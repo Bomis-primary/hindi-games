@@ -1,1 +1,630 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>अ की जादुई दुनिया - Innovine</title>
+    <style>
+        :root {
+            --primary-color: #ff6b6b;
+            --secondary-color: #4ecdc4;
+            --accent-color: #ffe66d;
+            --bg-color: #f7f9fc;
+            --text-color: #2f3e46;
+        }
 
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Arial Rounded MT Bold', 'Comic Sans MS', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            overflow: hidden;
+            touch-action: manipulation;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        #game-container {
+            width: 100%;
+            max-width: 500px;
+            height: 100vh;
+            max-height: 850px;
+            background: white;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            border-radius: 16px;
+        }
+
+        /* Screens Management */
+        .screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        /* 1. Logo Screen */
+        #logo-screen {
+            background-color: #ffffff;
+            z-index: 100;
+        }
+
+        .logo-img {
+            max-width: 220px;
+            animation: pulse 1.5s infinite;
+        }
+
+        /* 2. Instruction Screen */
+        #instruction-screen {
+            background: linear-gradient(135deg, #ffe66d, #ff6b6b);
+            color: white;
+        }
+
+        /* Score & Header */
+        .game-header {
+            width: 100%;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f0f3f7;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-bottom: 4px solid #ddaeae;
+        }
+
+        .game-body {
+            flex: 1;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            overflow-y: auto;
+        }
+
+        /* Buttons */
+        .btn {
+            background: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.4rem;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 6px #37a39b;
+            transition: all 0.1s;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        .btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px #37a39b;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: #2f3e46;
+        }
+
+        .hint-text {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: #666;
+        }
+
+        /* Phase 1: Tracing Canvas */
+        #trace-canvas {
+            border: 4px dashed var(--primary-color);
+            background: #fffdf0;
+            border-radius: 15px;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+            touch-action: none;
+        }
+
+        /* Phase 2: Tap Picture */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            width: 100%;
+            max-width: 360px;
+        }
+
+        .grid-item {
+            background: #f8f9fa;
+            border: 3px solid #e9ecef;
+            border-radius: 12px;
+            padding: 15px;
+            font-size: 3rem;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: transform 0.2s;
+        }
+
+        .grid-item span {
+            font-size: 1.1rem;
+            margin-top: 5px;
+            font-weight: bold;
+        }
+
+        /* Phase 3: Drag / Tap Sorting */
+        .words-pool {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .word-tag {
+            background: var(--accent-color);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            cursor: pointer;
+            border: 2px solid #e6cc4d;
+        }
+
+        .basket {
+            width: 160px;
+            height: 140px;
+            background: #d9a05b;
+            border-radius: 0 0 50px 50px;
+            border: 5px solid #b37d3d;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+            position: relative;
+        }
+
+        /* Phase 4: Matching */
+        .match-container {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            gap: 20px;
+        }
+
+        .match-column {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 45%;
+        }
+
+        .match-card {
+            background: #f1f3f5;
+            border: 2px solid #ced4da;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .match-card.selected {
+            background: #ffe66d;
+            border-color: #ff6b6b;
+        }
+
+        .match-card.matched {
+            background: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+            pointer-events: none;
+        }
+
+        /* Score Screen */
+        .score-badge {
+            font-size: 4rem;
+            color: var(--primary-color);
+            margin: 20px 0;
+            animation: bounce 1s infinite alternate;
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes bounce {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-10px); }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="game-container">
+        
+        <!-- 1. LOGO SCREEN -->
+        <div id="logo-screen" class="screen active">
+            <!-- Fallback styled text in case image doesn't load immediately -->
+            <img src="assets/innovine-logo.png" alt="Innovine Logo" class="logo-img" onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='block';">
+            <h1 id="logo-fallback" style="display:none; font-size: 3rem; color: #4ecdc4;">Innovine</h1>
+        </div>
+
+        <!-- 2. INSTRUCTION SCREEN -->
+        <div id="instruction-screen" class="screen">
+            <h1 style="font-size: 2.5rem; margin-bottom: 20px;">नमस्ते बच्चों! 👋</h1>
+            <p style="font-size: 1.4rem; padding: 0 10px;">चलो खेलते हैं अक्षर <b>"अ"</b> का मजेदार खेल!</p>
+            <button class="btn" onclick="startGame()">शुरू करें (Start)</button>
+        </div>
+
+        <!-- PLAYABLE GAME INTERFACE -->
+        <div id="game-play" style="display: none; flex-direction: column; height: 100%;">
+            <div class="game-header">
+                <span id="game-title">गतिविधि</span>
+                <span>स्कोर: <span id="score-display" style="color: var(--primary-color);">0</span></span>
+            </div>
+
+            <div class="game-body">
+                
+                <!-- LEVEL 1: TRACING -->
+                <div id="level-1" class="level-container" style="display: none; text-align: center;">
+                    <h2>1. 'अ' बनाओ (Trace Letter)</h2>
+                    <p class="hint-text">अपनी उंगली से पूरे 'अ' अक्षर को ट्रेस करें!</p>
+                    <canvas id="trace-canvas" width="300" height="300"></canvas>
+                    <br>
+                    <button class="btn" onclick="checkTracing()">जाँचें (Check)</button>
+                </div>
+
+                <!-- LEVEL 2: TAP THE PICTURE -->
+                <div id="level-2" class="level-container" style="display: none;">
+                    <h2>2. 'अ' ढूँढ़ो (Tap 'अ' Objects)</h2>
+                    <p class="hint-text">उन चित्रों को छुएं जो 'अ' से शुरू होते हैं!</p>
+                    <div class="grid-container" id="l2-grid">
+                        <!-- Dynamic items -->
+                    </div>
+                </div>
+
+                <!-- LEVEL 3: DRAG/TAP TO BASKET -->
+                <div id="level-3" class="level-container" style="display: none; align-items: center; flex-direction: column;">
+                    <h2>3. खींचो और रखो (Sort 'अ' Words)</h2>
+                    <p class="hint-text">सिर्फ 'अ' वाले शब्दों पर टैप करके टोकरी में डालें!</p>
+                    <div class="words-pool" id="l3-pool"></div>
+                    <div class="basket">
+                        <span>अ की टोकरी</span>
+                        <span style="font-size: 2rem;">🧺</span>
+                    </div>
+                </div>
+
+                <!-- LEVEL 4: MATCH PICTURE & WORD -->
+                <div id="level-4" class="level-container" style="display: none;">
+                    <h2>4. मिलाओ (Match Pair)</h2>
+                    <p class="hint-text">चित्र और सही शब्द का मिलान करें!</p>
+                    <div class="match-container">
+                        <div class="match-column" id="match-pics"></div>
+                        <div class="match-column" id="match-words"></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- FINAL COMPLETION SCREEN -->
+        <div id="end-screen" class="screen" style="background: linear-gradient(135deg, #4ecdc4, #ffe66d);">
+            <h1 style="font-size: 2.5rem; color: white;">🎉 बहुत बढ़िया! 🎉</h1>
+            <p style="font-size: 1.5rem; color: white; margin-top: 10px;">आपने खेल पूरा कर लिया है।</p>
+            <div class="score-badge" id="final-score">0</div>
+            <button class="btn" onclick="location.reload()" style="background: var(--primary-color); box-shadow: 0 6px #b84343;">फिर से खेलें 🔄</button>
+        </div>
+
+    </div>
+
+    <!-- AUDIO ELEMENTS -->
+    <audio id="snd-correct" src="assets/correct.mp3"></audio>
+    <audio id="snd-wrong" src="assets/wrong.mp3"></audio>
+    <audio id="snd-clap" src="assets/clap.mp3"></audio>
+
+    <script>
+        // Game State Variables
+        let score = 0;
+        let currentLevel = 1;
+        
+        // Sound players with fallbacks
+        function playSound(id) {
+            const sound = document.getElementById(id);
+            if (sound) {
+                sound.currentTime = 0;
+                sound.play().catch(e => console.log("Audio play blocked or missing native file path."));
+            }
+        }
+
+        // 1. Initial Launch: Logo screen for exactly 5 seconds
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                document.getElementById('logo-screen').classList.remove('active');
+                document.getElementById('instruction-screen').classList.add('active');
+            }, 5000);
+        });
+
+        // Start Gameplay after instruction
+        function startGame() {
+            document.getElementById('instruction-screen').classList.remove('active');
+            document.getElementById('game-play').style.display = 'flex';
+            loadLevel(1);
+        }
+
+        function updateScore(points) {
+            score += points;
+            if(score < 0) score = 0;
+            document.getElementById('score-display').innerText = score;
+        }
+
+        // Level Director
+        function loadLevel(lvl) {
+            currentLevel = lvl;
+            // Hide all levels
+            document.querySelectorAll('.level-container').forEach(el => el.style.display = 'none');
+            
+            if (lvl === 1) {
+                document.getElementById('level-1').style.display = 'block';
+                setupTracing();
+            } else if (lvl === 2) {
+                document.getElementById('level-2').style.display = 'block';
+                setupLevel2();
+            } else if (lvl === 3) {
+                document.getElementById('level-3').style.display = 'flex';
+                setupLevel3();
+            } else if (lvl === 4) {
+                document.getElementById('level-4').style.display = 'block';
+                setupLevel4();
+            } else {
+                // Game Over
+                document.getElementById('game-play').style.display = 'none';
+                document.getElementById('end-screen').classList.add('active');
+                document.getElementById('final-score').innerText = score;
+                playSound('snd-clap');
+            }
+        }
+
+        /* --- LEVEL 1 CODE: TRACING --- */
+        let canvas, ctx, drawing = false;
+        function setupTracing() {
+            canvas = document.getElementById('trace-canvas');
+            ctx = canvas.getContext('2d');
+            ctx.lineWidth = 14;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = '#a2a2a2';
+            
+            // Draw a ghost "अ" as guide line
+            ctx.font = '160px Arial';
+            ctx.fillStyle = '#e2e2e2';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('अ', canvas.width/2, canvas.height/2);
+
+            ctx.strokeStyle = '#ff6b6b';
+
+            // Event Listeners for Mobile Touch and Mouse
+            const startDraw = (e) => { drawing = true; draw(e); };
+            const endDraw = () => { drawing = false; ctx.beginPath(); };
+            
+            const draw = (e) => {
+                if (!drawing) return;
+                e.preventDefault();
+                const rect = canvas.getBoundingClientRect();
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                const x = clientX - rect.left;
+                const y = clientY - rect.top;
+
+                ctx.lineTo(x, y);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(x, y);
+            };
+
+            canvas.addEventListener('mousedown', startDraw);
+            canvas.addEventListener('mouseup', endDraw);
+            canvas.addEventListener('mousemove', draw);
+
+            canvas.addEventListener('touchstart', startDraw);
+            canvas.addEventListener('touchend', endDraw);
+            canvas.addEventListener('touchmove', draw);
+        }
+
+        function checkTracing() {
+            // For grade 1 kids, we praise their effort enthusiastically!
+            playSound('snd-correct');
+            updateScore(10);
+            setTimeout(() => loadLevel(2), 1500);
+        }
+
+
+        /* --- LEVEL 2 CODE: TAP OBJECTS --- */
+        const l2Data = [
+            { word: 'अनार', icon: '🍎', isA: true },
+            { word: 'अदरक', icon: '🫚', isA: true },
+            { word: 'घर', icon: '🏠', isA: false },
+            { word: 'अजगर', icon: '🐍', isA: true }
+        ];
+
+        function setupLevel2() {
+            const grid = document.getElementById('l2-grid');
+            grid.innerHTML = '';
+            let correctLeft = l2Data.filter(i => i.isA).length;
+
+            l2Data.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'grid-item';
+                div.innerHTML = `${item.icon} <span>${item.word}</span>`;
+                div.onclick = () => {
+                    if (div.style.pointerEvents === 'none') return;
+                    if (item.isA) {
+                        playSound('snd-correct');
+                        div.style.background = '#d4edda';
+                        div.style.borderColor = '#28a745';
+                        updateScore(10);
+                        correctLeft--;
+                        div.style.pointerEvents = 'none';
+                        if (correctLeft === 0) {
+                            setTimeout(() => loadLevel(3), 1500);
+                        }
+                    } else {
+                        playSound('snd-wrong');
+                        div.style.background = '#f8d7da';
+                        div.style.borderColor = '#dc3545';
+                        updateScore(-5);
+                    }
+                };
+                grid.appendChild(div);
+            });
+        }
+
+
+        /* --- LEVEL 3 CODE: SORT TO BASKET --- */
+        const l3Data = [
+            { text: 'अचार', isA: true },
+            { text: 'बतख', isA: false },
+            { text: 'अखबार', isA: true },
+            { text: 'नमक', isA: false }
+        ];
+
+        function setupLevel3() {
+            const pool = document.getElementById('l3-pool');
+            pool.innerHTML = '';
+            let itemsToFind = l3Data.filter(i => i.isA).length;
+
+            l3Data.forEach(item => {
+                const tag = document.createElement('div');
+                tag.className = 'word-tag';
+                tag.innerText = item.text;
+                
+                // Tap-to-move feature configured beautifully for mobile screens
+                tag.onclick = () => {
+                    if(item.isA) {
+                        playSound('snd-correct');
+                        tag.style.transform = 'scale(0)';
+                        tag.style.transition = 'all 0.4s';
+                        updateScore(10);
+                        itemsToFind--;
+                        if(itemsToFind === 0) {
+                            setTimeout(() => loadLevel(4), 1500);
+                        }
+                    } else {
+                        playSound('snd-wrong');
+                        tag.style.background = '#f8d7da';
+                        updateScore(-5);
+                    }
+                };
+                pool.appendChild(tag);
+            });
+        }
+
+
+        /* --- LEVEL 4 CODE: MATCH PICTURE & WORD --- */
+        const l4Items = [
+            { id: 1, word: 'अमरूद', icon: '🥑' },
+            { id: 2, word: 'अचकन', icon: '🥋' }
+        ];
+
+        let selectedPic = null;
+        let selectedWord = null;
+
+        function setupLevel4() {
+            const picsCol = document.getElementById('match-pics');
+            const wordsCol = document.getElementById('match-words');
+            picsCol.innerHTML = '';
+            wordsCol.innerHTML = '';
+
+            let totalMatches = l4Items.length;
+
+            // Render Pictures
+            [...l4Items].sort(() => Math.random() - 0.5).forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'match-card';
+                card.innerHTML = item.icon;
+                card.dataset.id = item.id;
+                card.onclick = () => {
+                    document.querySelectorAll('#match-pics .match-card').forEach(c => c.classList.remove('selected'));
+                    card.classList.add('selected');
+                    selectedPic = card;
+                    checkMatch();
+                };
+                picsCol.appendChild(card);
+            });
+
+            // Render Words
+            [...l4Items].sort(() => Math.random() - 0.5).forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'match-card';
+                card.innerText = item.word;
+                card.dataset.id = item.id;
+                card.onclick = () => {
+                    document.querySelectorAll('#match-words .match-card').forEach(c => c.classList.remove('selected'));
+                    card.classList.add('selected');
+                    selectedWord = card;
+                    checkMatch();
+                };
+                wordsCol.appendChild(card);
+            });
+
+            function checkMatch() {
+                if (selectedPic && selectedWord) {
+                    if (selectedPic.dataset.id === selectedWord.dataset.id) {
+                        playSound('snd-correct');
+                        selectedPic.classList.remove('selected');
+                        selectedWord.classList.remove('selected');
+                        selectedPic.classList.add('matched');
+                        selectedWord.classList.add('matched');
+                        updateScore(10);
+                        totalMatches--;
+                        selectedPic = null;
+                        selectedWord = null;
+
+                        if (totalMatches === 0) {
+                            setTimeout(() => loadLevel(5), 1500); // Trigger game over screen
+                        }
+                    } else {
+                        playSound('snd-wrong');
+                        selectedPic.classList.remove('selected');
+                        selectedWord.classList.remove('selected');
+                        selectedPic = null;
+                        selectedWord = null;
+                        updateScore(-5);
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>
