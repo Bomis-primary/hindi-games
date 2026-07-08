@@ -71,7 +71,7 @@
         }
 
         .logo-img {
-            max-width: 220px;
+            max-width: 250px;
             animation: pulse 1.5s infinite;
         }
 
@@ -298,10 +298,10 @@
 
     <div id="game-container">
         
-        <!-- LOGO SCREEN (5 SECONDS) -->
+        <!-- LOGO SCREEN (5 SECONDS) - FIXED INITIALIZATION -->
         <div id="logo-screen" class="screen active">
             <img src="assets/innovine-logo.png" alt="Innovine Logo" class="logo-img" onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='block';">
-            <h1 id="logo-fallback" style="display:none; font-size: 3rem; color: #4ecdc4;">Innovine</h1>
+            <h1 id="logo-fallback" style="display:none; font-size: 2.5rem; color: #2f3e46;">INNOVINE SOLUTIONS</h1>
         </div>
 
         <!-- INSTRUCTION SCREEN -->
@@ -332,14 +332,14 @@
                 <!-- LEVEL 2: TAP THE PICTURE -->
                 <div id="level-2" class="level-container" style="display: none;">
                     <h2>2. 'अ' ढूँढ़ो (Find Objects)</h2>
-                    <p class="hint-text">उन चित्रों को छुएं जो 'अ' से शुरू होते हैं[cite: 1]!</p>
+                    <p class="hint-text">उन चित्रों को छुएं जो 'अ' से शुरू होते हैं!</p>
                     <div class="grid-container" id="l2-grid"></div>
                 </div>
 
                 <!-- LEVEL 3: SORT TO BASKET -->
                 <div id="level-3" class="level-container" style="display: none; align-items: center; flex-direction: column;">
                     <h2>3. खींचो और रखो (Sort Words)</h2>
-                    <p class="hint-text">सिर्फ 'अ' वाले शब्दों पर टैप करके टोकरी में रखें[cite: 1]!</p>
+                    <p class="hint-text">सिर्फ 'अ' वाले शब्दों पर टैप करके टोकरी में रखें!</p>
                     <div class="words-pool" id="l3-pool"></div>
                     <div class="basket">
                         <span>अ की टोकरी</span>
@@ -350,7 +350,7 @@
                 <!-- LEVEL 4: MATCH PICTURE & WORD -->
                 <div id="level-4" class="level-container" style="display: none;">
                     <h2>4. मिलाओ (Match Pairs)</h2>
-                    <p class="hint-text">चित्र को सही शब्द के साथ मिलाएँ[cite: 1]!</p>
+                    <p class="hint-text">चित्र को सही शब्द के साथ मिलाएँ!</p>
                     <div class="match-container">
                         <div class="match-column" id="match-pics"></div>
                         <div class="match-column" id="match-words"></div>
@@ -360,7 +360,7 @@
                 <!-- LEVEL 5: POP THE BALLOONS -->
                 <div id="level-5" class="level-container" style="display: none; width: 100%;">
                     <h2>5. गुब्बारे फोड़ो (Pop Balloons)</h2>
-                    <p class="hint-text">'अ' अक्षर वाले गुब्बारों को छुएं[cite: 1]!</p>
+                    <p class="hint-text">'अ' अक्षर वाले गुब्बारों को छुएं!</p>
                     <div id="balloon-area"></div>
                 </div>
 
@@ -386,8 +386,7 @@
         let score = 0;
         let currentLevel = 1;
         
-        // Tracing Sequence Array
-        const traceWords = ['अ', 'अनार', 'अदरक'];[cite: 1]
+        const traceWords = ['अ', 'अनार', 'अदरक'];
         let currentTraceIdx = 0;
 
         function playSound(id) {
@@ -398,13 +397,15 @@
             }
         }
 
-        // 5 Seconds Logo screen logic
-        window.addEventListener('DOMContentLoaded', () => {
-            setTimeout(() => {
-                document.getElementById('logo-screen').classList.remove('active');
-                document.getElementById('instruction-screen').classList.add('active');
-            }, 5000);
-        });
+        // --- FIXED LOGO SCREEN TIMER (Runs Immediately Without Event Layer Triggers) ---
+        setTimeout(() => {
+            const logoScreen = document.getElementById('logo-screen');
+            const instScreen = document.getElementById('instruction-screen');
+            if(logoScreen && instScreen) {
+                logoScreen.classList.remove('active');
+                instScreen.classList.add('active');
+            }
+        }, 5000);
 
         function startGame() {
             document.getElementById('instruction-screen').classList.remove('active');
@@ -421,7 +422,10 @@
         function loadLevel(lvl) {
             currentLevel = lvl;
             document.querySelectorAll('.level-container').forEach(el => el.style.display = 'none');
-            document.getElementById('game-title').innerText = `स्तर ${lvl}/5`;
+            
+            if(lvl <= 5) {
+                document.getElementById('game-title').innerText = `स्तर ${lvl}/5`;
+            }
             
             if (lvl === 1) {
                 document.getElementById('level-1').style.display = 'block';
@@ -470,6 +474,7 @@
                 ctx.moveTo(clientX - rect.left, clientY - rect.top);
             };
 
+            canvas.removeEventListener('mousedown', startDraw);
             canvas.addEventListener('mousedown', startDraw);
             canvas.addEventListener('mouseup', endDraw);
             canvas.addEventListener('mousemove', draw);
@@ -480,21 +485,21 @@
 
         function drawTraceTarget() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            let currentWord = traceWords[currentTraceIdx];[cite: 1]
-            document.getElementById('trace-hint').innerText = `अपनी उंगली से "${currentWord}" को ट्रेस करें!`;[cite: 1]
+            let currentWord = traceWords[currentTraceIdx];
+            document.getElementById('trace-hint').innerText = `अपनी उंगली से "${currentWord}" को ट्रेस करें!`;
             
             ctx.font = currentWord.length > 1 ? '70px Arial' : '140px Arial';
             ctx.fillStyle = '#e5e8eb';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            ctx.fillText(currentWord, canvas.width/2, canvas.height/2);[cite: 1]
+            ctx.fillText(currentWord, canvas.width/2, canvas.height/2);
         }
 
         function nextTraceWord() {
             playSound('snd-correct');
             updateScore(10);
             currentTraceIdx++;
-            if (currentTraceIdx < traceWords.length) {[cite: 1]
+            if (currentTraceIdx < traceWords.length) {
                 drawTraceTarget();
             } else {
                 loadLevel(2);
@@ -503,10 +508,10 @@
 
         /* --- ACTIVITY 2: FIND OBJECTS --- */
         const l2Data = [
-            { word: 'अनार', icon: '🍎', isA: true },[cite: 1]
-            { word: 'घर', icon: '🏠', isA: false },[cite: 1]
-            { word: 'अजगर', icon: '🐍', isA: true },[cite: 1]
-            { word: 'बत्तख', icon: '🦆', isA: false }[cite: 1]
+            { word: 'अनार', icon: '🍎', isA: true },
+            { word: 'घर', icon: '🏠', isA: false },
+            { word: 'अजगर', icon: '🐍', isA: true },
+            { word: 'बत्तख', icon: '🦆', isA: false }
         ];
         function setupLevel2() {
             const grid = document.getElementById('l2-grid');
@@ -516,7 +521,7 @@
             l2Data.forEach(item => {
                 const div = document.createElement('div');
                 div.className = 'grid-item';
-                div.innerHTML = `${item.icon} <span>${item.word}</span>`;[cite: 1]
+                div.innerHTML = `${item.icon} <span>${item.word}</span>`;
                 div.onclick = () => {
                     if (div.style.pointerEvents === 'none') return;
                     if (item.isA) {
@@ -538,10 +543,10 @@
 
         /* --- ACTIVITY 3: SORT WORDS --- */
         const l3Data = [
-            { text: 'अचार', isA: true },[cite: 1]
-            { text: 'कमल', isA: false },[cite: 1]
-            { text: 'अखबार', isA: true },[cite: 1]
-            { text: 'नमक', isA: false }[cite: 1]
+            { text: 'अचार', isA: true },
+            { text: 'कमल', isA: false },
+            { text: 'अखबार', isA: true },
+            { text: 'नमक', isA: false }
         ];
         function setupLevel3() {
             const pool = document.getElementById('l3-pool');
@@ -551,7 +556,7 @@
             l3Data.forEach(item => {
                 const tag = document.createElement('div');
                 tag.className = 'word-tag';
-                tag.innerText = item.text;[cite: 1]
+                tag.innerText = item.text;
                 tag.onclick = () => {
                     if(item.isA) {
                         playSound('snd-correct');
@@ -571,8 +576,8 @@
 
         /* --- ACTIVITY 4: MATCH PAIRS --- */
         const l4Items = [
-            { id: 1, word: 'अमरूद', icon: '🥑' },[cite: 1]
-            { id: 2, word: 'अचकन', icon: '🥋' }[cite: 1]
+            { id: 1, word: 'अमरूद', icon: '🥑' },
+            { id: 2, word: 'अचकन', icon: '🥋' }
         ];
         let selPic = null, selWord = null;
         function setupLevel4() {
@@ -593,7 +598,7 @@
 
             [...l4Items].sort(() => Math.random() - 0.5).forEach(item => {
                 const card = document.createElement('div');
-                card.className = 'match-card'; card.innerText = item.word; card.dataset.id = item.id;[cite: 1]
+                card.className = 'match-card'; card.innerText = item.word; card.dataset.id = item.id;
                 card.onclick = () => {
                     document.querySelectorAll('#match-words .match-card').forEach(c => c.classList.remove('selected'));
                     card.classList.add('selected'); selWord = card; checkMatch();
@@ -620,11 +625,11 @@
 
         /* --- ACTIVITY 5: BALLOON POPPING --- */
         const balloonData = [
-            { text: 'अ', isCorrect: true },[cite: 1]
+            { text: 'अ', isCorrect: true },
             { text: 'क', isCorrect: false },
-            { text: 'अ', isCorrect: true },[cite: 1]
+            { text: 'अ', isCorrect: true },
             { text: 'म', isCorrect: false },
-            { text: 'अ', isCorrect: true }[cite: 1]
+            { text: 'अ', isCorrect: true }
         ];
         function setupLevel5() {
             const area = document.getElementById('balloon-area');
@@ -636,7 +641,6 @@
                 b.className = 'balloon';
                 b.innerText = data.text;
                 
-                // Random absolute distribution inside mobile grid viewport
                 b.style.left = (20 + (index * 75) % 360) + 'px';
                 b.style.top = (40 + (index * 60) % 240) + 'px';
                 b.style.backgroundColor = ['#ff6b6b', '#4ecdc4', '#ffe66d', '#a29bfe', '#fd79a8'][index];
@@ -655,7 +659,6 @@
                         }
                     } else {
                         playSound('snd-wrong');
-                        b.style.transform = 'shake 0.2s';
                         updateScore(-5);
                     }
                 };
