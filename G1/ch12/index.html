@@ -35,7 +35,7 @@
             position: relative;
         }
 
-        /* Fullscreen Screen States Management */
+        /* Responsive Screen States Wrapper */
         .game-screen {
             display: none;
             width: 100%;
@@ -63,7 +63,7 @@
             to { opacity: 1; transform: scale(1); }
         }
 
-        /* SCREEN 1: INTRO LOGO DESIGN */
+        /* SCREEN 1: SPLASH LOGO SCREEN */
         #screen-logo {
             background: #ffffff;
             border-color: #f0f0f0;
@@ -79,7 +79,7 @@
             50% { transform: scale(1.03); }
         }
 
-        /* CORE TYPOGRAPHY & BUTTONS */
+        /* CORE TYPOGRAPHY & INTERACTIVE BUTTONS */
         h1 {
             color: #ff477e;
             font-size: calc(2.2rem + 1.5vw);
@@ -113,7 +113,7 @@
             box-shadow: 0 2px 0 #0096c7;
         }
 
-        /* SCREEN 3: SIMPLIFIED INSTRUCTIONS CARD */
+        /* SCREEN 3: INSTRUCTIONS CARD LAYOUT */
         .instruction-box {
             background: #fff5f6;
             border: 3px dashed var(--bubblegum);
@@ -121,7 +121,6 @@
             padding: 20px;
             text-align: left;
             width: 100%;
-            min-width: 90%;
             margin-bottom: 15px;
         }
         .instruction-line {
@@ -134,7 +133,7 @@
             line-height: 1.5;
         }
 
-        /* SCREEN 4: STATUS BAR (HEARTS & SCORE) */
+        /* SCREEN 4: TOP LIVE HEADS-UP DISPLAY BAR */
         .status-bar {
             display: flex;
             justify-content: space-between;
@@ -156,7 +155,7 @@
             border: 2px solid #ffeeba;
         }
 
-        /* Ultra Responsive Progress Map Bar */
+        /* PROGRESS TRACK PATHWAY MAP */
         .map-track {
             display: grid;
             grid-template-columns: repeat(12, 1fr);
@@ -183,6 +182,7 @@
             color: white;
             z-index: 5;
             box-shadow: 0 3px 0 #cbd5e1;
+            transition: background 0.3s;
         }
         .map-tile .tile-icon {
             font-size: 0.6rem;
@@ -206,7 +206,7 @@
             z-index: 10;
         }
 
-        /* Display Card Window Wrapper */
+        /* MAIN CHALLENGE DISPLAY CARD DISPLAY PANEL */
         .display-box {
             background: #f8f9fa;
             border: 5px solid var(--sky);
@@ -215,7 +215,7 @@
             margin-bottom: 20px;
             box-shadow: 0 8px 0 #bde0fe;
             width: 100%;
-            position: relative; /* Confetti absolute anchor point */
+            position: relative;
         }
         .mode-badge {
             display: inline-block;
@@ -237,7 +237,7 @@
             color: #333;
         }
 
-        /* Choice Grid Button System */
+        /* ADAPTIVE CHOICE CONTROLS BUTTON SYSTEM */
         .choices-layout {
             display: flex;
             gap: 15px;
@@ -270,7 +270,7 @@
             box-shadow: 0 2px 0 #4361ee;
         }
 
-        /* GLOWING HINT SYSTEM ANIMATION */
+        /* GLOW HINT VISUAL FLASH SYSTEM EFFECT */
         .choice-card.glow-hint {
             animation: intenseGlow 1.2s infinite alternate;
             border-color: #00ff88 !important;
@@ -286,7 +286,7 @@
             }
         }
 
-        /* PURE LIGHTWEIGHT DOM CONFETTI PIECES */
+        /* LIGHTWEIGHT DOM PARTICLES SYSTEM CONFETTI BLOWS */
         .confetti-piece {
             position: absolute;
             width: 12px;
@@ -307,7 +307,7 @@
             }
         }
 
-        /* END SCREEN MODAL OVERLAYS */
+        /* CONTEXT STATE OVERLAYS POPUP SCREENS */
         .screen-overlay {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -321,12 +321,12 @@
             padding: 20px;
         }
 
-        /* Small screen specific overrides for older smartphones */
+        /* Cross-Device Optimization Breakpoint Engine */
         @media (max-width: 480px) {
             body { padding: 5px; }
             .game-screen { padding: 15px 10px; border-width: 4px; }
             .choices-layout { flex-direction: column; gap: 12px; }
-            .choice-card { padding: 10px 5px; box-shadow: 0 6px 0 #fb8500; }
+            .choice-card { padding: 12px 5px; box-shadow: 0 6px 0 #fb8500; }
             .choice-card:active { transform: translateY(4px); box-shadow: 0 2px 0 #fb8500; }
             .choice-card.alt-color { box-shadow: 0 6px 0 #4361ee; }
             .choice-card.alt-color:active { box-shadow: 0 2px 0 #4361ee; }
@@ -336,14 +336,11 @@
 </head>
 <body>
 
-    <!-- SCREEN 1: INTRO LOGO (5 Seconds Auto Timer) -->
     <div id="screen-logo" class="game-screen active">
-        <!-- Logo file verification mapped to assets folder structure from image_8f1884.png -->
         <img src="assets/innovine-logo.png" alt="Innovine Logo" class="logo-img" onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='block';">
         <h2 id="logo-fallback" style="display:none; font-size: 2.5rem; color: #333;">Innovine Media</h2>
     </div>
 
-    <!-- SCREEN 2: GAME TITLE SCREEN -->
     <div id="screen-title" class="game-screen">
         <span style="font-size: 4.5rem; margin-bottom: 10px;">🎪</span>
         <h1>मात्रा मेला</h1>
@@ -351,7 +348,6 @@
         <button class="action-btn" onclick="switchScreen('screen-title', 'screen-instructions')">शुरू करें 🚀</button>
     </div>
 
-    <!-- SCREEN 3: SIMPLIFIED INSTRUCTIONS SCREEN -->
     <div id="screen-instructions" class="game-screen">
         <h1>कैसे खेलें? 🎯</h1>
         <div class="instruction-box">
@@ -364,42 +360,36 @@
         <button class="action-btn blue-btn" onclick="initAudioAndStartGame()">खेलें 🎮</button>
     </div>
 
-    <!-- SCREEN 4: ACTUAL GAMEPLAY ENGINE -->
     <div id="screen-game" class="game-screen">
-        <!-- Status Bar containing Realtime Hearts and Scores -->
         <div class="status-bar">
             <div class="heart-box" id="heartBox">❤️ ❤️ ❤️</div>
             <div class="score-box" id="scoreBox">⭐ अंक: 0</div>
         </div>
 
-        <!-- 12 Nodes Fluid Grid Tracker Track -->
         <div class="map-track" id="trackLine">
             <div class="pawn-avatar" id="heroPawn">🦁</div>
-            <div class="map-tile passed">शुरू</div>
-            <div class="map-tile">१<span class="tile-icon">🧩</span></div>
-            <div class="map-tile">२<span class="tile-icon">🖼️</span></div>
-            <div class="map-tile">३<span class="tile-icon">🔍</span></div>
-            <div class="map-tile">४<span class="tile-icon">🧩</span></div>
-            <div class="map-tile">५<span class="tile-icon">🖼️</span></div>
-            <div class="map-tile">६<span class="tile-icon">🔍</span></div>
-            <div class="map-tile">७<span class="tile-icon">🧩</span></div>
-            <div class="map-tile">८<span class="tile-icon">🖼️</span></div>
-            <div class="map-tile">९<span class="tile-icon">🔍</span></div>
-            <div class="map-tile">१०<span class="tile-icon">🖼️</span></div>
-            <div class="map-tile finish-gate">🏁</div>
+            <div class="map-tile passed" id="tile-0">शुरू</div>
+            <div class="map-tile" id="tile-1">१<span class="tile-icon">🧩</span></div>
+            <div class="map-tile" id="tile-2">२<span class="tile-icon">🖼️</span></div>
+            <div class="map-tile" id="tile-3">३<span class="tile-icon">🔍</span></div>
+            <div class="map-tile" id="tile-4">४<span class="tile-icon">🧩</span></div>
+            <div class="map-tile" id="tile-5">५<span class="tile-icon">🖼️</span></div>
+            <div class="map-tile" id="tile-6">६<span class="tile-icon">🔍</span></div>
+            <div class="map-tile" id="tile-7">७<span class="tile-icon">🧩</span></div>
+            <div class="map-tile" id="tile-8">८<span class="tile-icon">🖼️</span></div>
+            <div class="map-tile" id="tile-9">९<span class="tile-icon">🔍</span></div>
+            <div class="map-tile" id="tile-10">१०<span class="tile-icon">🖼️</span></div>
+            <div class="map-tile finish-gate" id="tile-11">🏁</div>
         </div>
 
-        <!-- Central Arena Box UI -->
         <div class="display-box" id="mainDisplayCard">
             <span class="mode-badge" id="gameModeBadge">🧩 मात्रा जोड़ो</span>
             <span class="giant-emoji" id="bigEmoji">🌱</span>
             <div class="math-spell" id="spellFormula">प + ौ + ध + ा</div>
         </div>
 
-        <!-- Choices Layout Area -->
         <div class="choices-layout" id="buttonsLayout"></div>
 
-        <!-- End Overlays Inside Game Screen Canvas Frame Box -->
         <div id="endScreen" class="screen-overlay" style="display: none;">
             <h2 id="endTitle" style="font-size: 3rem; margin-bottom: 10px;">🎉 जीत गए! 🥳</h2>
             <p id="endDesc" style="font-size: 1.4rem; color: #555; margin-bottom: 25px;">अद्भुत खेल!</p>
@@ -408,31 +398,31 @@
     </div>
 
 <script>
-    // Audio engine maps referenced from repository folder layout in image_8f1884.png
+    // Audio engine mapped sync from ch12 assets configuration 
     const audioCorrect = new Audio('assets/correct.mp3');
     const audioWrong = new Audio('assets/wrong.mp3');
     const audioClaps = new Audio('assets/freesound_community-claps-44774.mp3');
 
-    // Levels Array List Definition
+    // 100% Textbook Mapped Interactive Levels Array from image_8e1d7c.png
     const levels = [
         { type: "jodo", emoji: "🌱", math: "प + ौ + ध + ा", correct: "पौधा", choices: ["पोधा", "पौधा"] },
         { type: "chitra", emoji: "🦅", math: "यह चित्र किसका है?", correct: "कौआ", choices: ["कौआ", "कोआ"] },
         { type: "pehchano", emoji: "🧣", math: "सही मात्रा पहचानो", correct: "तौलिया", choices: ["तोलिया", "तौलिया"] },
         { type: "jodo", emoji: "🏃", math: "द + ौ + ड़", correct: "दौड़", choices: ["दौड़", "दोड़"] },
-        { type: "chitra", emoji: "🧸", math: "यह चित्र किसका है?", correct: "खिलौना", choices: ["खिलोना", "खिलौना"] },
+        { type: "chitra", emoji: "🔧", math: "टूलबॉक्स में क्या होते हैं?", correct: "औजार", choices: ["ओजार", "औजार"] },
         { type: "pehchano", emoji: "🔢", math: "सही मात्रा पहचानो (14)", correct: "चौदह", choices: ["चौदह", "चोदह"] },
         { type: "jodo", emoji: "🪖", math: "फ + ौ + ज + ी", correct: "फौजी", choices: ["फोजी", "फौजी"] },
-        { type: "chitra", emoji: "⛵", math: "यह चित्र किसका है?", correct: "नौका", choices: ["नौका", "नोका"] },
+        { type: "chitra", emoji: "👩", math: "यह चित्र किसका है?", correct: "औरत", choices: ["औरत", "ओरत"] },
         { type: "pehchano", emoji: "🧑‍🍳", math: "सही मात्रा पहचानो", correct: "नौकर", choices: ["नोकर", "नौकर"] },
-        { type: "chitra", emoji: "🔨", math: "यह चित्र किसका है?", correct: "हथौड़ा", choices: ["हथौड़ा", "हतोड़ा"] }
+        { type: "chitra", emoji: "💊", math: "बीमार होने पर क्या लेते हैं?", correct: "औषधि", choices: ["ओषधि", "औषधि"] }
     ];
 
-    let currentLevelIndex = 0;
+    let currentLevelIndex = 1; // Start cleanly at level 1 node coordinates
     let totalLives = 3;
     let totalScore = 0;
-    let wrongAttemptsOnLevel = 0; 
+    let wrongAttemptsOnLevel = 0;
 
-    // Automated 5 Seconds Splash Transition Router
+    // Automated 5 Seconds Router Action
     window.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
             switchScreen('screen-logo', 'screen-title');
@@ -447,7 +437,7 @@
         }
     }
 
-    // Mobilizer for Mobile iOS/Android Safari browser permissions
+    // iOS/Android stock WebView audio contextual unlock activation framework permissions
     function initAudioAndStartGame() {
         [audioCorrect, audioWrong, audioClaps].forEach(track => {
             track.play().catch(() => {});
@@ -459,45 +449,40 @@
     }
 
     function renderStatusDisplays() {
-        // Render Hearts
         const heartBox = document.getElementById('heartBox');
         let heartString = "";
         for(let i = 0; i < totalLives; i++) { heartString += "❤️ "; }
         if(heartString === "") heartString = "💔 खेल खत्म";
         heartBox.innerText = heartString;
 
-        // Render Scores
         document.getElementById('scoreBox').innerText = `⭐ अंक: ${totalScore}`;
     }
 
     function alignPawn() {
         const pawn = document.getElementById('heroPawn');
-        const tiles = document.querySelectorAll('.map-tile');
-        if(!tiles || tiles.length === 0 || !pawn) return;
+        const activeTile = document.getElementById(`tile-${currentLevelIndex}`);
+        if(!activeTile || !pawn) return;
         
-        const activeTile = tiles[currentLevelIndex];
         const centerOffset = activeTile.offsetLeft + (activeTile.offsetWidth / 2) - (pawn.offsetWidth / 2);
         pawn.style.left = `${centerOffset}px`;
     }
 
-    /* PURE RETAINABLE LIGHTWEIGHT CONFETTI ENGINE RUNTIME */
+    // Offline Client Native Performance Confetti System Burst
     function launchConfettiBurst() {
         const arenaCard = document.getElementById('mainDisplayCard');
         const particleColors = ['#ff758f', '#4cc9f0', '#2ecc71', '#ffb703', '#9b5de5', '#ff6b6b'];
-        const totalParticles = 35;
+        const totalParticles = window.innerWidth < 480 ? 25 : 40;
 
         for (let i = 0; i < totalParticles; i++) {
             const confettiPiece = document.createElement('div');
             confettiPiece.classList.add('confetti-piece');
-            
-            // Random styling assets
             confettiPiece.style.backgroundColor = particleColors[Math.floor(Math.random() * particleColors.length)];
             confettiPiece.style.left = '50%';
             confettiPiece.style.top = '50%';
 
-            // Setting random distance vectors inside custom CSS properties
-            const vectorX = (Math.random() - 0.5) * calcResponsiveDistance();
-            const vectorY = (Math.random() - 0.6) * calcResponsiveDistance();
+            const maxDist = window.innerWidth < 480 ? 160 : 300;
+            const vectorX = (Math.random() - 0.5) * maxDist;
+            const vectorY = (Math.random() - 0.6) * maxDist;
             const rotationRandom = Math.floor(Math.random() * 360) + 180;
 
             confettiPiece.style.setProperty('--x', `${vectorX}px`);
@@ -506,32 +491,23 @@
 
             arenaCard.appendChild(confettiPiece);
 
-            // Garbage collector cleanup to avoid memory leaks on old phones
-            setTimeout(() => {
-                confettiPiece.remove();
-            }, 800);
+            setTimeout(() => { confettiPiece.remove(); }, 800);
         }
-    }
-
-    function calcResponsiveDistance() {
-        return window.innerWidth < 480 ? 180 : 320;
     }
 
     function loadChallenge() {
-        wrongAttemptsOnLevel = 0; 
+        wrongAttemptsOnLevel = 0;
         
         if (currentLevelIndex > 10) {
-            triggerGameEnd(true);
+            document.getElementById('tile-11').classList.add('passed');
+            setTimeout(() => { triggerGameEnd(true); }, 500);
             return;
         }
 
-        const tiles = document.querySelectorAll('.map-tile');
-        tiles[currentLevelIndex].classList.add('passed');
-
-        if(currentLevelIndex === 0) {
-            currentLevelIndex = 1;
-            loadChallenge();
-            return;
+        // Highlight passed step path tracking
+        for (let i = 0; i < currentLevelIndex; i++) {
+            const tile = document.getElementById(`tile-${i}`);
+            if (tile) tile.classList.add('passed');
         }
 
         const currentData = levels[currentLevelIndex - 1];
@@ -572,9 +548,8 @@
         
         if (selectedOption === currentData.correct) {
             audioCorrect.currentTime = 0;
-            audioCorrect.play().catch(e => console.log("Audio waiting context"));
+            audioCorrect.play().catch(() => {});
 
-            // Score addition system + Confetti launch trigger
             totalScore += 10;
             renderStatusDisplays();
             launchConfettiBurst();
@@ -582,18 +557,15 @@
             currentLevelIndex++;
             alignPawn();
             
-            setTimeout(() => {
-                loadChallenge();
-            }, 750); // Small extra delay so children can enjoy confetti explosion
+            setTimeout(() => { loadChallenge(); }, 800);
         } else {
             audioWrong.currentTime = 0;
-            audioWrong.play().catch(e => console.log("Audio blocked"));
+            audioWrong.play().catch(() => {});
             
             totalLives--;
             wrongAttemptsOnLevel++;
             renderStatusDisplays();
 
-            // Glow Hint Condition Trigger Logic
             if (wrongAttemptsOnLevel === 1) {
                 const choiceBtns = document.querySelectorAll('.choice-card');
                 choiceBtns.forEach(btn => {
@@ -604,9 +576,7 @@
             }
 
             if (totalLives <= 0) {
-                setTimeout(() => {
-                    triggerGameEnd(false);
-                }, 400);
+                setTimeout(() => { triggerGameEnd(false); }, 400);
             }
         }
     }
@@ -619,8 +589,7 @@
         screen.style.display = "flex";
         if (isWin) {
             audioClaps.currentTime = 0;
-            audioClaps.play().catch(e => console.log("Audio blocked"));
-            
+            audioClaps.play().catch(() => {});
             title.innerText = "🎉 जीत गए! 🥳";
             desc.innerText = `अद्भुत खेल! आपने बनाए कुल ${totalScore} अंक। शेर अपनी मंजिल तक पहुँच गया!`;
         } else {
@@ -630,7 +599,7 @@
     }
 
     function resetGame() {
-        currentLevelIndex = 0;
+        currentLevelIndex = 1;
         totalLives = 3;
         totalScore = 0;
         wrongAttemptsOnLevel = 0;
