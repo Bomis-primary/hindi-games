@@ -100,7 +100,7 @@
             align-items: center;
             justify-content: center;
             padding: 15px;
-            overflow: hidden;
+            overflow-y: auto;
         }
 
         .btn {
@@ -134,16 +134,7 @@
             color: #666;
         }
 
-        /* Level 1: Tracing Area */
-        #trace-canvas {
-            border: 4px dashed var(--primary-color);
-            background: #fffdf0;
-            border-radius: 15px;
-            touch-action: none;
-            margin-bottom: 10px;
-        }
-
-        /* Level 2: Grid */
+        /* Grid Containers */
         .grid-container {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -157,11 +148,12 @@
             border: 3px solid #e9ecef;
             border-radius: 12px;
             padding: 15px;
-            font-size: 3rem;
+            font-size: 2.5rem;
             cursor: pointer;
             display: flex;
             flex-direction: column;
             align-items: center;
+            transition: transform 0.1s;
         }
 
         .grid-item span {
@@ -244,7 +236,7 @@
         /* Level 5: Balloons */
         #balloon-area {
             width: 100%;
-            height: 350px;
+            height: 320px;
             background: #eef1f6;
             border-radius: 15px;
             position: relative;
@@ -275,6 +267,39 @@
             font-size: 0.8rem;
         }
 
+        /* Level 6: Fill in the Blanks */
+        .blank-question {
+            font-size: 2.2rem;
+            letter-spacing: 5px;
+            margin-bottom: 20px;
+            background: #f8f9fa;
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+        }
+
+        .options-container {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .option-btn {
+            background: #fff;
+            border: 3px solid var(--secondary-color);
+            font-size: 1.8rem;
+            padding: 10px 25px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 4px #37a39b;
+        }
+
+        .option-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px #37a39b;
+        }
+
         .score-badge {
             font-size: 4rem;
             color: var(--primary-color);
@@ -298,7 +323,7 @@
 
     <div id="game-container">
         
-        <!-- LOGO SCREEN (5 SECONDS) - FIXED INITIALIZATION -->
+        <!-- LOGO SCREEN (5 SECONDS) -->
         <div id="logo-screen" class="screen active">
             <img src="assets/innovine-logo.png" alt="Innovine Logo" class="logo-img" onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='block';">
             <h1 id="logo-fallback" style="display:none; font-size: 2.5rem; color: #2f3e46;">INNOVINE SOLUTIONS</h1>
@@ -314,32 +339,30 @@
         <!-- PLAYABLE AREA -->
         <div id="game-play" style="display: none; flex-direction: column; height: 100%;">
             <div class="game-header">
-                <span id="game-title">स्तर 1/5</span>
+                <span id="game-title">स्तर 1/6</span>
                 <span>स्कोर: <span id="score-display" style="color: var(--primary-color);">0</span></span>
             </div>
 
             <div class="game-body">
                 
-                <!-- LEVEL 1: MULTI-WORD TRACING -->
-                <div id="level-1" class="level-container" style="display: none; text-align: center;">
-                    <h2>1. लिखना सीखें (Trace)</h2>
-                    <p class="hint-text" id="trace-hint">अपनी उंगली से अक्षर 'अ' को ट्रेस करें</p>
-                    <canvas id="trace-canvas" width="300" height="280"></canvas>
-                    <br>
-                    <button class="btn" onclick="nextTraceWord()">आगे बढ़ें (Next Word)</button>
+                <!-- LEVEL 1: ODD ONE OUT -->
+                <div id="level-1" class="level-container" style="display: none; width: 100%;">
+                    <h2>1. अलग शब्द पहचानो (Odd One Out)</h2>
+                    <p class="hint-text">उस चित्र को चुनें जो 'अ' अक्षर से शुरू <b>नहीं</b> होता है!</p>
+                    <div class="grid-container" id="l1-grid"></div>
                 </div>
 
                 <!-- LEVEL 2: TAP THE PICTURE -->
-                <div id="level-2" class="level-container" style="display: none;">
+                <div id="level-2" class="level-container" style="display: none; width: 100%;">
                     <h2>2. 'अ' ढूँढ़ो (Find Objects)</h2>
-                    <p class="hint-text">उन चित्रों को छुएं जो 'अ' से शुरू होते हैं!</p>
+                    <p class="hint-text">उन चित्रों को छुएं जो 'अ' से शुरू होते हैं[cite: 1]!</p>
                     <div class="grid-container" id="l2-grid"></div>
                 </div>
 
                 <!-- LEVEL 3: SORT TO BASKET -->
                 <div id="level-3" class="level-container" style="display: none; align-items: center; flex-direction: column;">
                     <h2>3. खींचो और रखो (Sort Words)</h2>
-                    <p class="hint-text">सिर्फ 'अ' वाले शब्दों पर टैप करके टोकरी में रखें!</p>
+                    <p class="hint-text">सिर्फ 'अ' वाले शब्दों पर टैप करके टोकरी में रखें[cite: 1]!</p>
                     <div class="words-pool" id="l3-pool"></div>
                     <div class="basket">
                         <span>अ की टोकरी</span>
@@ -348,9 +371,9 @@
                 </div>
 
                 <!-- LEVEL 4: MATCH PICTURE & WORD -->
-                <div id="level-4" class="level-container" style="display: none;">
+                <div id="level-4" class="level-container" style="display: none; width: 100%;">
                     <h2>4. मिलाओ (Match Pairs)</h2>
-                    <p class="hint-text">चित्र को सही शब्द के साथ मिलाएँ!</p>
+                    <p class="hint-text">चित्र को सही शब्द के साथ मिलाएँ[cite: 1]!</p>
                     <div class="match-container">
                         <div class="match-column" id="match-pics"></div>
                         <div class="match-column" id="match-words"></div>
@@ -360,8 +383,16 @@
                 <!-- LEVEL 5: POP THE BALLOONS -->
                 <div id="level-5" class="level-container" style="display: none; width: 100%;">
                     <h2>5. गुब्बारे फोड़ो (Pop Balloons)</h2>
-                    <p class="hint-text">'अ' अक्षर वाले गुब्बारों को छुएं!</p>
+                    <p class="hint-text">'अ' अक्षर वाले गुब्बारों को छुएं[cite: 1]!</p>
                     <div id="balloon-area"></div>
+                </div>
+
+                <!-- LEVEL 6: FILL IN THE BLANKS -->
+                <div id="level-6" class="level-container" style="display: none; text-align: center; width: 100%;">
+                    <h2>6. खाली स्थान भरो (Fill Blank)</h2>
+                    <p class="hint-text">सही अक्षर चुनकर शब्द पूरा करें[cite: 1]!</p>
+                    <div class="blank-question" id="l6-question">_नार</div>
+                    <div class="options-container" id="l6-options"></div>
                 </div>
 
             </div>
@@ -385,9 +416,6 @@
     <script>
         let score = 0;
         let currentLevel = 1;
-        
-        const traceWords = ['अ', 'अनार', 'अदरक'];
-        let currentTraceIdx = 0;
 
         function playSound(id) {
             const sound = document.getElementById(id);
@@ -397,7 +425,7 @@
             }
         }
 
-        // --- FIXED LOGO SCREEN TIMER (Runs Immediately Without Event Layer Triggers) ---
+        // --- FIXED LOGO SCREEN TIMER (5 SECONDS) ---
         setTimeout(() => {
             const logoScreen = document.getElementById('logo-screen');
             const instScreen = document.getElementById('instruction-screen');
@@ -423,13 +451,13 @@
             currentLevel = lvl;
             document.querySelectorAll('.level-container').forEach(el => el.style.display = 'none');
             
-            if(lvl <= 5) {
-                document.getElementById('game-title').innerText = `स्तर ${lvl}/5`;
+            if(lvl <= 6) {
+                document.getElementById('game-title').innerText = `स्तर ${lvl}/6`;
             }
             
             if (lvl === 1) {
                 document.getElementById('level-1').style.display = 'block';
-                setupTracing();
+                setupLevel1();
             } else if (lvl === 2) {
                 document.getElementById('level-2').style.display = 'block';
                 setupLevel2();
@@ -442,6 +470,9 @@
             } else if (lvl === 5) {
                 document.getElementById('level-5').style.display = 'block';
                 setupLevel5();
+            } else if (lvl === 6) {
+                document.getElementById('level-6').style.display = 'block';
+                setupLevel6();
             } else {
                 document.getElementById('game-play').style.display = 'none';
                 document.getElementById('end-screen').classList.add('active');
@@ -450,68 +481,42 @@
             }
         }
 
-        /* --- ACTIVITY 1: WORD TRACING --- */
-        let canvas, ctx, drawing = false;
-        function setupTracing() {
-            canvas = document.getElementById('trace-canvas');
-            ctx = canvas.getContext('2d');
-            drawTraceTarget();
-
-            const startDraw = (e) => { drawing = true; draw(e); };
-            const endDraw = () => { drawing = false; ctx.beginPath(); };
-            const draw = (e) => {
-                if (!drawing) return;
-                e.preventDefault();
-                const rect = canvas.getBoundingClientRect();
-                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-                ctx.lineWidth = 12;
-                ctx.lineCap = 'round';
-                ctx.strokeStyle = '#ff6b6b';
-                ctx.lineTo(clientX - rect.left, clientY - rect.top);
-                ctx.stroke();
-                ctx.beginPath();
-                ctx.moveTo(clientX - rect.left, clientY - rect.top);
-            };
-
-            canvas.removeEventListener('mousedown', startDraw);
-            canvas.addEventListener('mousedown', startDraw);
-            canvas.addEventListener('mouseup', endDraw);
-            canvas.addEventListener('mousemove', draw);
-            canvas.addEventListener('touchstart', startDraw);
-            canvas.addEventListener('touchend', endDraw);
-            canvas.addEventListener('touchmove', draw);
-        }
-
-        function drawTraceTarget() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            let currentWord = traceWords[currentTraceIdx];
-            document.getElementById('trace-hint').innerText = `अपनी उंगली से "${currentWord}" को ट्रेस करें!`;
-            
-            ctx.font = currentWord.length > 1 ? '70px Arial' : '140px Arial';
-            ctx.fillStyle = '#e5e8eb';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText(currentWord, canvas.width/2, canvas.height/2);
-        }
-
-        function nextTraceWord() {
-            playSound('snd-correct');
-            updateScore(10);
-            currentTraceIdx++;
-            if (currentTraceIdx < traceWords.length) {
-                drawTraceTarget();
-            } else {
-                loadLevel(2);
-            }
+        /* --- ACTIVITY 1: ODD ONE OUT --- */
+        const l1Data = [
+            { word: 'अदरक', icon: '🫚', isOdd: false },[cite: 1]
+            { word: 'अचार', icon: '🫙', isOdd: false },[cite: 1]
+            { word: 'किताब', icon: '📚', isOdd: true }, 
+            { word: 'अमरूद', icon: '🥑', isOdd: false }[cite: 1]
+        ];
+        function setupLevel1() {
+            const grid = document.getElementById('l1-grid');
+            grid.innerHTML = '';
+            l1Data.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'grid-item';
+                div.innerHTML = `${item.icon} <span>${item.word}</span>`;[cite: 1]
+                div.onclick = () => {
+                    if (item.isOdd) {
+                        playSound('snd-correct');
+                        div.style.background = '#d4edda';
+                        updateScore(10);
+                        setTimeout(() => loadLevel(2), 1200);
+                    } else {
+                        playSound('snd-wrong');
+                        div.style.background = '#f8d7da';
+                        updateScore(-5);
+                    }
+                };
+                grid.appendChild(div);
+            });
         }
 
         /* --- ACTIVITY 2: FIND OBJECTS --- */
         const l2Data = [
-            { word: 'अनार', icon: '🍎', isA: true },
-            { word: 'घर', icon: '🏠', isA: false },
-            { word: 'अजगर', icon: '🐍', isA: true },
-            { word: 'बत्तख', icon: '🦆', isA: false }
+            { word: 'अनार', icon: '🍎', isA: true },[cite: 1]
+            { word: 'घर', icon: '🏠', isA: false },[cite: 1]
+            { word: 'अजगर', icon: '🐍', isA: true },[cite: 1]
+            { word: 'बत्तख', icon: '🦆', isA: false }[cite: 1]
         ];
         function setupLevel2() {
             const grid = document.getElementById('l2-grid');
@@ -521,7 +526,7 @@
             l2Data.forEach(item => {
                 const div = document.createElement('div');
                 div.className = 'grid-item';
-                div.innerHTML = `${item.icon} <span>${item.word}</span>`;
+                div.innerHTML = `${item.icon} <span>${item.word}</span>`;[cite: 1]
                 div.onclick = () => {
                     if (div.style.pointerEvents === 'none') return;
                     if (item.isA) {
@@ -543,10 +548,10 @@
 
         /* --- ACTIVITY 3: SORT WORDS --- */
         const l3Data = [
-            { text: 'अचार', isA: true },
-            { text: 'कमल', isA: false },
-            { text: 'अखबार', isA: true },
-            { text: 'नमक', isA: false }
+            { text: 'अचार', isA: true },[cite: 1]
+            { text: 'कमल', isA: false },[cite: 1]
+            { text: 'अखबार', isA: true },[cite: 1]
+            { text: 'नमक', isA: false }[cite: 1]
         ];
         function setupLevel3() {
             const pool = document.getElementById('l3-pool');
@@ -556,7 +561,7 @@
             l3Data.forEach(item => {
                 const tag = document.createElement('div');
                 tag.className = 'word-tag';
-                tag.innerText = item.text;
+                tag.innerText = item.text;[cite: 1]
                 tag.onclick = () => {
                     if(item.isA) {
                         playSound('snd-correct');
@@ -576,8 +581,8 @@
 
         /* --- ACTIVITY 4: MATCH PAIRS --- */
         const l4Items = [
-            { id: 1, word: 'अमरूद', icon: '🥑' },
-            { id: 2, word: 'अचकन', icon: '🥋' }
+            { id: 1, word: 'अमरूद', icon: '🥑' },[cite: 1]
+            { id: 2, word: 'अचकन', icon: '🥋' }[cite: 1]
         ];
         let selPic = null, selWord = null;
         function setupLevel4() {
@@ -598,7 +603,7 @@
 
             [...l4Items].sort(() => Math.random() - 0.5).forEach(item => {
                 const card = document.createElement('div');
-                card.className = 'match-card'; card.innerText = item.word; card.dataset.id = item.id;
+                card.className = 'match-card'; card.innerText = item.word; card.dataset.id = item.id;[cite: 1]
                 card.onclick = () => {
                     document.querySelectorAll('#match-words .match-card').forEach(c => c.classList.remove('selected'));
                     card.classList.add('selected'); selWord = card; checkMatch();
@@ -625,11 +630,11 @@
 
         /* --- ACTIVITY 5: BALLOON POPPING --- */
         const balloonData = [
-            { text: 'अ', isCorrect: true },
+            { text: 'अ', isCorrect: true },[cite: 1]
             { text: 'क', isCorrect: false },
-            { text: 'अ', isCorrect: true },
+            { text: 'अ', isCorrect: true },[cite: 1]
             { text: 'म', isCorrect: false },
-            { text: 'अ', isCorrect: true }
+            { text: 'अ', isCorrect: true }[cite: 1]
         ];
         function setupLevel5() {
             const area = document.getElementById('balloon-area');
@@ -642,7 +647,7 @@
                 b.innerText = data.text;
                 
                 b.style.left = (20 + (index * 75) % 360) + 'px';
-                b.style.top = (40 + (index * 60) % 240) + 'px';
+                b.style.top = (40 + (index * 60) % 220) + 'px';
                 b.style.backgroundColor = ['#ff6b6b', '#4ecdc4', '#ffe66d', '#a29bfe', '#fd79a8'][index];
 
                 b.onclick = () => {
@@ -663,6 +668,44 @@
                     }
                 };
                 area.appendChild(b);
+            });
+        }
+
+        /* --- NEW ACTIVITY 6: FILL IN THE BLANK --- */
+        const l6Questions = [
+            { display: '_नार', correct: 'अ', options: ['अ', 'इ', 'उ'] },[cite: 1]
+            { display: '_दरक', correct: 'अ', options: ['क', 'अ', 'प'] }[cite: 1]
+        ];
+        let currentL6Idx = 0;
+
+        function setupLevel6() {
+            if (currentL6Idx >= l6Questions.length) {
+                loadLevel(7); // Ends game
+                return;
+            }
+            
+            const qData = l6Questions[currentL6Idx];
+            document.getElementById('l6-question').innerText = qData.display;
+            
+            const optContainer = document.getElementById('l6-options');
+            optContainer.innerHTML = '';
+
+            qData.options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerText = opt;
+                btn.onclick = () => {
+                    if (opt === qData.correct) {
+                        playSound('snd-correct');
+                        updateScore(10);
+                        currentL6Idx++;
+                        setTimeout(() => setupLevel6(), 1200);
+                    } else {
+                        playSound('snd-wrong');
+                        updateScore(-5);
+                    }
+                };
+                optContainer.appendChild(btn);
             });
         }
     </script>
