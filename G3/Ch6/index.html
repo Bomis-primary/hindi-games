@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>चतुर खरगोश - कहानी निर्माता (Story Builder Game)</title>
+    <style>
+        :root {
+            --primary: #2e7d32;
+            --primary-dark: #1b5e21;
+            --secondary: #81c784;
+            --accent: #ff9800;
+            --bg-color: #f1f8e9;
+            --text-color: #1b2e1c;
+            --card-bg: #ffffff;
+            --shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            user-select: none;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        #game-container {
+            width: 100%;
+            max-width: 850px;
+            height: 95vh;
+            max-height: 680px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 25px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        .screen.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Screen 1: Splash Screen */
+        #splash-screen {
+            background: linear-gradient(135deg, #a5d6a7, #66bb6a);
+            color: white;
+            text-align: center;
+        }
+
+        .logo-box {
+            background: white;
+            padding: 30px 50px;
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: pulse 2.5s infinite ease-in-out;
+            max-width: 85%;
+            margin-bottom: 20px;
+        }
+
+        .innovine-logo-img {
+            max-height: 200px;
+            width: 100%;
+            max-width: 450px;
+            object-fit: contain;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* Screen 2: Welcome Screen */
+        #welcome-screen {
+            background: linear-gradient(to bottom, #f1f8e9, #dedbe0);
+            text-align: center;
+        }
+
+        .title {
+            font-size: 2.2rem;
+            color: var(--primary-dark);
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #444;
+            margin-bottom: 25px;
+        }
+
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(46, 125, 50, 0.4);
+            transition: all 0.2s ease;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        /* Screen 3: Game Play Screen */
+        #game-screen {
+            justify-content: flex-start;
+            padding: 20px;
+        }
+
+        .game-header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            background: #e8f5e9;
+            padding: 12px 24px;
+            border-radius: 12px;
+        }
+
+        .stat-box {
+            font-size: 1.05rem;
+            font-weight: bold;
+            color: var(--primary-dark);
+        }
+
+        .story-card {
+            width: 100%;
+            background: #ffffff;
+            border: 2px solid #c8e6c9;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            flex-grow: 1;
+            justify-content: space-between;
+        }
+
+        .scene-icon {
+            font-size: 3.5rem;
+            text-align: center;
+        }
+
+        .story-text {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            color: #2e3d2f;
+            text-align: center;
+            background: #fafafa;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 5px solid var(--primary);
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .opt-btn {
+            background: #f1f8e9;
+            border: 2px solid #a5d6a7;
+            padding: 12px 18px;
+            border-radius: 12px;
+            font-size: 1.05rem;
+            color: var(--text-color);
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .opt-btn:hover {
+            background: #c8e6c9;
+            border-color: var(--primary);
+            transform: translateX(4px);
+        }
+
+        /* Screen 4: End Screen */
+        #end-screen {
+            background: linear-gradient(to bottom, #e8f5e9, #f1f8e9);
+            text-align: center;
+        }
+
+        .end-card {
+            background: white;
+            padding: 35px;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            max-width: 420px;
+            width: 90%;
+        }
+
+        .end-card h2 {
+            color: var(--primary);
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        .end-stat {
+            font-size: 1.2rem;
+            margin: 10px 0;
+            color: #444;
+        }
+
+        @media (max-width: 600px) {
+            .title { font-size: 1.8rem; }
+            .story-text { font-size: 1.05rem; }
+            .opt-btn { font-size: 0.95rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="game-container">
+    <!-- Screen 1: Splash Screen -->
+    <div id="splash-screen" class="screen active">
+        <div class="logo-box">
+            <img src="assets/logo.png" alt="Logo" class="innovine-logo-img">
+        </div>
+        <p style="font-size: 1.2rem; font-weight: 500;">पंचतंत्र की प्रसिद्ध कहानी...</p>
+    </div>
+
+    <!-- Screen 2: Welcome Screen -->
+    <div id="welcome-screen" class="screen">
+        <h1 class="title">चतुर खरगोश (Story Builder)</h1>
+        <p class="subtitle">पाठ 6: बुद्धि की ताकत - सही विकल्प चुनकर कहानी पूरी करें!</p>
+        <div style="font-size: 4.5rem; margin-bottom: 20px;">🐇 🦁</div>
+        <p style="margin-bottom: 25px; max-width: 80%; color: #555;">
+            क्या खरगोश अपनी बुद्धिमत्ता से भासुरक शेर से जंगल को बचा पाएगा? सही निर्णय लें!
+        </p>
+        <button class="btn" onclick="startGame()">कहानी शुरू करें</button>
+    </div>
+
+    <!-- Screen 3: Game Screen -->
+    <div id="game-screen" class="screen">
+        <div class="game-header">
+            <div class="stat-box" id="score-display">अंक: 0</div>
+            <div class="stat-box" id="step-display">चरण: 1/5</div>
+            <div class="stat-box" id="timer-display">समय: 00:00</div>
+        </div>
+
+        <div class="story-card">
+            <div class="scene-icon" id="scene-icon">🌲</div>
+            <div class="story-text" id="story-prompt">कहानी की शुरुआत हो रही है...</div>
+            <div class="options-container" id="options-container"></div>
+        </div>
+    </div>
+
+    <!-- Screen 4: End Screen -->
+    <div id="end-screen" class="screen">
+        <div class="end-card">
+            <h2>शानदार सफलता! 🎉</h2>
+            <p style="font-size: 1.1rem; margin-bottom: 15px;">आपने अपनी बुद्धिमत्ता से कहानी को सही अंजाम तक पहुँचाया!</p>
+            <div class="end-stat" id="final-score">कुल अंक: 0</div>
+            <div class="end-stat" id="final-time">कुल समय: 00:00</div>
+            <button class="btn" style="margin-top: 20px;" onclick="restartGame()">पुनः खेलें</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Audio Context & Sound Effects
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    let audioCtx = null;
+
+    function initAudio() {
+        if (!audioCtx) audioCtx = new AudioCtx();
+    }
+
+    function playSound(type) {
+        if (!audioCtx) return;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        const now = audioCtx.currentTime;
+
+        if (type === 'click') {
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(400, now);
+            osc.frequency.exponentialRampToValueAtTime(200, now + 0.08);
+            gain.gain.setValueAtTime(0.1, now);
+            gain.gain.linearRampToValueAtTime(0.01, now + 0.08);
+            osc.start(now);
+            osc.stop(now + 0.08);
+        } else if (type === 'correct') {
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(523.25, now);
+            osc.frequency.setValueAtTime(659.25, now + 0.1);
+            osc.frequency.setValueAtTime(783.99, now + 0.2);
+            gain.gain.setValueAtTime(0.2, now);
+            gain.gain.linearRampToValueAtTime(0.01, now + 0.35);
+            osc.start(now);
+            osc.stop(now + 0.35);
+        } else if (type === 'wrong') {
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(200, now);
+            osc.frequency.setValueAtTime(140, now + 0.15);
+            gain.gain.setValueAtTime(0.2, now);
+            gain.gain.linearRampToValueAtTime(0.01, now + 0.3);
+            osc.start(now);
+            osc.stop(now + 0.3);
+        } else if (type === 'win') {
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(440, now);
+            osc.frequency.setValueAtTime(554.37, now + 0.15);
+            osc.frequency.setValueAtTime(659.25, now + 0.3);
+            osc.frequency.setValueAtTime(880, now + 0.45);
+            gain.gain.setValueAtTime(0.25, now);
+            gain.gain.linearRampToValueAtTime(0.01, now + 0.7);
+            osc.start(now);
+            osc.stop(now + 0.7);
+        }
+    }
+
+    // Story Steps Data
+    const storySteps = [
+        {
+            icon: "🦁",
+            prompt: "जंगल में भासुरक नाम का एक क्रूर शेर रहता था जो रोज कई जानवरों को मार डालता था। जानवरों ने मिलकर शेर से क्या समझौता किया?",
+            options: [
+                { text: "रोज एक जानवर खुद शेर के पास भोजन के रूप में जाएगा।", correct: true },
+                { text: "सभी जानवर जंगल छोड़कर दूर चले जाएँगे।", correct: false },
+                { text: "शेर को जंगल से बाहर निकाल दिया जाएगा।", correct: false }
+            ]
+        },
+        {
+            icon: "🐇",
+            prompt: "एक दिन खरगोश की बारी आई। खरगोश जान बचाने का उपाय सोचने लगा। वह शेर के पास कब पहुँचा?",
+            options: [
+                { text: "सुबह तड़के सबसे पहले पहुँचा।", correct: false },
+                { text: "देर से पहुँचा ताकि शेर गुस्से में आ जाए और योजना काम करे।", correct: true },
+                { text: "वह शेर के पास गया ही नहीं।", correct: false }
+            ]
+        },
+        {
+            icon: "😠",
+            prompt: "भूखा शेर गुस्से में दहाड़ा- 'तुम देर से क्यों आए और इतने छोटे क्यों हो?' खरगोश ने क्या उत्तर दिया?",
+            options: [
+                { text: "'रास्ते में मुझे देर हो गई क्योंकि मैं सो गया था।'", correct: false },
+                { text: "'रास्ते में दूसरे शक्तिशाली शेर ने मुझे रोक लिया था, जो खुद को राजा बता रहा था।'", correct: true },
+                { text: "'मैं रास्ता भूल गया था।'", correct: false }
+            ]
+        },
+        {
+            icon: "🕳️",
+            prompt: "दूसरे शेर की बात सुनकर भासुरक गुस्से से भर गया और बोला- 'मुझे उस दूसरे शेर के पास ले चलो!' खरगोश शेर को कहाँ ले गया?",
+            options: [
+                { text: "एक गहरे कुएँ के पास।", correct: true },
+                { text: "एक घनी गुफा के अंदर।", correct: false },
+                { text: "नदी के किनारे।", correct: false }
+            ]
+        },
+        {
+            icon: "🏆",
+            prompt: "खरगोश ने कुएँ में इशारा करके कहा- 'वह दूसरा शेर इसके अंदर छुपा है।' शेर ने कुएँ में क्या देखा और क्या किया?",
+            options: [
+                { text: "अपनी परछाई को दूसरा शेर समझकर कुएँ में छलांग लगा दी।", correct: true },
+                { text: "कुएँ में पत्थर फेंककर भाग गया।", correct: false },
+                { text: "खरगोश की बात मानकर वापस चला गया।", correct: false }
+            ]
+        }
+    ];
+
+    let currentStep = 0;
+    let score = 0;
+    let secondsElapsed = 0;
+    let timerInterval = null;
+
+    // Splash Screen Timer
+    setTimeout(() => {
+        switchScreen('splash-screen', 'welcome-screen');
+    }, 3000);
+
+    function switchScreen(fromId, toId) {
+        document.getElementById(fromId).classList.remove('active');
+        document.getElementById(toId).classList.add('active');
+    }
+
+    function startGame() {
+        initAudio();
+        score = 0;
+        currentStep = 0;
+        secondsElapsed = 0;
+
+        document.getElementById('score-display').innerText = `अंक: ${score}`;
+        document.getElementById('timer-display').innerText = `समय: 00:00`;
+
+        switchScreen('welcome-screen', 'game-screen');
+        loadStep();
+
+        clearInterval(timerInterval);
+        timerInterval = setInterval(() => {
+            secondsElapsed++;
+            const mins = String(Math.floor(secondsElapsed / 60)).padStart(2, '0');
+            const secs = String(secondsElapsed % 60).padStart(2, '0');
+            document.getElementById('timer-display').innerText = `समय: ${mins}:${secs}`;
+        }, 1000);
+    }
+
+    function loadStep() {
+        const stepData = storySteps[currentStep];
+        document.getElementById('step-display').innerText = `चरण: ${currentStep + 1}/${storySteps.length}`;
+        document.getElementById('scene-icon').innerText = stepData.icon;
+        document.getElementById('story-prompt').innerText = stepData.prompt;
+
+        const optionsContainer = document.getElementById('options-container');
+        optionsContainer.innerHTML = '';
+
+        stepData.options.forEach((opt) => {
+            const btn = document.createElement('button');
+            btn.classList.add('opt-btn');
+            btn.innerHTML = `<span>▶</span> <span>${opt.text}</span>`;
+            btn.onclick = () => selectOption(opt.correct);
+            optionsContainer.appendChild(btn);
+        });
+    }
+
+    function selectOption(isCorrect) {
+        if (isCorrect) {
+            playSound('correct');
+            score += 20;
+            document.getElementById('score-display').innerText = `अंक: ${score}`;
+            currentStep++;
+
+            if (currentStep < storySteps.length) {
+                loadStep();
+            } else {
+                endGame();
+            }
+        } else {
+            playSound('wrong');
+            alert("यह सही चुनाव नहीं है! दोबारा सोचें और सही विकल्प चुनें।");
+        }
+    }
+
+    function endGame() {
+        clearInterval(timerInterval);
+        playSound('win');
+
+        const mins = String(Math.floor(secondsElapsed / 60)).padStart(2, '0');
+        const secs = String(secondsElapsed % 60).padStart(2, '0');
+
+        document.getElementById('final-score').innerText = `कुल अंक: ${score}`;
+        document.getElementById('final-time').innerText = `कुल समय: ${mins}:${secs}`;
+
+        switchScreen('game-screen', 'end-screen');
+    }
+
+    function restartGame() {
+        switchScreen('end-screen', 'welcome-screen');
+    }
+</script>
+
+</body>
+</html>

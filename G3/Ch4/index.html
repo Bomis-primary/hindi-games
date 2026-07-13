@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>जगमग जगमग - बिंदु जोड़ो (Connect the Dots)</title>
+    <style>
+        :root {
+            --primary: #d32f2f;
+            --primary-dark: #b71c1c;
+            --secondary: #f57c00;
+            --accent: #ffd54f;
+            --bg-color: #fff8e1;
+            --text-color: #263238;
+            --card-bg: #ffffff;
+            --shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            user-select: none;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        #game-container {
+            width: 100%;
+            max-width: 900px;
+            height: 95vh;
+            max-height: 720px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        .screen.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Screen 1: Splash Screen */
+        #splash-screen {
+            background: linear-gradient(135deg, #ff9800, #d32f2f);
+            color: white;
+            text-align: center;
+        }
+
+        .logo-box {
+            background: white;
+            padding: 20px 35px;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 25px;
+            animation: pulse 2s infinite;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            max-width: 80%;
+        }
+
+        .logo-box img {
+            max-width: 260px;
+            height: auto;
+            display: block;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.04); }
+            100% { transform: scale(1); }
+        }
+
+        /* Screen 2: Welcome Screen */
+        #welcome-screen {
+            background: linear-gradient(to bottom, #fff8e1, #ffe0b2);
+            text-align: center;
+        }
+
+        .title {
+            font-size: 2.2rem;
+            color: var(--primary-dark);
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 14px 34px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(211, 47, 47, 0.4);
+            transition: all 0.2s ease;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(211, 47, 47, 0.5);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        /* Screen 3: Game Screen */
+        #game-screen {
+            justify-content: flex-start;
+            padding: 15px;
+            background: #fffdf5;
+        }
+
+        .game-header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #ffffff;
+            padding: 10px 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 10px;
+        }
+
+        .stat-box {
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--primary-dark);
+        }
+
+        .game-area {
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+            width: 100%;
+            height: calc(100% - 60px);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .canvas-container {
+            position: relative;
+            width: 380px;
+            height: 380px;
+            background: #2c1a32;
+            border-radius: 16px;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        canvas {
+            border-radius: 16px;
+        }
+
+        /* Question Box */
+        .question-card {
+            background: white;
+            width: 380px;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            height: 380px;
+            justify-content: space-between;
+        }
+
+        .question-card h3 {
+            font-size: 1.1rem;
+            color: #2c3e50;
+            line-height: 1.4;
+        }
+
+        .instruction-tag {
+            background: #ffe0b2;
+            color: #e65100;
+            font-weight: bold;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            display: inline-block;
+            margin-bottom: 5px;
+        }
+
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .opt-btn {
+            background: #fff8e1;
+            border: 2px solid #ffe0b2;
+            padding: 12px 14px;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #d84315;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s;
+        }
+
+        .opt-btn:hover {
+            background: #ffe0b2;
+            border-color: #f57c00;
+        }
+
+        /* Screen 4: End Screen */
+        #end-screen {
+            background: linear-gradient(to bottom, #fff8e1, #ffe0b2);
+            text-align: center;
+        }
+
+        .end-card {
+            background: white;
+            padding: 35px;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            max-width: 420px;
+            width: 90%;
+        }
+
+        .end-card h2 {
+            color: var(--primary-dark);
+            font-size: 2rem;
+            margin-bottom: 12px;
+        }
+
+        .end-stat {
+            font-size: 1.15rem;
+            margin: 8px 0;
+            color: #444;
+        }
+
+        @media (max-width: 768px) {
+            .game-area {
+                flex-direction: column;
+                gap: 10px;
+                overflow-y: auto;
+            }
+            .canvas-container, .question-card {
+                width: 320px;
+                height: 320px;
+            }
+            .logo-box img {
+                max-width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div id="game-container">
+    <!-- Splash Screen -->
+    <div id="splash-screen" class="screen active">
+        <div class="logo-box">
+            <img src="assets/logo.png" alt="Logo">
+        </div>
+    
+    </div>
+
+    <!-- Welcome Screen -->
+    <div id="welcome-screen" class="screen">
+        <h1 class="title">बिंदु जोड़ो - जगमग दीया 🪔</h1>
+        <p class="subtitle">पाठ 4: जगमग जगमग (सोहनलाल द्विवेदी)</p>
+        <div style="font-size: 4rem; margin-bottom: 15px;">🪔✨</div>
+        <p style="margin-bottom: 20px; max-width: 80%; color: #555;">
+            प्रश्नों के सही उत्तर देकर बिंदुओं (Dots) को क्रम से जोड़िए और दिवाली का जगमगाता दीया प्रकट कीजिए!
+        </p>
+        <button class="btn" onclick="startGame()">खेल शुरू करें</button>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="game-screen" class="screen">
+        <div class="game-header">
+            <div class="stat-box" id="score-display">अंक: 0</div>
+            <div class="stat-box" id="dot-display">बिंदु: 1/10</div>
+            <div class="stat-box" id="timer-display">समय: 00:00</div>
+        </div>
+
+        <div class="game-area">
+            <div class="canvas-container">
+                <canvas id="dotsCanvas" width="360" height="360"></canvas>
+            </div>
+
+            <div class="question-card">
+                <div>
+                    <span class="instruction-tag" id="target-dot-tag">अगला बिंदु: 2</span>
+                    <h3 id="question-text" style="margin-top: 5px;">प्रश्न यहाँ प्रदर्शित होगा...</h3>
+                </div>
+                <div class="options-grid" id="options-container"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- End Screen -->
+    <div id="end-screen" class="screen">
+        <div class="end-card">
+            <h2>शुभ दीपावली! 🪔✨</h2>
+            <p style="font-size: 1.1rem; margin-bottom: 15px;">आपने सभी बिंदु जोड़कर दीया जगमगा दिया है!</p>
+            <div class="end-stat" id="final-score">कुल अंक: 0</div>
+            <div class="end-stat" id="final-time">कुल समय: 00:00</div>
+            <button class="btn" style="margin-top: 20px;" onclick="restartGame()">पुनः खेलें</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Audio Synthesizer (Web Audio API)
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    let audioCtx = null;
+
+    function initAudio() {
+        if (!audioCtx) audioCtx = new AudioCtx();
+    }
+
+    function playSound(type) {
+        if (!audioCtx) return;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        const now = audioCtx.currentTime;
+
+        if (type === 'connect') {
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(350, now);
+            osc.frequency.exponentialRampToValueAtTime(700, now + 0.15);
+            gain.gain.setValueAtTime(0.2, now);
+            gain.gain.linearRampToValueAtTime(0.01, now + 0.15);
+            osc.start(now);
+            osc.stop(now + 0.15);
+        } else if (type === 'correct') {
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(523.25, now);
+            osc.frequency.setValueAtTime(659.25, now + 0.1);
+            osc.frequency.setValueAtTime(783.99, now + 0.2);
+            gain.gain.setValueAtTime(0.2, now);
+            gain.gain.linearRampToValueAtTime(0.01, now + 0.35);
+            osc.start(now);
+            osc.stop(now + 0.35);
+        } else if (type === 'wrong') {
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(180, now);
+            osc.frequency.setValueAtTime(130, now + 0.15);
+            gain.gain.setValueAtTime(0.2, now);
+            gain.gain.linearRampToValueAtTime(0.01, now + 0.3);
+            osc.start(now);
+            osc.stop(now + 0.3);
+        } else if (type === 'win') {
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(440, now);
+            osc.frequency.setValueAtTime(554.37, now + 0.12);
+            osc.frequency.setValueAtTime(659.25, now + 0.24);
+            osc.frequency.setValueAtTime(880, now + 0.36);
+            gain.gain.setValueAtTime(0.25, now);
+            gain.gain.linearRampToValueAtTime(0.01, now + 0.7);
+            osc.start(now);
+            osc.stop(now + 0.7);
+        }
+    }
+
+    // 10 Detailed Dot Coordinates defining a complete Diya & Flame shape on 360x360 canvas
+    const dotPoints = [
+        { id: 1, x: 180, y: 55, label: "1" },   // Flame Apex
+        { id: 2, x: 215, y: 110, label: "2" },  // Flame Right Outer
+        { id: 3, x: 195, y: 160, label: "3" },  // Flame Right Base
+        { id: 4, x: 310, y: 175, label: "4" },  // Diya Top-Right Rim
+        { id: 5, x: 260, y: 285, label: "5" },  // Diya Bottom-Right Curve
+        { id: 6, x: 180, y: 300, label: "6" },  // Diya Bottom Base Center
+        { id: 7, x: 100, y: 285, label: "7" },  // Diya Bottom-Left Curve
+        { id: 8, x: 50,  y: 175, label: "8" },  // Diya Top-Left Rim
+        { id: 9, x: 165, y: 160, label: "9" },  // Flame Left Base
+        { id: 10, x: 145, y: 110, label: "10" } // Flame Left Outer
+    ];
+
+    // Questions corresponding to connecting dot i to i+1
+    const questionBank = [
+        {
+            q: "कविता 'जगमग जगमग' के रचयिता कौन हैं?",
+            options: ["सोहनलाल द्विवेदी", "जयशंकर प्रसाद", "हरिवंश राय बच्चन", "सुभद्रा कुमारी चौहान"],
+            answer: 0
+        },
+        {
+            q: "'दृग ठग' शब्द का कविता में क्या अर्थ है?",
+            options: ["आँखों को मोह लेने वाला", "आँखों में धूल झोंकना", "चोरी करना", "सो जाना"],
+            answer: 0
+        },
+        {
+            q: "तुलसी के नन्हें थाले में क्या जल रहा है?",
+            options: ["फूल", "दीप", "मिठाई", "पानी"],
+            answer: 1
+        },
+        {
+            q: "कविता में दीप कहाँ तैरते दिखाई दे रहे हैं?",
+            options: ["नदियों और नहरों में", "सड़कों पर", "खेतों में", "आसमान में"],
+            answer: 0
+        },
+        {
+            q: "'राजा के घर, कंगले के घर' पंक्ति का क्या आशय है?",
+            options: ["दिवाली सबके लिए समान खुशियाँ लाती है", "केवल राजा ही दीप जलाते हैं", "गरीब त्योहार नहीं मनाते", "दीवाले केवल महलों में जलते हैं"],
+            answer: 0
+        },
+        {
+            q: "संस्कृत भाषा में 'दीपावली' का अर्थ क्या होता है?",
+            options: ["दीपों की कतार", "रोशनी का पहाड़", "सुंदर मिठाइयाँ", "रंगों का त्योहार"],
+            answer: 0
+        },
+        {
+            q: "'उजियाली' शब्द का विलोम (उल्टा) शब्द क्या होगा?",
+            options: ["अंधियारा", "सवेरा", "चमक", "सुघर"],
+            answer: 0
+        },
+        {
+            q: "नेपाल में दीपावली के त्योहार को किस नाम से जाना जाता है?",
+            options: ["तिहार", "दीपमाला", "लॉय क्रॉथोंग", "वैशाखी"],
+            answer: 0
+        },
+        {
+            q: "'सुघर' शब्द का क्या अर्थ होता है?",
+            options: ["सुंदर ढंग से सजाया हुआ", "बड़ा घर", "टूटा हुआ घर", "पुराना घर"],
+            answer: 0
+        }
+    ];
+
+    let currentDotIndex = 0; 
+    let score = 0;
+    let secondsElapsed = 0;
+    let timerInterval = null;
+    let canvas, ctx;
+    let isCompleted = false;
+
+    // Splash Screen Timer (3.5 seconds)
+    setTimeout(() => {
+        switchScreen('splash-screen', 'welcome-screen');
+    }, 3500);
+
+    function switchScreen(fromId, toId) {
+        document.getElementById(fromId).classList.remove('active');
+        document.getElementById(toId).classList.add('active');
+    }
+
+    function startGame() {
+        initAudio();
+        score = 0;
+        currentDotIndex = 0;
+        secondsElapsed = 0;
+        isCompleted = false;
+
+        canvas = document.getElementById('dotsCanvas');
+        ctx = canvas.getContext('2d');
+
+        document.getElementById('score-display').innerText = `अंक: ${score}`;
+        document.getElementById('dot-display').innerText = `बिंदु: 1/${dotPoints.length}`;
+        document.getElementById('timer-display').innerText = `समय: 00:00`;
+
+        switchScreen('welcome-screen', 'game-screen');
+        drawCanvas();
+        loadQuestion();
+
+        clearInterval(timerInterval);
+        timerInterval = setInterval(() => {
+            secondsElapsed++;
+            const mins = String(Math.floor(secondsElapsed / 60)).padStart(2, '0');
+            const secs = String(secondsElapsed % 60).padStart(2, '0');
+            document.getElementById('timer-display').innerText = `समय: ${mins}:${secs}`;
+        }, 1000);
+    }
+
+    function drawCanvas() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Draw connected lines
+        if (currentDotIndex > 0) {
+            ctx.beginPath();
+            ctx.moveTo(dotPoints[0].x, dotPoints[0].y);
+            for (let i = 1; i <= currentDotIndex; i++) {
+                ctx.lineTo(dotPoints[i].x, dotPoints[i].y);
+            }
+            if (isCompleted) {
+                ctx.lineTo(dotPoints[0].x, dotPoints[0].y); // Close path
+            }
+            ctx.strokeStyle = isCompleted ? '#ffd54f' : '#ff9800';
+            ctx.lineWidth = 4;
+            ctx.stroke();
+
+            // Fill Diya color when completed
+            if (isCompleted) {
+                ctx.fillStyle = "rgba(255, 152, 0, 0.35)";
+                ctx.fill();
+            }
+        }
+
+        // Glow Effect upon Diya completion
+        if (isCompleted) {
+            const gradient = ctx.createRadialGradient(180, 110, 10, 180, 110, 90);
+            gradient.addColorStop(0, 'rgba(255, 235, 59, 0.95)');
+            gradient.addColorStop(0.5, 'rgba(255, 152, 0, 0.6)');
+            gradient.addColorStop(1, 'rgba(255, 152, 0, 0)');
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.arc(180, 110, 90, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        // Draw Dots and Numbers
+        dotPoints.forEach((p, idx) => {
+            const isReached = idx <= currentDotIndex;
+            const isNext = idx === currentDotIndex + 1;
+
+            // Dot Circle
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, isNext ? 10 : 7, 0, Math.PI * 2);
+            ctx.fillStyle = isReached ? '#ffd54f' : (isNext ? '#ff5722' : '#ffffff');
+            ctx.fill();
+            ctx.strokeStyle = '#d32f2f';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Label Position Calculations
+            ctx.font = 'bold 13px Segoe UI';
+            ctx.fillStyle = isNext ? '#ff5722' : '#ffffff';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+
+            let offsetX = p.x > 180 ? 18 : (p.x < 180 ? -18 : 0);
+            let offsetY = p.y > 180 ? 18 : -18;
+            ctx.fillText(p.label, p.x + offsetX, p.y + offsetY);
+        });
+    }
+
+    function loadQuestion() {
+        if (currentDotIndex >= dotPoints.length - 1) {
+            completeDiya();
+            return;
+        }
+
+        const nextDotNum = currentDotIndex + 2;
+        document.getElementById('target-dot-tag').innerText = `बिंदु ${currentDotIndex + 1} ➔ बिंदु ${nextDotNum} जोड़ने के लिए:`;
+
+        const qData = questionBank[currentDotIndex];
+        document.getElementById('question-text').innerText = qData.q;
+
+        const optionsContainer = document.getElementById('options-container');
+        optionsContainer.innerHTML = '';
+
+        qData.options.forEach((opt, idx) => {
+            const btn = document.createElement('button');
+            btn.classList.add('opt-btn');
+            btn.innerText = opt;
+            btn.onclick = () => checkAnswer(idx === qData.answer);
+            optionsContainer.appendChild(btn);
+        });
+    }
+
+    function checkAnswer(isCorrect) {
+        if (isCorrect) {
+            playSound('connect');
+            score += 10;
+            currentDotIndex++;
+
+            document.getElementById('score-display').innerText = `अंक: ${score}`;
+            document.getElementById('dot-display').innerText = `बिंदु: ${currentDotIndex + 1}/${dotPoints.length}`;
+
+            drawCanvas();
+            setTimeout(loadQuestion, 400);
+        } else {
+            playSound('wrong');
+            alert("गलत उत्तर! ध्यानपूर्वक सोचकर पुनः प्रयास करें।");
+        }
+    }
+
+    function completeDiya() {
+        isCompleted = true;
+        drawCanvas();
+        playSound('win');
+
+        document.getElementById('target-dot-tag').innerText = "बधाई हो!";
+        document.getElementById('question-text').innerText = "🪔 सुंदर दीया पूरा हो गया और जगमगा उठा!";
+        document.getElementById('options-container').innerHTML = `
+            <button class="btn" style="width: 100%; margin-top: 10px;" onclick="handleWin()">परिणाम देखें ➔</button>
+        `;
+    }
+
+    function handleWin() {
+        clearInterval(timerInterval);
+
+        const mins = String(Math.floor(secondsElapsed / 60)).padStart(2, '0');
+        const secs = String(secondsElapsed % 60).padStart(2, '0');
+
+        document.getElementById('final-score').innerText = `कुल अंक: ${score}`;
+        document.getElementById('final-time').innerText = `कुल समय: ${mins}:${secs}`;
+
+        switchScreen('game-screen', 'end-screen');
+    }
+
+    function restartGame() {
+        startGame();
+    }
+</script>
+</body>
+</html>
