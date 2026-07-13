@@ -65,15 +65,22 @@
             display: flex;
         }
 
-        /* LOGO SCREEN (STRICT 5 SECONDS) */
+        /* LOGO SCREEN WITH TAP TO SKIP */
         #logo-screen {
             background-color: #ffffff;
             z-index: 999;
+            cursor: pointer;
         }
 
         .logo-img {
             max-width: 250px;
             animation: pulse 1.5s infinite;
+        }
+
+        .skip-hint {
+            font-size: 0.9rem;
+            color: #aaa;
+            margin-top: 20px;
         }
 
         #instruction-screen {
@@ -301,16 +308,17 @@
 
     <div id="game-container">
         
-        <!-- INNOVINE LOGO SCREEN (5 SECONDS ONLY) -->
-        <div id="logo-screen" class="screen active">
+        <!-- INNOVINE LOGO SCREEN (TAP TO SKIP INSTANTLY) -->
+        <div id="logo-screen" class="screen active" onclick="dismissLogoScreen()">
             <img src="assets/innovine-logo.png" alt="Innovine Logo" class="logo-img" onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='block';">
             <h1 id="logo-fallback" style="display:none; font-size: 2.5rem; color: #2f3e46;">INNOVINE SOLUTIONS</h1>
+            <p class="skip-hint">आगे बढ़ने के लिए कहीं भी टच करें (Tap to Skip)</p>
         </div>
 
         <!-- INSTRUCTION SCREEN -->
         <div id="instruction-screen" class="screen">
             <h1 style="font-size: 2.2rem; margin-bottom: 15px;">बिना मात्रा वाले शब्द 📚</h1>
-            <p style="font-size: 1.2rem; padding: 0 10px; line-height: 1.6;">6 मज़ेदार लेवल्स! रेसिंग, फ्लाइंग, बबल ब्लास्ट और राइमिंग एडवेंचर खेलें![cite: 2]</p>
+            <p style="font-size: 1.2rem; padding: 0 10px; line-height: 1.6;">6 मज़ेदार लेवल्स! रेसिंग, फ्लाइंग, बबल ब्लास्ट और राइमिंग एडवेंचर खेलें!</p>
             <button class="btn" onclick="startGame()">खेलें (Start Game)</button>
         </div>
 
@@ -335,14 +343,14 @@
                 <!-- LEVEL 2: FLYING & CATCHING -->
                 <div id="level-2" class="level-container" style="display: none; width: 100%;">
                     <h2>2. उड़ते शब्द (Flying & Catching)</h2>
-                    <p class="hint-text">केवल <b>बिना मात्रा वाले सही शब्द</b> को हवा में टैप करें![cite: 2]</p>
+                    <p class="hint-text">केवल <b>बिना मात्रा वाले सही शब्द</b> को हवा में टैप करें!</p>
                     <div id="sky-area"></div>
                 </div>
 
                 <!-- LEVEL 3: RACING GAME -->
                 <div id="level-3" class="level-container" style="display: none; width: 100%;">
                     <h2>3. शब्द रेस (Racing Game)</h2>
-                    <p class="hint-text">सही शब्द चुनें और गाड़ी आगे बढ़ाएं![cite: 2]</p>
+                    <p class="hint-text">सही शब्द चुनें और गाड़ी आगे बढ़ाएं!</p>
                     <div id="race-track">
                         <div class="finish-line"></div>
                         <div id="player-car">🚗</div>
@@ -353,7 +361,7 @@
                 <!-- LEVEL 4: BUBBLE CONNECTOR -->
                 <div id="level-4" class="level-container" style="display: none; text-align: center;">
                     <h2>4. अक्षर जोड़ो (Bubble Joiner)</h2>
-                    <p class="hint-text" id="bubble-target-text">अक्षरों को सही क्रम में छुएं: <b>घर</b></p>[cite: 2]
+                    <p class="hint-text" id="bubble-target-text">अक्षरों को सही क्रम में छुएं: <b>घर</b></p>
                     <div class="bubble-container" id="bubble-wrapper"></div>
                     <div id="bubble-current-build" style="font-size: 2rem; font-weight: bold; color: var(--primary-color); height: 40px;"></div>
                 </div>
@@ -361,7 +369,7 @@
                 <!-- LEVEL 5: RHYMING MATCH -->
                 <div id="level-5" class="level-container" style="display: none; width: 100%;">
                     <h2>5. समान ध्वनि वाले शब्द (Rhyme Match)</h2>
-                    <p class="hint-text">समान ध्वनि वाले जोड़ों (Matching Pairs) को मिलाइए![cite: 2]</p>
+                    <p class="hint-text">समान ध्वनि वाले जोड़ों (Matching Pairs) को मिलाइए!</p>
                     <div class="rhyme-grid" id="rhyme-wrapper"></div>
                 </div>
 
@@ -395,9 +403,9 @@
     <script>
         let score = 0;
         let currentLevel = 1;
+        let isLogoDismissed = false;
         
-        // Data sets compiled from textbook source[cite: 2]
-        const traceWords = ['घर', 'फल', 'नल', 'कमल'];[cite: 2]
+        const traceWords = ['घर', 'फल', 'नल', 'कमल'];
         let currentTraceIdx = 0;
 
         function playSound(id) {
@@ -405,15 +413,20 @@
             if (sound) { sound.currentTime = 0; sound.play().catch(() => {}); }
         }
 
-        // Strict 5 seconds Logo visibility
-        setTimeout(() => {
+        // Logic to transition away from logo safely
+        function dismissLogoScreen() {
+            if (isLogoDismissed) return;
+            isLogoDismissed = true;
             const logo = document.getElementById('logo-screen');
             const inst = document.getElementById('instruction-screen');
             if(logo && inst) {
                 logo.style.display = 'none';
                 inst.classList.add('active');
             }
-        }, 5000);
+        }
+
+        // Auto transition reduced to 2.5 seconds instead of 5
+        setTimeout(dismissLogoScreen, 2500);
 
         function startGame() {
             document.getElementById('instruction-screen').classList.remove('active');
@@ -489,7 +502,7 @@
         function renderTraceWord() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             let word = traceWords[currentTraceIdx];
-            document.getElementById('trace-hint').innerText = `अपनी उंगली से "${word}" को ट्रेस करें![cite: 2]`;
+            document.getElementById('trace-hint').innerText = `अपनी उंगली से "${word}" को ट्रेस करें!`;
             ctx.font = '70px Arial'; ctx.fillStyle = '#e1e5eb'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
             ctx.fillText(word, canvas.width/2, canvas.height/2);
         }
@@ -501,9 +514,9 @@
 
         /* ================= LEVEL 2: FLYING & CATCHING ================= */
         const poolL2 = [
-            { text: 'बस', valid: true }, { text: 'शहद', valid: true },[cite: 2]
+            { text: 'बस', valid: true }, { text: 'शहद', valid: true },
             { text: 'किताब', valid: false }, { text: 'गमला', valid: false },
-            { text: 'बटन', valid: true }, { text: 'अदरक', valid: true }[cite: 2]
+            { text: 'बटन', valid: true }, { text: 'अदरक', valid: true }
         ];
         let flyingInterval;
         function setupFlyingGame() {
@@ -535,9 +548,9 @@
 
         /* ================= LEVEL 3: RACING GAME ================= */
         const raceRounds = [
-            { target: 'बिना मात्रा वाला शब्द:', answers: [{t:'नल', v:true}, {t:'कार', v:false}] },[cite: 2]
-            { target: '४ अक्षरों का बिना मात्रा शब्द:', answers: [{t:'शरबत', v:true}, {t:'टमाटर', v:false}] },[cite: 2]
-            { target: '३ अक्षरों का बिना मात्रा शब्द:', answers: [{t:'नमक', v:true}, {t:'सूरज', v:false}] }[cite: 2]
+            { target: 'बिना मात्रा वाला शब्द:', answers: [{t:'नल', v:true}, {t:'कार', v:false}] },
+            { target: '४ अक्षरों का बिना मात्रा शब्द:', answers: [{t:'शरबत', v:true}, {t:'टमाटर', v:false}] },
+            { target: '३ अक्षरों का बिना मात्रा शब्द:', answers: [{t:'नमक', v:true}, {t:'सूरज', v:false}] }
         ];
         let currentRoundIdx = 0; let carPosition = 20;
         function setupRacingGame() {
@@ -560,8 +573,8 @@
 
         /* ================= LEVEL 4: BUBBLE CONNECTOR ================= */
         const bubbleTargets = [
-            { word: 'फल', parts: ['फ', 'ल'] },[cite: 2]
-            { word: 'हवन', parts: ['ह', 'व', 'न'] }[cite: 2]
+            { word: 'फल', parts: ['फ', 'ल'] },
+            { word: 'हवन', parts: ['ह', 'व', 'न'] }
         ];
         let currentBubbleIdx = 0; let builtBubbleWord = "";
         function setupBubbleGame() {
@@ -569,7 +582,7 @@
             builtBubbleWord = "";
             document.getElementById('bubble-current-build').innerText = "";
             const currentObj = bubbleTargets[currentBubbleIdx];
-            document.getElementById('bubble-target-text').innerHTML = `अक्षरों को सही क्रम में छुएं: <b>${currentObj.word}</b>` ;[cite: 2]
+            document.getElementById('bubble-target-text').innerHTML = `अक्षरों को सही क्रम में छुएं: <b>${currentObj.word}</b>`;
             
             const wrapper = document.getElementById('bubble-wrapper');
             wrapper.innerHTML = "";
@@ -597,8 +610,8 @@
 
         /* ================= LEVEL 5: RHYMING MATCH ================= */
         const rhymeItems = [
-            { text: 'जगमग', pairId: 1 }, { text: 'चटपट', pairId: 1 },[cite: 2]
-            { text: 'दलदल', pairId: 2 }, { text: 'मलमल', pairId: 2 }[cite: 2]
+            { text: 'जगमग', pairId: 1 }, { text: 'चटपट', pairId: 1 },
+            { text: 'दलदल', pairId: 2 }, { text: 'मलमल', pairId: 2 }
         ];
         let selectedBox = null; let clearedPairs = 0;
         function setupRhymeGame() {
@@ -629,10 +642,10 @@
             });
         }
 
-        /* ================= FIXED LEVEL 6: WORD UNSCRAMBLE ================= */
+        /* ================= LEVEL 6: WORD UNSCRAMBLE ================= */
         const scramblePool = [
-            { correct: 'अदरक', jumbled: ['द', 'र', 'अ', 'क'] },[cite: 2]
-            { correct: 'बटन', jumbled: ['ट', 'न', 'ब'] }[cite: 2]
+            { correct: 'अदरक', jumbled: ['द', 'र', 'अ', 'क'] },
+            { correct: 'बटन', jumbled: ['ट', 'न', 'ब'] }
         ];
         let currentScrambleIdx = 0; let playerScrambleWord = "";
         function setupScrambleGame() {
