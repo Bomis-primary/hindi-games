@@ -102,7 +102,6 @@
             justify-content: center;
             padding: 15px;
             position: relative;
-            overflow-y: auto;
         }
 
         .btn {
@@ -250,6 +249,7 @@
             font-weight: bold;
             border-radius: 10px;
             cursor: pointer;
+            text-align: center;
         }
 
         .rhyme-box.selected {
@@ -310,7 +310,7 @@
         <!-- INSTRUCTION SCREEN -->
         <div id="instruction-screen" class="screen">
             <h1 style="font-size: 2.2rem; margin-bottom: 15px;">बिना मात्रा वाले शब्द 📚</h1>
-            <p style="font-size: 1.2rem; padding: 0 10px; line-height: 1.6;">6 मज़ेदार लेवल्स! रेसिंग, फ्लाइंग, बबल ब्लास्ट और राइमिंग एडवेंचर खेलें!</p>
+            <p style="font-size: 1.2rem; padding: 0 10px; line-height: 1.6;">6 मज़ेदार लेवल्स! रेसिंग, फ्लाइंग, बबल ब्लास्ट और राइमिंग एडवेंचर खेलें![cite: 2]</p>
             <button class="btn" onclick="startGame()">खेलें (Start Game)</button>
         </div>
 
@@ -335,14 +335,14 @@
                 <!-- LEVEL 2: FLYING & CATCHING -->
                 <div id="level-2" class="level-container" style="display: none; width: 100%;">
                     <h2>2. उड़ते शब्द (Flying & Catching)</h2>
-                    <p class="hint-text">केवल <b>बिना मात्रा वाले सही शब्द</b> को हवा में टैप करें!</p>
+                    <p class="hint-text">केवल <b>बिना मात्रा वाले सही शब्द</b> को हवा में टैप करें![cite: 2]</p>
                     <div id="sky-area"></div>
                 </div>
 
                 <!-- LEVEL 3: RACING GAME -->
                 <div id="level-3" class="level-container" style="display: none; width: 100%;">
                     <h2>3. शब्द रेस (Racing Game)</h2>
-                    <p class="hint-text">सही शब्द चुनें और गाड़ी आगे बढ़ाएं!</p>
+                    <p class="hint-text">सही शब्द चुनें और गाड़ी आगे बढ़ाएं![cite: 2]</p>
                     <div id="race-track">
                         <div class="finish-line"></div>
                         <div id="player-car">🚗</div>
@@ -350,22 +350,22 @@
                     <div class="race-options" id="race-choices"></div>
                 </div>
 
-                <!-- NEW! LEVEL 4: BUBBLE CONNECTOR -->
+                <!-- LEVEL 4: BUBBLE CONNECTOR -->
                 <div id="level-4" class="level-container" style="display: none; text-align: center;">
                     <h2>4. अक्षर जोड़ो (Bubble Joiner)</h2>
-                    <p class="hint-text" id="bubble-target-text">अक्षरों को सही क्रम में छुएं: <b>घर</b></p>
+                    <p class="hint-text" id="bubble-target-text">अक्षरों को सही क्रम में छुएं: <b>घर</b></p>[cite: 2]
                     <div class="bubble-container" id="bubble-wrapper"></div>
                     <div id="bubble-current-build" style="font-size: 2rem; font-weight: bold; color: var(--primary-color); height: 40px;"></div>
                 </div>
 
-                <!-- NEW! LEVEL 5: RHYMING MATCH -->
+                <!-- LEVEL 5: RHYMING MATCH -->
                 <div id="level-5" class="level-container" style="display: none; width: 100%;">
                     <h2>5. समान ध्वनि वाले शब्द (Rhyme Match)</h2>
                     <p class="hint-text">समान ध्वनि वाले जोड़ों (Matching Pairs) को मिलाइए![cite: 2]</p>
                     <div class="rhyme-grid" id="rhyme-wrapper"></div>
                 </div>
 
-                <!-- NEW! LEVEL 6: WORD UNSCRAMBLE -->
+                <!-- LEVEL 6: WORD UNSCRAMBLE -->
                 <div id="level-6" class="level-container" style="display: none; width: 100%; text-align: center;">
                     <h2>6. गड़बड़ शब्द ठीक करो (Unscramble)</h2>
                     <p class="hint-text">अक्षरों को सही क्रम में दबाकर अर्थपूर्ण शब्द बनाएं!</p>
@@ -558,7 +558,7 @@
             });
         }
 
-        /* ================= NEW! LEVEL 4: BUBBLE CONNECTOR ================= */
+        /* ================= LEVEL 4: BUBBLE CONNECTOR ================= */
         const bubbleTargets = [
             { word: 'फल', parts: ['फ', 'ल'] },[cite: 2]
             { word: 'हवन', parts: ['ह', 'व', 'न'] }[cite: 2]
@@ -574,7 +574,6 @@
             const wrapper = document.getElementById('bubble-wrapper');
             wrapper.innerHTML = "";
             
-            // Shuffle bubbles
             let shuffledParts = [...currentObj.parts].sort(() => Math.random() - 0.5);
             shuffledParts.forEach(char => {
                 const b = document.createElement('div');
@@ -589,15 +588,14 @@
                         setTimeout(() => setupBubbleGame(), 1000);
                     } else if (!currentObj.word.startsWith(builtBubbleWord)) {
                         playSound('snd-wrong'); updateScore(-5);
-                        setTimeout(() => setupBubbleGame(), 800); // reset
+                        setTimeout(() => setupBubbleGame(), 800);
                     }
                 };
                 wrapper.appendChild(b);
             });
         }
 
-        /* ================= NEW! LEVEL 5: RHYMING MATCH ================= */
-        // Pairs from source text: जगमग-चटपट, दलदल-मलमल[cite: 2]
+        /* ================= LEVEL 5: RHYMING MATCH ================= */
         const rhymeItems = [
             { text: 'जगमग', pairId: 1 }, { text: 'चटपट', pairId: 1 },[cite: 2]
             { text: 'दलदल', pairId: 2 }, { text: 'मलमल', pairId: 2 }[cite: 2]
@@ -615,7 +613,7 @@
                     if(selectedBox === null) {
                         selectedBox = { box, item }; box.classList.add('selected');
                     } else {
-                        if(selectedBox.box === box) return; // same clicked
+                        if(selectedBox.box === box) return;
                         if(selectedBox.item.pairId === item.pairId) {
                             playSound('snd-correct'); updateScore(20);
                             box.style.visibility = 'hidden'; selectedBox.box.style.visibility = 'hidden';
@@ -631,10 +629,10 @@
             });
         }
 
-        /* ================= NEW! LEVEL 6: WORD UNSCRAMBLE ================= */
+        /* ================= FIXED LEVEL 6: WORD UNSCRAMBLE ================= */
         const scramblePool = [
             { correct: 'अदरक', jumbled: ['द', 'र', 'अ', 'क'] },[cite: 2]
-            { :: 'बटन', jumbled: ['ट', 'न', 'ब'] }[cite: 2]
+            { correct: 'बटन', jumbled: ['ट', 'न', 'ब'] }[cite: 2]
         ];
         let currentScrambleIdx = 0; let playerScrambleWord = "";
         function setupScrambleGame() {
@@ -664,7 +662,7 @@
                 setTimeout(() => setupScrambleGame(), 1000);
             } else {
                 playSound('snd-wrong'); updateScore(-5);
-                setupScrambleGame(); // Reset round
+                setupScrambleGame();
             }
         }
     </script>
