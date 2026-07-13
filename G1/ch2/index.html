@@ -229,7 +229,7 @@
             box-shadow: 0 2px #ccc;
         }
 
-        /* CONTAINERS FOR REMAINING LEVELS */
+        /* OTHER LEVELS CONTAINERS */
         .level-container {
             width: 100%;
             display: flex;
@@ -349,11 +349,11 @@
 
     <div id="game-container">
         
-        <!-- INNOVINE LOGO SCREEN  -->
+        <!-- INNOVINE LOGO SCREEN (JUMPS AFTER 5 SECONDS) -->
         <div id="logo-screen" class="screen active" onclick="dismissLogoScreen()">
             <img src="assets/innovine-logo.png" alt="Innovine Logo" class="logo-img" onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='block';">
             <h1 id="logo-fallback" style="display:none; font-size: 3rem; color: #2f3e46;">INNOVINE SOLUTIONS</h1>
-        
+            <p class="skip-hint">यह स्क्रीन 5 सेकंड में अपने आप आगे बढ़ेगी...</p>
         </div>
 
         <!-- INSTRUCTION SCREEN -->
@@ -448,7 +448,7 @@
         let currentLevel = 1;
         let isLogoDismissed = false;
         
-        // Tracing: Strictly 2 letters & exactly 3 words[cite: 2]
+        // Tracing Pool: Strictly 2 letters & exactly 3 words[cite: 2]
         const traceWords = ['घर', 'फल', 'नल'];[cite: 2]
         let currentTraceIdx = 0;
 
@@ -457,7 +457,6 @@
             if (sound) { sound.currentTime = 0; sound.play().catch(() => {}); }
         }
 
-        // Moves to the next page (Instructions)
         function dismissLogoScreen() {
             if (isLogoDismissed) return;
             isLogoDismissed = true;
@@ -469,7 +468,7 @@
             }
         }
 
-        // AUTOMATIC JUMP TIMER: Exactly after 5000ms (5 seconds)
+        // AUTOMATIC JUMP TIMER FROM LOGO
         setTimeout(dismissLogoScreen, 5000);
 
         function startGame() {
@@ -519,7 +518,7 @@
             }
         }
 
-        /* ================= LEVEL 1: TRACING ================= */
+        /* ================= LEVEL 1: FIXED TRACING LOGIC ================= */
         let canvas, ctx, isDrawing = false;
         function setupTracing() {
             canvas = document.getElementById('trace-canvas');
@@ -533,15 +532,31 @@
                 return { x: clientX - rect.left, y: clientY - rect.top };
             };
 
-            const start = (e) => { isDrawing = true; ctx.beginPath(); draw(e); };
-            const move = (e) => {
-                if(!isDrawing) return; e.preventDefault();
+            const startDrawing = (e) => { 
+                isDrawing = true; 
                 const pos = getPos(e);
-                ctx.lineWidth = 12; ctx.lineCap = 'round'; ctx.strokeStyle = '#4ecdc4';
-                ctx.lineTo(pos.x, pos.y); ctx.stroke(); ctx.beginPath(); ctx.moveTo(pos.x, pos.y);
+                ctx.beginPath();
+                ctx.moveTo(pos.x, pos.y);
             };
-            canvas.onmousedown = start; canvas.onmousemove = move; window.onmouseup = () => isDrawing = false;
-            canvas.ontouchstart = start; canvas.ontouchmove = move; canvas.ontouchend = () => isDrawing = false;
+
+            const drawMove = (e) => {
+                if(!isDrawing) return; 
+                e.preventDefault();
+                const pos = getPos(e);
+                ctx.lineWidth = 12; 
+                ctx.lineCap = 'round'; 
+                ctx.strokeStyle = '#4ecdc4';
+                ctx.lineTo(pos.x, pos.y); 
+                ctx.stroke(); 
+            };
+
+            canvas.onmousedown = startDrawing; 
+            canvas.onmousemove = drawMove; 
+            window.onmouseup = () => isDrawing = false;
+            
+            canvas.ontouchstart = startDrawing; 
+            canvas.ontouchmove = drawMove; 
+            canvas.ontouchend = () => isDrawing = false;
         }
 
         function renderTraceWord() {
@@ -585,7 +600,7 @@
 
                 let topPos = -50;
                 let itemRoute = setInterval(() => {
-                    topPos += 1.2; // Slow falling speed
+                    topPos += 1.2; 
                     el.style.top = topPos + 'px';
                     if(topPos > sky.clientHeight) { clearInterval(itemRoute); el.remove(); }
                 }, 25);
