@@ -150,7 +150,7 @@
             max-width: 100%;
         }
 
-        /* LEVEL 2: FLYING & CATCHING (SLOWED DOWN) */
+        /* LEVEL 2: FLYING & CATCHING */
         #sky-area {
             width: 80%;
             max-width: 800px;
@@ -229,7 +229,7 @@
             box-shadow: 0 2px #ccc;
         }
 
-        /* LEVEL 4, 5, 6 CONTAINERS */
+        /* CONTAINERS FOR REMAINING LEVELS */
         .level-container {
             width: 100%;
             display: flex;
@@ -303,7 +303,7 @@
             box-shadow: 0 4px #369b94;
         }
 
-        /* WINNING SPLASH & CONFETTI */
+        /* WINNING SPLASH & CELEBRATION */
         .score-badge {
             font-size: 4.5rem;
             color: var(--accent-color);
@@ -318,12 +318,10 @@
             margin-bottom: 10px;
         }
 
-        /* CONFETTI EFFECT BACKGROUND */
         .confetti-piece {
             position: absolute;
             width: 12px;
             height: 12px;
-            background: #ffd700;
             top: -20px;
             opacity: 0.8;
             border-radius: 50%;
@@ -351,11 +349,11 @@
 
     <div id="game-container">
         
-        <!-- INNOVINE LOGO SCREEN -->
+        <!-- INNOVINE LOGO SCREEN (AUTOMATICALLY JUMPS AFTER 5 SECONDS) -->
         <div id="logo-screen" class="screen active" onclick="dismissLogoScreen()">
             <img src="assets/innovine-logo.png" alt="Innovine Logo" class="logo-img" onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='block';">
             <h1 id="logo-fallback" style="display:none; font-size: 3rem; color: #2f3e46;">INNOVINE SOLUTIONS</h1>
-            <p class="skip-hint">आगे बढ़ने के लिए कहीं भी टच करें (Tap to Skip)</p>
+            <p class="skip-hint">यह स्क्रीन 5 सेकंड में अपने आप आगे बढ़ेगी...</p>
         </div>
 
         <!-- INSTRUCTION SCREEN -->
@@ -412,14 +410,14 @@
                 <!-- LEVEL 5: RHYMING MATCH -->
                 <div id="level-5" class="level-container" style="display: none; width: 100%;">
                     <h2>5. समान ध्वनि वाले शब्द (Rhyme Match)</h2>
-                    <p class="hint-text">समान ध्वनि वाले जोड़ों (Matching Pairs) को मिलाइए!</p>
+                    <p class="hint-text">समान ध्वनि वाले जोड़ों को मिलाइए!</p>
                     <div class="rhyme-grid" id="rhyme-wrapper"></div>
                 </div>
 
                 <!-- LEVEL 6: WORD UNSCRAMBLE -->
                 <div id="level-6" class="level-container" style="display: none; width: 100%; text-align: center;">
                     <h2>6. गड़बड़ शब्द ठीक करो (Unscramble)</h2>
-                    <p class="hint-text">अक्षरों को सही क्रम में दबाकर अर्थपूर्ण शब्द बनाएं!</p>
+                    <p class="hint-text">अक्षरों को सही क्रम में दबाकर शब्द बनाएं!</p>
                     <div class="scramble-letters" id="scramble-wrapper" style="justify-content: center;"></div>
                     <div id="scramble-current-word" style="font-size: 2.5rem; font-weight: bold; color: #2f3e46; letter-spacing: 6px; min-height: 50px;"></div>
                     <button class="btn" onclick="checkScrambleWord()">जाँच करें (Verify)</button>
@@ -450,7 +448,7 @@
         let currentLevel = 1;
         let isLogoDismissed = false;
         
-        // 1. Tracing words strictly 2 letters & exactly 3 words[cite: 2]
+        // Tracing: Strictly 2 letters & exactly 3 words[cite: 2]
         const traceWords = ['घर', 'फल', 'नल'];[cite: 2]
         let currentTraceIdx = 0;
 
@@ -459,6 +457,7 @@
             if (sound) { sound.currentTime = 0; sound.play().catch(() => {}); }
         }
 
+        // Moves to the next page (Instructions)
         function dismissLogoScreen() {
             if (isLogoDismissed) return;
             isLogoDismissed = true;
@@ -470,7 +469,8 @@
             }
         }
 
-        setTimeout(dismissLogoScreen, 2500);
+        // AUTOMATIC JUMP TIMER: Exactly after 5000ms (5 seconds)
+        setTimeout(dismissLogoScreen, 5000);
 
         function startGame() {
             document.getElementById('instruction-screen').classList.remove('active');
@@ -553,18 +553,17 @@
         }
 
         function nextTraceWord() {
-            playSound('snd-clap'); // Clap sound on correct submission
+            playSound('snd-clap'); 
             updateScore(10); 
             currentTraceIdx++;
             if(currentTraceIdx < traceWords.length) {
                 renderTraceWord(); 
             } else { 
-                loadLevel(2); // Automatically jumps to next level after 3 plays
+                loadLevel(2); 
             }
         }
 
         /* ================= LEVEL 2: FLYING (SLOWED DOWN, 2 & 3 LETTERS) ================= */
-        // Pool consists strictly of 2 and 3 letter words[cite: 2]
         const poolL2 = [
             { text: 'बस', valid: true }, { text: 'शहद', valid: true },[cite: 2]
             { text: 'जल', valid: true }, { text: 'मटर', valid: true },[cite: 2]
@@ -575,7 +574,7 @@
         function setupFlyingGame() {
             const sky = document.getElementById('sky-area');
             let catchCount = 0;
-            // Spawning rate slowed down for user ease
+            
             flyingInterval = setInterval(() => {
                 if(currentLevel !== 2) { clearInterval(flyingInterval); return; }
                 const item = poolL2[Math.floor(Math.random() * poolL2.length)];
@@ -585,9 +584,9 @@
                 sky.appendChild(el);
 
                 let topPos = -50;
-                // Falling speed slowed down considerably (topPos += 1.5 instead of 3)
                 let itemRoute = setInterval(() => {
-                    topPos += 1.5; el.style.top = topPos + 'px';
+                    topPos += 1.2; // Slow falling speed
+                    el.style.top = topPos + 'px';
                     if(topPos > sky.clientHeight) { clearInterval(itemRoute); el.remove(); }
                 }, 25);
 
@@ -598,7 +597,7 @@
                         if(catchCount >= 3) { clearInterval(flyingInterval); setTimeout(() => loadLevel(3), 800); }
                     } else { playSound('snd-wrong'); updateScore(-5); }
                 };
-            }, 2000);
+            }, 2200);
         }
 
         /* ================= LEVEL 3: RACING GAME ================= */
@@ -737,16 +736,16 @@
             }
         }
 
-        /* BEAUTIFUL CELEBRATORY CONFETTI */
+        /* CELEBRATORY CONFETTI BACKGROUND CREATOR */
         function createConfetti() {
             const holder = document.getElementById('confetti-container');
             const colors = ['#ff6b6b', '#4ecdc4', '#ffe66d', '#ff9ff3', '#feca57'];
-            for(let i=0; i<60; i++) {
+            for(let i=0; i<70; i++) {
                 const p = document.createElement('div');
                 p.className = 'confetti-piece';
                 p.style.left = Math.random() * 100 + 'vw';
                 p.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                p.style.animationDelay = Math.random() * 2 + 's';
+                p.style.animationDelay = Math.random() * 2.5 + 's';
                 p.style.width = Math.random() * 8 + 8 + 'px';
                 p.style.height = p.style.width;
                 holder.appendChild(p);
