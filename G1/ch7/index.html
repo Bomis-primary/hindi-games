@@ -1,1 +1,286 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>मुन्ना की मेला सैर - 'उ' की मात्रा का खेल</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
+        body { 
+            font-family: 'Arial', sans-serif; 
+            text-align: center; 
+            background: linear-gradient(135deg, #eef2ff, #e0e7ff); 
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        /* 1. Splash Screen (5 Seconds Logo Display) */
+        #splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 1;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        #splash-screen img {
+            max-width: 260px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        .loader {
+            width: 45px;
+            height: 45px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #4f46e5;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* 2. Main Game Wrapper */
+        #game-container { 
+            display: none; 
+            width: 95%;
+            max-width: 850px; 
+            margin: 20px auto; 
+            padding: 30px; 
+            background: white; 
+            border-radius: 20px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
+        }
+
+        .top-logo {
+            max-width: 160px;
+            height: auto;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            color: #1e3a8a;
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+
+        .instruction {
+            font-size: 18px;
+            color: #4b5563;
+            margin-bottom: 25px;
+        }
+
+        /* Game Layout split into two parts */
+        .game-layout {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+        }
+
+        /* Basket representation */
+        .basket-zone {
+            background-color: #fef3c7;
+            border: 3px dashed #d97706;
+            padding: 20px;
+            border-radius: 15px;
+            width: 100%;
+            max-width: 400px;
+            margin-bottom: 20px;
+        }
+
+        .basket-title {
+            font-size: 22px;
+            color: #b45309;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .basket-counter {
+            font-size: 16px;
+            color: #78350f;
+        }
+
+        /* Elements Grid */
+        .word-grid { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 20px; 
+            width: 100%;
+        }
+
+        .card { 
+            padding: 25px 15px; 
+            border: 2px solid #818cf8; 
+            border-radius: 12px; 
+            cursor: pointer; 
+            font-size: 24px; 
+            font-weight: bold;
+            background: #f8fafc;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            background-color: #e0e7ff;
+            box-shadow: 0 6px 12px rgba(79, 70, 229, 0.15);
+        }
+
+        .card.disabled {
+            background-color: #e2e8f0;
+            border-color: #cbd5e1;
+            color: #94a3b8;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn { 
+            padding: 12px 28px; 
+            font-size: 18px; 
+            cursor: pointer; 
+            background: #4f46e5; 
+            color: white; 
+            border: none; 
+            border-radius: 10px; 
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .btn:hover {
+            background: #4338ca;
+        }
+
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+    <!-- Audio Elements -->
+    <audio id="sound-clap" src="./assest/clap.mp3" preload="auto"></audio>
+    <audio id="sound-wrong" src="./assest/wrong.mp3" preload="auto"></audio>
+
+    <!-- 1. Splash Screen Section (5 Seconds) -->
+    <div id="splash-screen">
+        <img src="./assest/innovine-logo.png" alt="Innovine Logo">
+        <div class="loader"></div>
+    </div>
+
+    <!-- 2. Master Game Platform -->
+    <div id="game-container">
+        <!-- Logo inside main container -->
+        <img src="./assest/innovine-logo.png" alt="Innovine Logo" class="top-logo">
+        
+        <h1>प्र.१. उ की टोकरी 🧺</h1>
+        
+        <div id="level-1" class="game-layout">
+            <p class="instruction"><strong>निर्देश:</strong> केवल उन शब्दों पर क्लिक करें जिनमें <strong>'उ' स्वर</strong> या <strong>'ु' (छोटा उ) की मात्रा</strong> है, ताकि वे टोकरी में जा सकें!</p>
+            
+            <!-- Basket Zone based on Textbook Exercise -->
+            <div class="basket-zone">
+                <div class="basket-title">🧺 'उ' की टोकरी</div>
+                <div class="basket-counter">टोकरी में शब्द: <span id="score-display">0</span> / 5</div>
+            </div>
+
+            <!-- Options from Textbook Pages -->
+            <div class="word-grid">
+                <!-- Correct options from lists and illustrations -->
+                <div class="card" id="w1" onclick="checkWord(true, 'उल्लू', 'w1')">उल्लू</div>
+                <div class="card" id="w2" onclick="checkWord(true, 'कुर्सी', 'w2')">कुर्सी</div>
+                <!-- Distractors based on standard words -->
+                <div class="card" id="w3" onclick="checkWord(false, 'कमल', 'w3')">कमल</div>
+                <div class="card" id="w4" onclick="checkWord(true, 'गुड़िया', 'w4')">गुड़िया</div>
+                <div class="card" id="w5" onclick="checkWord(false, 'आम', 'w5')">आम</div>
+                <div class="card" id="w6" onclick="checkWord(true, 'चुहिया', 'w6')">चुहिया</div>
+                <div class="card" id="w7" onclick="checkWord(false, 'घर', 'w7')">घर</div>
+                <div class="card" id="w8" onclick="checkWord(true, 'कुटिया', 'w8')">कुटिया</div>
+                <div class="card" id="w9" onclick="checkWord(false, 'टोकरी', 'w9')">टोकरी</div>
+            </div>
+        </div>
+
+        <!-- FINAL GAME END WRAPPER -->
+        <div id="result-screen" class="hidden">
+            <h2 id="msg" style="color: #4f46e5; font-size: 30px; margin-bottom: 15px;"></h2>
+            <button class="btn" onclick="location.reload()">फिर से खेलें</button>
+        </div>
+    </div>
+
+    <script>
+        let correctAnswersCount = 0;
+        const totalRequired = 5; // उल्लू, कुर्सी, गुड़िया, चुहिया, कुटिया
+
+        const clapSnd = document.getElementById('sound-clap');
+        const wrongSnd = document.getElementById('sound-wrong');
+
+        // Splash screen handler (Exactly 5000 milliseconds display time)
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                const splash = document.getElementById('splash-screen');
+                splash.style.opacity = 0;
+                setTimeout(() => {
+                    splash.style.display = 'none';
+                    document.getElementById('game-container').style.display = 'block';
+                }, 500);
+            }, 5000);
+        });
+
+        function checkWord(isCorrect, wordText, cardId) {
+            const selectedCard = document.getElementById(cardId);
+            
+            // Prevent clicking already disabled correct cards
+            if (selectedCard.classList.contains('disabled')) return;
+
+            if(isCorrect) {
+                // Play success audio
+                clapSnd.currentTime = 0;
+                clapSnd.play().catch(() => {});
+                
+                correctAnswersCount++;
+                document.getElementById('score-display').innerText = correctAnswersCount;
+                
+                // Visual response: disable and mark card
+                selectedCard.classList.add('disabled');
+                selectedCard.style.border = "2px solid #10b981";
+                
+                alert("बहुत बढ़िया! \"" + wordText + "\" में 'उ' की ध्वनि है और यह टोकरी में चला गया।");
+            } else {
+                // Play fail audio
+                wrongSnd.currentTime = 0;
+                wrongSnd.play().catch(() => {});
+                
+                alert("सोचिए! \"" + wordText + "\" में 'उ' या 'ु' की मात्रा नहीं है। दोबारा प्रयास करें!");
+            }
+
+            // Check if game complete
+            if(correctAnswersCount >= totalRequired) {
+                setTimeout(() => {
+                    document.getElementById('level-1').classList.add('hidden');
+                    document.getElementById('result-screen').classList.remove('hidden');
+                    document.getElementById('msg').innerHTML = "अद्भुत! 🎉<br>आपने सभी सही शब्दों को 'उ की टोकरी' में पहुँचा दिया है।";
+                }, 500);
+            }
+        }
+    </script>
+</body>
+</html>
