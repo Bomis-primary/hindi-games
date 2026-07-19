@@ -1,1 +1,298 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>नटखट खरगोश की समोसा खोज - 'ओ' की मात्रा का खेल</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
+        body { 
+            font-family: 'Arial', sans-serif; 
+            text-align: center; 
+            background: linear-gradient(135deg, #ffedd5, #ffdec2); 
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            cursor: pointer;
+        }
+
+        /* 1. Splash Screen */
+        #splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 1;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        #splash-screen img {
+            max-width: 260px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        .loader {
+            width: 45px;
+            height: 45px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #ea580c;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .tap-hint {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #71717a;
+            font-weight: 500;
+        }
+
+        /* 2. Main Game Container */
+        #game-container { 
+            display: none; 
+            width: 95%;
+            max-width: 850px; 
+            margin: 20px auto; 
+            padding: 30px; 
+            background: white; 
+            border-radius: 20px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05); 
+        }
+
+        .top-logo {
+            max-width: 160px;
+            height: auto;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            color: #9a3412;
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+
+        .instruction {
+            font-size: 18px;
+            color: #3f3f46;
+            margin-bottom: 25px;
+        }
+
+        .game-layout {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+        }
+
+        /* Story Ordering List Area */
+        .story-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+            max-width: 600px;
+            margin-bottom: 15px;
+        }
+
+        .story-item {
+            display: flex;
+            align-items: center;
+            background: #fafafa;
+            border: 2px dashed #fdba74;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #4b5563;
+        }
+
+        .order-select {
+            margin-right: 15px;
+            padding: 8px 12px;
+            font-size: 18px;
+            font-weight: bold;
+            border: 2px solid #ea580c;
+            border-radius: 8px;
+            background-color: white;
+            color: #ea580c;
+            cursor: pointer;
+        }
+
+        /* Highlight for words with O Matra */
+        .o-word {
+            color: #ea580c;
+            text-decoration: underline;
+        }
+
+        .btn-check { 
+            padding: 14px 35px; 
+            font-size: 20px; 
+            cursor: pointer; 
+            background: #ea580c; 
+            color: white; 
+            border: none; 
+            border-radius: 12px; 
+            font-weight: bold;
+            margin-top: 20px;
+            transition: background 0.2s;
+        }
+
+        .btn-check:hover {
+            background: #c2410c;
+        }
+
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+    <!-- Audio Elements (Precise relative assets paths verified) -->
+    <audio id="sound-correct" src="assets/correct.mp3" preload="auto"></audio>
+    <audio id="sound-wrong" src="assets/wrong.mp3" preload="auto"></audio>
+
+    <!-- 1. Splash Screen Section (5 Seconds Display) -->
+    <div id="splash-screen">
+        <img src="assets/innovine-logo.png" alt="Innovine Logo">
+        <div class="loader"></div>
+        <p class="tap-hint">आवाज़ शुरू करने के लिए स्क्रीन पर एक बार टच करें 👇</p>
+    </div>
+
+    <!-- 2. Master Game Platform -->
+    <div id="game-container">
+        <img src="assets/innovine-logo.png" alt="Innovine Logo" class="top-logo">
+        
+        <h1>कहानी की दुनिया: खरगोश की यात्रा 🐇</h1>
+        
+        <div id="level-1" class="game-layout">
+            <p class="instruction"><strong>निर्देश:</strong> पाठ्यपुस्तक की कहानी के आधार पर वाक्यों को **सही क्रम (1 से 4)** में लगाइए!</p>
+            
+            <!-- Story Ordering Interactive List -->
+            <div class="story-list">
+                <div class="story-item">
+                    <select class="order-select" id="sel-1">
+                        <option value="">?</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                    </select>
+                    <span>नटखट खरगोश ने गरम-गरम <span class="o-word">समोसा</span> खा लिया।[cite: 8]</span>
+                </div>
+                
+                <div class="story-item">
+                    <select class="order-select" id="sel-2">
+                        <option value="">?</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                    </select>
+                    <span>उसने <span class="o-word">सोफ़े</span> पर रखी <span class="o-word">टोपी</span> पहन ली।[cite: 8]</span>
+                </div>
+
+                <div class="story-item">
+                    <select class="order-select" id="sel-3">
+                        <option value="">?</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                    </select>
+                    <span>वह चुपके से <span class="o-word">सोफ़े</span> के नीचे छिप गया।[cite: 8]</span>
+                </div>
+
+                <div class="story-item">
+                    <select class="order-select" id="sel-4">
+                        <option value="">?</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                    </select>
+                    <span>एक छोटा खरगोश घर में घुसा।[cite: 8]</span>
+                </div>
+            </div>
+
+            <button class="btn-check" onclick="validateStoryOrder()">क्रम की जाँच करें 🔍</button>
+        </div>
+
+        <!-- FINAL GAME END WRAPPER -->
+        <div id="result-screen" class="hidden">
+            <h2 id="msg" style="color: #9a3412; font-size: 30px; margin-bottom: 15px;"></h2>
+            <button class="btn-check" onclick="location.reload()">फिर से खेलें</button>
+        </div>
+    </div>
+
+    <script>
+        const correctSnd = document.getElementById('sound-correct');
+        const wrongSnd = document.getElementById('sound-wrong');
+
+        // Unlock audio contexts early via initial touch
+        document.body.addEventListener('click', () => {
+            correctSnd.play().then(() => { correctSnd.pause(); correctSnd.currentTime = 0; }).catch(e => console.log(e));
+            wrongSnd.play().then(() => { wrongSnd.pause(); wrongSnd.currentTime = 0; }).catch(e => console.log(e));
+        }, { once: true });
+
+        // Splash screen setup (Exactly 5000ms delay)
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                const splash = document.getElementById('splash-screen');
+                splash.style.opacity = 0;
+                setTimeout(() => {
+                    splash.style.display = 'none';
+                    document.getElementById('game-container').style.display = 'block';
+                }, 500);
+            }, 5000);
+        });
+
+        function validateStoryOrder() {
+            // Correct chronological sequence based on textbook story[cite: 8]:
+            // 1. खरगोश घर में घुसा (Item 4 -> Value '1')[cite: 8]
+            // 2. सोफ़े के नीचे छिप गया (Item 3 -> Value '2')[cite: 8]
+            // 3. टोपी पहन ली (Item 2 -> Value '3')[cite: 8]
+            // 4. समोसा खा लिया (Item 1 -> Value '4')[cite: 8]
+            
+            const ans1 = document.getElementById('sel-1').value;
+            const ans2 = document.getElementById('sel-2').value;
+            const ans3 = document.getElementById('sel-3').value;
+            const ans4 = document.getElementById('sel-4').value;
+
+            if (ans1 === "4" && ans2 === "3" && ans3 === "2" && ans4 === "1") {
+                correctSnd.currentTime = 0;
+                correctSnd.play().catch(e => console.log(e));
+                
+                setTimeout(() => {
+                    document.getElementById('level-1').classList.add('hidden');
+                    document.getElementById('result-screen').classList.remove('hidden');
+                    document.getElementById('msg').innerHTML = "अद्भुत! 🎉<br>आपने कहानी को बिल्कुल सही क्रम में सजाया है और 'ओ' मात्रा वाले शब्दों को पहचान लिया है!";
+                }, 400);
+            } else {
+                wrongSnd.currentTime = 0;
+                wrongSnd.play().catch(e => console.log(e));
+                alert("ओह! क्रम सही नहीं है। कहानी को एक बार फिर याद करें और दोबारा प्रयास करें!");
+            }
+        }
+    </script>
+</body>
+</html>
