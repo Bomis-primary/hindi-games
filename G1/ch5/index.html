@@ -1,1 +1,467 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grade 1: ई की मात्रा का चक्र और तितली खेल</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
+        body {
+            background: linear-gradient(135deg, #e0f2fe, #fae8ff);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        /* 1. Splash Screen */
+        #splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        #splash-screen img {
+            max-width: 260px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        .loader {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #a855f7;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* 2. Main Game Framework */
+        #game-wrapper {
+            width: 95%;
+            max-width: 850px;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            padding: 25px;
+            display: none;
+            text-align: center;
+        }
+
+        .header-status {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #f3e8ff;
+            margin-bottom: 20px;
+        }
+
+        .game-title {
+            font-size: 24px;
+            color: #7e22ce;
+            font-weight: bold;
+        }
+
+        .score-box {
+            font-size: 18px;
+            background: #f3e8ff;
+            color: #6b21a8;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        /* LEVEL 1: WORD WHEEL STYLE */
+        #wheel-level {
+            display: block;
+        }
+
+        .wheel-container {
+            position: relative;
+            width: 280px;
+            height: 280px;
+            margin: 20px auto;
+        }
+
+        .center-hub {
+            position: absolute;
+            top: 90px;
+            left: 90px;
+            width: 100px;
+            height: 100px;
+            background: #a855f7;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 32px;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            z-index: 5;
+        }
+
+        .spoke-node {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: #f3e8ff;
+            border: 3px solid #c084fc;
+            color: #1e1b4b;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 22px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+        .spoke-node:hover {
+            transform: scale(1.1);
+            background: #e9d5ff;
+        }
+
+        .target-box {
+            font-size: 24px;
+            margin: 20px;
+            font-weight: bold;
+            color: #475569;
+        }
+
+        /* LEVEL 2: BUTTERFLY SORTING STYLE */
+        #butterfly-level {
+            display: none;
+        }
+
+        .butterfly-layout {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px 0;
+            min-height: 250px;
+        }
+
+        .wing {
+            width: 42%;
+            background: #fae8ff;
+            border: 4px dashed #d946ef;
+            border-radius: 40px 100px 40px 100px;
+            padding: 20px;
+            min-height: 220px;
+            transition: background-color 0.2s;
+        }
+
+        .wing.right-wing {
+            border-radius: 100px 40px 100px 40px;
+            background: #e0f2fe;
+            border-color: #0ea5e9;
+        }
+
+        .wing-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #4a044e;
+        }
+
+        .right-wing .wing-title {
+            color: #0369a1;
+        }
+
+        .words-pool {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+            min-height: 60px;
+        }
+
+        .draggable-word {
+            padding: 8px 16px;
+            background: white;
+            border: 2px solid #cbd5e1;
+            border-radius: 8px;
+            cursor: grab;
+            font-weight: bold;
+            font-size: 18px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        /* Common Result screen */
+        #end-screen {
+            display: none;
+            padding: 30px 0;
+        }
+
+        .btn-next {
+            padding: 12px 28px;
+            background: #22c55e;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-top: 15px;
+        }
+
+        .btn-next:hover {
+            background: #16a34a;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Audio Elements -->
+    <audio id="sound-clap" src="assets/clap.mp3" preload="auto"></audio>
+    <audio id="sound-wrong" src="assets/wrong.mp3" preload="auto"></audio>
+
+    <!-- 1. Splash Screen Section (5 Seconds) -->
+    <div id="splash-screen">
+        <img src="assets/innovine-logo.png" alt="Innovine Logo">
+        <div class="loader"></div>
+    </div>
+
+    <!-- 2. Master Game Platform -->
+    <div id="game-wrapper">
+        <div class="header-status">
+            <div class="game-title" id="stage-indicator">स्तर १: शब्द चक्र बनाओ</div>
+            <div class="score-box">अंक: <span id="score-counter">0</span></div>
+        </div>
+
+        <!-- LEVEL 1: CYCLIC CHAKRA BUILDING -->
+        <div id="wheel-level">
+            <p style="color: #64748b; font-weight: 500;">बीच वाले अक्षर को बाहर के अक्षरों से जोड़कर सही शब्द पर क्लिक करें!</p>
+            <div class="target-box">बनाएँ: <span id="target-word-text" style="color:#a855f7; font-size:28px;">सीख</span></div>
+            
+            <div class="wheel-container">
+                <div class="center-hub">सी</div>
+                <!-- Spoke options rendered programmatically around the perimeter -->
+                <div class="spoke-node" style="top:0; left:110px;" onclick="checkWheelNode('ख')">ख</div>
+                <div class="spoke-node" style="top:50px; right:10px;" onclick="checkWheelNode('टी')">टी</div>
+                <div class="spoke-node" style="top:170px; right:10px;" onclick="checkWheelNode('पी')">पी</div>
+                <div class="spoke-node" style="top:220px; left:110px;" onclick="checkWheelNode('धा')">धा</div>
+                <div class="spoke-node" style="top:170px; left:10px;" onclick="checkWheelNode('ना')">ना</div>
+                <div class="spoke-node" style="top:50px; left:10px;" onclick="checkWheelNode('मा')">मा</div>
+            </div>
+        </div>
+
+        <!-- LEVEL 2: BUTTERFLY WING SORTING -->
+        <div id="butterfly-level">
+            <p style="color: #64748b; font-weight: 500; margin-bottom: 15px;">शब्दों को सही पंख पर ड्रैग करके छोड़ें (Drag & Drop)!</p>
+            
+            <div class="butterfly-layout">
+                <!-- Target Wing A -->
+                <div class="wing left-wing" id="wing-ee-root" ondragover="allowDrop(event)" ondrop="handleWingDrop(event, 'root')">
+                    <div class="wing-title">केवल 'ई' से शुरू होने वाले शब्द</div>
+                </div>
+
+                <!-- Target Wing B -->
+                <div class="wing right-wing" id="wing-ee-matra" ondragover="allowDrop(event)" ondrop="handleWingDrop(event, 'matra')">
+                    <div class="wing-title">'ी' की मात्रा वाले शब्द</div>
+                </div>
+            </div>
+
+            <div class="words-pool" id="sorting-pool"></div>
+        </div>
+
+        <!-- FINAL GAME END WRAPPER -->
+        <div id="end-screen">
+            <h2 style="color: #22c55e; font-size: 34px; margin-bottom: 10px;">अद्भुत प्रदर्शन! 🎉</h2>
+            <p style="font-size: 20px; color: #475569;" id="final-report-msg"></p>
+            <button class="btn-next" onclick="restartWholeGame()">फिर से खेलें</button>
+        </div>
+    </div>
+
+    <script>
+        // Data derived directly from Chapter 5 PDF
+        const wheelTargets = [
+            { node: "ख", word: "सीख" }, //
+            { node: "टी", word: "सीटी" }, //[cite: 2]
+            { node: "पी", word: "सीपी" }, //[cite: 2]
+            { node: "धा", word: "सीधा" }, //[cite: 2]
+            { node: "ना", word: "सीना" }, //[cite: 2]
+            { node: "मा", word: "सीमा" }  //[cite: 2]
+        ];
+
+        // Separation lists based on direct page categories[cite: 2]
+        const sortingWords = [
+            { text: "ईख", type: "root" }, { text: "ईंट", type: "root" }, { text: "ईनाम", type: "root" }, { text: "ईद", type: "root" }, //[cite: 2]
+            { text: "कील", type: "matra" }, { text: "तीर", type: "matra" }, { text: "खीर", type: "matra" }, { text: "दीवार", type: "matra" } //[cite: 2]
+        ];
+
+        let gameScore = 0;
+        let wheelIndex = 0;
+        let activeDraggedItem = null;
+        let pendingSortCount = sortingWords.length;
+
+        const clapSnd = document.getElementById('sound-clap');
+        const wrongSnd = document.getElementById('sound-wrong');
+
+        // Splash screen validation for exactly 5000ms
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                const splash = document.getElementById('splash-screen');
+                splash.style.opacity = 0;
+                setTimeout(() => {
+                    splash.style.display = 'none';
+                    document.getElementById('game-wrapper').style.display = 'block';
+                    initWheelLevel();
+                }, 500);
+            }, 5000);
+        });
+
+        function triggerAudio(isCorrect) {
+            const track = isCorrect ? clapSnd : wrongSnd;
+            track.currentTime = 0;
+            track.play().catch(() => {});
+        }
+
+        // --- LEVEL 1 ENGINE ---
+        function initWheelLevel() {
+            wheelIndex = 0;
+            updateWheelTarget();
+        }
+
+        function updateWheelTarget() {
+            if (wheelIndex >= wheelTargets.length) {
+                setTimeout(startButterflyLevel, 1000);
+                return;
+            }
+            document.getElementById('target-word-text').innerText = wheelTargets[wheelIndex].word;
+        }
+
+        function checkWheelNode(clickedNode) {
+            const expected = wheelTargets[wheelIndex].node;
+            if (clickedNode === expected) {
+                triggerAudio(true);
+                gameScore += 10;
+                document.getElementById('score-counter').innerText = gameScore;
+                wheelIndex++;
+                updateWheelTarget();
+            } else {
+                triggerAudio(false);
+                gameScore = Math.max(0, gameScore - 2);
+                document.getElementById('score-counter').innerText = gameScore;
+            }
+        }
+
+        // --- LEVEL 2 ENGINE ---
+        function startButterflyLevel() {
+            document.getElementById('wheel-level').style.display = 'none';
+            document.getElementById('butterfly-level').style.display = 'block';
+            document.getElementById('stage-indicator').innerText = "स्तर २: तितली पंख सॉर्टर";
+
+            const pool = document.getElementById('sorting-pool');
+            pool.innerHTML = "";
+            
+            // Shuffle matching objects array
+            const shuffled = [...sortingWords].sort(() => Math.random() - 0.5);
+            pendingSortCount = shuffled.length;
+
+            shuffled.forEach((item, idx) => {
+                const wordNode = document.createElement('div');
+                wordNode.className = 'draggable-word';
+                wordNode.innerText = item.text;
+                wordNode.setAttribute('draggable', 'true');
+                wordNode.id = `sort-item-${idx}`;
+                
+                wordNode.addEventListener('dragstart', () => {
+                    activeDraggedItem = item;
+                    wordNode.style.opacity = '0.5';
+                });
+
+                wordNode.addEventListener('dragend', () => {
+                    wordNode.style.opacity = '1';
+                });
+
+                pool.appendChild(wordNode);
+            });
+        }
+
+        function allowDrop(e) {
+            e.preventDefault();
+        }
+
+        function handleWingDrop(e, targetedType) {
+            e.preventDefault();
+            if (!activeDraggedItem) return;
+
+            if (activeDraggedItem.type === targetedType) {
+                triggerAudio(true);
+                gameScore += 15;
+                document.getElementById('score-counter').innerText = gameScore;
+
+                // Move visual element directly inside corresponding wing frame
+                const poolElements = document.getElementsByClassName('draggable-word');
+                for (let el of poolElements) {
+                    if (el.innerText === activeDraggedItem.text) {
+                        el.setAttribute('draggable', 'false');
+                        el.style.cursor = 'default';
+                        el.style.margin = '5px';
+                        e.currentTarget.appendChild(el);
+                        break;
+                    }
+                }
+                pendingSortCount--;
+                if (pendingSortCount === 0) {
+                    setTimeout(endEntireGame, 1200);
+                }
+            } else {
+                triggerAudio(false);
+                gameScore = Math.max(0, gameScore - 5);
+                document.getElementById('score-counter').innerText = gameScore;
+            }
+            activeDraggedItem = null;
+        }
+
+        // --- ENDGAME TERMINATION ---
+        function endEntireGame() {
+            document.getElementById('butterfly-level').style.display = 'none';
+            document.getElementById('end-screen').style.display = 'block';
+            document.getElementById('stage-indicator').innerText = "खेल समाप्त!";
+            document.getElementById('final-report-msg').innerHTML = `आपने शानदार तरीके से सभी स्तरों को पूरा किया।<br>कुल अर्जित स्कोर: <strong>${gameScore} अंक</strong>`;
+        }
+
+        function restartWholeGame() {
+            gameScore = 0;
+            document.getElementById('score-counter').innerText = gameScore;
+            document.getElementById('end-screen').style.display = 'none';
+            document.getElementById('wheel-level').style.display = 'block';
+            document.getElementById('stage-indicator').innerText = "स्तर १: शब्द चक्र बनाओ";
+            
+            // Clean wings content reset
+            document.getElementById('wing-ee-root').innerHTML = '<div class="wing-title">केवल \'ई\' से शुरू होने वाले शब्द</div>';
+            document.getElementById('wing-ee-matra').innerHTML = '<div class="wing-title">\'ी\' की मात्रा वाले शब्द</div>';
+            
+            initWheelLevel();
+        }
+    </script>
+</body>
+</html>
