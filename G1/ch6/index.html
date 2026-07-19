@@ -36,6 +36,7 @@
             justify-content: center;
             align-items: center;
             z-index: 9999;
+            opacity: 1;
             transition: opacity 0.5s ease-in-out;
         }
 
@@ -61,7 +62,7 @@
 
         /* 2. Main Game Wrapper */
         #game-container { 
-            display: none; /* Splash screen के बाद खुलेगा */
+            display: none; 
             width: 95%;
             max-width: 800px; 
             margin: 20px auto; 
@@ -105,7 +106,6 @@
             font-weight: bold;
             background: white;
             transition: all 0.2s ease;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
         }
 
         .card:hover {
@@ -124,11 +124,6 @@
             border-radius: 10px; 
             font-weight: bold;
             margin-top: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-
-        .btn:hover {
-            background: #15803d;
         }
 
         .hidden { display: none; }
@@ -136,24 +131,24 @@
 </head>
 <body>
 
-    <!-- Audio Elements with Correct Directory Path -->
-    <audio id="sound-clap" src="../assest/clap.mp3" preload="auto"></audio>
-    <audio id="sound-wrong" src="../assest/wrong.mp3" preload="auto"></audio>
+    <!-- Audio Elements (Fixing Directory Path) -->
+    <audio id="sound-clap" src="./assest/clap.mp3" preload="auto"></audio>
+    <audio id="sound-wrong" src="./assest/wrong.mp3" preload="auto"></audio>
 
     <!-- 1. Splash Screen Section (5 Seconds) -->
     <div id="splash-screen">
-        <img src="../assest/innovine-logo.png" alt="Innovine Logo">
+        <img src="./assest/innovine-logo.png" alt="Innovine Logo">
         <div class="loader"></div>
     </div>
 
     <!-- 2. Master Game Platform -->
     <div id="game-container">
         <!-- Logo inside main container -->
-        <img src="../assest/innovine-logo.png" alt="Innovine Logo" class="top-logo">
+        <img src="./assest/innovine-logo.png" alt="Innovine Logo" class="top-logo">
         
         <h1>ऋ स्वर और मात्राएँ खोजें</h1>
         
-        <!-- LEVEL 1: IDENTIFICATION -->
+        <!-- LEVEL 1 -->
         <div id="level-1">
             <p class="instruction"><strong>निर्देश:</strong> सही शब्द पर क्लिक करें जिसमें 'ऋ' की मात्रा है।</p>
             <div class="word-grid">
@@ -175,7 +170,7 @@
 
     <script>
         let correctAnswersCount = 0;
-        const totalRequired = 4; // मृग, वृक्ष, नृप, कृषक
+        const totalRequired = 4; 
 
         const clapSnd = document.getElementById('sound-clap');
         const wrongSnd = document.getElementById('sound-wrong');
@@ -192,24 +187,20 @@
             }, 5000);
         });
 
-        function checkWord(isCorrect, wordElement, event) {
-            // Target elements to change color or disable if needed
+        function checkWord(isCorrect, wordElement) {
             if(isCorrect) {
-                // Play clap audio
                 clapSnd.currentTime = 0;
                 clapSnd.play().catch(() => {});
                 
                 correctAnswersCount++;
                 alert("बिल्कुल सही! \"" + wordElement + "\" में 'ऋ' की मात्रा है।");
             } else {
-                // Play wrong audio
                 wrongSnd.currentTime = 0;
                 wrongSnd.play().catch(() => {});
                 
                 alert("यह गलत उत्तर है, कृपया दोबारा प्रयास करें!");
             }
 
-            // Check if win condition met
             if(correctAnswersCount >= totalRequired) {
                 setTimeout(() => {
                     document.getElementById('level-1').classList.add('hidden');
