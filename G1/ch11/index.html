@@ -167,7 +167,7 @@
 </head>
 <body>
 
-    <!-- Audio Elements (Precise relative assets paths verified) -->
+    <!-- Audio Elements -->
     <audio id="sound-correct" src="assets/correct.mp3" preload="auto"></audio>
     <audio id="sound-wrong" src="assets/wrong.mp3" preload="auto"></audio>
 
@@ -185,7 +185,7 @@
         <h1>कहानी की दुनिया: खरगोश की यात्रा 🐇</h1>
         
         <div id="level-1" class="game-layout">
-            <p class="instruction"><strong>निर्देश:</strong> पाठ्यपुस्तक की कहानी के आधार पर वाक्यों को **सही क्रम (1 से 4)** में लगाइए!</p>
+            <p class="instruction"><strong>निर्देश:</strong> पाठ्यपुस्तक की कहानी के आधार पर वाक्यों को <strong>सही क्रम (1 से 4)</strong> में लगाइए!</p>
             
             <!-- Story Ordering Interactive List -->
             <div class="story-list">
@@ -197,7 +197,7 @@
                         <option value="3">3</option>
                         <option value="4">4</option>
                     </select>
-                    <span>नटखट खरगोश ने गरम-गरम <span class="o-word">समोसा</span> खा लिया।[cite: 8]</span>
+                    <span>नटखट खरगोश ने गरम-गरम <span class="o-word">समोसा</span> खा लिया।</span>
                 </div>
                 
                 <div class="story-item">
@@ -208,7 +208,7 @@
                         <option value="3">3</option>
                         <option value="4">4</option>
                     </select>
-                    <span>उसने <span class="o-word">सोफ़े</span> पर रखी <span class="o-word">टोपी</span> पहन ली।[cite: 8]</span>
+                    <span>उसने <span class="o-word">सोफ़े</span> पर रखी <span class="o-word">टोपी</span> पहन ली।</span>
                 </div>
 
                 <div class="story-item">
@@ -219,7 +219,7 @@
                         <option value="3">3</option>
                         <option value="4">4</option>
                     </select>
-                    <span>वह चुपके से <span class="o-word">सोफ़े</span> के नीचे छिप गया।[cite: 8]</span>
+                    <span>वह चुपके से <span class="o-word">सोफ़े</span> के नीचे छिप गया।</span>
                 </div>
 
                 <div class="story-item">
@@ -230,7 +230,7 @@
                         <option value="3">3</option>
                         <option value="4">4</option>
                     </select>
-                    <span>एक छोटा खरगोश घर में घुसा।[cite: 8]</span>
+                    <span>एक छोटा खरगोश घर में घुसा।</span>
                 </div>
             </div>
 
@@ -267,17 +267,12 @@
         });
 
         function validateStoryOrder() {
-            // Correct chronological sequence based on textbook story[cite: 8]:
-            // 1. खरगोश घर में घुसा (Item 4 -> Value '1')[cite: 8]
-            // 2. सोफ़े के नीचे छिप गया (Item 3 -> Value '2')[cite: 8]
-            // 3. टोपी पहन ली (Item 2 -> Value '3')[cite: 8]
-            // 4. समोसा खा लिया (Item 1 -> Value '4')[cite: 8]
-            
             const ans1 = document.getElementById('sel-1').value;
             const ans2 = document.getElementById('sel-2').value;
             const ans3 = document.getElementById('sel-3').value;
             const ans4 = document.getElementById('sel-4').value;
 
+            // Correct order: 4, 3, 2, 1
             if (ans1 === "4" && ans2 === "3" && ans3 === "2" && ans4 === "1") {
                 correctSnd.currentTime = 0;
                 correctSnd.play().catch(e => console.log(e));
