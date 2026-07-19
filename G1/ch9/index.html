@@ -1,1 +1,310 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>रमेश की छुक-छुक रेल - 'ए' की मात्रा का खेल</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
+        body { 
+            font-family: 'Arial', sans-serif; 
+            text-align: center; 
+            background: linear-gradient(135deg, #fef08a, #fef9c3); 
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            cursor: pointer;
+        }
+
+        /* 1. Splash Screen */
+        #splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 1;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        #splash-screen img {
+            max-width: 260px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        .loader {
+            width: 45px;
+            height: 45px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #eab308;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .tap-hint {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #71717a;
+            font-weight: 500;
+        }
+
+        /* 2. Main Game Container */
+        #game-container { 
+            display: none; 
+            width: 95%;
+            max-width: 850px; 
+            margin: 20px auto; 
+            padding: 30px; 
+            background: white; 
+            border-radius: 20px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05); 
+        }
+
+        .top-logo {
+            max-width: 160px;
+            height: auto;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            color: #854d0e;
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+
+        .instruction {
+            font-size: 18px;
+            color: #3f3f46;
+            margin-bottom: 25px;
+        }
+
+        .game-layout {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+        }
+
+        /* Platform / Target Sorting Zone */
+        .sorting-zones-container {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .zone-box {
+            flex: 1;
+            padding: 15px;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 18px;
+            transition: background-color 0.3s;
+        }
+
+        #eat-zone {
+            background-color: #fef2f2;
+            border: 3px dashed #ef4444;
+            color: #991b1b;
+        }
+
+        #play-zone {
+            background-color: #eff6ff;
+            border: 3px dashed #3b82f6;
+            color: #1e3a8a;
+        }
+
+        .active-target-text {
+            font-size: 22px;
+            font-weight: 800;
+            color: #18181b;
+            margin: 10px 0;
+            background-color: #f4f4f5;
+            padding: 10px 30px;
+            border-radius: 30px;
+            border: 2px solid #e4e4e7;
+        }
+
+        /* Grid Selection Setup */
+        .choices-grid { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 20px; 
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .choice-btn { 
+            padding: 20px; 
+            border: 2px solid #eab308; 
+            border-radius: 12px; 
+            cursor: pointer; 
+            font-size: 22px; 
+            font-weight: bold;
+            background: #fffdf5;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+        .choice-btn:hover {
+            transform: scale(1.03);
+            background-color: #fef9c3;
+        }
+
+        .btn-reset { 
+            padding: 12px 28px; 
+            font-size: 18px; 
+            cursor: pointer; 
+            background: #eab308; 
+            color: white; 
+            border: none; 
+            border-radius: 10px; 
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .btn-reset:hover {
+            background: #ca8a04;
+        }
+
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+    <!-- Audio Elements (Relative path 'assets/' verified) -->
+    <audio id="sound-clap" src="assets/correct.mp3" preload="auto"></audio>
+    <audio id="sound-wrong" src="assets/wrong.mp3" preload="auto"></audio>
+
+    <!-- 1. Splash Screen Section (5 Seconds) -->
+    <div id="splash-screen">
+        <img src="assets/innovine-logo.png" alt="Innovine Logo">
+        <div class="loader"></div>
+        <p class="tap-hint">आवाज़ शुरू करने के लिए स्क्रीन पर एक बार टच करें 👇</p>
+    </div>
+
+    <!-- 2. Master Game Platform -->
+    <div id="game-container">
+        <img src="assets/innovine-logo.png" alt="Innovine Logo" class="top-logo">
+        
+        <h1>प्र.१. शब्द-कोना वर्गीकरण 🚂</h1>
+        
+        <div id="level-1" class="game-layout">
+            <p class="instruction"><strong>निर्देश:</strong> सामने दिए गए शब्द को पहचानें और चुनें कि यह <strong>'खाने का कोना'</strong> में जाएगा या <strong>'खेल कोना'</strong> में![cite: 6]</p>
+            
+            <!-- Sorting Categories from Book Exercise -->
+            <div class="sorting-zones-container">
+                <div class="zone-box" id="eat-zone">🍎 खाने का कोना[cite: 6]<br><span id="eat-count">0</span> शब्द</div>
+                <div class="zone-box" id="play-zone">⚽ खेल कोना[cite: 6]<br><span id="play-count">0</span> शब्द</div>
+            </div>
+
+            <!-- Presenting item to solve -->
+            <p style="font-size: 16px; color: #71717a; margin-top: 10px;">इस शब्द को सही कोने में भेजें:</p>
+            <div class="active-target-text" id="current-word-display">सेब</div>
+
+            <!-- Target corners selector -->
+            <div class="choices-grid">
+                <button class="choice-btn" onclick="submitAnswer('खाओ')">🍎 खाने का कोना[cite: 6]</button>
+                <button class="choice-btn" onclick="submitAnswer('खेला')">⚽ खेल कोना[cite: 6]</button>
+            </div>
+        </div>
+
+        <!-- FINAL GAME END WRAPPER -->
+        <div id="result-screen" class="hidden">
+            <h2 id="msg" style="color: #854d0e; font-size: 30px; margin-bottom: 15px;"></h2>
+            <button class="btn-reset" onclick="location.reload()">फिर से खेलें</button>
+        </div>
+    </div>
+
+    <script>
+        // Content pool matching the 'ए' matra categorization page precisely
+        const itemsToSort = [
+            { word: 'सेब', category: 'खाओ' },    // खाने का कोना[cite: 6]
+            { word: 'खेल', category: 'खेला' },   // खेल कोना[cite: 6]
+            { word: 'केले', category: 'खाओ' },   // खाने का कोना[cite: 6]
+            { word: 'गेंद', category: 'खेला' }    // खेल कोना[cite: 6]
+        ];
+
+        let currentIndex = 0;
+        let eatScore = 0;
+        let playScore = 0;
+
+        const clapSnd = document.getElementById('sound-clap');
+        const wrongSnd = document.getElementById('sound-wrong');
+
+        // Global user gesture listener for bypassing browser audio restrictions
+        document.body.addEventListener('click', () => {
+            clapSnd.play().then(() => { clapSnd.pause(); clapSnd.currentTime = 0; }).catch(e => console.log(e));
+            wrongSnd.play().then(() => { wrongSnd.pause(); wrongSnd.currentTime = 0; }).catch(e => console.log(e));
+        }, { once: true });
+
+        // Splash screen time lock: exactly 5000 milliseconds
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                const splash = document.getElementById('splash-screen');
+                splash.style.opacity = 0;
+                setTimeout(() => {
+                    splash.style.display = 'none';
+                    document.getElementById('game-container').style.display = 'block';
+                    updateDisplayWord();
+                }, 500);
+            }, 5000);
+        });
+
+        function updateDisplayWord() {
+            if (currentIndex < itemsToSort.length) {
+                document.getElementById('current-word-display').innerText = itemsToSort[currentIndex].word;
+            } else {
+                // End game state triggered
+                document.getElementById('level-1').classList.add('hidden');
+                document.getElementById('result-screen').classList.remove('hidden');
+                document.getElementById('msg').innerHTML = "अद्भुत! 🚂🎉<br>आपने सभी 'ए' मात्रा वाले शब्दों को उनके सही कोनों में व्यवस्थित कर दिया है!";
+            }
+        }
+
+        function submitAnswer(chosenCategory) {
+            let currentItem = itemsToSort[currentIndex];
+
+            if (chosenCategory === currentItem.category) {
+                clapSnd.currentTime = 0;
+                clapSnd.play().catch(e => console.log(e));
+
+                if (currentItem.category === 'खाओ') {
+                    eatScore++;
+                    document.getElementById('eat-count').innerText = eatScore;
+                } else {
+                    playScore++;
+                    document.getElementById('play-count').innerText = playScore;
+                }
+                alert(`बिल्कुल सही! "${currentItem.word}" अपने सही स्थान पर पहुंच गया है।`);
+                currentIndex++;
+                updateDisplayWord();
+            } else {
+                wrongSnd.currentTime = 0;
+                wrongSnd.play().catch(e => console.log(e));
+                alert(`सोचिए! क्या "${currentItem.word}" इस कोने का हिस्सा है? दोबारा प्रयास करें!`);
+            }
+        }
+    </script>
+</body>
+</html>
