@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>इ की मात्रा (f) का खेल</title>
+    <title>Grade 1: इ की मात्रा का रोमांचक खेल</title>
     <style>
         * {
             box-sizing: border-box;
@@ -13,11 +13,13 @@
         }
 
         body {
-            background: linear-gradient(135deg, #e0f2fe, #f0fdf4);
+            background: linear-gradient(135deg, #fef08a, #bbf7d0);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
+            overflow: hidden;
+            user-select: none;
         }
 
         /* 1. Splash Screen */
@@ -46,7 +48,7 @@
             width: 50px;
             height: 50px;
             border: 5px solid #f3f3f3;
-            border-top: 5px solid #0284c7;
+            border-top: 5px solid #16a34a;
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
@@ -56,329 +58,458 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* 2. Main Game Container */
+        /* Game Shell Container */
         #game-container {
-            width: 90%;
-            max-width: 700px;
+            width: 95%;
+            max-width: 800px;
+            height: 550px;
             background: white;
+            border-radius: 24px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            padding: 20px;
+            display: none;
+            position: relative;
+            flex-direction: column;
+        }
+
+        .header-panel {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid #f1f5f9;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .level-title {
+            color: #1e293b;
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .stats {
+            font-size: 18px;
+            font-weight: bold;
+            color: #059669;
+            background: #ecfdf5;
+            padding: 5px 15px;
             border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            padding: 30px;
-            text-align: center;
+        }
+
+        /* Canvas-like Gameplay Arenas */
+        .stage-arena {
+            flex: 1;
+            position: relative;
+            background: #f8fafc;
+            border-radius: 16px;
+            overflow: hidden;
             display: none;
         }
 
-        h1 {
-            color: #0369a1;
-            margin-bottom: 10px;
-            font-size: 28px;
-        }
-
-        .score-board {
-            font-size: 18px;
-            color: #475569;
-            margin-bottom: 25px;
-            font-weight: bold;
-        }
-
-        /* Word Building UI */
-        .game-panel {
-            background: #f8fafc;
-            border: 2px dashed #cbd5e1;
-            border-radius: 15px;
-            padding: 30px;
-            margin-bottom: 25px;
-        }
-
-        .question-hint {
-            font-size: 22px;
-            color: #1e293b;
-            margin-bottom: 25px;
-            font-weight: 600;
-        }
-
-        .word-slots {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-
-        .slot {
-            width: 65px;
-            height: 65px;
-            border: 3px solid #94a3b8;
-            border-radius: 10px;
-            background: #fff;
+        /* --- LEVEL 1: BALLOON STYLE --- */
+        .balloon {
+            position: absolute;
+            width: 85px;
+            height: 105px;
+            background: #ff7043;
+            border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+            cursor: pointer;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 26px;
+            color: white;
+            font-size: 18px;
             font-weight: bold;
-            color: #0f172a;
+            box-shadow: inset -5px -5px 10px rgba(0,0,0,0.15);
+            animation: floatUp var(--speed) linear infinite;
+            bottom: -120px;
+        }
+        .balloon::after {
+            content: "";
+            position: absolute;
+            bottom: -8px;
+            left: 38px;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-bottom: 8px solid currentColor;
+            transform: rotate(180deg);
         }
 
-        .slot.missing {
-            border: 3px dashed #0284c7;
-            background: #f0f9ff;
+        @keyframes floatUp {
+            0% { bottom: -120px; }
+            100% { bottom: 560px; }
         }
 
-        .slot.correct-drop {
-            border-color: #22c55e;
-            background: #f0fdf4;
-            color: #15803d;
+        /* --- LEVEL 2: CATCHING STYLE --- */
+        .falling-word {
+            position: absolute;
+            padding: 8px 16px;
+            background: white;
+            border: 2px solid #3b82f6;
+            color: #1e3a8a;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 20px;
+            top: -50px;
         }
 
-        /* Draggable Options */
-        .options-container {
+        #basket {
+            position: absolute;
+            bottom: 10px;
+            left: 45%;
+            width: 100px;
+            height: 45px;
+            background: #b45309;
+            border-radius: 0 0 25px 25px;
+            border: 4px solid #78350f;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
             display: flex;
             justify-content: center;
-            gap: 15px;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
-            min-height: 70px;
+            align-items: center;
+            color: white;
+            font-weight: bold;
         }
 
-        .matra-card {
-            padding: 12px 25px;
-            background: #0284c7;
+        /* --- LEVEL 3: RACING STYLE --- */
+        #racing-arena {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            background: #eff6ff;
+        }
+
+        .track-box {
+            font-size: 32px;
+            letter-spacing: 5px;
+            background: white;
+            padding: 20px 40px;
+            border-radius: 15px;
+            border: 3px dashed #3b82f6;
+            font-weight: bold;
+        }
+
+        .race-btn-grid {
+            display: flex;
+            gap: 15px;
+        }
+
+        .race-opt {
+            padding: 15px 30px;
+            background: #3b82f6;
             color: white;
             font-size: 24px;
             font-weight: bold;
-            border-radius: 10px;
-            cursor: grab;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            user-select: none;
-            transition: transform 0.2s, background 0.2s;
-        }
-
-        .matra-card:hover {
-            transform: translateY(-2px);
-            background: #0369a1;
-        }
-
-        .matra-card:active {
-            cursor: grabbing;
-        }
-
-        /* Result Screen */
-        #result-screen {
-            display: none;
-        }
-
-        .btn-restart {
-            padding: 12px 30px;
-            background: #22c55e;
-            color: white;
             border: none;
-            border-radius: 10px;
-            font-size: 18px;
-            font-weight: bold;
+            border-radius: 12px;
             cursor: pointer;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: background 0.2s;
         }
 
-        .btn-restart:hover {
-            background: #16a34a;
+        /* Results Display */
+        #results-screen {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            height: 100%;
+        }
+
+        .btn-action {
+            padding: 12px 30px;
+            background: #10b981;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
 
-    <!-- Audio Elements -->
-    <audio id="audio-correct" src="assets/correct.mp3" preload="auto"></audio>
-    <audio id="audio-wrong" src="assets/wrong.mp3" preload="auto"></audio>
+    <!-- Audio Pipelines -->
+    <audio id="snd-correct" src="assets/correct.mp3" preload="auto"></audio>
+    <audio id="snd-wrong" src="assets/wrong.mp3" preload="auto"></audio>
 
-    <!-- 1. Splash Screen Section -->
+    <!-- Splash Screen Screen -->
     <div id="splash-screen">
         <img src="assets/innovine-logo.png" alt="Innovine Logo">
         <div class="loader"></div>
     </div>
 
-    <!-- 2. Main Interactive Game Section -->
+    <!-- Master Game Wrapper -->
     <div id="game-container">
-        <h1>इ की मात्रा (f) जोड़ो!</h1>
-        <div class="score-board">प्रश्न: <span id="current-idx">1</span>/5 | अंक: <span id="score">0</span></div>
-
-        <div id="play-screen">
-            <div class="game-panel">
-                <div class="question-hint" id="question-hint">संकेत लोड हो रहा है...</div>
-                
-                <!-- Target Slots for the Word Construction -->
-                <div class="word-slots" id="word-slots"></div>
-            </div>
-
-            <p style="color: #64748b; margin-bottom: 15px; font-weight: 500;">सही मात्रा या अक्षर को खाली डिब्बे (dashed box) में खींचकर लाएँ:</p>
-            <div class="options-container" id="options-container"></div>
+        <div class="header-panel">
+            <div class="level-title" id="level-indicator">स्तर १: गुब्बारा फोड़ो (इ मात्रा वाले शब्द)</div>
+            <div class="stats">अंक (Score): <span id="score-val">0</span></div>
         </div>
 
-        <!-- 3. Final Result Screen Inside Container -->
-        <div id="result-screen">
-            <h2 style="color: #15803d; font-size: 32px; margin-bottom: 15px;">बधाई हो! 🎉</h2>
-            <p style="font-size: 22px; color: #334155; margin-bottom: 30px;">आपने खेल पूरा कर लिया है। कुल अंक: <span id="final-score">0</span>/5</p>
-            <button class="btn-restart" onclick="restartGame()">फिर से खेलें</button>
+        <!-- LEVEL 1 STAGE ARENA -->
+        <div class="stage-arena" id="balloon-arena"></div>
+
+        <!-- LEVEL 2 STAGE ARENA -->
+        <div class="stage-arena" id="catching-arena">
+            <div id="basket">टोकरी</div>
+        </div>
+
+        <!-- LEVEL 3 STAGE ARENA -->
+        <div class="stage-arena" id="racing-arena">
+            <div style="font-size: 18px; color: #475569; font-weight: bold;">खाली जगह में कौन सी मात्रा (f) आएगी? गाड़ी दौड़ाएं!</div>
+            <div class="track-box" id="race-word-display">_ कसान</div>
+            <div class="race-btn-grid" id="race-options"></div>
+        </div>
+
+        <!-- SCORE SUMMARY / RESTART -->
+        <div id="results-screen">
+            <h2 style="color: #059669; font-size: 36px; margin-bottom: 10px;">अद्भुत खेल! 🎉</h2>
+            <p style="font-size: 20px; color: #475569;" id="final-status-msg"></p>
+            <button class="btn-action" onclick="resetToBeginning()">फिर से खेलें (Restart)</button>
         </div>
     </div>
 
     <script>
-        // Game Dataset containing fresh content direct from Chapter 4 context
-        const questions = [
-            {
-                hint: "१. हम इसमें पानी पीते हैं:",
-                // Meaning "गिलास". The 'ि' matra needs to be dropped before 'ग'
-                slots: [{text: "", missing: true}, {text: "ग"}, {text: "ला"}, {text: "स"}],
-                answer: "ि",
-                options: ["ि", "ी", "ा", "ु"]
-            },
-            {
-                hint: "२. पक्षी रहने के लिए पेड़ पर क्या बनाते हैं?",
-                // Meaning "घोंसला / चिड़िया". Let's build 'चिड़िया'. Missing 'ि' before 'च'
-                slots: [{text: "", missing: true}, {text: "च"}, {text: "ड़ि"}, {text: "या"}],
-                answer: "ि",
-                options: ["ा", "ि", "ो", "ू"]
-            },
-            {
-                hint: "३. एक फल जिसमें बाहर कड़ा छिलका और अंदर पानी होता है:",
-                // Meaning "नारियल". Missing 'ि' before 'र'
-                slots: [{text: "ना"}, {text: "", missing: true}, {text: "र"}, {text: "य"}, {text: "ल"}],
-                answer: "ि",
-                options: ["ी", "ु", "ि", "े"]
-            },
-            {
-                hint: "४. भारत का राष्ट्रीय ध्वज:",
-                // Meaning "तिरंगा". Missing 'ि' before 'त'
-                slots: [{text: "", missing: true}, {text: "त"}, {text: "रं"}, {text: "गा"}],
-                answer: "ि",
-                options: ["ि", "ी", "ै", "ौ"]
-            },
-            {
-                hint: "५. पढ़ने के लिए काम आने वाली वस्तु:",
-                // Meaning "किताब". Missing 'ि' before 'क'
-                slots: [{text: "", missing: true}, {text: "क"}, {text: "ता"}, {text: "ब"}],
-                answer: "ि",
-                options: ["ु", "ा", "ो", "ि"]
-            }
-        ];
+        // Core Game Database based entirely on Chapter 4
+        const matraWords = ["इमली", "इनाम", "इडली", "इमारत", "गिलास", "किताब", "तित利", "दिन", "चिड़िया", "हिरन", "किसान", "सितार"]; // Correct answers[cite: 1]
+        const wrongMatraWords = ["आम", "माला", "मछली", "दूध", "फूल", "पेड़", "शेर", "मोर", "बंदर", "चूहा"]; // Distractors
 
-        let currentQuestionIndex = 0;
-        let score = 0;
-        let draggedValue = null;
+        let totalScore = 0;
+        let currentLevel = 1;
+        let gameLoops = [];
+        
+        const correctAudio = document.getElementById('snd-correct');
+        const wrongAudio = document.getElementById('snd-wrong');
 
-        // Audio Triggers
-        const correctSound = document.getElementById('audio-correct');
-        const wrongSound = document.getElementById('audio-wrong');
-
-        // Splash Screen Logic: Show logo exactly for 5000ms (5 seconds)
+        // Manage Entry Window Sequence (5 Second Target Duration)
         window.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
                 const splash = document.getElementById('splash-screen');
                 splash.style.opacity = 0;
                 setTimeout(() => {
                     splash.style.display = 'none';
-                    document.getElementById('game-container').style.display = 'block';
-                    loadQuestion();
+                    document.getElementById('game-container').style.display = 'flex';
+                    startLevelOne();
                 }, 500);
-            }, 5000); 
+            }, 5000);
         });
 
-        // Initialize and Load Question Data
-        function loadQuestion() {
-            if (currentQuestionIndex >= questions.length) {
-                showResults();
+        function playSound(isCorrect) {
+            const target = isCorrect ? correctAudio : wrongAudio;
+            target.currentTime = 0;
+            target.play().catch(e => console.log("Audio waiting for window interactions..."));
+        }
+
+        function clearAllIntervals() {
+            gameLoops.forEach(clearInterval);
+            gameLoops = [];
+        }
+
+        // ==========================================
+        // LEVEL 1: BALLOON POPPING
+        // ==========================================
+        function startLevelOne() {
+            currentLevel = 1;
+            document.getElementById('level-indicator').innerText = "स्तर १: गुब्बारा फोड़ो (इ मात्रा वाले शब्द)";
+            const arena = document.getElementById('balloon-arena');
+            arena.style.display = "block";
+            arena.innerHTML = "";
+
+            let itemsSpawned = 0;
+            const balloonColors = ['#ff5252', '#3b82f6', '#ec4899', '#f59e0b', '#a855f7'];
+
+            let spawnTimer = setInterval(() => {
+                if (itemsSpawned >= 15) {
+                    clearInterval(spawnTimer);
+                    setTimeout(transitionToLevelTwo, 5000); // Transition out after final balloon floats clear
+                    return;
+                }
+
+                const isCorrectWord = Math.random() > 0.4;
+                const textStr = isCorrectWord ? matraWords[Math.floor(Math.random() * matraWords.length)] : wrongMatraWords[Math.floor(Math.random() * wrongMatraWords.length)];
+
+                const balloon = document.createElement('div');
+                balloon.className = 'balloon';
+                balloon.innerText = textStr;
+                balloon.style.left = Math.random() * (arena.clientWidth - 90) + "px";
+                balloon.style.setProperty('--speed', (4 + Math.random() * 3) + "s");
+                balloon.style.backgroundColor = balloonColors[Math.floor(Math.random() * balloonColors.length)];
+
+                balloon.onclick = () => {
+                    if (isCorrectWord) {
+                        playSound(true);
+                        totalScore += 10;
+                    } else {
+                        playSound(false);
+                        totalScore = Math.max(0, totalScore - 5);
+                    }
+                    document.getElementById('score-val').innerText = totalScore;
+                    balloon.remove();
+                };
+
+                arena.appendChild(balloon);
+                itemsSpawned++;
+            }, 1000);
+
+            gameLoops.push(spawnTimer);
+        }
+
+        // ==========================================
+        // LEVEL 2: CATCHING THE INGREDIENTS
+        // ==========================================
+        function transitionToLevelTwo() {
+            clearAllIntervals();
+            document.getElementById('balloon-arena').style.display = "none";
+            
+            document.getElementById('level-indicator').innerText = "स्तर २: टोकरी में पकड़ो ('इ' की ध्वनि वाले शब्द)";
+            const arena = document.getElementById('catching-arena');
+            arena.style.display = "block";
+
+            const basket = document.getElementById('basket');
+            
+            // Mouse tracking control setup
+            arena.onmousemove = (e) => {
+                const rect = arena.getBoundingClientRect();
+                let x = e.clientX - rect.left - (basket.clientWidth / 2);
+                x = Math.max(0, Math.min(x, arena.clientWidth - basket.clientWidth));
+                basket.style.left = x + "px";
+            };
+
+            let dropsSpawned = 0;
+            let catchTimer = setInterval(() => {
+                if (dropsSpawned >= 12) {
+                    clearInterval(catchTimer);
+                    setTimeout(transitionToLevelThree, 4000);
+                    return;
+                }
+
+                const isCorrectWord = Math.random() > 0.4;
+                const textStr = isCorrectWord ? matraWords[Math.floor(Math.random() * matraWords.length)] : wrongMatraWords[Math.floor(Math.random() * wrongMatraWords.length)];
+
+                const wordObj = document.createElement('div');
+                wordObj.className = 'falling-word';
+                wordObj.innerText = textStr;
+                wordObj.style.left = Math.random() * (arena.clientWidth - 120) + "px";
+                arena.appendChild(wordObj);
+
+                let currentTop = -50;
+                let fallSpeed = 3 + Math.random() * 3;
+
+                let animationFrame = setInterval(() => {
+                    currentTop += fallSpeed;
+                    wordObj.style.top = currentTop + "px";
+
+                    // Check boundaries / overlaps with matching tool logic
+                    const basketRect = basket.getBoundingClientRect();
+                    const wordRect = wordObj.getBoundingClientRect();
+
+                    if (wordRect.bottom >= basketRect.top && 
+                        wordRect.right >= basketRect.left && 
+                        wordRect.left <= basketRect.right && 
+                        wordRect.top <= basketRect.bottom) {
+                        
+                        clearInterval(animationFrame);
+                        wordObj.remove();
+
+                        if (isCorrectWord) {
+                            playSound(true);
+                            totalScore += 10;
+                        } else {
+                            playSound(false);
+                            totalScore = Math.max(0, totalScore - 5);
+                        }
+                        document.getElementById('score-val').innerText = totalScore;
+                    }
+
+                    // Fall past frame logic
+                    if (currentTop > arena.clientHeight) {
+                        clearInterval(animationFrame);
+                        wordObj.remove();
+                    }
+                }, 20);
+
+                dropsSpawned++;
+            }, 1200);
+
+            gameLoops.push(catchTimer);
+        }
+
+        // ==========================================
+        // LEVEL 3: RACING MATRA SPELLING
+        // ==========================================
+        let racingIndex = 0;
+        const racingQuestions = [
+            { display: "_ कसान", solution: "ि", options: ["ि", "ी", "ा"] }, //[cite: 1]
+            { display: "क _ ताब", solution: "ि", options: ["ु", "ि", "ो"] }, //[cite: 1]
+            { display: "च _ ड़िया", solution: "ि", options: ["ी", "ै", "ि"] }, //[cite: 1]
+            { display: "ग _ लास", solution: "ि", options: ["ि", "ा", "ू"] } //[cite: 1]
+        ];
+
+        function transitionToLevelThree() {
+            clearAllIntervals();
+            document.getElementById('catching-arena').style.display = "none";
+            document.getElementById('level-indicator').innerText = "स्तर ३: अक्षर रेस (खाली स्थान भरो)";
+            document.getElementById('racing-arena').style.display = "flex";
+            
+            racingIndex = 0;
+            loadRacingPrompt();
+        }
+
+        function loadRacingPrompt() {
+            if (racingIndex >= racingQuestions.length) {
+                concludeGamePlay();
                 return;
             }
 
-            const q = questions[currentQuestionIndex];
-            document.getElementById('current-idx').innerText = currentQuestionIndex + 1;
-            document.getElementById('score').innerText = score;
-            document.getElementById('question-hint').innerText = q.hint;
-
-            // Generate slots UI
-            const slotsContainer = document.getElementById('word-slots');
-            slotsContainer.innerHTML = '';
+            const activeQ = racingQuestions[racingIndex];
+            document.getElementById('race-word-display').innerText = activeQ.display;
             
-            q.slots.forEach(slotData => {
-                const slotDiv = document.createElement('div');
-                slotDiv.classList.add('slot');
-                if (slotData.missing) {
-                    slotDiv.classList.add('missing');
-                    // Add Drag and Drop Listeners to Target Element
-                    slotDiv.addEventListener('dragover', dragOver);
-                    slotDiv.addEventListener('drop', dropElement);
-                } else {
-                    slotDiv.innerText = slotData.text;
-                }
-                slotsContainer.appendChild(slotDiv);
-            });
+            const btnBox = document.getElementById('race-options');
+            btnBox.innerHTML = "";
 
-            // Generate Draggable Options Cards
-            const optionsContainer = document.getElementById('options-container');
-            optionsContainer.innerHTML = '';
-            q.options.forEach(opt => {
-                const card = document.createElement('div');
-                card.classList.add('matra-card');
-                card.setAttribute('draggable', 'true');
-                card.innerText = opt;
-                
-                card.addEventListener('dragstart', (e) => {
-                    draggedValue = opt;
-                });
-                
-                optionsContainer.appendChild(card);
+            activeQ.options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = "race-opt";
+                btn.innerText = opt;
+                btn.onclick = () => processRaceAnswer(opt, activeQ.solution);
+                btnBox.appendChild(btn);
             });
         }
 
-        // Drag handlers
-        function dragOver(e) {
-            e.preventDefault();
-        }
-
-        function dropElement(e) {
-            e.preventDefault();
-            const currentQ = questions[currentQuestionIndex];
-
-            if (draggedValue === currentQ.answer) {
-                // Correct Choice Path
-                correctSound.currentTime = 0;
-                correctSound.play().catch(err => console.log("Audio play blocked by browser validation metrics."));
-                
-                score++;
-                e.target.innerText = draggedValue;
-                e.target.classList.remove('missing');
-                e.target.classList.add('correct-drop');
-
-                setTimeout(() => {
-                    currentQuestionIndex++;
-                    loadQuestion();
-                }, 1200);
+        function processRaceAnswer(chosen, exactAns) {
+            if (chosen === exactAns) {
+                playSound(true);
+                totalScore += 15;
             } else {
-                // Wrong Choice Path
-                wrongSound.currentTime = 0;
-                wrongSound.play().catch(err => console.log("Audio play blocked by browser validation metrics."));
-                
-                // Visual feedback shaking or brief flash
-                e.target.style.borderColor = '#ef4444';
-                e.target.style.background = '#fef2f2';
-                setTimeout(() => {
-                    e.target.style.borderColor = '#0284c7';
-                    e.target.style.background = '#f0f9ff';
-                }, 800);
+                playSound(false);
+                totalScore = Math.max(0, totalScore - 5);
             }
+            document.getElementById('score-val').innerText = totalScore;
+            racingIndex++;
+            loadRacingPrompt();
         }
 
-        function showResults() {
-            document.getElementById('play-screen').style.display = 'none';
-            document.getElementById('result-screen').style.display = 'block';
-            document.getElementById('final-score').innerText = score;
+        // ==========================================
+        // FINAL ENDGAME CONCLUSION
+        // ==========================================
+        function concludeGamePlay() {
+            clearAllIntervals();
+            document.getElementById('racing-arena').style.display = "none";
+            document.getElementById('level-indicator').innerText = "खेल पूरा हुआ!";
+            
+            const summary = document.getElementById('results-screen');
+            summary.style.display = "flex";
+            document.getElementById('final-status-msg').innerHTML = `शानदार प्रयास! आपका कुल स्कोर रहा: <strong>${totalScore} अंक</strong>।`;
         }
 
-        function restartGame() {
-            currentQuestionIndex = 0;
-            score = 0;
-            document.getElementById('play-screen').style.display = 'block';
-            document.getElementById('result-screen').style.display = 'none';
-            loadQuestion();
+        function resetToBeginning() {
+            totalScore = 0;
+            document.getElementById('score-val').innerText = totalScore;
+            document.getElementById('results-screen').style.display = "none";
+            startLevelOne();
         }
     </script>
 </body>
