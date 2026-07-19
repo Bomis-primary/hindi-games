@@ -21,6 +21,7 @@
             justify-content: center;
             align-items: center;
             overflow-x: hidden;
+            cursor: pointer; /* उपयोगकर्ता को संकेत देने के लिए कि कहीं भी क्लिक करें */
         }
 
         /* 1. Splash Screen */
@@ -44,6 +45,27 @@
             max-width: 260px;
             height: auto;
             margin-bottom: 20px;
+        }
+
+        .loader {
+            width: 45px;
+            height: 45px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #4f46e5;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .tap-instruction {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #6b7280;
+            font-weight: 500;
         }
 
         /* 2. Main Game Wrapper */
@@ -126,6 +148,7 @@
         .card:hover {
             transform: translateY(-3px);
             background-color: #e0e7ff;
+            box-shadow: 0 6px 12px rgba(79, 70, 229, 0.15);
         }
 
         .card.disabled {
@@ -137,8 +160,8 @@
         }
 
         .btn { 
-            padding: 15px 35px; 
-            font-size: 20px; 
+            padding: 12px 28px; 
+            font-size: 18px; 
             cursor: pointer; 
             background: #4f46e5; 
             color: white; 
@@ -146,12 +169,6 @@
             border-radius: 10px; 
             font-weight: bold;
             margin-top: 20px;
-            box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
-            transition: background 0.2s;
-        }
-
-        .btn:hover {
-            background: #4338ca;
         }
 
         .hidden { display: none; }
@@ -159,24 +176,26 @@
 </head>
 <body>
 
-    <!-- Audio Elements -->
-    <audio id="sound-clap" src="./assest/clap.mp3" preload="auto"></audio>
-    <audio id="sound-wrong" src="./assest/wrong.mp3" preload="auto"></audio>
+    <!-- Audio Elements with corrected absolute relative path 'assets/' -->
+    <audio id="sound-clap" src="assets/clap.mp3" preload="auto"></audio>
+    <audio id="sound-wrong" src="assets/wrong.mp3" preload="auto"></audio>
 
-    <!-- 1. Splash Screen Section (Exactly 5 Seconds Display with Unlocking Button) -->
+    <!-- 1. Splash Screen Section (5 Seconds Logo Display) -->
     <div id="splash-screen">
-        <img src="./assest/innovine-logo.png" alt="Innovine Logo">
-        <!-- Interactive button to instantly unlock browser audio context -->
-        <button class="btn" id="start-btn" onclick="unlockAndStartGame()">खेल शुरू करें 🎮</button>
+        <img src="assets/innovine-logo.png" alt="Innovine Logo">
+        <div class="loader"></div>
+        <p class="tap-instruction">साउंड चालू करने के लिए स्क्रीन पर कहीं भी एक बार टच करें 👇</p>
     </div>
 
     <!-- 2. Master Game Platform -->
     <div id="game-container">
-        <img src="./assest/innovine-logo.png" alt="Innovine Logo" class="top-logo">
+        <!-- Logo inside main container -->
+        <img src="assets/innovine-logo.png" alt="Innovine Logo" class="top-logo">
+        
         <h1>प्र.१. उ की टोकरी 🧺</h1>
         
         <div id="level-1" class="game-layout">
-            <p class="instruction"><strong>निर्देश:</strong> केवल उन शब्दों पर क्लिक करें जिनमें <strong>'उ' स्वर</strong> या <strong>'ु' की मात्रा</strong> है।</p>
+            <p class="instruction"><strong>निर्देश:</strong> केवल उन शब्दों पर क्लिक करें जिनमें <strong>'उ' स्वर</strong> या <strong>'u' की मात्रा</strong> है।</p>
             
             <div class="basket-zone">
                 <div class="basket-title">🧺 'उ' की टोकरी</div>
@@ -196,6 +215,7 @@
             </div>
         </div>
 
+        <!-- FINAL GAME END WRAPPER -->
         <div id="result-screen" class="hidden">
             <h2 id="msg" style="color: #4f46e5; font-size: 30px; margin-bottom: 15px;"></h2>
             <button class="btn" onclick="location.reload()">फिर से खेलें</button>
@@ -209,16 +229,14 @@
         const clapSnd = document.getElementById('sound-clap');
         const wrongSnd = document.getElementById('sound-wrong');
 
-        // Function triggered by clicking the start button
-        function unlockAndStartGame() {
-            // 1. Instantly play & pause sounds silently to trigger browser authorization
+        // Global click listener to unlock AudioContext immediately upon user interaction
+        document.body.addEventListener('click', () => {
             clapSnd.play().then(() => { clapSnd.pause(); clapSnd.currentTime = 0; }).catch(e => console.log(e));
             wrongSnd.play().then(() => { wrongSnd.pause(); wrongSnd.currentTime = 0; }).catch(e => console.log(e));
+        }, { once: true }); // triggers only once
 
-            // Hide the button, leave the logo active for the remaining splash duration
-            document.getElementById('start-btn').style.display = 'none';
-
-            // 2. Exactly 5 seconds delay before launching the core game environment
+        // Splash screen handler - Keeps logo on screen for exactly 5000 milliseconds
+        window.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
                 const splash = document.getElementById('splash-screen');
                 splash.style.opacity = 0;
@@ -227,16 +245,15 @@
                     document.getElementById('game-container').style.display = 'block';
                 }, 500);
             }, 5000);
-        }
+        });
 
         function checkWord(isCorrect, wordText, cardId) {
             const selectedCard = document.getElementById(cardId);
             if (selectedCard.classList.contains('disabled')) return;
 
             if(isCorrect) {
-                // Sound will now play reliably because of user interaction on the splash page
                 clapSnd.currentTime = 0;
-                clapSnd.play().catch(err => console.log("Audio failed:", err));
+                clapSnd.play().catch(err => console.log("Audio play blocked:", err));
                 
                 correctAnswersCount++;
                 document.getElementById('score-display').innerText = correctAnswersCount;
@@ -247,9 +264,9 @@
                 alert("बहुत बढ़िया! \"" + wordText + "\" में 'उ' की ध्वनि है।");
             } else {
                 wrongSnd.currentTime = 0;
-                wrongSnd.play().catch(err => console.log("Audio failed:", err));
+                wrongSnd.play().catch(err => console.log("Audio play blocked:", err));
                 
-                alert("सोचिए! \"" + wordText + "\" में 'उ' या 'u' की मात्रा नहीं है। दोबारा प्रयास करें!");
+                alert("सोचिए! \"" + wordText + "\" में 'उ' या 'ु' की मात्रा नहीं है। दोबारा प्रयास करें!");
             }
 
             if(correctAnswersCount >= totalRequired) {
