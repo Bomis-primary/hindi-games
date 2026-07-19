@@ -1,1 +1,296 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>मीनू की बगिया - 'ऊ' की मात्रा का खेल</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
+        body { 
+            font-family: 'Arial', sans-serif; 
+            text-align: center; 
+            background: linear-gradient(135deg, #f0fdf4, #dcfce7); 
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            cursor: pointer;
+        }
+
+        /* 1. Splash Screen */
+        #splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 1;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        #splash-screen img {
+            max-width: 260px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        .loader {
+            width: 45px;
+            height: 45px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #22c55e;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .tap-hint {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        /* 2. Main Game Container */
+        #game-container { 
+            display: none; 
+            width: 95%;
+            max-width: 850px; 
+            margin: 20px auto; 
+            padding: 30px; 
+            background: white; 
+            border-radius: 20px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05); 
+        }
+
+        .top-logo {
+            max-width: 160px;
+            height: auto;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            color: #166534;
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+
+        .instruction {
+            font-size: 18px;
+            color: #374151;
+            margin-bottom: 25px;
+        }
+
+        .game-layout {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+        }
+
+        /* Target Zone (Basket/Garden Box) */
+        .target-zone {
+            background-color: #dcfce7;
+            border: 3px dashed #22c55e;
+            padding: 20px;
+            border-radius: 15px;
+            width: 100%;
+            max-width: 450px;
+            margin-bottom: 20px;
+        }
+
+        .target-title {
+            font-size: 22px;
+            color: #166534;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .target-counter {
+            font-size: 16px;
+            color: #14532d;
+        }
+
+        /* Word Grid */
+        .word-grid { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 20px; 
+            width: 100%;
+        }
+
+        .card { 
+            padding: 25px 15px; 
+            border: 2px solid #86efac; 
+            border-radius: 12px; 
+            cursor: pointer; 
+            font-size: 24px; 
+            font-weight: bold;
+            background: #f8fafc;
+            transition: all 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            background-color: #f0fdf4;
+            box-shadow: 0 6px 12px rgba(34, 197, 94, 0.15);
+        }
+
+        .card.disabled {
+            background-color: #e2e8f0;
+            border-color: #cbd5e1;
+            color: #94a3b8;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn { 
+            padding: 12px 28px; 
+            font-size: 18px; 
+            cursor: pointer; 
+            background: #22c55e; 
+            color: white; 
+            border: none; 
+            border-radius: 10px; 
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .btn:hover {
+            background: #16a34a;
+        }
+
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+    <!-- Audio Elements (Using precise relative paths as requested) -->
+    <audio id="sound-clap" src="assets/correct.mp3" preload="auto"></audio>
+    <audio id="sound-wrong" src="assets/wrong.mp3" preload="auto"></audio>
+
+    <!-- 1. Splash Screen Section (5 Seconds Display) -->
+    <div id="splash-screen">
+        <img src="assets/innovine-logo.png" alt="Innovine Logo">
+        <div class="loader"></div>
+        <p class="tap-hint font-hindi">आवाज़ सक्रिय करने के लिए स्क्रीन पर कहीं भी एक बार टच करें 👇</p>
+    </div>
+
+    <!-- 2. Master Game Platform -->
+    <div id="game-container">
+        <!-- Logo inside main container -->
+        <img src="assets/innovine-logo.png" alt="Innovine Logo" class="top-logo">
+        
+        <h1>प्र.१. 'ऊ' की बगिया 🌸</h1>
+        
+        <div id="level-1" class="game-layout">
+            <p class="instruction"><strong>निर्देश:</strong> केवल उन शब्दों पर क्लिक करें जिनमें <strong>'ऊ' स्वर</strong> या <strong>'ू' (बड़ा ऊ) की मात्रा</strong> है, ताकि वे मीनू की बगिया में खिल सकें!</p>
+            
+            <!-- Target Collection Zone -->
+            <div class="target-zone">
+                <div class="target-title">🌸 मीनू की बगिया</div>
+                <div class="target-counter">बगिया में खिले शब्द: <span id="score-display">0</span> / 6</div>
+            </div>
+
+            <!-- Vocabulary taken directly from the provided textbook page text lists -->
+            <div class="word-grid">
+                <!-- Correct options from lists: ऊन, ऊँट, फूल, जूता, सूरजमुखी, कबूतर -->
+                <div class="card" id="w1" onclick="checkWord(true, 'ऊन', 'w1')">ऊन</div>
+                <div class="card" id="w2" onclick="checkWord(true, 'फूल', 'w2')">फूल</div>
+                <!-- Distractors without long U sound -->
+                <div class="card" id="w3" onclick="checkWord(false, 'घर', 'w3')">घर</div>
+                <div class="card" id="w4" onclick="checkWord(true, 'जूता', 'w4')">जूता</div>
+                <div class="card" id="w5" onclick="checkWord(false, 'किताब', 'w5')">किताब</div>
+                <div class="card" id="w6" onclick="checkWord(true, 'कबूतर', 'w6')">कबूतर</div>
+                <div class="card" id="w7" onclick="checkWord(false, 'बर्तन', 'w7')">बर्तन</div>
+                <div class="card" id="w8" onclick="checkWord(true, 'सूरजमुखी', 'w8')">सूरजमुखी</div>
+                <div class="card" id="w9" onclick="checkWord(true, 'ऊँट', 'w9')">ऊँट</div>
+            </div>
+        </div>
+
+        <!-- FINAL GAME END WRAPPER -->
+        <div id="result-screen" class="hidden">
+            <h2 id="msg" style="color: #166534; font-size: 30px; margin-bottom: 15px;"></h2>
+            <button class="btn" onclick="location.reload()">फिर से खेलें</button>
+        </div>
+    </div>
+
+    <script>
+        let correctAnswersCount = 0;
+        const totalRequired = 6; // ऊन, फूल, जूता, कबूतर, सूरजमुखी, ऊँट
+
+        const clapSnd = document.getElementById('sound-clap');
+        const wrongSnd = document.getElementById('sound-wrong');
+
+        // Global touch/click interaction to trigger browser audio permissions instantly
+        document.body.addEventListener('click', () => {
+            clapSnd.play().then(() => { clapSnd.pause(); clapSnd.currentTime = 0; }).catch(e => console.log(e));
+            wrongSnd.play().then(() => { wrongSnd.pause(); wrongSnd.currentTime = 0; }).catch(e => console.log(e));
+        }, { once: true });
+
+        // Splash screen timer logic: Keeps logo up for exactly 5000ms
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                const splash = document.getElementById('splash-screen');
+                splash.style.opacity = 0;
+                setTimeout(() => {
+                    splash.style.display = 'none';
+                    document.getElementById('game-container').style.display = 'block';
+                }, 500);
+            }, 5000);
+        });
+
+        function checkWord(isCorrect, wordText, cardId) {
+            const selectedCard = document.getElementById(cardId);
+            
+            if (selectedCard.classList.contains('disabled')) return;
+
+            if(isCorrect) {
+                // Instantly plays approved sound clip
+                clapSnd.currentTime = 0;
+                clapSnd.play().catch(err => console.log("Audio play blocked:", err));
+                
+                correctAnswersCount++;
+                document.getElementById('score-display').innerText = correctAnswersCount;
+                
+                selectedCard.classList.add('disabled');
+                selectedCard.style.border = "2px solid #22c55e";
+                selectedCard.style.backgroundColor = "#f0fdf4";
+                
+                alert("बहुत बढ़िया! \"" + wordText + "\" में 'ऊ' की ध्वनि है और यह बगिया में खिल गया।");
+            } else {
+                wrongSnd.currentTime = 0;
+                wrongSnd.play().catch(err => console.log("Audio play blocked:", err));
+                
+                alert("सोचिए! \"" + wordText + "\" में 'ऊ' या 'ू' की मात्रा नहीं है। दोबारा प्रयास करें!");
+            }
+
+            // Victory state handler
+            if(correctAnswersCount >= totalRequired) {
+                setTimeout(() => {
+                    document.getElementById('level-1').classList.add('hidden');
+                    document.getElementById('result-screen').classList.remove('hidden');
+                    document.getElementById('msg').innerHTML = "अद्भुत! 🎉<br>आपने सभी सही शब्दों को मीनू की बगिया में पहुँचा दिया है।";
+                }, 500);
+            }
+        }
+    </script>
+</body>
+</html>
