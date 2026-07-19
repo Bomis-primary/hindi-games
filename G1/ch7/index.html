@@ -23,7 +23,7 @@
             overflow-x: hidden;
         }
 
-        /* 1. Splash Screen (5 Seconds Logo Display) */
+        /* 1. Splash Screen */
         #splash-screen {
             position: fixed;
             top: 0;
@@ -44,20 +44,6 @@
             max-width: 260px;
             height: auto;
             margin-bottom: 20px;
-        }
-
-        .loader {
-            width: 45px;
-            height: 45px;
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid #4f46e5;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
         }
 
         /* 2. Main Game Wrapper */
@@ -90,7 +76,6 @@
             margin-bottom: 25px;
         }
 
-        /* Game Layout split into two parts */
         .game-layout {
             display: flex;
             flex-direction: column;
@@ -98,7 +83,6 @@
             align-items: center;
         }
 
-        /* Basket representation */
         .basket-zone {
             background-color: #fef3c7;
             border: 3px dashed #d97706;
@@ -121,7 +105,6 @@
             color: #78350f;
         }
 
-        /* Elements Grid */
         .word-grid { 
             display: grid; 
             grid-template-columns: repeat(3, 1fr); 
@@ -138,13 +121,11 @@
             font-weight: bold;
             background: #f8fafc;
             transition: all 0.2s ease;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
         }
 
         .card:hover {
             transform: translateY(-3px);
             background-color: #e0e7ff;
-            box-shadow: 0 6px 12px rgba(79, 70, 229, 0.15);
         }
 
         .card.disabled {
@@ -153,12 +134,11 @@
             color: #94a3b8;
             cursor: not-allowed;
             transform: none;
-            box-shadow: none;
         }
 
         .btn { 
-            padding: 12px 28px; 
-            font-size: 18px; 
+            padding: 15px 35px; 
+            font-size: 20px; 
             cursor: pointer; 
             background: #4f46e5; 
             color: white; 
@@ -166,6 +146,8 @@
             border-radius: 10px; 
             font-weight: bold;
             margin-top: 20px;
+            box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
+            transition: background 0.2s;
         }
 
         .btn:hover {
@@ -181,34 +163,29 @@
     <audio id="sound-clap" src="./assest/clap.mp3" preload="auto"></audio>
     <audio id="sound-wrong" src="./assest/wrong.mp3" preload="auto"></audio>
 
-    <!-- 1. Splash Screen Section (5 Seconds) -->
+    <!-- 1. Splash Screen Section (Exactly 5 Seconds Display with Unlocking Button) -->
     <div id="splash-screen">
         <img src="./assest/innovine-logo.png" alt="Innovine Logo">
-        <div class="loader"></div>
+        <!-- Interactive button to instantly unlock browser audio context -->
+        <button class="btn" id="start-btn" onclick="unlockAndStartGame()">खेल शुरू करें 🎮</button>
     </div>
 
     <!-- 2. Master Game Platform -->
     <div id="game-container">
-        <!-- Logo inside main container -->
         <img src="./assest/innovine-logo.png" alt="Innovine Logo" class="top-logo">
-        
         <h1>प्र.१. उ की टोकरी 🧺</h1>
         
         <div id="level-1" class="game-layout">
-            <p class="instruction"><strong>निर्देश:</strong> केवल उन शब्दों पर क्लिक करें जिनमें <strong>'उ' स्वर</strong> या <strong>'ु' (छोटा उ) की मात्रा</strong> है, ताकि वे टोकरी में जा सकें!</p>
+            <p class="instruction"><strong>निर्देश:</strong> केवल उन शब्दों पर क्लिक करें जिनमें <strong>'उ' स्वर</strong> या <strong>'ु' की मात्रा</strong> है।</p>
             
-            <!-- Basket Zone based on Textbook Exercise -->
             <div class="basket-zone">
                 <div class="basket-title">🧺 'उ' की टोकरी</div>
                 <div class="basket-counter">टोकरी में शब्द: <span id="score-display">0</span> / 5</div>
             </div>
 
-            <!-- Options from Textbook Pages -->
             <div class="word-grid">
-                <!-- Correct options from lists and illustrations -->
                 <div class="card" id="w1" onclick="checkWord(true, 'उल्लू', 'w1')">उल्लू</div>
                 <div class="card" id="w2" onclick="checkWord(true, 'कुर्सी', 'w2')">कुर्सी</div>
-                <!-- Distractors based on standard words -->
                 <div class="card" id="w3" onclick="checkWord(false, 'कमल', 'w3')">कमल</div>
                 <div class="card" id="w4" onclick="checkWord(true, 'गुड़िया', 'w4')">गुड़िया</div>
                 <div class="card" id="w5" onclick="checkWord(false, 'आम', 'w5')">आम</div>
@@ -219,7 +196,6 @@
             </div>
         </div>
 
-        <!-- FINAL GAME END WRAPPER -->
         <div id="result-screen" class="hidden">
             <h2 id="msg" style="color: #4f46e5; font-size: 30px; margin-bottom: 15px;"></h2>
             <button class="btn" onclick="location.reload()">फिर से खेलें</button>
@@ -228,13 +204,21 @@
 
     <script>
         let correctAnswersCount = 0;
-        const totalRequired = 5; // उल्लू, कुर्सी, गुड़िया, चुहिया, कुटिया
+        const totalRequired = 5; 
 
         const clapSnd = document.getElementById('sound-clap');
         const wrongSnd = document.getElementById('sound-wrong');
 
-        // Splash screen handler (Exactly 5000 milliseconds display time)
-        window.addEventListener('DOMContentLoaded', () => {
+        // Function triggered by clicking the start button
+        function unlockAndStartGame() {
+            // 1. Instantly play & pause sounds silently to trigger browser authorization
+            clapSnd.play().then(() => { clapSnd.pause(); clapSnd.currentTime = 0; }).catch(e => console.log(e));
+            wrongSnd.play().then(() => { wrongSnd.pause(); wrongSnd.currentTime = 0; }).catch(e => console.log(e));
+
+            // Hide the button, leave the logo active for the remaining splash duration
+            document.getElementById('start-btn').style.display = 'none';
+
+            // 2. Exactly 5 seconds delay before launching the core game environment
             setTimeout(() => {
                 const splash = document.getElementById('splash-screen');
                 splash.style.opacity = 0;
@@ -243,36 +227,31 @@
                     document.getElementById('game-container').style.display = 'block';
                 }, 500);
             }, 5000);
-        });
+        }
 
         function checkWord(isCorrect, wordText, cardId) {
             const selectedCard = document.getElementById(cardId);
-            
-            // Prevent clicking already disabled correct cards
             if (selectedCard.classList.contains('disabled')) return;
 
             if(isCorrect) {
-                // Play success audio
+                // Sound will now play reliably because of user interaction on the splash page
                 clapSnd.currentTime = 0;
-                clapSnd.play().catch(() => {});
+                clapSnd.play().catch(err => console.log("Audio failed:", err));
                 
                 correctAnswersCount++;
                 document.getElementById('score-display').innerText = correctAnswersCount;
                 
-                // Visual response: disable and mark card
                 selectedCard.classList.add('disabled');
                 selectedCard.style.border = "2px solid #10b981";
                 
-                alert("बहुत बढ़िया! \"" + wordText + "\" में 'उ' की ध्वनि है और यह टोकरी में चला गया।");
+                alert("बहुत बढ़िया! \"" + wordText + "\" में 'उ' की ध्वनि है।");
             } else {
-                // Play fail audio
                 wrongSnd.currentTime = 0;
-                wrongSnd.play().catch(() => {});
+                wrongSnd.play().catch(err => console.log("Audio failed:", err));
                 
-                alert("सोचिए! \"" + wordText + "\" में 'उ' या 'ु' की मात्रा नहीं है। दोबारा प्रयास करें!");
+                alert("सोचिए! \"" + wordText + "\" में 'उ' या 'u' की मात्रा नहीं है। दोबारा प्रयास करें!");
             }
 
-            // Check if game complete
             if(correctAnswersCount >= totalRequired) {
                 setTimeout(() => {
                     document.getElementById('level-1').classList.add('hidden');
