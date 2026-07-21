@@ -35,12 +35,11 @@
             position: relative;
         }
 
-        /* Responsive Screen States Wrapper */
         .game-screen {
             display: none;
             width: 100%;
             max-width: 800px;
-            min-height: 80vh;
+            min-height: 85vh;
             background: white;
             border-radius: 35px;
             padding: 25px 20px;
@@ -63,7 +62,7 @@
             to { opacity: 1; transform: scale(1); }
         }
 
-        /* SCREEN 1: SPLASH LOGO SCREEN */
+        /* LOGO SCREEN */
         #screen-logo {
             background: #ffffff;
             border-color: #f0f0f0;
@@ -79,11 +78,11 @@
             50% { transform: scale(1.03); }
         }
 
-        /* CORE TYPOGRAPHY & INTERACTIVE BUTTONS */
+        /* TYPOGRAPHY & BUTTONS */
         h1 {
             color: #ff477e;
-            font-size: calc(2.2rem + 1.5vw);
-            margin-bottom: 20px;
+            font-size: calc(2.2rem + 1.2vw);
+            margin-bottom: 15px;
             text-shadow: 2px 2px 0px #ffe5ec;
         }
 
@@ -98,7 +97,7 @@
             box-shadow: 0 8px 0 #27ae60;
             cursor: pointer;
             transition: transform 0.1s ease, box-shadow 0.1s ease;
-            margin-top: 20px;
+            margin-top: 15px;
             display: inline-block;
         }
         .action-btn:active {
@@ -113,35 +112,47 @@
             box-shadow: 0 2px 0 #0096c7;
         }
 
-        /* SCREEN 3: INSTRUCTIONS CARD LAYOUT */
-        .instruction-box {
-            background: #fff5f6;
-            border: 3px dashed var(--bubblegum);
-            border-radius: 25px;
-            padding: 20px;
-            text-align: left;
+        /* KIDS INSTRUCTIONS GRID */
+        .instruction-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
             width: 100%;
             margin-bottom: 15px;
         }
-        .instruction-line {
-            font-size: calc(1.1rem + 0.4vw);
-            color: #4a4a4a;
-            margin-bottom: 15px;
+        .instruction-card {
+            background: #fff0f3;
+            border: 3px dashed var(--bubblegum);
+            border-radius: 20px;
+            padding: 12px;
             display: flex;
             align-items: center;
-            gap: 10px;
-            line-height: 1.5;
+            gap: 12px;
+            text-align: left;
+        }
+        .instruction-card .icon {
+            font-size: 2.2rem;
+            background: white;
+            padding: 8px;
+            border-radius: 15px;
+            box-shadow: 0 4px 0 rgba(0,0,0,0.05);
+        }
+        .instruction-card .text {
+            font-size: calc(0.95rem + 0.3vw);
+            color: #444;
+            font-weight: bold;
+            line-height: 1.3;
         }
 
-        /* SCREEN 4: TOP LIVE HEADS-UP DISPLAY BAR */
+        /* STATUS BAR */
         .status-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
             width: 100%;
             padding: 0 5px;
-            margin-bottom: 15px;
-            font-size: calc(1.2rem + 0.6vw);
+            margin-bottom: 12px;
+            font-size: calc(1.2rem + 0.5vw);
             font-weight: bold;
         }
         .heart-box {
@@ -155,39 +166,34 @@
             border: 2px solid #ffeeba;
         }
 
-        /* PROGRESS TRACK PATHWAY MAP */
+        /* MAP TRACK */
         .map-track {
             display: grid;
             grid-template-columns: repeat(12, 1fr);
             align-items: center;
             background: #fff5f6;
-            padding: 15px 5px;
+            padding: 12px 5px;
             border-radius: 20px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             border: 3px dashed #ffb3c1;
             position: relative;
             width: 100%;
             gap: 2px;
         }
         .map-tile {
-            height: calc(30px + 3vw);
+            height: calc(28px + 2.5vw);
             background: #e2e8f0;
             border-radius: 50%;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            font-size: calc(0.6rem + 0.5vw);
+            font-size: calc(0.6rem + 0.4vw);
             font-weight: bold;
             color: white;
             z-index: 5;
             box-shadow: 0 3px 0 #cbd5e1;
             transition: background 0.3s;
-        }
-        .map-tile .tile-icon {
-            font-size: 0.6rem;
-            margin-top: 1px;
-            display: block;
         }
         .map-tile.passed {
             background: var(--grass);
@@ -199,45 +205,55 @@
             box-shadow: 0 3px 0 #7b2cbf;
         }
         .pawn-avatar {
-            font-size: calc(1.5rem + 2vw);
+            font-size: calc(1.5rem + 1.8vw);
             position: absolute;
-            top: calc(-12px - 1vw);
+            top: calc(-10px - 1vw);
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.3);
             z-index: 10;
         }
 
-        /* MAIN CHALLENGE DISPLAY CARD DISPLAY PANEL */
+        /* MAIN DISPLAY CARD */
         .display-box {
             background: #f8f9fa;
             border: 5px solid var(--sky);
             border-radius: 25px;
-            padding: 20px 10px;
-            margin-bottom: 20px;
+            padding: 15px 10px;
+            margin-bottom: 15px;
             box-shadow: 0 8px 0 #bde0fe;
             width: 100%;
             position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         .mode-badge {
             display: inline-block;
-            padding: 5px 15px;
+            padding: 4px 14px;
             font-size: calc(0.9rem + 0.3vw);
             font-weight: bold;
             color: white;
-            border-radius: 15px;
-            margin-bottom: 10px;
+            border-radius: 12px;
+            margin-bottom: 8px;
+        }
+        .card-image {
+            max-height: 140px;
+            width: auto;
+            object-fit: contain;
+            margin-bottom: 8px;
+            border-radius: 12px;
         }
         .giant-emoji {
-            font-size: calc(4.5rem + 4vw); 
-            margin-bottom: 10px;
+            font-size: calc(3.5rem + 3vw); 
+            margin-bottom: 5px;
             display: block;
         }
         .math-spell {
-            font-size: calc(1.8rem + 1.2vw);
+            font-size: calc(1.6rem + 1vw);
             font-weight: bold;
             color: #333;
         }
 
-        /* ADAPTIVE CHOICE CONTROLS BUTTON SYSTEM */
+        /* CHOICE BUTTONS */
         .choices-layout {
             display: flex;
             gap: 15px;
@@ -248,8 +264,8 @@
             background: white;
             border: 5px solid var(--sunshine);
             border-radius: 22px;
-            padding: 15px 5px;
-            font-size: calc(1.6rem + 1.5vw);
+            padding: 12px 5px;
+            font-size: calc(1.6rem + 1.2vw);
             font-weight: bold;
             color: #212529;
             cursor: pointer;
@@ -270,23 +286,17 @@
             box-shadow: 0 2px 0 #4361ee;
         }
 
-        /* GLOW HINT VISUAL FLASH SYSTEM EFFECT */
+        /* GLOW HINT EFFECT */
         .choice-card.glow-hint {
             animation: intenseGlow 1.2s infinite alternate;
             border-color: #00ff88 !important;
         }
         @keyframes intenseGlow {
-            0% {
-                transform: scale(1);
-                box-shadow: 0 0 10px #00ff88, 0 8px 0 #27ae60;
-            }
-            100% {
-                transform: scale(1.04);
-                box-shadow: 0 0 25px #00ff88, 0 8px 0 #27ae60;
-            }
+            0% { transform: scale(1); box-shadow: 0 0 10px #00ff88, 0 8px 0 #27ae60; }
+            100% { transform: scale(1.04); box-shadow: 0 0 25px #00ff88, 0 8px 0 #27ae60; }
         }
 
-        /* LIGHTWEIGHT DOM PARTICLES SYSTEM CONFETTI BLOWS */
+        /* CONFETTI */
         .confetti-piece {
             position: absolute;
             width: 12px;
@@ -297,17 +307,11 @@
             animation: explodeParticles 0.8s forwards cubic-bezier(0.1, 0.8, 0.3, 1);
         }
         @keyframes explodeParticles {
-            0% {
-                transform: translate(0, 0) rotate(0deg) scale(1);
-                opacity: 1;
-            }
-            100% {
-                transform: translate(var(--x), var(--y)) rotate(var(--r)) scale(0);
-                opacity: 0;
-            }
+            0% { transform: translate(0, 0) rotate(0deg) scale(1); opacity: 1; }
+            100% { transform: translate(var(--x), var(--y)) rotate(var(--r)) scale(0); opacity: 0; }
         }
 
-        /* CONTEXT STATE OVERLAYS POPUP SCREENS */
+        /* OVERLAY SCREENS */
         .screen-overlay {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -321,45 +325,57 @@
             padding: 20px;
         }
 
-        /* Cross-Device Optimization Breakpoint Engine */
-        @media (max-width: 480px) {
+        @media (max-width: 500px) {
             body { padding: 5px; }
-            .game-screen { padding: 15px 10px; border-width: 4px; }
-            .choices-layout { flex-direction: column; gap: 12px; }
-            .choice-card { padding: 12px 5px; box-shadow: 0 6px 0 #fb8500; }
-            .choice-card:active { transform: translateY(4px); box-shadow: 0 2px 0 #fb8500; }
-            .choice-card.alt-color { box-shadow: 0 6px 0 #4361ee; }
-            .choice-card.alt-color:active { box-shadow: 0 2px 0 #4361ee; }
-            .map-track { padding: 10px 2px; }
+            .game-screen { padding: 15px 10px; }
+            .instruction-grid { grid-template-columns: 1fr; gap: 8px; }
+            .choices-layout { flex-direction: column; gap: 10px; }
+            .choice-card { padding: 10px 5px; }
+            .card-image { max-height: 110px; }
         }
     </style>
 </head>
 <body>
 
+    <!-- LOGO SCREEN -->
     <div id="screen-logo" class="game-screen active">
         <img src="assets/innovine-logo.png" alt="Innovine Logo" class="logo-img" onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='block';">
         <h2 id="logo-fallback" style="display:none; font-size: 2.5rem; color: #333;">Innovine Media</h2>
     </div>
 
+    <!-- TITLE SCREEN -->
     <div id="screen-title" class="game-screen">
         <span style="font-size: 4.5rem; margin-bottom: 10px;">🎪</span>
         <h1>मात्रा मेला</h1>
-        <p style="font-size: 1.3rem; color: #666; margin-bottom: 20px;">आओ मिलकर औ (ू) मात्रा सीखें!</p>
+        <p style="font-size: 1.3rem; color: #666; margin-bottom: 20px;">आओ मिलकर <b>औ (ौ)</b> मात्रा सीखें!</p>
         <button class="action-btn" onclick="switchScreen('screen-title', 'screen-instructions')">शुरू करें 🚀</button>
     </div>
 
+    <!-- INSTRUCTIONS SCREEN -->
     <div id="screen-instructions" class="game-screen">
         <h1>कैसे खेलें? 🎯</h1>
-        <div class="instruction-box">
-            <div class="instruction-line"><span>🎈</span> सही मात्रा वाले शब्द को पहचानकर छूना है।</div>
-            <div class="instruction-line"><span>🌟</span> हर सही जवाब पर आपको मिलेंगे <b>10 अंक</b>।</div>
-            <div class="instruction-line"><span>🦁</span> सही उत्तर पर शेर आगे बढ़ेगा और <b>कन्फेटी धमाका</b> होगा!</div>
-            <div class="instruction-line"><span>💡</span> गलत जवाब देने पर सही बटन चमकने (Glow) लगेगा!</div>
-            <div class="instruction-line"><span>❤️</span> आपके पास कुल 3 जिंदगियां हैं।</div>
+        <div class="instruction-grid">
+            <div class="instruction-card">
+                <span class="icon">👆</span>
+                <span class="text">सही उत्तर वाले बटन को छुओ</span>
+            </div>
+            <div class="instruction-card">
+                <span class="icon">🦁</span>
+                <span class="text">सही जवाब पर शेर आगे बढ़ेगा</span>
+            </div>
+            <div class="instruction-card">
+                <span class="icon">💡</span>
+                <span class="text">गलत उत्तर होने पर बटन चमकेगा</span>
+            </div>
+            <div class="instruction-card">
+                <span class="icon">❤️</span>
+                <span class="text">आपके पास कुल 3 जिंदगियां हैं</span>
+            </div>
         </div>
         <button class="action-btn blue-btn" onclick="initAudioAndStartGame()">खेलें 🎮</button>
     </div>
 
+    <!-- GAME PLAY SCREEN -->
     <div id="screen-game" class="game-screen">
         <div class="status-bar">
             <div class="heart-box" id="heartBox">❤️ ❤️ ❤️</div>
@@ -369,23 +385,24 @@
         <div class="map-track" id="trackLine">
             <div class="pawn-avatar" id="heroPawn">🦁</div>
             <div class="map-tile passed" id="tile-0">शुरू</div>
-            <div class="map-tile" id="tile-1">१<span class="tile-icon">🧩</span></div>
-            <div class="map-tile" id="tile-2">२<span class="tile-icon">🖼️</span></div>
-            <div class="map-tile" id="tile-3">३<span class="tile-icon">🔍</span></div>
-            <div class="map-tile" id="tile-4">४<span class="tile-icon">🧩</span></div>
-            <div class="map-tile" id="tile-5">५<span class="tile-icon">🖼️</span></div>
-            <div class="map-tile" id="tile-6">६<span class="tile-icon">🔍</span></div>
-            <div class="map-tile" id="tile-7">७<span class="tile-icon">🧩</span></div>
-            <div class="map-tile" id="tile-8">८<span class="tile-icon">🖼️</span></div>
-            <div class="map-tile" id="tile-9">९<span class="tile-icon">🔍</span></div>
-            <div class="map-tile" id="tile-10">१०<span class="tile-icon">🖼️</span></div>
+            <div class="map-tile" id="tile-1">१</div>
+            <div class="map-tile" id="tile-2">२</div>
+            <div class="map-tile" id="tile-3">३</div>
+            <div class="map-tile" id="tile-4">४</div>
+            <div class="map-tile" id="tile-5">५</div>
+            <div class="map-tile" id="tile-6">६</div>
+            <div class="map-tile" id="tile-7">७</div>
+            <div class="map-tile" id="tile-8">८</div>
+            <div class="map-tile" id="tile-9">९</div>
+            <div class="map-tile" id="tile-10">१०</div>
             <div class="map-tile finish-gate" id="tile-11">🏁</div>
         </div>
 
         <div class="display-box" id="mainDisplayCard">
             <span class="mode-badge" id="gameModeBadge">🧩 मात्रा जोड़ो</span>
-            <span class="giant-emoji" id="bigEmoji">🌱</span>
-            <div class="math-spell" id="spellFormula">प + ौ + ध + ा</div>
+            <img id="cardImg" class="card-image" src="" alt="Level Asset" style="display: none;">
+            <span class="giant-emoji" id="bigEmoji">🏃</span>
+            <div class="math-spell" id="spellFormula">द + ौ + ड़</div>
         </div>
 
         <div class="choices-layout" id="buttonsLayout"></div>
@@ -398,35 +415,34 @@
     </div>
 
 <script>
-    // Audio engine mapped sync from ch12 assets configuration 
+    // Asset Audio Engine Mapped
     const audioCorrect = new Audio('assets/correct.mp3');
     const audioWrong = new Audio('assets/wrong.mp3');
     const audioClaps = new Audio('assets/freesound_community-claps-44774.mp3');
 
-    // 100% Textbook Mapped Interactive Levels Array from image_8e1d7c.png
+    // Mapped levels strictly using your assets folder assets
     const levels = [
-        { type: "jodo", emoji: "🌱", math: "प + ौ + ध + ा", correct: "पौधा", choices: ["पोधा", "पौधा"] },
-        { type: "chitra", emoji: "🦅", math: "यह चित्र किसका है?", correct: "कौआ", choices: ["कौआ", "कोआ"] },
-        { type: "pehchano", emoji: "🧣", math: "सही मात्रा पहचानो", correct: "तौलिया", choices: ["तोलिया", "तौलिया"] },
-        { type: "jodo", emoji: "🏃", math: "द + ौ + ड़", correct: "दौड़", choices: ["दौड़", "दोड़"] },
-        { type: "chitra", emoji: "🔧", math: "टूलबॉक्स में क्या होते हैं?", correct: "औजार", choices: ["ओजार", "औजार"] },
-        { type: "pehchano", emoji: "🔢", math: "सही मात्रा पहचानो (14)", correct: "चौदह", choices: ["चौदह", "चोदह"] },
-        { type: "jodo", emoji: "🪖", math: "फ + ौ + ज + ी", correct: "फौजी", choices: ["फोजी", "फौजी"] },
-        { type: "chitra", emoji: "👩", math: "यह चित्र किसका है?", correct: "औरत", choices: ["औरत", "ओरत"] },
-        { type: "pehchano", emoji: "🧑‍🍳", math: "सही मात्रा पहचानो", correct: "नौकर", choices: ["नोकर", "नौकर"] },
-        { type: "chitra", emoji: "💊", math: "बीमार होने पर क्या लेते हैं?", correct: "औषधि", choices: ["ओषधि", "औषधि"] }
+        { type: "jodo", img: "daud.png", fallbackEmoji: "🏃", math: "द + ौ + ड़", correct: "दौड़", choices: ["दोड़", "दौड़"] },
+        { type: "chitra", img: "aurat.png", fallbackEmoji: "👩", math: "यह कौन है?", correct: "औरत", choices: ["औरत", "ओरत"] },
+        { type: "pehchano", img: "mausa.png", fallbackEmoji: "👨", math: "सही शब्द छुओ", correct: "मौसा", choices: ["मोसा", "मौसा"] },
+        { type: "chitra", img: "mausi.png", fallbackEmoji: "👩‍🦱", math: "यह कौन है?", correct: "मौसी", choices: ["मोसी", "मौसी"] },
+        { type: "pehchano", img: "fauji.png", fallbackEmoji: "🪖", math: "देश का वीर जवान", correct: "फ़ौजी", choices: ["फोजी", "फ़ौजी"] },
+        { type: "jodo", img: "square.png", fallbackEmoji: "🪑", math: "च + ौ + क + ी", correct: "चौकी", choices: ["चोकी", "चौकी"] },
+        { type: "chitra", img: "daulat.png", fallbackEmoji: "💰", math: "सिक्के और धन", correct: "दौलत", choices: ["दौलत", "दोलत"] },
+        { type: "pehchano", img: "naukar.png", fallbackEmoji: "🧑‍🍳", math: "घर का मददगार", correct: "नौकर", choices: ["नोकर", "नौकर"] },
+        { type: "chitra", img: "samosa.png", fallbackEmoji: "🔺", math: "यह क्या है?", correct: "समोसा", choices: ["समौसा", "समोसा"] },
+        { type: "jodo", img: "taufa.png", fallbackEmoji: "🎁", math: "त + ो + ह + फ़ + ा", correct: "तोहफ़ा", choices: ["तोहफ़ा", "तौहफ़ा"] }
     ];
 
-    let currentLevelIndex = 1; // Start cleanly at level 1 node coordinates
+    let currentLevelIndex = 1;
     let totalLives = 3;
     let totalScore = 0;
     let wrongAttemptsOnLevel = 0;
 
-    // Automated 5 Seconds Router Action
     window.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
             switchScreen('screen-logo', 'screen-title');
-        }, 5000);
+        }, 3000);
     });
 
     function switchScreen(hideId, showId) {
@@ -437,7 +453,6 @@
         }
     }
 
-    // iOS/Android stock WebView audio contextual unlock activation framework permissions
     function initAudioAndStartGame() {
         [audioCorrect, audioWrong, audioClaps].forEach(track => {
             track.play().catch(() => {});
@@ -467,7 +482,6 @@
         pawn.style.left = `${centerOffset}px`;
     }
 
-    // Offline Client Native Performance Confetti System Burst
     function launchConfettiBurst() {
         const arenaCard = document.getElementById('mainDisplayCard');
         const particleColors = ['#ff758f', '#4cc9f0', '#2ecc71', '#ffb703', '#9b5de5', '#ff6b6b'];
@@ -504,7 +518,6 @@
             return;
         }
 
-        // Highlight passed step path tracking
         for (let i = 0; i < currentLevelIndex; i++) {
             const tile = document.getElementById(`tile-${i}`);
             if (tile) tile.classList.add('passed');
@@ -513,6 +526,8 @@
         const currentData = levels[currentLevelIndex - 1];
         const badge = document.getElementById('gameModeBadge');
         const cardBox = document.getElementById('mainDisplayCard');
+        const cardImg = document.getElementById('cardImg');
+        const bigEmoji = document.getElementById('bigEmoji');
 
         if(currentData.type === "jodo") {
             badge.innerText = "🧩 मात्रा जोड़ो";
@@ -520,18 +535,28 @@
             cardBox.style.borderColor = "var(--grass)";
             cardBox.style.boxShadow = "0 8px 0 #c2f0d5";
         } else if(currentData.type === "chitra") {
-            badge.innerText = "🖼️ चित्र और शब्द";
+            badge.innerText = "🖼️ चित्र पहचानो";
             badge.style.backgroundColor = "var(--coral)";
             cardBox.style.borderColor = "var(--coral)";
             cardBox.style.boxShadow = "0 8px 0 #ffcccc";
         } else {
-            badge.innerText = "🔍 सही मात्रा पहचानो";
+            badge.innerText = "🔍 सही शब्द चुनो";
             badge.style.backgroundColor = "var(--purple)";
             cardBox.style.borderColor = "var(--purple)";
             cardBox.style.boxShadow = "0 8px 0 #e1ccfa";
         }
 
-        document.getElementById('bigEmoji').innerText = currentData.emoji;
+        // Handle Image loading with Emoji Fallback
+        cardImg.src = `assets/${currentData.img}`;
+        cardImg.style.display = "block";
+        bigEmoji.style.display = "none";
+
+        cardImg.onerror = function() {
+            this.style.display = "none";
+            bigEmoji.innerText = currentData.fallbackEmoji;
+            bigEmoji.style.display = "block";
+        };
+
         document.getElementById('spellFormula').innerText = currentData.math;
 
         const layout = document.getElementById('buttonsLayout');
