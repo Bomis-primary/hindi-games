@@ -32,10 +32,9 @@
             justify-content: center;
             min-height: 100vh;
             padding: 10px;
-            overflow: hidden;
         }
 
-        /* App Wrapper */
+        /* App Wrapper with Smooth Custom Scrollbar */
         .game-app-container {
             width: 100%;
             max-width: 430px;
@@ -48,9 +47,29 @@
             box-shadow: 0 20px 45px rgba(0,0,0,0.3), 0 0 0 8px rgba(255, 255, 255, 0.7);
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
             position: relative;
-            overflow: hidden; /* Scrollbar Fix */
+            overflow-y: auto; /* Enable Scrolling */
+            scroll-behavior: smooth;
+        }
+
+        /* Clean Custom Scrollbar Styling */
+        .game-app-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .game-app-container::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.03);
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+
+        .game-app-container::-webkit-scrollbar-thumb {
+            background: #74b9ff;
+            border-radius: 10px;
+        }
+
+        .game-app-container::-webkit-scrollbar-thumb:hover {
+            background: #0984e3;
         }
 
         /* Screen Base */
@@ -66,7 +85,7 @@
             padding: 20px;
             text-align: center;
             z-index: 20;
-            overflow: hidden; /* Scrollbar Fix */
+            overflow-y: auto;
         }
 
         /* 1. Splash Screen */
@@ -203,6 +222,7 @@
             color: #2d3436;
             font-size: 1.05rem;
             box-shadow: 0 6px 12px rgba(116, 185, 255, 0.2);
+            flex-shrink: 0;
         }
 
         .hud-badge {
@@ -224,17 +244,17 @@
             margin: 10px 0 2px 0;
             box-shadow: 0 4px 12px rgba(214, 48, 49, 0.3);
             border: 2px solid #fff;
+            flex-shrink: 0;
         }
 
-        /* Card Grid */
+        /* Card Grid with scroll margin */
         .card-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 12px;
             width: 100%;
-            flex-grow: 1;
-            margin-top: 10px;
-            align-content: center;
+            margin-top: 12px;
+            padding-bottom: 12px;
         }
 
         .game-card {
@@ -308,7 +328,7 @@
             40%, 80% { transform: rotateY(180deg) translateX(7px); }
         }
 
-        /* 🌟 CLEAN WIN MODAL CARD */
+        /* CLEAN WIN MODAL CARD */
         .win-modal-card {
             background: #ffffff;
             border-radius: 28px;
@@ -383,7 +403,7 @@
 
         <div class="card-grid" id="gridContainer"></div>
 
-        <!-- 5. FULLY COVERED CLEAN WIN SCREEN -->
+        <!-- 5. WIN SCREEN -->
         <div class="app-screen" id="endOverlay" style="display: none; background: #f8fafc; z-index: 100;">
             <div class="win-modal-card">
                 <h1 style="font-size: 2.1rem; color: #2ed573; margin-bottom: 10px; font-weight: 800; display: flex; align-items: center; gap: 8px;">
@@ -420,7 +440,6 @@
     let score = 0;
     let lockBoard = false;
 
-    // Fisher-Yates Complete Randomization
     function shuffleArray(array) {
         for (let i = array.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -437,7 +456,6 @@
         }
     }
 
-    // Splash Loader Timer
     window.onload = function() {
         document.getElementById('loaderFill').style.width = '100%';
         setTimeout(() => {
@@ -466,7 +484,6 @@
         document.getElementById('scoreText').innerText = `⭐ 0`;
         document.getElementById('hintBox').style.display = 'none';
 
-        // Generate 12 Cards
         let generatedCards = [];
         itemsData.forEach(item => {
             generatedCards.push({
@@ -483,7 +500,6 @@
             });
         });
 
-        // True Random Shuffle
         cardsArray = shuffleArray(generatedCards);
 
         const grid = document.getElementById('gridContainer');
@@ -525,7 +541,6 @@
         const [card1, card2] = flippedCards;
 
         if (card1.dataset.id === card2.dataset.id) {
-            // Correct Pair
             playAudio('sndCorrect');
             confetti({ particleCount: 50, spread: 70, origin: { y: 0.7 } });
 
@@ -541,14 +556,12 @@
                 setTimeout(winGame, 600);
             }
         } else {
-            // Wrong Match
             playAudio('sndWrong');
             if (navigator.vibrate) navigator.vibrate(200);
 
             card1.querySelector('.card-front').classList.add('shake-animation');
             card2.querySelector('.card-front').classList.add('shake-animation');
 
-            // Show Hint Box
             const hintBox = document.getElementById('hintBox');
             hintBox.innerText = `💡 संकेत: ${card1.dataset.name} - ${card1.dataset.hint}`;
             hintBox.style.display = 'block';
