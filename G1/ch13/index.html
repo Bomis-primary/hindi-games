@@ -40,7 +40,7 @@
             min-height: 85vh;
             background: var(--card-bg);
             border-radius: 35px;
-            padding: 20px 20px 30px 20px;
+            padding: 20px;
             box-shadow: 0 15px 0 #d8b4e2, 0 25px 50px rgba(0,0,0,0.08);
             text-align: center;
             border: 6px solid #e0c3fc;
@@ -49,26 +49,106 @@
             align-items: center;
             justify-content: space-between;
             position: relative;
+            overflow: hidden;
         }
 
-        /* HEADER & LOGO */
+        /* FULLSCREEN SCREENS OVERLAY */
+        .screen {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: white;
+            border-radius: 28px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+            padding: 25px;
+            text-align: center;
+        }
+
+        /* SCREEN 1: SPLASH LOGO */
+        #splashScreen {
+            background: #ffffff;
+            z-index: 100;
+        }
+
+        .splash-logo {
+            max-width: 70%;
+            max-height: 180px;
+            object-fit: contain;
+            animation: pulse 1.5s infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); }
+            100% { transform: scale(1.05); }
+        }
+
+        /* SCREEN 2: TITLE SCREEN */
+        #titleScreen {
+            background: linear-gradient(180deg, #fff2f7 0%, #f3e8ff 100%);
+            z-index: 90;
+        }
+
+        /* SCREEN 3: INSTRUCTION SCREEN */
+        #instructionScreen {
+            background: #faf4ff;
+            z-index: 80;
+        }
+
+        .instruction-box {
+            background: white;
+            border: 4px dashed var(--pastel-purple);
+            border-radius: 25px;
+            padding: 20px;
+            margin: 20px 0;
+            width: 100%;
+            max-width: 500px;
+            text-align: left;
+            font-size: 1.3rem;
+            color: #4a1272;
+            line-height: 1.8;
+        }
+
+        /* BUTTONS */
+        .action-btn {
+            background: #70e000;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            border-radius: 40px;
+            box-shadow: 0 8px 0 #38b000;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: transform 0.1s;
+        }
+
+        .action-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 4px 0 #38b000;
+        }
+
+        /* GAME HEADER & LOGO */
         .top-header {
             width: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
         }
 
         .brand-logo {
-            max-height: 45px;
+            max-height: 40px;
             margin-bottom: 5px;
             object-fit: contain;
         }
 
         .header-title {
             color: #6b2d5c;
-            font-size: calc(1.8rem + 0.8vw);
+            font-size: calc(1.6rem + 0.6vw);
             text-shadow: 2px 2px 0px #ffe5ec;
         }
 
@@ -110,7 +190,7 @@
         .magic-board {
             background: #3c096c;
             width: 100%;
-            min-height: 200px;
+            min-height: 220px;
             border-radius: 30px;
             border: 5px dashed var(--pastel-yellow);
             display: flex;
@@ -127,12 +207,12 @@
             color: var(--pastel-blue);
             font-size: calc(1.2rem + 0.4vw);
             font-weight: bold;
-            margin-bottom: 18px;
+            margin-bottom: 15px;
         }
 
         .word-container {
             display: flex;
-            gap: 15px;
+            gap: 12px;
             align-items: center;
             justify-content: center;
             flex-wrap: wrap;
@@ -144,9 +224,9 @@
             color: #333;
             font-size: calc(2.4rem + 1.2vw);
             font-weight: bold;
-            width: calc(65px + 1.2vw);
-            height: calc(75px + 1.2vw);
-            border-radius: 22px;
+            width: calc(60px + 1.2vw);
+            height: calc(70px + 1.2vw);
+            border-radius: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -176,6 +256,26 @@
             color: #2b0938 !important;
             box-shadow: 0 0 25px var(--pastel-yellow) !important;
             transform: scale(1.1);
+        }
+
+        /* DISPLAY FULL COMPLETED ANSWER */
+        .full-word-display {
+            margin-top: 15px;
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--pastel-yellow);
+            background: rgba(255, 255, 255, 0.15);
+            padding: 5px 25px;
+            border-radius: 20px;
+            letter-spacing: 2px;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.4s ease-out;
+        }
+
+        .full-word-display.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         /* OPTIONS AREA */
@@ -221,40 +321,6 @@
             40%, 80% { transform: translateX(12px); }
         }
 
-        /* CELEBRATION OVERLAY */
-        .celebration-screen {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(255, 255, 255, 0.96);
-            border-radius: 30px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 100;
-            padding: 20px;
-            display: none;
-        }
-
-        .action-btn {
-            background: #70e000;
-            color: white;
-            border: none;
-            padding: 15px 40px;
-            font-size: 1.5rem;
-            font-weight: bold;
-            border-radius: 40px;
-            box-shadow: 0 8px 0 #38b000;
-            cursor: pointer;
-            margin-top: 20px;
-            transition: transform 0.1s;
-        }
-
-        .action-btn:active {
-            transform: translateY(4px);
-            box-shadow: 0 4px 0 #38b000;
-        }
-
         /* PARTICLE ANIMATION */
         .star-particle {
             position: absolute;
@@ -271,6 +337,34 @@
 <body>
 
     <div class="game-card">
+
+        <!-- SCREEN 1: SPLASH LOGO (5 Seconds) -->
+        <div id="splashScreen" class="screen">
+            <img src="assets/innovine-logo.png" alt="Innovine Logo" class="splash-logo" onerror="autoAdvanceSplash();">
+            <p style="margin-top: 20px; color: #888; font-weight: bold;">Loading Magic...</p>
+        </div>
+
+        <!-- SCREEN 2: TITLE SCREEN -->
+        <div id="titleScreen" class="screen" style="display: none;">
+            <img src="assets/innovine-logo.png" alt="Logo" style="max-height: 40px; margin-bottom: 15px;" onerror="this.style.display='none';">
+            <h1 style="font-size: 3rem; color: #6b2d5c; margin-bottom: 10px;">🔴 बिंदी कहाँ लगेगी? ✨</h1>
+            <p style="font-size: 1.4rem; color: #555; margin-bottom: 25px;">अं (ं) की मात्रा का मज़ेदार खेल!</p>
+            <button class="action-btn" onclick="goToInstructions()">शुरू करें ▶</button>
+        </div>
+
+        <!-- SCREEN 3: INSTRUCTIONS SCREEN -->
+        <div id="instructionScreen" class="screen" style="display: none;">
+            <h2 style="font-size: 2rem; color: #4a1272; margin-bottom: 10px;">खेल के नियम 📜</h2>
+            <div class="instruction-box">
+                👉 <b>1.</b> सही अक्षर को पहचानो और छुओ।<br>
+                👉 <b>2.</b> `ं` (बिंदी) सही अक्षर के ऊपर बैठ जाएगी!<br>
+                👉 <b>3.</b> 3 गुब्बारे 🎈 आपकी मदद के लिए हैं।<br>
+                👉 <b>4.</b> 100 अंक हासिल करो और जीतो! ⭐
+            </div>
+            <button class="action-btn" onclick="startGameDirectly()">खेलें 🎮</button>
+        </div>
+
+        <!-- MAIN GAME AREA -->
         <div class="top-header">
             <img src="assets/innovine-logo.png" alt="Logo" class="brand-logo" onerror="this.style.display='none';">
             <h1 class="header-title">🔴 बिंदी कहाँ लगेगी? ✨</h1>
@@ -289,6 +383,8 @@
         <div class="magic-board" id="magicBoard">
             <div class="prompt-text" id="questionPrompt">बिंदी (ं) सही अक्षर के ऊपर लगाओ!</div>
             <div class="word-container" id="wordBox"></div>
+            <!-- PROPER COMPLETE ANSWER DISPLAY -->
+            <div class="full-word-display" id="fullWordDisplay"></div>
         </div>
 
         <div style="width: 100%;">
@@ -296,38 +392,65 @@
             <div class="options-grid" id="optionsBox"></div>
         </div>
 
-        <!-- END SCREEN -->
-        <div id="endOverlay" class="celebration-screen">
+        <!-- END GAME OVERLAY -->
+        <div id="endOverlay" class="screen" style="display: none;">
             <h1 id="endTitle" style="font-size: 2.8rem; color: #5e503f; margin-bottom: 10px;">🎉 बहुत बढ़िया! 🥳</h1>
             <p id="finalScore" style="font-size: 1.4rem; color: #333; margin-bottom: 15px;">आपने बनाए कुल १०० अंक!</p>
             <button class="action-btn" onclick="startNewGame()">फिर से खेलें 🔄</button>
         </div>
+
     </div>
 
 <script>
-    // Audio Paths from Asset directory
+    // Audio Paths
     const sndCorrect = new Audio('assets/correct.mp3');
     const sndWrong = new Audio('assets/wrong.mp3');
     const sndClaps = new Audio('assets/freesound_community-claps-44774.mp3');
 
     const masterQuestions = [
-        { display: ["प", "खा"], correctLetter: "प", prompt: "हवा में उड़ता पंखा! बिंदी कहाँ लगेगी?" },
-        { display: ["ब", "द", "र"], correctLetter: "ब", prompt: "नटखट बंदर! बिंदी किस अक्षर पर चिपकाएँ?" },
-        { display: ["प", "त", "ग"], correctLetter: "त", prompt: "ऊँची उड़ती पतंग! बिंदी कहाँ बैठाएँ?" },
-        { display: ["म", "दि", "र"], correctLetter: "म", prompt: "सुंदर मंदिर! सही अक्षर पहचानो:" },
-        { display: ["ज", "ग", "ल"], correctLetter: "ज", prompt: "हरा-भरा जंगल! बिंदी कहाँ लगेगी?" },
-        { display: ["च", "दा"], correctLetter: "च", prompt: "चंदा मामा की बिंदी किस अक्षर पर होगी?" },
-        { display: ["अ", "गू", "र"], correctLetter: "अ", prompt: "मीठे-मीठे अंगूर! सही जगह छुओ:" },
-        { display: ["ह", "स"], correctLetter: "ह", prompt: "पानी में तैरता हंस! बिंदी कहाँ लगेगी?" },
-        { display: ["स", "त", "रा"], correctLetter: "स", prompt: "रसीला संतरा! जादू की बिंदी कहाँ लगाएँ?" },
-        { display: ["म", "ग", "ल", "वा", "र"], correctLetter: "म", prompt: "मंगलवार! सबसे बड़े शब्द में बिंदी कहाँ लगेगी?" }
+        { display: ["प", "खा"], correctLetter: "प", fullWord: "पंखा", prompt: "हवा में उड़ता पंखा! बिंदी कहाँ लगेगी?" },
+        { display: ["ब", "द", "र"], correctLetter: "ब", fullWord: "बंदर", prompt: "नटखट बंदर! बिंदी किस अक्षर पर चिपकाएँ?" },
+        { display: ["प", "त", "ग"], correctLetter: "त", fullWord: "पतंग", prompt: "ऊँची उड़ती पतंग! बिंदी कहाँ बैठाएँ?" },
+        { display: ["म", "दि", "र"], correctLetter: "म", fullWord: "मंदिर", prompt: "सुंदर मंदिर! सही अक्षर पहचानो:" },
+        { display: ["ज", "ग", "ल"], correctLetter: "ज", fullWord: "जंगल", prompt: "हरा-भरा जंगल! बिंदी कहाँ लगेगी?" },
+        { display: ["च", "दा"], correctLetter: "च", fullWord: "चंदा", prompt: "चंदा मामा की बिंदी किस अक्षर पर होगी?" },
+        { display: ["अ", "गू", "र"], correctLetter: "अ", fullWord: "अंगूर", prompt: "मीठे-मीठे अंगूर! सही जगह छुओ:" },
+        { display: ["ह", "स"], correctLetter: "ह", fullWord: "हंस", prompt: "पानी में तैरता हंस! बिंदी कहाँ लगेगी?" },
+        { display: ["स", "त", "रा"], correctLetter: "स", fullWord: "संतरा", prompt: "रसीला संतरा! जादू की बिंदी कहाँ लगाएँ?" },
+        { display: ["म", "ग", "ल", "वा", "र"], correctLetter: "म", fullWord: "मंगलवार", prompt: "मंगलवार! सबसे बड़े शब्द में बिंदी कहाँ लगेगी?" }
     ];
 
     let gameQuestions = [];
     let currentIdx = 0;
     let score = 0;
     let balloonsLeft = 3;
+    let splashTimer = null;
 
+    // --- SCREEN FLOW LOGIC ---
+    window.onload = function() {
+        // Auto transition from Screen 1 (Splash) to Screen 2 (Title) after 5 seconds
+        splashTimer = setTimeout(() => {
+            autoAdvanceSplash();
+        }, 5000);
+    };
+
+    function autoAdvanceSplash() {
+        if (splashTimer) clearTimeout(splashTimer);
+        document.getElementById('splashScreen').style.display = 'none';
+        document.getElementById('titleScreen').style.display = 'flex';
+    }
+
+    function goToInstructions() {
+        document.getElementById('titleScreen').style.display = 'none';
+        document.getElementById('instructionScreen').style.display = 'flex';
+    }
+
+    function startGameDirectly() {
+        document.getElementById('instructionScreen').style.display = 'none';
+        startNewGame();
+    }
+
+    // --- GAME LOGIC ---
     function shuffle(arr) {
         let array = [...arr];
         for (let i = array.length - 1; i > 0; i--) {
@@ -385,7 +508,12 @@
         const q = gameQuestions[currentIdx];
         document.getElementById('questionPrompt').innerText = q.prompt;
 
-        // Render Word Container (Without Bindi)
+        // Reset Full Word Display
+        const wordDisplay = document.getElementById('fullWordDisplay');
+        wordDisplay.classList.remove('visible');
+        wordDisplay.innerText = '';
+
+        // Render Word Container (Initial Blocks)
         const wordBox = document.getElementById('wordBox');
         wordBox.innerHTML = '';
         q.display.forEach((char) => {
@@ -397,7 +525,7 @@
             `;
         });
 
-        // Render Choices
+        // Render Options
         const optionsBox = document.getElementById('optionsBox');
         optionsBox.innerHTML = '';
         const randomizedChoices = shuffle(q.display);
@@ -417,7 +545,7 @@
             score += 10;
             updateScoreBoard();
 
-            // Animate Magic Bindi on the Word
+            // 1. Animate Bindi on Block
             const blocks = document.querySelectorAll('.letter-block');
             blocks.forEach(block => {
                 if (block.getAttribute('data-char') === q.correctLetter) {
@@ -425,21 +553,25 @@
                 }
             });
 
+            // 2. Display Proper Full Completed Word
+            const wordDisplay = document.getElementById('fullWordDisplay');
+            wordDisplay.innerText = `✨ सही शब्द: ${q.fullWord} ✨`;
+            wordDisplay.classList.add('visible');
+
             createBurstAnimation();
 
-            // Lock buttons temporarily
+            // Lock buttons
             document.querySelectorAll('.option-btn').forEach(btn => btn.style.pointerEvents = 'none');
 
             setTimeout(() => {
                 currentIdx++;
                 loadNextQuestion();
-            }, 1200);
+            }, 1800);
 
         } else {
-            // Wrong Answer Flow
+            // Incorrect
             playAudio(sndWrong);
 
-            // Trigger Device Vibration if supported
             if (navigator.vibrate) {
                 navigator.vibrate(200);
             }
@@ -495,8 +627,6 @@
             scoreText.innerText = `आपके सभी गुब्बारे खत्म हो गए! आपने ${toHindiNum(score)} अंक बनाए। फिर से कोशिश करें!`;
         }
     }
-
-    window.onload = startNewGame;
 </script>
 
 </body>
