@@ -1,1 +1,641 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>मात्रा शूटर! 🎯✨</title>
+    <style>
+        :root {
+            --bright-orange: #ff5e00;
+            --warm-yellow: #ffb703;
+            --neon-pink: #ff007f;
+            --soft-yellow: #fff3b0;
+            --dark-purple: #3a0ca3;
+            --card-bg: #ffffff;
+        }
 
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #ff7b00 0%, #ff007f 50%, #ffb703 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            user-select: none;
+            padding: 10px;
+        }
+
+        .game-card {
+            width: 100%;
+            max-width: 800px;
+            min-height: 88vh;
+            background: var(--card-bg);
+            border-radius: 35px;
+            padding: 20px;
+            box-shadow: 0 15px 0 #cc005f, 0 25px 50px rgba(0,0,0,0.15);
+            border: 6px solid #ffd166;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* OVERLAY SCREENS */
+        .screen {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #ffffff;
+            border-radius: 28px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+            padding: 25px;
+            text-align: center;
+        }
+
+        /* SCREEN 1: SPLASH LOGO ONLY */
+        #splashScreen {
+            background: #ffffff;
+            z-index: 100;
+        }
+
+        .splash-logo {
+            max-width: 75%;
+            max-height: 200px;
+            object-fit: contain;
+            animation: pulse 1.5s infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); }
+            100% { transform: scale(1.05); }
+        }
+
+        /* SCREEN 2: TITLE SCREEN */
+        #titleScreen {
+            background: linear-gradient(180deg, #fff3b0 0%, #ffccd5 100%);
+            z-index: 90;
+        }
+
+        .main-title {
+            font-size: calc(2.4rem + 1vw);
+            color: var(--bright-orange);
+            margin-bottom: 10px;
+            text-shadow: 3px 3px 0px #ffccd5;
+        }
+
+        .subtitle {
+            font-size: 1.4rem;
+            color: var(--neon-pink);
+            margin-bottom: 30px;
+            font-weight: bold;
+        }
+
+        /* SCREEN 3: INSTRUCTION SCREEN */
+        #instructionScreen {
+            background: #fff5eb;
+            z-index: 80;
+        }
+
+        .instruction-cards-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+            max-width: 480px;
+            margin: 20px 0 30px 0;
+        }
+
+        .rule-card {
+            background: #ffffff;
+            border: 3px solid #ffb703;
+            border-radius: 20px;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 6px 0 #ffae00;
+            text-align: left;
+        }
+
+        .rule-icon {
+            font-size: 2.2rem;
+            background: #ffe8d6;
+            width: 55px;
+            height: 55px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .rule-text {
+            font-size: 1.3rem;
+            color: #4a1272;
+            font-weight: bold;
+            line-height: 1.3;
+        }
+
+        /* BUTTONS */
+        .action-btn {
+            background: var(--bright-orange);
+            color: white;
+            border: none;
+            padding: 16px 45px;
+            font-size: 1.6rem;
+            font-weight: bold;
+            border-radius: 40px;
+            box-shadow: 0 8px 0 #d00000;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        .action-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 4px 0 #d00000;
+        }
+
+        /* TOP HEADER */
+        .header-title {
+            color: var(--bright-orange);
+            font-size: calc(1.8rem + 0.5vw);
+            margin-bottom: 5px;
+        }
+
+        /* STATUS BAR */
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 10px 20px;
+            background: #ffe3e0;
+            border-radius: 25px;
+            color: #4a1272;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .balloon-chances {
+            display: flex;
+            gap: 6px;
+            font-size: 1.6rem;
+        }
+
+        .balloon {
+            display: inline-block;
+            transition: transform 0.3s, opacity 0.3s;
+        }
+
+        .balloon.popped {
+            transform: scale(0);
+            opacity: 0;
+            width: 0;
+            margin: 0;
+        }
+
+        /* SHOOTER PLAY AREA */
+        .shooter-arena {
+            width: 100%;
+            height: 380px;
+            background: linear-gradient(180deg, #3a0ca3 0%, #7209b7 60%, #f72585 100%);
+            border-radius: 30px;
+            border: 5px dashed var(--warm-yellow);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 10px;
+            overflow: hidden;
+            box-shadow: inset 0 0 25px rgba(255, 230, 0, 0.3);
+        }
+
+        /* BUBBLE TARGETS */
+        .bubbles-row {
+            display: flex;
+            width: 100%;
+            justify-content: space-around;
+            padding: 0 10px;
+            z-index: 10;
+        }
+
+        .target-bubble {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 8px 0 rgba(0,0,0,0.2), inset 0 -8px 15px rgba(0,0,0,0.2), 0 0 20px rgba(255,255,255,0.6);
+            animation: floatBubble 3s infinite alternate ease-in-out;
+            transition: transform 0.2s;
+        }
+
+        .target-bubble:active {
+            transform: scale(0.9);
+        }
+
+        .bubble-pink {
+            background: radial-gradient(circle at 30% 30%, #ff85a1, #ff007f);
+            border: 4px solid #fff;
+        }
+
+        .bubble-yellow {
+            background: radial-gradient(circle at 30% 30%, #ffea00, #ff9e00);
+            border: 4px solid #fff;
+        }
+
+        .bubble-symbol {
+            font-size: 2.8rem;
+            font-weight: bold;
+            color: #ffffff;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
+            line-height: 1;
+        }
+
+        .bubble-text {
+            font-size: 0.9rem;
+            color: #ffffff;
+            font-weight: bold;
+            background: rgba(0,0,0,0.25);
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+
+        @keyframes floatBubble {
+            0% { transform: translateY(0px) rotate(-3deg); }
+            100% { transform: translateY(-12px) rotate(3deg); }
+        }
+
+        /* WORD CARD DISPLAY */
+        .target-word-card {
+            background: #ffffff;
+            border: 5px solid var(--warm-yellow);
+            border-radius: 25px;
+            padding: 10px 35px;
+            font-size: calc(2.4rem + 0.8vw);
+            font-weight: bold;
+            color: #2b2d42;
+            box-shadow: 0 8px 0 #ff8500, 0 0 20px rgba(255, 255, 255, 0.4);
+            z-index: 10;
+        }
+
+        /* CANNON / SHOOTER */
+        .cannon-box {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .cannon-gun {
+            font-size: 3.5rem;
+            filter: drop-shadow(0 5px 5px rgba(0,0,0,0.4));
+            transition: transform 0.2s ease-out;
+        }
+
+        /* WATER LASER BULLET */
+        .laser-bullet {
+            position: absolute;
+            width: 16px;
+            height: 40px;
+            background: #00f5d4;
+            border-radius: 20px;
+            box-shadow: 0 0 15px #00f5d4, 0 0 25px #ffffff;
+            z-index: 5;
+            bottom: 50px;
+            display: none;
+        }
+
+        @keyframes shootUpLeft {
+            0% { bottom: 50px; left: 50%; opacity: 1; transform: scale(1); }
+            100% { bottom: 260px; left: 25%; opacity: 0; transform: scale(1.8); }
+        }
+
+        @keyframes shootUpRight {
+            0% { bottom: 50px; left: 50%; opacity: 1; transform: scale(1); }
+            100% { bottom: 260px; left: 75%; opacity: 0; transform: scale(1.8); }
+        }
+
+        .shoot-left {
+            display: block;
+            animation: shootUpLeft 0.4s ease-out forwards;
+        }
+
+        .shoot-right {
+            display: block;
+            animation: shootUpRight 0.4s ease-out forwards;
+        }
+
+        /* SHAKE ANIMATION */
+        .wrong-shake {
+            animation: shake 0.4s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-12px); }
+            40%, 80% { transform: translateX(12px); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="game-card">
+
+        <!-- SCREEN 1: SPLASH LOGO ONLY (5 SECONDS) -->
+        <div id="splashScreen" class="screen">
+            <img src="assets/innovine-logo.png" alt="Innovine Logo" class="splash-logo" onerror="autoAdvanceSplash();">
+            <p style="margin-top: 20px; color: #aaa; font-weight: bold; font-size: 1.1rem;">लोड हो रहा है...</p>
+        </div>
+
+        <!-- SCREEN 2: TITLE SCREEN -->
+        <div id="titleScreen" class="screen" style="display: none;">
+            <h1 class="main-title">🎯 मात्रा शूटर! ✨</h1>
+            <p class="subtitle">चंद्रबिंदु (ँ) और विसर्ग (ः) पर निशाना लगाओ!</p>
+            <button class="action-btn" onclick="goToInstructions()">शुरू करें ▶</button>
+        </div>
+
+        <!-- SCREEN 3: INSTRUCTIONS SCREEN -->
+        <div id="instructionScreen" class="screen" style="display: none;">
+            <h2 style="font-size: 2.2rem; color: var(--bright-orange);">कैसे खेलें? 🎮</h2>
+            
+            <div class="instruction-cards-container">
+                <div class="rule-card">
+                    <div class="rule-icon">📖</div>
+                    <div class="rule-text">बीच में लिखा शब्द ध्यान से पढ़ो।</div>
+                </div>
+                <div class="rule-card">
+                    <div class="rule-icon">🎯</div>
+                    <div class="rule-text">सही मात्रा वाले बबल पर निशाना साधो!</div>
+                </div>
+                <div class="rule-card">
+                    <div class="rule-icon">🎈</div>
+                    <div class="rule-text">३ गुब्बारे फटने से पहले खेलो।</div>
+                </div>
+            </div>
+
+            <button class="action-btn" onclick="startGameDirectly()">खेलें 🎮</button>
+        </div>
+
+        <!-- MAIN GAME AREA -->
+        <div style="width: 100%;">
+            <h1 class="header-title">🎯 सही मात्रा पर निशाना लगाओ!</h1>
+        </div>
+
+        <div class="status-bar">
+            <span id="progressText">सवाल: 1/10</span>
+            <div class="balloon-chances" id="balloonBox">
+                <span class="balloon">🎈</span>
+                <span class="balloon">🎈</span>
+                <span class="balloon">🎈</span>
+            </div>
+            <span id="scoreText">⭐ अंक: 0 / 100</span>
+        </div>
+
+        <!-- SHOOTER ARENA -->
+        <div class="shooter-arena">
+            <!-- DYNAMIC TARGET BUBBLES -->
+            <div class="bubbles-row" id="bubblesRow"></div>
+
+            <!-- TARGET WORD CARD -->
+            <div class="target-word-card" id="wordCard">---</div>
+
+            <!-- SHOOTER CANNON & BULLET -->
+            <div class="laser-bullet" id="laserBullet"></div>
+            <div class="cannon-box">
+                <div class="cannon-gun" id="cannonGun">🚀</div>
+            </div>
+        </div>
+
+        <!-- END GAME OVERLAY -->
+        <div id="endOverlay" class="screen" style="display: none;">
+            <h1 id="endTitle" style="font-size: 2.8rem; color: var(--bright-orange); margin-bottom: 15px;">🎉 बहुत बढ़िया! 🥳</h1>
+            <p id="finalScore" style="font-size: 1.4rem; color: #333; margin-bottom: 25px;">आपने बनाए कुल 100 अंक!</p>
+            <button class="action-btn" onclick="startNewGame()">फिर से खेलें 🔄</button>
+        </div>
+
+    </div>
+
+<script>
+    // Audio Paths from your Assets Directory
+    const sndCorrect = new Audio('assets/correct.mp3');
+    const sndWrong = new Audio('assets/wrong.mp3');
+    const sndClaps = new Audio('assets/freesound_community-claps-44774.mp3');
+
+    // Questions Dataset
+    const masterQuestions = [
+        { word: "चाँद", type: "ँ" },
+        { word: "नमः", type: "ः" },
+        { word: "साँप", type: "ँ" },
+        { word: "प्रातः", type: "ः" },
+        { word: "कुआँ", type: "ँ" },
+        { word: "छः", type: "ः" },
+        { word: "आँख", type: "ँ" },
+        { word: "पुनः", type: "ः" },
+        { word: "माँ", type: "ँ" },
+        { word: "दुःख", type: "ः" }
+    ];
+
+    let gameQuestions = [];
+    let currentIdx = 0;
+    let score = 0;
+    let balloonsLeft = 3;
+    let splashTimer = null;
+    let isProcessing = false;
+
+    window.onload = function() {
+        // Auto-advance Splash Screen after 5 seconds
+        splashTimer = setTimeout(() => {
+            autoAdvanceSplash();
+        }, 5000);
+    };
+
+    function autoAdvanceSplash() {
+        if (splashTimer) clearTimeout(splashTimer);
+        document.getElementById('splashScreen').style.display = 'none';
+        document.getElementById('titleScreen').style.display = 'flex';
+    }
+
+    function goToInstructions() {
+        document.getElementById('titleScreen').style.display = 'none';
+        document.getElementById('instructionScreen').style.display = 'flex';
+    }
+
+    function startGameDirectly() {
+        document.getElementById('instructionScreen').style.display = 'none';
+        startNewGame();
+    }
+
+    function shuffle(arr) {
+        let array = [...arr];
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    function playAudio(audioObj) {
+        audioObj.currentTime = 0;
+        audioObj.play().catch(() => {});
+    }
+
+    function startNewGame() {
+        document.getElementById('endOverlay').style.display = 'none';
+        
+        // Randomize questions order
+        gameQuestions = shuffle(masterQuestions);
+        
+        currentIdx = 0;
+        score = 0;
+        balloonsLeft = 3;
+        isProcessing = false;
+        renderBalloons();
+        updateScoreBoard();
+        loadNextQuestion();
+    }
+
+    function renderBalloons() {
+        const box = document.getElementById('balloonBox');
+        box.innerHTML = '';
+        for (let i = 0; i < 3; i++) {
+            if (i < balloonsLeft) {
+                box.innerHTML += `<span class="balloon">🎈</span>`;
+            } else {
+                box.innerHTML += `<span class="balloon popped">🎈</span>`;
+            }
+        }
+    }
+
+    function updateScoreBoard() {
+        document.getElementById('progressText').innerText = `सवाल: ${currentIdx + 1}/10`;
+        document.getElementById('scoreText').innerText = `⭐ अंक: ${score} / 100`;
+    }
+
+    function loadNextQuestion() {
+        if (currentIdx >= gameQuestions.length) {
+            showEndGame(true);
+            return;
+        }
+
+        updateScoreBoard();
+        const q = gameQuestions[currentIdx];
+        document.getElementById('wordCard').innerText = q.word;
+
+        // Render Bubbles Options in Randomized Order (Left/Right)
+        const bubblesRow = document.getElementById('bubblesRow');
+        bubblesRow.innerHTML = '';
+
+        const bubbleOptions = shuffle([
+            { symbol: "ँ", name: "चंद्रबिंदु", class: "bubble-pink" },
+            { symbol: "ः", name: "विसर्ग", class: "bubble-yellow" }
+        ]);
+
+        bubbleOptions.forEach((opt, index) => {
+            bubblesRow.innerHTML += `
+                <div class="target-bubble ${opt.class}" onclick="shootTarget('${opt.symbol}', this, ${index})">
+                    <div class="bubble-symbol">${opt.symbol}</div>
+                    <div class="bubble-text">${opt.name}</div>
+                </div>
+            `;
+        });
+
+        isProcessing = false;
+    }
+
+    function shootTarget(selectedSymbol, bubbleElement, sideIndex) {
+        if (isProcessing) return;
+        isProcessing = true;
+
+        const q = gameQuestions[currentIdx];
+        const cannon = document.getElementById('cannonGun');
+        const bullet = document.getElementById('laserBullet');
+
+        // Aim Cannon
+        cannon.style.transform = sideIndex === 0 ? 'rotate(-25deg)' : 'rotate(25deg)';
+
+        // Shoot Bullet Animation
+        bullet.className = 'laser-bullet';
+        void bullet.offsetWidth; // Trigger reflow
+        bullet.classList.add(sideIndex === 0 ? 'shoot-left' : 'shoot-right');
+
+        setTimeout(() => {
+            cannon.style.transform = 'rotate(0deg)';
+
+            if (selectedSymbol === q.type) {
+                // Correct Shoot
+                playAudio(sndCorrect);
+                score += 10;
+                updateScoreBoard();
+
+                bubbleElement.style.transform = 'scale(1.4)';
+                bubbleElement.style.opacity = '0';
+
+                setTimeout(() => {
+                    currentIdx++;
+                    loadNextQuestion();
+                }, 700);
+
+            } else {
+                // Wrong Shoot
+                playAudio(sndWrong);
+
+                if (navigator.vibrate) {
+                    navigator.vibrate(200);
+                }
+
+                bubbleElement.classList.add('wrong-shake');
+                balloonsLeft--;
+                renderBalloons();
+
+                if (balloonsLeft <= 0) {
+                    setTimeout(() => { showEndGame(false); }, 500);
+                } else {
+                    setTimeout(() => {
+                        bubbleElement.classList.remove('wrong-shake');
+                        isProcessing = false;
+                    }, 400);
+                }
+            }
+        }, 300);
+    }
+
+    function showEndGame(isWin) {
+        const screen = document.getElementById('endOverlay');
+        const title = document.getElementById('endTitle');
+        const scoreText = document.getElementById('finalScore');
+
+        screen.style.display = 'flex';
+
+        if (isWin) {
+            playAudio(sndClaps);
+            title.innerText = "🎉 अद्भुत! जीत गए! 🥳";
+            scoreText.innerText = `बधाई हो! आपने पूरे ${score} अंक प्राप्त किए!`;
+        } else {
+            title.innerText = "ओहो! 🎈 सारे गुब्बारे फूट गए!";
+            scoreText.innerText = `आपने ${score} अंक बनाए। फिर से कोशिश करें!`;
+        }
+    }
+</script>
+
+</body>
+</html>
