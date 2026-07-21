@@ -22,7 +22,7 @@
 
         body {
             font-family: 'Comic Sans MS', 'Segoe UI', Arial, sans-serif;
-            background: linear-gradient(135deg, #ff7b00 0%, #ff007f 50%, #ffb703 100%);
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #feada6 100%);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -34,14 +34,14 @@
 
         .game-card {
             width: 100%;
-            max-width: 450px;
-            height: 92vh;
-            max-height: 820px;
+            max-width: 440px;
+            height: 94vh;
+            max-height: 840px;
             background: #ffffff;
-            border-radius: 25px;
-            padding: 12px;
-            box-shadow: 0 10px 0 #cc005f, 0 15px 30px rgba(0,0,0,0.3);
-            border: 5px solid #ffd166;
+            border-radius: 30px;
+            padding: 15px;
+            box-shadow: 0 12px 0 #ff007f, 0 20px 40px rgba(0,0,0,0.25);
+            border: 6px solid #ffe600;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -83,6 +83,7 @@
             font-size: 2.2rem;
             color: var(--bright-orange);
             margin-bottom: 10px;
+            text-shadow: 2px 2px 0px #ffe600;
         }
 
         .subtitle {
@@ -96,18 +97,19 @@
         .action-btn {
             background: linear-gradient(135deg, #ff5e00, #ff007f);
             color: white;
-            border: none;
+            border: 3px solid #fff;
             padding: 14px 35px;
             font-size: 1.4rem;
             font-weight: bold;
             border-radius: 30px;
             box-shadow: 0 6px 0 #b30047, 0 10px 20px rgba(255,0,127,0.4);
             cursor: pointer;
+            transition: all 0.1s ease;
         }
 
         .action-btn:active {
-            transform: translateY(3px);
-            box-shadow: 0 3px 0 #b30047;
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #b30047;
         }
 
         /* STATUS BAR */
@@ -116,65 +118,111 @@
             justify-content: space-between;
             align-items: center;
             width: 100%;
-            padding: 8px 15px;
-            background: #ffe3e0;
+            padding: 10px 16px;
+            background: linear-gradient(135deg, #fff0f5, #ffe4e1);
             border-radius: 20px;
+            border: 3px solid #ffb703;
             color: var(--dark-purple);
-            font-size: 1.1rem;
-            font-weight: bold;
-            margin-bottom: 8px;
+            font-size: 1.15rem;
+            font-weight: 900;
         }
 
-        .lives-box { font-size: 1.3rem; }
+        .lives-box { font-size: 1.4rem; letter-spacing: 2px; }
 
-        /* MATCH-3 CANDY GRID */
+        /* MID TASK BANNER */
+        .task-banner {
+            width: 100%;
+            background: linear-gradient(135deg, #70e000, #38b000);
+            border-radius: 18px;
+            padding: 8px 12px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 4px 0 #007200;
+            margin: 8px 0;
+        }
+
+        .task-badge {
+            background: #ffffff;
+            color: #38b000;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-weight: 900;
+        }
+
+        /* MATCH-3 BRIGHT CANDY GRID */
         .grid-container {
             width: 100%;
             aspect-ratio: 1/1;
-            background: #3a0ca3;
-            border-radius: 20px;
-            border: 4px solid var(--warm-yellow);
-            padding: 8px;
+            background: linear-gradient(180deg, #6a11cb 0%, #2575fc 100%);
+            border-radius: 25px;
+            border: 6px solid #ffe600;
+            padding: 10px;
             display: grid;
             grid-template-columns: repeat(6, 1fr);
             grid-template-rows: repeat(6, 1fr);
-            gap: 5px;
-            box-shadow: inset 0 0 15px rgba(0,0,0,0.5);
+            gap: 6px;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.4), 0 8px 15px rgba(0,0,0,0.15);
         }
 
         .candy-tile {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.22);
+            border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: transform 0.15s ease, background 0.2s;
             position: relative;
+            box-shadow: inset 0 3px 6px rgba(255,255,255,0.4), 0 4px 6px rgba(0,0,0,0.2);
+        }
+
+        .candy-tile:hover {
+            transform: scale(1.05);
+            background: rgba(255, 255, 255, 0.35);
         }
 
         .candy-tile.selected {
+            background: #ffe600;
             border: 3px solid #ffffff;
-            animation: bounce 0.5s infinite alternate;
+            animation: popSelected 0.4s infinite alternate;
+            box-shadow: 0 0 15px #ffe600;
         }
 
-        @keyframes bounce {
-            0% { transform: scale(0.9); }
-            100% { transform: scale(1.05); }
+        @keyframes popSelected {
+            0% { transform: scale(0.92); }
+            100% { transform: scale(1.1); }
         }
 
         .candy-img {
-            width: 85%;
-            height: 85%;
+            width: 88%;
+            height: 88%;
             object-fit: contain;
             pointer-events: none;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+        }
+
+        /* POP MATCH ANIMATION */
+        .popping {
+            animation: candyBlast 0.35s forwards;
+        }
+
+        @keyframes candyBlast {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.3) rotate(15deg); opacity: 0.8; }
+            100% { transform: scale(0); opacity: 0; }
         }
 
         /* TRACING MODAL OVERLAY */
         #tracingModal {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.85);
+            background: rgba(43, 9, 56, 0.88);
+            backdrop-filter: blur(4px);
             z-index: 60;
             display: none;
             flex-direction: column;
@@ -185,37 +233,39 @@
 
         .tracing-card {
             background: #ffffff;
-            border-radius: 20px;
-            padding: 15px;
-            width: 90%;
+            border-radius: 25px;
+            padding: 20px 15px;
+            width: 92%;
             max-width: 360px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            border: 4px solid var(--warm-yellow);
+            border: 5px solid var(--warm-yellow);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
         }
 
         .tracing-prompt {
             font-size: 1.2rem;
             color: var(--bright-orange);
-            font-weight: bold;
+            font-weight: 900;
             margin-bottom: 5px;
         }
 
         .tracing-word {
-            font-size: 2.2rem;
-            font-weight: bold;
+            font-size: 2.4rem;
+            font-weight: 900;
             color: var(--dark-purple);
-            margin-bottom: 10px;
+            margin-bottom: 12px;
+            letter-spacing: 2px;
         }
 
         .canvas-container {
             position: relative;
             width: 250px;
-            height: 200px;
+            height: 190px;
             background: #fff8f0;
-            border: 3px dashed var(--neon-pink);
-            border-radius: 15px;
+            border: 4px dashed var(--neon-pink);
+            border-radius: 20px;
             margin-bottom: 15px;
         }
 
@@ -223,7 +273,7 @@
             width: 100%;
             height: 100%;
             touch-action: none;
-            border-radius: 12px;
+            border-radius: 16px;
             cursor: crosshair;
         }
 
@@ -231,9 +281,67 @@
             position: absolute;
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 5rem;
-            color: rgba(200, 200, 200, 0.35);
+            font-size: 5.5rem;
+            color: rgba(255, 0, 127, 0.18);
             pointer-events: none;
+            font-weight: 900;
+        }
+
+        /* INSTRUCTIONS STYLING */
+        .instruction-title {
+            font-size: 2rem;
+            color: var(--bright-orange);
+            margin-bottom: 15px;
+            font-weight: 900;
+        }
+
+        .instruction-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .step-card {
+            background: #fff8f0;
+            border: 2px dashed #ffb703;
+            border-left: 6px solid var(--neon-pink);
+            border-radius: 15px;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-align: left;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .step-num {
+            background: linear-gradient(135deg, #ff5e00, #ff007f);
+            color: white;
+            width: 32px;
+            height: 32px;
+            min-width: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .step-text {
+            font-size: 1rem;
+            color: #333;
+            line-height: 1.3;
+            font-weight: 600;
+        }
+
+        .highlight-tag {
+            background: #ffe3e0;
+            color: var(--neon-pink);
+            padding: 2px 6px;
+            border-radius: 6px;
             font-weight: bold;
         }
     </style>
@@ -257,10 +365,25 @@
 
         <!-- SCREEN 3: INSTRUCTIONS SCREEN -->
         <div id="instructionScreen" class="screen" style="display: none;">
-            <h2 style="font-size: 1.8rem; color: var(--bright-orange); margin-bottom: 15px;">कैसे खेलें? 🎮</h2>
-            <p style="font-size: 1.1rem; color: #333; margin-bottom: 10px;">1. पास वाली 2 कैंडिज़ को आपस में बदलो (Swap)।</p>
-            <p style="font-size: 1.1rem; color: #333; margin-bottom: 10px;">2. 3 या अधिक सेम कैंडीज़ का मैच बनाओ!</p>
-            <p style="font-size: 1.1rem; color: #333; margin-bottom: 25px;">3. 2 मैच बनते ही सवाल का जवाब मात्रा (<b style="color:var(--neon-pink)">ँ</b> या <b style="color:var(--neon-pink)">ः</b>) लिखकर दो!</p>
+            <h2 class="instruction-title">कैसे खेलें? 🎮</h2>
+            
+            <div class="instruction-list">
+                <div class="step-card">
+                    <div class="step-num">1</div>
+                    <div class="step-text">पास वाली 2 कैंडिज़ पर क्लिक करके आपस में बदलो <span class="highlight-tag">Swap</span></div>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-num">2</div>
+                    <div class="step-text">एक जैसी 3 या अधिक कैंडिज़ मिलाकर <span class="highlight-tag">Match</span> बनाओ 🍬</div>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-num">3</div>
+                    <div class="step-text">हर 2 मैच के बाद सही मात्रा (<span class="highlight-tag">ँ</span> या <span class="highlight-tag">ः</span>) लिखकर सवाल का जवाब दो! ✏️</div>
+                </div>
+            </div>
+
             <button class="action-btn" onclick="startGameDirectly()">खेलें 🎮</button>
         </div>
 
@@ -271,6 +394,12 @@
             <span id="scoreText">⭐: 0</span>
         </div>
 
+        <!-- TASK BANNER -->
+        <div class="task-banner">
+            <span>🎯 लक्ष्य: 2 मैच बनाओ!</span>
+            <span class="task-badge" id="matchProgress">0 / 2</span>
+        </div>
+
         <!-- MATCH-3 CANDY CRUSH BOARD -->
         <div class="grid-container" id="board"></div>
 
@@ -278,10 +407,10 @@
         <div id="tracingModal">
             <div class="tracing-card">
                 <div class="tracing-prompt">शब्द पूरा करने के लिए मात्रा लिखो:</div>
-                <div class="tracing-word" id="wordPrompt">चाँ__द</div>
+                <div class="tracing-word" id="wordPrompt">चा__द</div>
                 <div class="canvas-container">
                     <div class="guide-text" id="guideMatra">ँ</div>
-                    <canvas id="tracingCanvas" width="250" height="200"></canvas>
+                    <canvas id="tracingCanvas" width="250" height="190"></canvas>
                 </div>
                 <button class="action-btn" style="padding: 10px 25px; font-size: 1.2rem;" onclick="submitTracingAnswer()">सबमिट करें ✔</button>
             </div>
@@ -306,25 +435,26 @@
         audioObj.play().catch(() => {});
     }
 
+    // CORRECTED MASTER QUESTIONS ARRAY
     const masterQuestions = [
-        { wordPrompt: "चाँ__द", targetMatra: "ँ" },
+        { wordPrompt: "चा__द",  targetMatra: "ँ" },
         { wordPrompt: "नम__",   targetMatra: "ः" },
-        { wordPrompt: "साँ__प", targetMatra: "ँ" },
+        { wordPrompt: "सा__प",  targetMatra: "ँ" },
         { wordPrompt: "प्रात__", targetMatra: "ः" },
-        { wordPrompt: "कुआँ__", targetMatra: "ँ" },
+        { wordPrompt: "कुआ__",  targetMatra: "ँ" },
         { wordPrompt: "छ__",    targetMatra: "ः" },
-        { wordPrompt: "आँ__ख", targetMatra: "ँ" },
-        { wordPrompt: "पुन__",   targetMatra: "ः" },
-        { wordPrompt: "माँ__",   targetMatra: "ँ" },
-        { wordPrompt: "दुः__ख", targetMatra: "ः" }
+        { wordPrompt: "आ__ख",   targetMatra: "ँ" },
+        { wordPrompt: "पुन__",  targetMatra: "ः" },
+        { wordPrompt: "मा__",   targetMatra: "ँ" },
+        { wordPrompt: "दु__ख",  targetMatra: "ः" } // Corrected to 'ख'
     ];
 
     const CANDY_SVGS = [
-        `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><ellipse cx="50" cy="50" rx="40" ry="25" fill="%23ff0055" transform="rotate(-20 50 50)"/><ellipse cx="40" cy="40" rx="15" ry="8" fill="%23ff99bb" transform="rotate(-20 50 50)"/></svg>`,
-        `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M50 10 Q85 60 50 90 Q15 60 50 10 Z" fill="%23ffb703"/><ellipse cx="42" cy="45" rx="10" ry="18" fill="%23ffea88" transform="rotate(-15 42 45)"/></svg>`,
-        `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="38" fill="%2300b4d8"/><circle cx="38" cy="38" r="12" fill="%2390e0ef"/><path d="M20 50 A 30 30 0 0 0 80 50" stroke="%230077b6" stroke-width="5" fill="none"/></svg>`,
-        `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect x="15" y="15" width="70" height="70" rx="18" fill="%2338b000"/><rect x="25" y="25" width="25" height="25" rx="8" fill="%239ef01a"/></svg>`,
-        `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="38" fill="%237209b7"/><circle cx="50" cy="50" r="15" fill="%23f72585"/><circle cx="38" cy="38" r="8" fill="%23480ca8"/></svg>`
+        `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><radialGradient id="g1" cx="30%" cy="30%" r="70%"><stop offset="0%" stop-color="%23ff99c8"/><stop offset="50%" stop-color="%23ff0055"/><stop offset="100%" stop-color="%2380002a"/></radialGradient></defs><circle cx="50" cy="50" r="42" fill="url(%23g1)"/><ellipse cx="38" cy="32" rx="12" ry="6" fill="%23ffffff" opacity="0.6" transform="rotate(-30 38 32)"/></svg>`,
+        `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><radialGradient id="g2" cx="35%" cy="35%" r="65%"><stop offset="0%" stop-color="%23ffee55"/><stop offset="60%" stop-color="%23ff9100"/><stop offset="100%" stop-color="%23995500"/></radialGradient></defs><path d="M50 8 Q88 55 50 92 Q12 55 50 8 Z" fill="url(%23g2)"/><ellipse cx="42" cy="38" rx="8" ry="16" fill="%23ffffff" opacity="0.55" transform="rotate(-20 42 38)"/></svg>`,
+        `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><radialGradient id="g3" cx="30%" cy="30%" r="70%"><stop offset="0%" stop-color="%23e0f7fa"/><stop offset="40%" stop-color="%2300b4d8"/><stop offset="100%" stop-color="%2303045e"/></radialGradient></defs><circle cx="50" cy="50" r="42" fill="url(%23g3)"/><circle cx="36" cy="34" r="10" fill="%23ffffff" opacity="0.75"/></svg>`,
+        `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><linearGradient id="g4" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="%23b5e7a0"/><stop offset="50%" stop-color="%2338b000"/><stop offset="100%" stop-color="%23004b23"/></linearGradient></defs><rect x="16" y="16" width="68" height="68" rx="22" fill="url(%23g4)"/><rect x="24" y="24" width="22" height="22" rx="8" fill="%23ffffff" opacity="0.45"/></svg>`,
+        `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><radialGradient id="g5" cx="35%" cy="35%" r="65%"><stop offset="0%" stop-color="%23f72585"/><stop offset="60%" stop-color="%237209b7"/><stop offset="100%" stop-color="%233a0ca3"/></radialGradient></defs><circle cx="50" cy="50" r="42" fill="url(%23g5)"/><path d="M 30 50 A 20 20 0 0 1 70 50" stroke="%23ffffff" stroke-width="6" stroke-linecap="round" fill="none" opacity="0.6"/></svg>`
     ];
 
     let splashTimer = null;
@@ -430,7 +560,10 @@
 
             if (rowOfThree.every(index => candyTiles[index].getAttribute('data-type') === decidedType)) {
                 hasMatch = true;
-                rowOfThree.forEach(index => replaceWithNewCandy(candyTiles[index]));
+                rowOfThree.forEach(index => {
+                    candyTiles[index].classList.add('popping');
+                    setTimeout(() => replaceWithNewCandy(candyTiles[index]), 200);
+                });
             }
         }
 
@@ -440,15 +573,19 @@
 
             if (colOfThree.every(index => candyTiles[index].getAttribute('data-type') === decidedType)) {
                 hasMatch = true;
-                colOfThree.forEach(index => replaceWithNewCandy(candyTiles[index]));
+                colOfThree.forEach(index => {
+                    candyTiles[index].classList.add('popping');
+                    setTimeout(() => replaceWithNewCandy(candyTiles[index]), 200);
+                });
             }
         }
 
         if (hasMatch) {
             matchCountForCurrentQuestion++;
+            document.getElementById('matchProgress').innerText = `${matchCountForCurrentQuestion} / 2`;
             if (matchCountForCurrentQuestion >= 2) {
                 matchCountForCurrentQuestion = 0;
-                setTimeout(triggerTracingModal, 400);
+                setTimeout(triggerTracingModal, 500);
             }
         }
 
@@ -456,6 +593,7 @@
     }
 
     function replaceWithNewCandy(tile) {
+        tile.classList.remove('popping');
         let newCandyType = Math.floor(Math.random() * CANDY_SVGS.length);
         tile.setAttribute('data-type', newCandyType);
         tile.querySelector('img').src = CANDY_SVGS[newCandyType];
@@ -482,7 +620,7 @@
             const pos = getPos(e);
             tCtx.lineTo(pos.x, pos.y);
             tCtx.strokeStyle = '#ff007f';
-            tCtx.lineWidth = 10;
+            tCtx.lineWidth = 12;
             tCtx.lineCap = 'round';
             tCtx.stroke();
         }
@@ -529,6 +667,7 @@
         score += 10;
         questionsSolved++;
         
+        document.getElementById('matchProgress').innerText = `0 / 2`;
         updateStatusBar();
 
         if (questionsSolved >= 10) {
@@ -551,6 +690,7 @@
         questionsSolved = 0;
         matchCountForCurrentQuestion = 0;
         lives = 3;
+        document.getElementById('matchProgress').innerText = `0 / 2`;
         updateStatusBar();
         createBoard();
     }
