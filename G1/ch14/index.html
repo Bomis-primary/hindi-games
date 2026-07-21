@@ -39,8 +39,8 @@
         .game-card {
             width: 100%;
             max-width: 440px;
-            height: 94vh;
-            max-height: 840px;
+            height: 96vh;
+            max-height: 880px;
             background: #ffffff;
             border-radius: 30px;
             padding: 15px;
@@ -218,26 +218,26 @@
             100% { transform: scale(0); opacity: 0; }
         }
 
-        /* TRACING MODAL OVERLAY */
+        /* LARGER TRACING MODAL OVERLAY */
         #tracingModal {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(43, 9, 56, 0.88);
-            backdrop-filter: blur(4px);
+            background: rgba(43, 9, 56, 0.92);
+            backdrop-filter: blur(5px);
             z-index: 60;
             display: none;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 15px;
+            padding: 10px;
         }
 
         .tracing-card {
             background: #ffffff;
-            border-radius: 25px;
-            padding: 20px 15px;
-            width: 92%;
-            max-width: 360px;
+            border-radius: 28px;
+            padding: 18px 15px;
+            width: 96%;
+            max-width: 400px; /* Increased Card Width */
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -260,17 +260,17 @@
         }
 
         .tracing-prompt {
-            font-size: 1.2rem;
+            font-size: 1.15rem;
             color: var(--bright-orange);
             font-weight: 900;
-            margin-bottom: 5px;
+            margin-bottom: 4px;
         }
 
         .tracing-word {
-            font-size: 2.4rem;
+            font-size: 2.5rem;
             font-weight: 900;
             color: var(--dark-purple);
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             letter-spacing: 2px;
         }
 
@@ -279,23 +279,24 @@
             color: #856404;
             border: 2px dashed #ffebaa;
             border-radius: 12px;
-            padding: 6px 12px;
+            padding: 6px 10px;
             font-size: 0.95rem;
             font-weight: bold;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             display: none;
             width: 100%;
             text-align: center;
         }
 
+        /* LARGER CANVAS CONTAINER */
         .canvas-container {
             position: relative;
-            width: 250px;
-            height: 180px;
+            width: 320px;  /* Expanded Width */
+            height: 240px; /* Expanded Height */
             background: #fff8f0;
             border: 4px dashed var(--neon-pink);
             border-radius: 20px;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
 
         #tracingCanvas {
@@ -394,12 +395,13 @@
                 <div class="tracing-prompt">शब्द पूरा करने के लिए मात्रा लिखो:</div>
                 <div class="tracing-word" id="wordPrompt">चा__द</div>
                 
-                <div class="hint-box" id="hintBox">💡 हिंट: दी गई हल्की गुलाबी रेखाओं के ऊपर ध्यान से उंगली फेरें!</div>
+                <div class="hint-box" id="hintBox">💡 हिंट: रेखा साफ़ कर दी गई है, दोबारा ध्यान से ट्रेस करें!</div>
 
                 <div class="success-banner" id="successBanner">🎉 सही उत्तर! चाँद</div>
 
                 <div class="canvas-container" id="canvasBox">
-                    <canvas id="tracingCanvas" width="250" height="180"></canvas>
+                    <!-- ENLARGED CANVAS RESOLUTION -->
+                    <canvas id="tracingCanvas" width="320" height="240"></canvas>
                 </div>
 
                 <button class="action-btn" id="submitBtn" style="padding: 10px 25px; font-size: 1.2rem;" onclick="submitTracingAnswer()">सबमिट करें ✔</button>
@@ -426,16 +428,16 @@
     }
 
     const masterQuestions = [
-        { wordPrompt: "चा__द",  targetMatra: "ँ", fullWord: "चाँद", hint: "💡 हिंट: 'चंद्रबिंदु' (ँ) के ऊपर ठीक से ट्रेस करें!" },
-        { wordPrompt: "नम__",   targetMatra: "ः", fullWord: "नमः", hint: "💡 हिंट: 'विसर्ग' (ः) की दो बिंदुओं के ऊपर ठीक से ट्रेस करें!" },
-        { wordPrompt: "सा__प",  targetMatra: "ँ", fullWord: "साँप", hint: "💡 हिंट: ऊपर चंद्रबिंदु (ँ) के ऊपर ट्रेस करें!" },
-        { wordPrompt: "प्रात__", targetMatra: "ः", fullWord: "प्रातः", hint: "💡 हिंट: 'विसर्ग' (ः) की दोनों बिंदुओं पर ट्रेस करें!" },
-        { wordPrompt: "कुआ__",  targetMatra: "ँ", fullWord: "कुआँ", hint: "💡 हिंट: 'चंद्रबिंदु' (ँ) पर ध्यान से उंगली फेरें!" },
-        { wordPrompt: "छ__",    targetMatra: "ः", fullWord: "छः", hint: "💡 हिंट: आगे विसर्ग (ः) की दो बिंदियाँ ट्रेस करें!" },
-        { wordPrompt: "आ__ख",   targetMatra: "ँ", fullWord: "आँख", hint: "💡 हिंट: ऊपर चंद्रबिंदु (ँ) पर ट्रेस करें!" },
-        { wordPrompt: "पुन__",  targetMatra: "ः", fullWord: "पुनः", hint: "💡 हिंट: विसर्ग (ः) की दो बिंदुओं पर उंगली चलाएँ!" },
-        { wordPrompt: "मा__",   targetMatra: "ँ", fullWord: "माँ", hint: "💡 हिंट: ऊपर चंद्रबिंदु (ँ) को पूरा करें!" },
-        { wordPrompt: "दु__ख",  targetMatra: "ः", fullWord: "दुःख", hint: "💡 हिंट: बीच में विसर्ग (ः) को ट्रेस करें!" }
+        { wordPrompt: "चा__द",  targetMatra: "ँ", fullWord: "चाँद", hint: "💡 गलत ट्रेस हुआ! कैनवास साफ़ कर दिया गया है, 'चंद्रबिंदु' (ँ) पर दोबारा ट्रेस करें।" },
+        { wordPrompt: "नम__",   targetMatra: "ः", fullWord: "नमः", hint: "💡 गलत ट्रेस हुआ! विसर्ग (ः) की दो बिंदुओं के ऊपर दोबारा ट्रेस करें।" },
+        { wordPrompt: "सा__प",  targetMatra: "ँ", fullWord: "साँप", hint: "💡 फिर से कोशिश करें! चंद्रबिंदु (ँ) के ऊपर ध्यान से उंगली फेरें।" },
+        { wordPrompt: "प्रात__", targetMatra: "ः", fullWord: "प्रातः", hint: "💡 गलत ट्रेस हुआ! विसर्ग (ः) की दोनों बिंदुओं पर साफ़-साफ़ ट्रेस करें।" },
+        { wordPrompt: "कुआ__",  targetMatra: "ँ", fullWord: "कुआँ", hint: "💡 कैनवास साफ़ किया गया है, 'चंद्रबिंदु' (ँ) पर दोबारा उंगली चलाएँ।" },
+        { wordPrompt: "छ__",    targetMatra: "ः", fullWord: "छः", hint: "💡 विसर्ग (ः) की दोनों बिंदुओं पर ठीक से ट्रेस करें।" },
+        { wordPrompt: "आ__ख",   targetMatra: "ँ", fullWord: "आँख", hint: "💡 गलत ट्रेस हुआ! चंद्रबिंदु (ँ) पर फिर से ध्यान से उंगली फेरें।" },
+        { wordPrompt: "पुन__",  targetMatra: "ः", fullWord: "पुनः", hint: "💡 विसर्ग (ः) की दो बिंदुओं पर उंगली चलाएँ।" },
+        { wordPrompt: "मा__",   targetMatra: "ँ", fullWord: "माँ", hint: "💡 कैनवास रीसेट हो गया है, चंद्रबिंदु (ँ) को दोबारा ट्रेस करें।" },
+        { wordPrompt: "दु__ख",  targetMatra: "ः", fullWord: "दुःख", hint: "💡 बीच में विसर्ग (ः) की दो बिंदुओं को साफ़-साफ़ ट्रेस करें।" }
     ];
 
     const CANDY_SVGS = [
@@ -478,7 +480,6 @@
     let candyTiles = [];
     let firstSelectedTile = null;
 
-    /* FIX 1: BOARD INITIALIZATION WITHOUT INITIAL MATCHES */
     function createBoard() {
         board.innerHTML = '';
         candyTiles = [];
@@ -488,7 +489,6 @@
             tile.classList.add('candy-tile');
             tile.setAttribute('data-id', i);
 
-            // Ensure no match is formed upon placement
             let randomCandy;
             do {
                 randomCandy = Math.floor(Math.random() * CANDY_SVGS.length);
@@ -601,7 +601,7 @@
         tile.querySelector('img').src = CANDY_SVGS[newCandyType];
     }
 
-    /* FIX 2: ACCURACY CHECKER FOR TRACING CANVAS */
+    /* ENHANCED CANVAS TRACING & AUTO-CLEAR */
     let tCanvas, tCtx;
     let isDrawing = false;
     let targetPixelPositions = [];
@@ -622,7 +622,7 @@
             const pos = getPos(e);
             tCtx.lineTo(pos.x, pos.y);
             tCtx.strokeStyle = '#ff007f';
-            tCtx.lineWidth = 14;
+            tCtx.lineWidth = 16; /* Thicker stroke for bigger canvas */
             tCtx.lineCap = 'round';
             tCtx.lineJoin = 'round';
             tCtx.stroke();
@@ -634,9 +634,14 @@
             const rect = tCanvas.getBoundingClientRect();
             const clientX = e.touches ? e.touches[0].clientX : e.clientX;
             const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            
+            // Adjust mouse/touch position according to scaled canvas size
+            const scaleX = tCanvas.width / rect.width;
+            const scaleY = tCanvas.height / rect.height;
+
             return {
-                x: clientX - rect.left,
-                y: clientY - rect.top
+                x: (clientX - rect.left) * scaleX,
+                y: (clientY - rect.top) * scaleY
             };
         }
 
@@ -652,18 +657,17 @@
     function renderGuideTemplate(matra) {
         tCtx.clearRect(0, 0, tCanvas.width, tCanvas.height);
         
-        // Draw the guide text on canvas for pixel sampling
-        tCtx.font = "900 6.5rem 'Comic Sans MS', sans-serif";
+        // Larger font scaled for 320x240 canvas
+        tCtx.font = "900 8.5rem 'Comic Sans MS', sans-serif";
         tCtx.textAlign = "center";
         tCtx.textBaseline = "middle";
         tCtx.fillStyle = "rgba(255, 0, 127, 0.25)";
         tCtx.fillText(matra, tCanvas.width / 2, tCanvas.height / 2);
 
-        // Store the target pixel positions
+        // Sample target pixels
         const imgData = tCtx.getImageData(0, 0, tCanvas.width, tCanvas.height);
         targetPixelPositions = [];
 
-        // Sample target pixels every 4px for performance
         for (let y = 0; y < tCanvas.height; y += 4) {
             for (let x = 0; x < tCanvas.width; x += 4) {
                 let alpha = imgData.data[(y * tCanvas.width + x) * 4 + 3];
@@ -684,10 +688,8 @@
             let index = (pt.y * tCanvas.width + pt.x) * 4;
             let r = currentImgData.data[index];
             let g = currentImgData.data[index + 1];
-            let b = currentImgData.data[index + 2];
             let alpha = currentImgData.data[index + 3];
 
-            // Check if user drew over target pixels (User color is #ff007f -> High R & Low G)
             if (alpha > 150 && r > 180 && g < 100) {
                 matchedPixels++;
             }
@@ -715,10 +717,9 @@
         const hintBox = document.getElementById('hintBox');
         const currentQ = masterQuestions[questionsSolved];
 
-        // Evaluate user tracing accuracy
         const coverageRatio = checkTracingAccuracy();
 
-        // Require at least 30% of target area to be traced properly
+        // FAIL TRACE
         if (coverageRatio < 0.30) {
             playAudio(sndWrong);
 
@@ -731,10 +732,16 @@
 
             hintBox.innerText = currentQ.hint;
             hintBox.style.display = 'block';
+
+            /* FIX: AUTO-CLEAR CANVAS ON WRONG TRACE */
+            setTimeout(() => {
+                renderGuideTemplate(currentQ.targetMatra);
+            }, 300);
+
             return;
         }
 
-        // Correct tracing!
+        // SUCCESS TRACE
         playAudio(sndCorrect);
 
         if (window.confetti) {
