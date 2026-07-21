@@ -1,1 +1,543 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>रंगों का मज़ेदार सफ़र 🚂🎨</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap');
+
+        :root {
+            --primary-gradient: linear-gradient(135deg, #a8edd9 0%, #fed6e3 100%);
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --accent-yellow: #ffeaa7;
+            --accent-pink: #ff7675;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Fredoka', 'Comic Sans MS', cursive, sans-serif;
+            background: var(--primary-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 10px;
+            overflow: hidden;
+        }
+
+        /* CUTEST GAME CARD */
+        .game-card {
+            width: 100%;
+            max-width: 410px;
+            height: 92vh;
+            max-height: 740px;
+            background: var(--card-bg);
+            border-radius: 35px;
+            padding: 18px;
+            box-shadow: 0 20px 50px rgba(168, 237, 217, 0.5), 0 10px 0 #fd79a8;
+            border: 6px solid #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        /* SHAKE ANIMATION */
+        .shake {
+            animation: cuteShake 0.4s ease-in-out;
+        }
+
+        @keyframes cuteShake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-10px) rotate(-2deg); }
+            40%, 80% { transform: translateX(10px) rotate(2deg); }
+        }
+
+        .screen {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 25px;
+            text-align: center;
+            z-index: 10;
+        }
+
+        #splashScreen { z-index: 50; background: linear-gradient(135deg, #fff5f5, #e3fafc); }
+
+        .logo-img {
+            max-width: 200px;
+            height: auto;
+            margin-bottom: 25px;
+            animation: bounceFloat 2s infinite ease-in-out;
+        }
+
+        @keyframes bounceFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .loader-bar {
+            width: 80%;
+            height: 14px;
+            background: #ffe3e3;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 3px solid #fff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .loader-fill {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #ff7675, #74b9ff, #a29bfe);
+            border-radius: 20px;
+            transition: width 5s linear;
+        }
+
+        .game-title {
+            font-size: 2.3rem;
+            color: #6c5ce7;
+            margin-bottom: 10px;
+            text-shadow: 3px 3px 0px #ffeaa7;
+            font-weight: 700;
+        }
+
+        .instruction-card {
+            background: #fff9db;
+            border: 3px dashed #fcc419;
+            border-radius: 25px;
+            padding: 18px;
+            text-align: left;
+            margin: 15px 0;
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #495057;
+            box-shadow: 0 8px 15px rgba(252, 196, 25, 0.15);
+        }
+
+        .action-btn {
+            background: linear-gradient(135deg, #ff7675, #e84393);
+            color: white;
+            border: 3px solid #fff;
+            padding: 14px 38px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            border-radius: 30px;
+            box-shadow: 0 8px 0 #d63031, 0 12px 20px rgba(232, 67, 147, 0.3);
+            cursor: pointer;
+            transition: all 0.1s ease;
+        }
+
+        .action-btn:active {
+            transform: translateY(6px);
+            box-shadow: 0 2px 0 #d63031;
+        }
+
+        /* HUD TOP BAR */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fff;
+            padding: 10px 18px;
+            border-radius: 25px;
+            border: 3px solid #ffeaa7;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.04);
+            font-weight: 700;
+            color: #2d3436;
+            font-size: 1rem;
+        }
+
+        .lives-container {
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            filter: drop-shadow(0 2px 4px rgba(255, 118, 117, 0.3));
+        }
+
+        .stage-box {
+            background: linear-gradient(180deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 30px;
+            padding: 15px;
+            text-align: center;
+            border: 4px dashed #a29bfe;
+            flex-grow: 1;
+            margin: 12px 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        .hint-btn {
+            background: #ffeaa7;
+            border: 2px solid #fdcb6e;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #d35400;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #e67e22;
+            transition: transform 0.1s;
+        }
+
+        .hint-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #e67e22;
+        }
+
+        .hint-text-box {
+            display: none;
+            background: #fd79a8;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            margin-top: 8px;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(253, 121, 168, 0.3);
+        }
+
+        /* COLOR BINS GRID */
+        .color-bins-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            width: 100%;
+            margin-top: 5px;
+        }
+
+        .color-bin {
+            padding: 14px 8px;
+            border-radius: 22px;
+            color: white;
+            font-size: 1.25rem;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            border: 4px solid #fff;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .color-bin:hover {
+            transform: scale(1.03);
+        }
+
+        .color-bin:active {
+            transform: scale(0.95);
+        }
+
+        /* CUTEST CONVEYOR BELT */
+        .conveyor-area {
+            width: 100%;
+            height: 125px;
+            background: linear-gradient(180deg, #e3fafc 0%, #c5f6fa 100%);
+            border-radius: 25px;
+            border: 4px solid #fff;
+            box-shadow: inset 0 5px 10px rgba(0,0,0,0.05), 0 8px 15px rgba(0,0,0,0.05);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .conveyor-track {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 22px;
+            background: repeating-linear-gradient(90deg, #b2bec3, #b2bec3 15px, #636e72 15px, #636e72 30px);
+            animation: moveTrack 1.5s linear infinite;
+            border-top: 3px solid #fff;
+        }
+
+        @keyframes moveTrack {
+            0% { background-position: 0 0; }
+            100% { background-position: 60px 0; }
+        }
+
+        .item-object {
+            font-size: 3.8rem;
+            position: absolute;
+            top: 10px;
+            filter: drop-shadow(0 8px 8px rgba(0,0,0,0.15));
+            animation: cuteFloat 1.8s ease-in-out infinite alternate;
+        }
+
+        @keyframes cuteFloat {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-8px); }
+        }
+
+        .item-label {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #2d3436;
+            margin-bottom: 6px;
+            background: #fff;
+            padding: 4px 15px;
+            border-radius: 15px;
+            display: inline-block;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="game-card" id="gameCard">
+
+        <!-- 1. SPLASH SCREEN -->
+        <div class="screen" id="splashScreen">
+            <img src="assets/innovine-logo.png" alt="Innovine Logo" class="logo-img" onerror="this.src='https://via.placeholder.com/200x80?text=Innovine+Logo'">
+            <div class="loader-bar">
+                <div class="loader-fill" id="loaderFill"></div>
+            </div>
+            <p style="margin-top: 18px; color: #888; font-weight: 600;">जादू लोड हो रहा है... ✨</p>
+        </div>
+
+        <!-- 2. GAME TITLE SCREEN -->
+        <div class="screen" id="titleScreen" style="display: none;">
+            <h1 class="game-title">🎨 रंगों का <br>मज़ेदार सफ़र 🚂</h1>
+            <p style="font-size: 1.15rem; color: #636e72; margin-bottom: 30px;">सही रंग के डिब्बे चुनकर मज़ा लें!</p>
+            <button class="action-btn" onclick="showInstructions()">खेलें ➔</button>
+        </div>
+
+        <!-- 3. INSTRUCTION SCREEN -->
+        <div class="screen" id="instructionScreen" style="display: none;">
+            <h2 style="color: #6c5ce7; font-size: 1.8rem; margin-bottom: 10px;">कैसे खेलें? 📜</h2>
+            <div class="instruction-card">
+                <p>1️⃣ कन्वेयर बेल्ट पर सुंदर वस्तुएँ आएँगी।</p>
+                <p>2️⃣ ऊपर सही <b>रंग की बोगी/डिब्बे</b> पर क्लिक करें!</p>
+                <p>3️⃣ कुल <b>10 वस्तुएँ</b> (100 अंक) हैं।</p>
+                <p>4️⃣ आपके पास <b>3 क्यूट लाइफ़्स (💖)</b> हैं। मदद के लिए <b>💡 संकेत</b> दबाएँ!</p>
+            </div>
+            <button class="action-btn" onclick="startGame()">शुरू करें! 🎮</button>
+        </div>
+
+        <!-- 4. MAIN GAME UI -->
+        <div class="top-bar">
+            <span id="levelText">वस्तु: 1/10</span>
+            <span class="lives-container" id="livesDisplay">💖💖💖</span>
+            <span id="scoreText">⭐ अंक: 0</span>
+        </div>
+
+        <div class="stage-box" id="gameStage">
+            <div>
+                <button class="hint-btn" onclick="toggleHint()">💡 संकेत (Hint)</button>
+                <div class="hint-text-box" id="hintBox"></div>
+            </div>
+
+            <!-- BINS DISPLAY -->
+            <div class="color-bins-grid" id="binsGrid"></div>
+
+            <!-- ITEM & BELT AREA -->
+            <div style="width: 100%;">
+                <div class="item-label" id="itemName">वस्तु का नाम</div>
+                <div class="conveyor-area">
+                    <div class="item-object" id="itemEmoji">🎈</div>
+                    <div class="conveyor-track"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. END OVERLAY (WIN) -->
+        <div class="screen" id="endOverlay" style="display: none;">
+            <h1 style="font-size: 2.3rem; color: #6c5ce7; margin-bottom: 10px;">🎉 कमाल कर दिया! 🥳</h1>
+            <p style="font-size: 1.2rem; color: #2d3436; margin-bottom: 20px;">आपने रंगों का सफ़र पूरा किया!</p>
+            <h2 id="finalScore" style="color: #e84393; font-size: 2.2rem; margin-bottom: 30px;">अंक: 100 / 100</h2>
+            <button class="action-btn" onclick="restartGame()">पुनः खेलें 🔄</button>
+        </div>
+
+        <!-- 6. GAME OVER OVERLAY -->
+        <div class="screen" id="gameOverOverlay" style="display: none;">
+            <h1 style="font-size: 2.3rem; color: #ff7675; margin-bottom: 10px;">💔 अरे वाह! फिर कोशिश करें!</h1>
+            <p style="font-size: 1.2rem; color: #2d3436; margin-bottom: 20px;">आपकी सभी लाइफ़ खत्म हो गईं!</p>
+            <h2 id="gameOverScore" style="color: #6c5ce7; font-size: 2rem; margin-bottom: 30px;">अंक: 0</h2>
+            <button class="action-btn" onclick="restartGame()">फिर से प्रयास करें 🔄</button>
+        </div>
+
+    </div>
+
+    <!-- AUDIO ASSETS -->
+    <audio id="sndCorrect" src="assets/correct.mp3" preload="auto"></audio>
+    <audio id="sndWrong" src="assets/wrong.mp3" preload="auto"></audio>
+    <audio id="sndClaps" src="assets/freesound_community-claps-44774.mp3" preload="auto"></audio>
+
+<script>
+    const questions = [
+        { name: "गुब्बारा", emoji: "🎈", correctColor: "लाल", hint: "यह टमाटर और सेब के रंग जैसा होता है", options: ["लाल", "हरा", "नीला", "पीला"] },
+        { name: "पत्ता", emoji: "🍃", correctColor: "हरा", hint: "यह पेड़-पौधों का रंग होता है", options: ["हरा", "लाल", "सफ़ेद", "गुलाबी"] },
+        { name: "मक्का", emoji: "🌽", correctColor: "पीला", hint: "सूरजमुखी और केले का रंग", options: ["पीला", "नीला", "बैगनी", "भूरा"] },
+        { name: "पानी की बूंद", emoji: "💧", correctColor: "नीला", hint: "आसमान और समुद्र का रंग", options: ["नीला", "नारंगी", "लाल", "हरा"] },
+        { name: "बादल", emoji: "☁️", correctColor: "सफ़ेद", hint: "दूध और बर्फ का रंग", options: ["सफ़ेद", "गहरा नीला", "बैगनी", "पीला"] },
+        { name: "बैंगन", emoji: "🍆", correctColor: "बैगनी", hint: "सब्जियों के राजा का रंग (Purple)", options: ["बैगनी", "गुलाबी", "भूरा", "लाल"] },
+        { name: "चॉकलेट", emoji: "🍫", correctColor: "भूरा", hint: "लकड़ी और मिट्टी का रंग (Brown)", options: ["भूरा", "नारंगी", "सफ़ेद", "नीला"] },
+        { name: "प्याज़", emoji: "🧅", correctColor: "गुलाबी", hint: "कमल के फूल और कॉटन कैंडी का रंग", options: ["गुलाबी", "हरा", "गहरा नीला", "पीला"] },
+        { name: "कद्दू", emoji: "🎃", correctColor: "नारंगी", hint: "संतरे और गाजर का रंग (Orange)", options: ["नारंगी", "बैगनी", "सफ़ेद", "भूरा"] },
+        { name: "ब्लूबेरी", emoji: "🫐", correctColor: "गहरा नीला", hint: "रात के आसमान का रंग (Dark Blue)", options: ["गहरा नीला", "लाल", "गुलाबी", "हरा"] }
+    ];
+
+    const colorCodes = {
+        "लाल": "#ff6b6b",
+        "हरा": "#51cf66",
+        "नीला": "#339af0",
+        "पीला": "#fcc419",
+        "सफ़ेद": "#adb5bd",
+        "बैगनी": "#cc5de8",
+        "भूरा": "#8d6e63",
+        "गुलाबी": "#ff8787",
+        "नारंगी": "#ff922b",
+        "गहरा नीला": "#3b5bdb"
+    };
+
+    let currentQ = 0;
+    let score = 0;
+    let lives = 3;
+
+    function playAudio(id) {
+        const audio = document.getElementById(id);
+        if (audio) {
+            audio.currentTime = 0;
+            audio.play().catch(e => console.log("Audio deferred"));
+        }
+    }
+
+    function triggerWrongEffects() {
+        playAudio('sndWrong');
+        if (navigator.vibrate) navigator.vibrate(200);
+
+        const card = document.getElementById('gameCard');
+        card.classList.add('shake');
+        setTimeout(() => card.classList.remove('shake'), 400);
+
+        lives--;
+        updateLivesDisplay();
+
+        if (lives <= 0) {
+            setTimeout(() => {
+                document.getElementById('gameOverOverlay').style.display = 'flex';
+                document.getElementById('gameOverScore').innerText = `अंक: ${score}`;
+            }, 500);
+        }
+    }
+
+    function updateLivesDisplay() {
+        let heartsStr = "";
+        for (let i = 0; i < 3; i++) {
+            heartsStr += (i < lives) ? "💖" : "🖤";
+        }
+        document.getElementById('livesDisplay').innerText = heartsStr;
+    }
+
+    function toggleHint() {
+        const hintBox = document.getElementById('hintBox');
+        if (hintBox.style.display === 'block') {
+            hintBox.style.display = 'none';
+        } else {
+            hintBox.innerText = `💡 संकेत: ${questions[currentQ].hint}`;
+            hintBox.style.display = 'block';
+        }
+    }
+
+    window.onload = function() {
+        document.getElementById('loaderFill').style.width = '100%';
+        setTimeout(() => {
+            document.getElementById('splashScreen').style.display = 'none';
+            document.getElementById('titleScreen').style.display = 'flex';
+        }, 5000);
+    };
+
+    function showInstructions() {
+        document.getElementById('titleScreen').style.display = 'none';
+        document.getElementById('instructionScreen').style.display = 'flex';
+    }
+
+    function startGame() {
+        document.getElementById('instructionScreen').style.display = 'none';
+        loadQuestion();
+    }
+
+    function loadQuestion() {
+        document.getElementById('hintBox').style.display = 'none';
+        const q = questions[currentQ];
+        document.getElementById('levelText').innerText = `वस्तु: ${currentQ + 1}/10`;
+        document.getElementById('scoreText').innerText = `⭐ अंक: ${score}`;
+        updateLivesDisplay();
+
+        document.getElementById('itemName').innerText = q.name;
+        document.getElementById('itemEmoji').innerText = q.emoji;
+
+        const grid = document.getElementById('binsGrid');
+        grid.innerHTML = '';
+        
+        const shuffledOpts = [...q.options].sort(() => Math.random() - 0.5);
+
+        shuffledOpts.forEach(colorName => {
+            const bin = document.createElement('div');
+            bin.className = 'color-bin';
+            bin.innerText = colorName;
+            bin.style.backgroundColor = colorCodes[colorName] || '#333';
+            bin.onclick = () => checkAnswer(colorName);
+            grid.appendChild(bin);
+        });
+    }
+
+    function checkAnswer(selectedColor) {
+        if (lives <= 0) return;
+        const q = questions[currentQ];
+
+        if (selectedColor === q.correctColor) {
+            playAudio('sndCorrect');
+            confetti({ particleCount: 60, spread: 70, origin: { y: 0.7 } });
+            score += 10;
+            nextQuestion();
+        } else {
+            triggerWrongEffects();
+        }
+    }
+
+    function nextQuestion() {
+        currentQ++;
+        if (currentQ < questions.length) {
+            loadQuestion();
+        } else {
+            playAudio('sndClaps');
+            confetti({ particleCount: 160, spread: 100, origin: { y: 0.6 } });
+            document.getElementById('endOverlay').style.display = 'flex';
+            document.getElementById('finalScore').innerText = `अंक: ${score} / 100`;
+        }
+    }
+
+    function restartGame() {
+        currentQ = 0;
+        score = 0;
+        lives = 3;
+        document.getElementById('endOverlay').style.display = 'none';
+        document.getElementById('gameOverOverlay').style.display = 'none';
+        document.getElementById('titleScreen').style.display = 'flex';
+    }
+</script>
+
+</body>
+</html>
