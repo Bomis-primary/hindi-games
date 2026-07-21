@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>मात्रा कैंडी क्रश 🍬✨</title>
+
+    <!-- Canvas Confetti Library for Visual Feedback -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
     <style>
         :root {
             --bright-orange: #ff5e00;
@@ -129,7 +133,7 @@
 
         .lives-box { font-size: 1.4rem; letter-spacing: 2px; }
 
-        /* MID TASK BANNER */
+        /* TASK BANNER */
         .task-banner {
             width: 100%;
             background: linear-gradient(135deg, #70e000, #38b000);
@@ -206,10 +210,7 @@
             filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
         }
 
-        /* POP MATCH ANIMATION */
-        .popping {
-            animation: candyBlast 0.35s forwards;
-        }
+        .popping { animation: candyBlast 0.35s forwards; }
 
         @keyframes candyBlast {
             0% { transform: scale(1); opacity: 1; }
@@ -242,6 +243,21 @@
             align-items: center;
             border: 5px solid var(--warm-yellow);
             box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            transition: transform 0.2s ease;
+        }
+
+        /* SHAKE ANIMATION FOR WRONG ANSWER */
+        .shake-animation {
+            animation: shake 0.4s ease-in-out;
+            border-color: #ff0055 !important;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-12px); }
+            40% { transform: translateX(12px); }
+            60% { transform: translateX(-8px); }
+            80% { transform: translateX(8px); }
         }
 
         .tracing-prompt {
@@ -255,14 +271,29 @@
             font-size: 2.4rem;
             font-weight: 900;
             color: var(--dark-purple);
-            margin-bottom: 12px;
+            margin-bottom: 8px;
             letter-spacing: 2px;
+        }
+
+        /* HINT BOX FOR WRONG ANSWER */
+        .hint-box {
+            background: #fff3cd;
+            color: #856404;
+            border: 2px dashed #ffebaa;
+            border-radius: 12px;
+            padding: 6px 12px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: none;
+            width: 100%;
+            text-align: center;
         }
 
         .canvas-container {
             position: relative;
             width: 250px;
-            height: 190px;
+            height: 180px;
             background: #fff8f0;
             border: 4px dashed var(--neon-pink);
             border-radius: 20px;
@@ -287,103 +318,70 @@
             font-weight: 900;
         }
 
-        /* INSTRUCTIONS STYLING */
-        .instruction-title {
-            font-size: 2rem;
-            color: var(--bright-orange);
-            margin-bottom: 15px;
+        /* SUCCESS OVERLAY INSIDE MODAL */
+        .success-banner {
+            display: none;
+            font-size: 1.8rem;
+            color: #38b000;
             font-weight: 900;
+            margin: 15px 0;
+            animation: popSuccess 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        .instruction-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            width: 100%;
-            margin-bottom: 20px;
+        @keyframes popSuccess {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
         }
 
+        /* INSTRUCTIONS STYLING */
+        .instruction-title { font-size: 2rem; color: var(--bright-orange); margin-bottom: 15px; font-weight: 900; }
+        .instruction-list { display: flex; flex-direction: column; gap: 12px; width: 100%; margin-bottom: 20px; }
         .step-card {
-            background: #fff8f0;
-            border: 2px dashed #ffb703;
-            border-left: 6px solid var(--neon-pink);
-            border-radius: 15px;
-            padding: 10px 14px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            text-align: left;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            background: #fff8f0; border: 2px dashed #ffb703; border-left: 6px solid var(--neon-pink);
+            border-radius: 15px; padding: 10px 14px; display: flex; align-items: center; gap: 12px; text-align: left;
         }
-
         .step-num {
-            background: linear-gradient(135deg, #ff5e00, #ff007f);
-            color: white;
-            width: 32px;
-            height: 32px;
-            min-width: 32px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 1.1rem;
+            background: linear-gradient(135deg, #ff5e00, #ff007f); color: white; width: 32px; height: 32px;
+            min-width: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;
         }
-
-        .step-text {
-            font-size: 1rem;
-            color: #333;
-            line-height: 1.3;
-            font-weight: 600;
-        }
-
-        .highlight-tag {
-            background: #ffe3e0;
-            color: var(--neon-pink);
-            padding: 2px 6px;
-            border-radius: 6px;
-            font-weight: bold;
-        }
+        .step-text { font-size: 1rem; color: #333; line-height: 1.3; font-weight: 600; }
+        .highlight-tag { background: #ffe3e0; color: var(--neon-pink); padding: 2px 6px; border-radius: 6px; font-weight: bold; }
     </style>
 </head>
 <body>
 
     <div class="game-card">
 
-        <!-- SCREEN 1: SPLASH LOGO -->
+        <!-- SPLASH -->
         <div id="splashScreen" class="screen">
             <img src="assets/innovine-logo.png" alt="Innovine Logo" class="splash-logo" onerror="autoAdvanceSplash();">
             <p style="margin-top: 20px; color: #888; font-weight: bold;">मात्रा कैंडी क्रश शुरू हो रहा है...</p>
         </div>
 
-        <!-- SCREEN 2: TITLE SCREEN -->
+        <!-- TITLE -->
         <div id="titleScreen" class="screen" style="display: none;">
             <h1 class="main-title">🍬 मात्रा कैंडी क्रश 🍬</h1>
             <p class="subtitle">कैंडीज़ मिलाओ और मात्रा लिखो!</p>
             <button class="action-btn" onclick="goToInstructions()">शुरू करें ▶</button>
         </div>
 
-        <!-- SCREEN 3: INSTRUCTIONS SCREEN -->
+        <!-- INSTRUCTIONS -->
         <div id="instructionScreen" class="screen" style="display: none;">
             <h2 class="instruction-title">कैसे खेलें? 🎮</h2>
-            
             <div class="instruction-list">
                 <div class="step-card">
                     <div class="step-num">1</div>
                     <div class="step-text">पास वाली 2 कैंडिज़ पर क्लिक करके आपस में बदलो <span class="highlight-tag">Swap</span></div>
                 </div>
-
                 <div class="step-card">
                     <div class="step-num">2</div>
                     <div class="step-text">एक जैसी 3 या अधिक कैंडिज़ मिलाकर <span class="highlight-tag">Match</span> बनाओ 🍬</div>
                 </div>
-
                 <div class="step-card">
                     <div class="step-num">3</div>
                     <div class="step-text">हर 2 मैच के बाद सही मात्रा (<span class="highlight-tag">ँ</span> या <span class="highlight-tag">ः</span>) लिखकर सवाल का जवाब दो! ✏️</div>
                 </div>
             </div>
-
             <button class="action-btn" onclick="startGameDirectly()">खेलें 🎮</button>
         </div>
 
@@ -400,19 +398,27 @@
             <span class="task-badge" id="matchProgress">0 / 2</span>
         </div>
 
-        <!-- MATCH-3 CANDY CRUSH BOARD -->
+        <!-- GAME BOARD -->
         <div class="grid-container" id="board"></div>
 
         <!-- TRACING QUESTION MODAL -->
         <div id="tracingModal">
-            <div class="tracing-card">
+            <div class="tracing-card" id="tracingCard">
                 <div class="tracing-prompt">शब्द पूरा करने के लिए मात्रा लिखो:</div>
                 <div class="tracing-word" id="wordPrompt">चा__द</div>
-                <div class="canvas-container">
+                
+                <!-- HINT DISPLAY AREA -->
+                <div class="hint-box" id="hintBox">💡 हिंट: दिए गए गुलाबी अक्षर 'ँ' के ऊपर उंगली फेरकर पूरा करें!</div>
+
+                <!-- SUCCESS MESSAGE DISPLAY -->
+                <div class="success-banner" id="successBanner">🎉 सही उत्तर! चाँद</div>
+
+                <div class="canvas-container" id="canvasBox">
                     <div class="guide-text" id="guideMatra">ँ</div>
-                    <canvas id="tracingCanvas" width="250" height="190"></canvas>
+                    <canvas id="tracingCanvas" width="250" height="180"></canvas>
                 </div>
-                <button class="action-btn" style="padding: 10px 25px; font-size: 1.2rem;" onclick="submitTracingAnswer()">सबमिट करें ✔</button>
+
+                <button class="action-btn" id="submitBtn" style="padding: 10px 25px; font-size: 1.2rem;" onclick="submitTracingAnswer()">सबमिट करें ✔</button>
             </div>
         </div>
 
@@ -435,18 +441,18 @@
         audioObj.play().catch(() => {});
     }
 
-    // CORRECTED MASTER QUESTIONS ARRAY
+    // MASTER QUESTIONS WITH FULL CORRECT WORD & HINTS
     const masterQuestions = [
-        { wordPrompt: "चा__द",  targetMatra: "ँ" },
-        { wordPrompt: "नम__",   targetMatra: "ः" },
-        { wordPrompt: "सा__प",  targetMatra: "ँ" },
-        { wordPrompt: "प्रात__", targetMatra: "ः" },
-        { wordPrompt: "कुआ__",  targetMatra: "ँ" },
-        { wordPrompt: "छ__",    targetMatra: "ः" },
-        { wordPrompt: "आ__ख",   targetMatra: "ँ" },
-        { wordPrompt: "पुन__",  targetMatra: "ः" },
-        { wordPrompt: "मा__",   targetMatra: "ँ" },
-        { wordPrompt: "दु__ख",  targetMatra: "ः" } // Corrected to 'ख'
+        { wordPrompt: "चा__द",  targetMatra: "ँ", fullWord: "चाँद", hint: "💡 हिंट: 'चंद्रबिंदु' (ँ) मात्रा लगाएँ!" },
+        { wordPrompt: "नम__",   targetMatra: "ः", fullWord: "नमः", hint: "💡 हिंट: 'विसर्ग' (ः) की दो बिंदी लगाएँ!" },
+        { wordPrompt: "सा__प",  targetMatra: "ँ", fullWord: "साँप", hint: "💡 हिंट: ऊपर चंद्रबिंदु (ँ) बनाएँ!" },
+        { wordPrompt: "प्रात__", targetMatra: "ः", fullWord: "प्रातः", hint: "💡 हिंट: 'विसर्ग' (ः) की दो बिंदी लगाएँ!" },
+        { wordPrompt: "कुआ__",  targetMatra: "ँ", fullWord: "कुआँ", hint: "💡 हिंट: 'चंद्रबिंदु' (ँ) ट्रेस करें!" },
+        { wordPrompt: "छ__",    targetMatra: "ः", fullWord: "छः", hint: "💡 हिंट: आगे विसर्ग (ः) बनाएँ!" },
+        { wordPrompt: "आ__ख",   targetMatra: "ँ", fullWord: "आँख", hint: "💡 हिंट: ऊपर चंद्रबिंदु (ँ) ट्रेस करें!" },
+        { wordPrompt: "पुन__",  targetMatra: "ः", fullWord: "पुनः", hint: "💡 हिंट: आगे विसर्ग (ः) की बिंदी बनाएँ!" },
+        { wordPrompt: "मा__",   targetMatra: "ँ", fullWord: "माँ", hint: "💡 हिंट: ऊपर चंद्रबिंदु (ँ) बनाएँ!" },
+        { wordPrompt: "दु__ख",  targetMatra: "ः", fullWord: "दुःख", hint: "💡 हिंट: बीच में विसर्ग (ः) लगाएँ!" }
     ];
 
     const CANDY_SVGS = [
@@ -620,7 +626,7 @@
             const pos = getPos(e);
             tCtx.lineTo(pos.x, pos.y);
             tCtx.strokeStyle = '#ff007f';
-            tCtx.lineWidth = 12;
+            tCtx.lineWidth = 14;
             tCtx.lineCap = 'round';
             tCtx.stroke();
         }
@@ -652,27 +658,75 @@
         const currentQ = masterQuestions[questionsSolved];
         document.getElementById('wordPrompt').innerText = currentQ.wordPrompt;
         document.getElementById('guideMatra').innerText = currentQ.targetMatra;
+        document.getElementById('hintBox').style.display = 'none';
+        document.getElementById('successBanner').style.display = 'none';
+        document.getElementById('canvasBox').style.display = 'block';
+        document.getElementById('submitBtn').style.display = 'block';
 
         tCtx.clearRect(0, 0, tCanvas.width, tCanvas.height);
         hasDrawn = false;
         document.getElementById('tracingModal').style.display = 'flex';
     }
 
+    // SUBMIT WITH CONFETTI, CORRECT ANSWER DISPLAY & SHAKE/HINT FOR WRONG
     function submitTracingAnswer() {
-        if (!hasDrawn) return;
+        const tracingCard = document.getElementById('tracingCard');
+        const hintBox = document.getElementById('hintBox');
+        const currentQ = masterQuestions[questionsSolved];
 
-        document.getElementById('tracingModal').style.display = 'none';
+        // IF USER HAS NOT TRACED ANYTHING (WRONG/INCOMPLETE SUBMISSION)
+        if (!hasDrawn) {
+            playAudio(sndWrong);
+
+            // VIBRATE DEVICE IF SUPPORTED
+            if (navigator.vibrate) {
+                navigator.vibrate([100, 50, 100]);
+            }
+
+            // TRIGGER SHAKE ANIMATION
+            tracingCard.classList.add('shake-animation');
+            setTimeout(() => tracingCard.classList.remove('shake-animation'), 450);
+
+            // SHOW HINT
+            hintBox.innerText = currentQ.hint;
+            hintBox.style.display = 'block';
+            return;
+        }
+
+        // ON CORRECT SUBMISSION
         playAudio(sndCorrect);
+
+        // THROW CONFETTI! 🎉
+        if (window.confetti) {
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+        }
+
+        // SHOW FULL CORRECT ANSWER BANNER
+        document.getElementById('canvasBox').style.display = 'none';
+        document.getElementById('submitBtn').style.display = 'none';
+        hintBox.style.display = 'none';
         
+        const successBanner = document.getElementById('successBanner');
+        successBanner.innerText = `✨ सही उत्तर: ${currentQ.fullWord} ✨`;
+        successBanner.style.display = 'block';
+
+        // UPDATE SCORE & QUESTIONS
         score += 10;
         questionsSolved++;
-        
         document.getElementById('matchProgress').innerText = `0 / 2`;
         updateStatusBar();
 
-        if (questionsSolved >= 10) {
-            showEndGame(true);
-        }
+        // CLOSE MODAL AFTER 1.5 SECONDS TO LET STUDENT SEE CORRECT ANSWER
+        setTimeout(() => {
+            document.getElementById('tracingModal').style.display = 'none';
+            if (questionsSolved >= 10) {
+                showEndGame(true);
+            }
+        }, 1600);
     }
 
     function updateStatusBar() {
@@ -701,6 +755,10 @@
             playAudio(sndClaps);
             document.getElementById('endTitle').innerText = "🎉 अद्भुत! जीत गए! 🥳";
             document.getElementById('finalScore').innerText = `आपने पूरे ${score} अंक प्राप्त किए!`;
+            
+            if (window.confetti) {
+                confetti({ particleCount: 200, spread: 100, origin: { y: 0.5 } });
+            }
         }
     }
 </script>
