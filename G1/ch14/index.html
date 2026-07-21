@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>बबल शूटर और मात्रा ट्रेसर 🎯✨</title>
+    <title>असली कैंडी क्रश मात्रा ट्रेसर 🍬✨</title>
     <style>
         :root {
             --bright-orange: #ff5e00;
             --warm-yellow: #ffb703;
             --neon-pink: #ff007f;
             --dark-purple: #2b0938;
-            --card-bg: #ffffff;
         }
 
         * {
@@ -35,10 +34,10 @@
 
         .game-card {
             width: 100%;
-            max-width: 500px;
+            max-width: 450px;
             height: 92vh;
-            max-height: 850px;
-            background: var(--card-bg);
+            max-height: 820px;
+            background: #ffffff;
             border-radius: 25px;
             padding: 12px;
             box-shadow: 0 10px 0 #cc005f, 0 15px 30px rgba(0,0,0,0.3);
@@ -95,20 +94,20 @@
 
         /* BUTTONS */
         .action-btn {
-            background: var(--bright-orange);
+            background: linear-gradient(135deg, #ff5e00, #ff007f);
             color: white;
             border: none;
             padding: 14px 35px;
             font-size: 1.4rem;
             font-weight: bold;
             border-radius: 30px;
-            box-shadow: 0 6px 0 #d00000;
+            box-shadow: 0 6px 0 #b30047, 0 10px 20px rgba(255,0,127,0.4);
             cursor: pointer;
         }
 
         .action-btn:active {
             transform: translateY(3px);
-            box-shadow: 0 3px 0 #d00000;
+            box-shadow: 0 3px 0 #b30047;
         }
 
         /* STATUS BAR */
@@ -126,16 +125,49 @@
             margin-bottom: 8px;
         }
 
-        .balloon-chances { font-size: 1.3rem; }
+        .lives-box { font-size: 1.3rem; }
 
-        /* BUBBLE SHOOTER CANVAS AREA */
-        #gameCanvas {
-            background: #1e0036;
-            border-radius: 18px;
-            border: 4px solid var(--warm-yellow);
+        /* MATCH-3 CANDY GRID */
+        .grid-container {
             width: 100%;
-            height: 100%;
-            touch-action: none;
+            aspect-ratio: 1/1;
+            background: #3a0ca3;
+            border-radius: 20px;
+            border: 4px solid var(--warm-yellow);
+            padding: 8px;
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            grid-template-rows: repeat(6, 1fr);
+            gap: 5px;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.5);
+        }
+
+        .candy-tile {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+            position: relative;
+        }
+
+        .candy-tile.selected {
+            border: 3px solid #ffffff;
+            animation: bounce 0.5s infinite alternate;
+        }
+
+        @keyframes bounce {
+            0% { transform: scale(0.9); }
+            100% { transform: scale(1.05); }
+        }
+
+        .candy-img {
+            width: 85%;
+            height: 85%;
+            object-fit: contain;
+            pointer-events: none;
         }
 
         /* TRACING MODAL OVERLAY */
@@ -164,7 +196,7 @@
         }
 
         .tracing-prompt {
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             color: var(--bright-orange);
             font-weight: bold;
             margin-bottom: 5px;
@@ -210,43 +242,43 @@
 
     <div class="game-card">
 
-        <!-- SCREEN 1: SPLASH LOGO ONLY -->
+        <!-- SCREEN 1: SPLASH LOGO -->
         <div id="splashScreen" class="screen">
             <img src="assets/innovine-logo.png" alt="Innovine Logo" class="splash-logo" onerror="autoAdvanceSplash();">
-            <p style="margin-top: 20px; color: #888; font-weight: bold;">लोड हो रहा है...</p>
+            <p style="margin-top: 20px; color: #888; font-weight: bold;">कैंडी क्रश चालू हो रहा है...</p>
         </div>
 
         <!-- SCREEN 2: TITLE SCREEN -->
         <div id="titleScreen" class="screen" style="display: none;">
-            <h1 class="main-title">🎯 बबल मात्रा शूटर! ✨</h1>
-            <p class="subtitle">बबल्स फोड़ो और मात्रा लिखो!</p>
+            <h1 class="main-title">🍬 कैंडी क्रश मात्रा! ✨</h1>
+            <p class="subtitle">कैंडीज़ मिलाओ और मात्रा लिखो!</p>
             <button class="action-btn" onclick="goToInstructions()">शुरू करें ▶</button>
         </div>
 
         <!-- SCREEN 3: INSTRUCTIONS SCREEN -->
         <div id="instructionScreen" class="screen" style="display: none;">
             <h2 style="font-size: 1.8rem; color: var(--bright-orange); margin-bottom: 15px;">कैसे खेलें? 🎮</h2>
-            <p style="font-size: 1.1rem; color: #333; margin-bottom: 10px;">1. नीचे से बबल को सही जगह पर शूट करो!</p>
-            <p style="font-size: 1.1rem; color: #333; margin-bottom: 10px;">2. 3 या अधिक सेम कलर के बबल्स फोड़ो।</p>
-            <p style="font-size: 1.1rem; color: #333; margin-bottom: 25px;">3. स्क्रीन पर उंगली या माउस से मात्रा (ँ या ः) लिखो!</p>
+            <p style="font-size: 1.1rem; color: #333; margin-bottom: 10px;">1. पास वाली 2 कैंडिज़ को आपस में बदलो (Swap)।</p>
+            <p style="font-size: 1.1rem; color: #333; margin-bottom: 10px;">2. 3 या अधिक सेम कैंडीज़ का मैच बनाओ!</p>
+            <p style="font-size: 1.1rem; color: #333; margin-bottom: 25px;">3. 2 मैच बनते ही सवाल का जवाब मात्रा (<b style="color:var(--neon-pink)">ँ</b> या <b style="color:var(--neon-pink)">ः</b>) लिखकर दो!</p>
             <button class="action-btn" onclick="startGameDirectly()">खेलें 🎮</button>
         </div>
 
         <!-- TOP STATUS BAR -->
         <div class="status-bar">
             <span id="progressText">सवाल: 0/10</span>
-            <div class="balloon-chances" id="balloonBox">🎈🎈🎈</div>
+            <div class="lives-box" id="livesBox">🍬🍬🍬</div>
             <span id="scoreText">⭐: 0</span>
         </div>
 
-        <!-- BUBBLE SHOOTER GAME CANVAS -->
-        <canvas id="gameCanvas"></canvas>
+        <!-- MATCH-3 CANDY CRUSH BOARD -->
+        <div class="grid-container" id="board"></div>
 
         <!-- TRACING QUESTION MODAL -->
         <div id="tracingModal">
             <div class="tracing-card">
                 <div class="tracing-prompt">शब्द पूरा करने के लिए मात्रा लिखो:</div>
-                <div class="tracing-word" id="wordPrompt">चा__द</div>
+                <div class="tracing-word" id="wordPrompt">चाँ__द</div>
                 <div class="canvas-container">
                     <div class="guide-text" id="guideMatra">ँ</div>
                     <canvas id="tracingCanvas" width="250" height="200"></canvas>
@@ -257,15 +289,15 @@
 
         <!-- END OVERLAY -->
         <div id="endOverlay" class="screen" style="display: none;">
-            <h1 id="endTitle" style="font-size: 2.2rem; color: var(--bright-orange); margin-bottom: 15px;">🎉 बहुत बढ़िया! 🥳</h1>
-            <p id="finalScore" style="font-size: 1.3rem; color: #333; margin-bottom: 25px;">आपने 100 अंक बनाए!</p>
+            <h1 id="endTitle" style="font-size: 2.2rem; color: var(--bright-orange); margin-bottom: 15px;">🎉 स्वीट विक्ट्री! 🥳</h1>
+            <p id="finalScore" style="font-size: 1.3rem; color: #333; margin-bottom: 25px;">आपने पूरे 100 अंक बनाए!</p>
             <button class="action-btn" onclick="startNewGame()">फिर से खेलें 🔄</button>
         </div>
 
     </div>
 
 <script>
-    // Audio files configuration
+    // Audio Configuration
     const sndCorrect = new Audio('assets/correct.mp3');
     const sndWrong = new Audio('assets/wrong.mp3');
     const sndClaps = new Audio('assets/freesound_community-claps-44774.mp3');
@@ -275,24 +307,39 @@
         audioObj.play().catch(() => {});
     }
 
-    // Dataset
+    // Correct Dataset
     const masterQuestions = [
-        { wordPrompt: "चा__द", targetMatra: "ँ" },
-        { wordPrompt: "न__म", targetMatra: "ः" },
-        { wordPrompt: "सा__प", targetMatra: "ँ" },
-        { wordPrompt: "प्रा__त", targetMatra: "ः" },
-        { wordPrompt: "कुआ__", targetMatra: "ँ" },
-        { wordPrompt: "छ__", targetMatra: "ः" },
-        { wordPrompt: "आ__ख", targetMatra: "ँ" },
-        { wordPrompt: "पु__न", targetMatra: "ः" },
-        { wordPrompt: "मा__", targetMatra: "ँ" },
-        { wordPrompt: "दु__ख", targetMatra: "ः" }
+        { wordPrompt: "चाँ__द", targetMatra: "ँ" },
+        { wordPrompt: "नम__",   targetMatra: "ः" },
+        { wordPrompt: "साँ__प", targetMatra: "ँ" },
+        { wordPrompt: "प्रात__", targetMatra: "ः" },
+        { wordPrompt: "कुआँ__", targetMatra: "ँ" },
+        { wordPrompt: "छ__",    targetMatra: "ः" },
+        { wordPrompt: "आँ__ख", targetMatra: "ँ" },
+        { wordPrompt: "पुन__",   targetMatra: "ः" },
+        { wordPrompt: "माँ__",   targetMatra: "ँ" },
+        { wordPrompt: "दुः__خ", targetMatra: "ः" }
+    ];
+
+    // SVG Candy Graphics (High Quality SVG Vectors)
+    const CANDY_SVGS = [
+        // Red Bean Candy
+        `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><ellipse cx="50" cy="50" rx="40" ry="25" fill="%23ff0055" transform="rotate(-20 50 50)"/><ellipse cx="40" cy="40" rx="15" ry="8" fill="%23ff99bb" transform="rotate(-20 50 50)"/></svg>`,
+        // Yellow Drop Candy
+        `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M50 10 Q85 60 50 90 Q15 60 50 10 Z" fill="%23ffb703"/><ellipse cx="42" cy="45" rx="10" ry="18" fill="%23ffea88" transform="rotate(-15 42 45)"/></svg>`,
+        // Blue Spherical Lollipop
+        `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="38" fill="%2300b4d8"/><circle cx="38" cy="38" r="12" fill="%2390e0ef"/><path d="M20 50 A 30 30 0 0 0 80 50" stroke="%230077b6" stroke-width="5" fill="none"/></svg>`,
+        // Green Square Jelly
+        `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect x="15" y="15" width="70" height="70" rx="18" fill="%2338b000"/><rect x="25" y="25" width="25" height="25" rx="8" fill="%239ef01a"/></svg>`,
+        // Purple Flower Candy
+        `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="38" fill="%237209b7"/><circle cx="50" cy="50" r="15" fill="%23f72585"/><circle cx="38" cy="38" r="8" fill="%23480ca8"/></svg>`
     ];
 
     let splashTimer = null;
     let score = 0;
     let questionsSolved = 0;
-    let balloonsLeft = 3;
+    let matchCountForCurrentQuestion = 0;
+    let lives = 3;
 
     window.onload = function() {
         splashTimer = setTimeout(autoAdvanceSplash, 5000);
@@ -315,132 +362,117 @@
         startNewGame();
     }
 
-    /* --- BUBBLE SHOOTER ENGINE --- */
-    const canvas = document.getElementById('gameCanvas');
-    const ctx = canvas.getContext('2d');
+    /* --- MATCH-3 CANDY CRUSH BOARD LOGIC --- */
+    const width = 6;
+    const board = document.getElementById('board');
+    let candyTiles = [];
+    let firstSelectedTile = null;
 
-    const BUBBLE_COLORS = ['#ff007f', '#ffb703', '#00f5d4', '#70e000'];
-    const ROWS = 5;
-    const COLS = 7;
-    let bubbleRadius = 20;
-    let grid = [];
-    let shooterBubble = null;
-    let isShooting = false;
-    let shootAngle = 0;
+    function createBoard() {
+        board.innerHTML = '';
+        candyTiles = [];
+        for (let i = 0; i < width * width; i++) {
+            const tile = document.createElement('div');
+            tile.classList.add('candy-tile');
+            tile.setAttribute('data-id', i);
+            
+            let randomCandy = Math.floor(Math.random() * CANDY_SVGS.length);
+            tile.setAttribute('data-type', randomCandy);
 
-    function initShooter() {
-        const rect = canvas.parentElement.getBoundingClientRect();
-        canvas.width = rect.width - 24;
-        canvas.height = rect.height - 100;
-        bubbleRadius = Math.floor(canvas.width / (COLS * 2.2));
+            const img = document.createElement('img');
+            img.src = CANDY_SVGS[randomCandy];
+            img.classList.add('candy-img');
+            tile.appendChild(img);
 
-        grid = [];
-        for (let r = 0; r < ROWS; r++) {
-            grid[r] = [];
-            for (let c = 0; c < COLS; c++) {
-                grid[r][c] = {
-                    x: (c * 2 + 1) * bubbleRadius + (r % 2 === 1 ? bubbleRadius : 0),
-                    y: (r * 1.8 + 1) * bubbleRadius,
-                    color: BUBBLE_COLORS[Math.floor(Math.random() * BUBBLE_COLORS.length)],
-                    active: true
-                };
-            }
+            tile.addEventListener('click', onTileClick);
+            board.appendChild(tile);
+            candyTiles.push(tile);
         }
-        createNextShooterBubble();
-        drawCanvas();
+        checkMatchesAndRefill();
     }
 
-    function createNextShooterBubble() {
-        shooterBubble = {
-            x: canvas.width / 2,
-            y: canvas.height - bubbleRadius * 2,
-            dx: 0,
-            dy: 0,
-            color: BUBBLE_COLORS[Math.floor(Math.random() * BUBBLE_COLORS.length)]
-        };
-    }
+    function onTileClick(e) {
+        if (questionsSolved >= 10) return;
 
-    function drawCanvas() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const clickedTile = e.currentTarget;
 
-        // Draw Grid Bubbles
-        for (let r = 0; r < ROWS; r++) {
-            for (let c = 0; c < COLS; c++) {
-                let b = grid[r][c];
-                if (b && b.active) {
-                    drawBubble(b.x, b.y, b.color);
+        if (!firstSelectedTile) {
+            firstSelectedTile = clickedTile;
+            firstSelectedTile.classList.add('selected');
+        } else {
+            const id1 = parseInt(firstSelectedTile.getAttribute('data-id'));
+            const id2 = parseInt(clickedTile.getAttribute('data-id'));
+
+            // Check if adjacent (Left, Right, Up, Down)
+            const validMoves = [id1 - 1, id1 + 1, id1 - width, id1 + width];
+            
+            if (validMoves.includes(id2)) {
+                swapTiles(firstSelectedTile, clickedTile);
+                let matched = checkMatchesAndRefill();
+                if (!matched) {
+                    // Swap back if no match created
+                    setTimeout(() => swapTiles(firstSelectedTile, clickedTile), 250);
                 }
             }
-        }
 
-        // Draw Shooter Bubble
-        if (shooterBubble) {
-            drawBubble(shooterBubble.x, shooterBubble.y, shooterBubble.color);
-        }
-
-        if (isShooting) {
-            updateShooterBubble();
-            requestAnimationFrame(drawCanvas);
+            firstSelectedTile.classList.remove('selected');
+            firstSelectedTile = null;
         }
     }
 
-    function drawBubble(x, y, color) {
-        ctx.beginPath();
-        ctx.arc(x, y, bubbleRadius, 0, Math.PI * 2);
-        ctx.fillStyle = color;
-        ctx.fill();
-        ctx.lineWidth = 2;
-        ctx.strokeStyle = '#ffffff';
-        ctx.stroke();
+    function swapTiles(tile1, tile2) {
+        const type1 = tile1.getAttribute('data-type');
+        const type2 = tile2.getAttribute('data-type');
+
+        tile1.setAttribute('data-type', type2);
+        tile1.querySelector('img').src = CANDY_SVGS[type2];
+
+        tile2.setAttribute('data-type', type1);
+        tile2.querySelector('img').src = CANDY_SVGS[type1];
     }
 
-    // Handle Shooting Controls
-    canvas.addEventListener('pointerdown', function(e) {
-        if (isShooting || questionsSolved >= 10) return;
-        const rect = canvas.getBoundingClientRect();
-        const clickX = e.clientX - rect.left;
-        const clickY = e.clientY - rect.top;
+    function checkMatchesAndRefill() {
+        let hasMatch = false;
 
-        const angle = Math.atan2(clickY - shooterBubble.y, clickX - shooterBubble.x);
-        if (angle < 0 && angle > -Math.PI) {
-            shooterBubble.dx = Math.cos(angle) * 12;
-            shooterBubble.dy = Math.sin(angle) * 12;
-            isShooting = true;
-            drawCanvas();
-        }
-    });
+        // Check Row Matches (3 or more)
+        for (let i = 0; i < 36; i++) {
+            if (i % width > width - 3) continue;
+            let rowOfThree = [i, i + 1, i + 2];
+            let decidedType = candyTiles[i].getAttribute('data-type');
 
-    function updateShooterBubble() {
-        shooterBubble.x += shooterBubble.dx;
-        shooterBubble.y += shooterBubble.dy;
-
-        // Bounce walls
-        if (shooterBubble.x - bubbleRadius < 0 || shooterBubble.x + bubbleRadius > canvas.width) {
-            shooterBubble.dx *= -1;
-        }
-
-        // Hit top or grid collision
-        if (shooterBubble.y - bubbleRadius <= 0 || checkGridCollision()) {
-            isShooting = false;
-            triggerTracingModal();
-            createNextShooterBubble();
-            drawCanvas();
-        }
-    }
-
-    function checkGridCollision() {
-        for (let r = 0; r < ROWS; r++) {
-            for (let c = 0; c < COLS; c++) {
-                let b = grid[r][c];
-                if (b && b.active) {
-                    let dist = Math.hypot(b.x - shooterBubble.x, b.y - shooterBubble.y);
-                    if (dist < bubbleRadius * 1.8) {
-                        return true;
-                    }
-                }
+            if (rowOfThree.every(index => candyTiles[index].getAttribute('data-type') === decidedType)) {
+                hasMatch = true;
+                rowOfThree.forEach(index => replaceWithNewCandy(candyTiles[index]));
             }
         }
-        return false;
+
+        // Check Column Matches (3 or more)
+        for (let i = 0; i < 24; i++) {
+            let colOfThree = [i, i + width, i + width * 2];
+            let decidedType = candyTiles[i].getAttribute('data-type');
+
+            if (colOfThree.every(index => candyTiles[index].getAttribute('data-type') === decidedType)) {
+                hasMatch = true;
+                colOfThree.forEach(index => replaceWithNewCandy(candyTiles[index]));
+            }
+        }
+
+        if (hasMatch) {
+            matchCountForCurrentQuestion++;
+            // Show Tracing Question modal every 2 Matches!
+            if (matchCountForCurrentQuestion >= 2) {
+                matchCountForCurrentQuestion = 0;
+                setTimeout(triggerTracingModal, 400);
+            }
+        }
+
+        return hasMatch;
+    }
+
+    function replaceWithNewCandy(tile) {
+        let newCandyType = Math.floor(Math.random() * CANDY_SVGS.length);
+        tile.setAttribute('data-type', newCandyType);
+        tile.querySelector('img').src = CANDY_SVGS[newCandyType];
     }
 
     /* --- TRACING CANVAS LOGIC --- */
@@ -523,18 +555,19 @@
         document.getElementById('progressText').innerText = `सवाल: ${questionsSolved}/10`;
         document.getElementById('scoreText').innerText = `⭐: ${score}`;
         
-        let bStr = "";
-        for(let i=0; i<balloonsLeft; i++) bStr += "🎈";
-        document.getElementById('balloonBox').innerText = bStr;
+        let cStr = "";
+        for(let i=0; i<lives; i++) cStr += "🍬";
+        document.getElementById('livesBox').innerText = cStr;
     }
 
     function startNewGame() {
         document.getElementById('endOverlay').style.display = 'none';
         score = 0;
         questionsSolved = 0;
-        balloonsLeft = 3;
+        matchCountForCurrentQuestion = 0;
+        lives = 3;
         updateStatusBar();
-        initShooter();
+        createBoard();
     }
 
     function showEndGame(isWin) {
