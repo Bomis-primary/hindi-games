@@ -398,7 +398,7 @@
         </div>
 
         <div class="display-box" id="mainDisplayCard">
-            <span class="mode-badge" id="gameModeBadge">🧩 मात्रा जोड़ो</span>
+            <span class="mode-badge" id="gameModeBadge">🖼️ चित्र पहचानो</span>
             <img id="cardImg" class="card-image" src="" alt="Level Asset" style="display: none;">
             <span class="giant-emoji" id="bigEmoji">🏃</span>
             <div class="math-spell" id="spellFormula">द + ौ + ड़</div>
@@ -418,14 +418,14 @@
     const audioWrong = new Audio('assets/wrong.mp3');
     const audioClaps = new Audio('assets/freesound_community-claps-44774.mp3');
 
-    // Base raw questions with exact asset filenames
+    // Questions pool updated with 'चौकोर' and Chitra-Jodo Mode
     const baseLevels = [
         { type: "jodo", img: "daud.png", fallbackEmoji: "🏃", math: "द + ौ + ड़", correct: "दौड़", choices: ["दोड़", "दौड़"] },
         { type: "chitra", img: "aurat.png", fallbackEmoji: "👩", math: "यह कौन है?", correct: "औरत", choices: ["औरत", "ओरत"] },
         { type: "pehchano", img: "mausa.png", fallbackEmoji: "👨", math: "सही शब्द छुओ", correct: "मौसा", choices: ["मोसा", "मौसा"] },
         { type: "chitra", img: "mausi.png", fallbackEmoji: "👩‍🦱", math: "यह कौन है?", correct: "मौसी", choices: ["मोसी", "मौसी"] },
         { type: "pehchano", img: "fauji.png", fallbackEmoji: "🪖", math: "देश का वीर जवान", correct: "फ़ौजी", choices: ["फोजी", "फ़ौजी"] },
-        { type: "jodo", img: "square.png", fallbackEmoji: "🌾", math: "च + ौ + क + र", correct: "चौकर", choices: ["चोकर", "चौकर"] },
+        { type: "chitra", img: "square.png", fallbackEmoji: "🔲", math: "च + ौ + क + ो + र", correct: "चौकोर", choices: ["चोकोर", "चौकोर"] },
         { type: "chitra", img: "daulat.png", fallbackEmoji: "💰", math: "सिक्के और धन", correct: "दौलत", choices: ["दौलत", "दोलत"] },
         { type: "pehchano", img: "naukar.png", fallbackEmoji: "🧑‍🍳", math: "घर का मददगार", correct: "नौकर", choices: ["नोकर", "नौकर"] },
         { type: "chitra", img: "hathoda.png", fallbackEmoji: "🔨", math: "कील ठोकने की चीज़", correct: "हथौड़ा", choices: ["हथोड़ा", "हथौड़ा"] },
@@ -438,9 +438,9 @@
     let totalScore = 0;
     let wrongAttemptsOnLevel = 0;
 
-    // Fisher-Yates Shuffle Logic
-    function shuffleArray(array) {
-        let arr = [...array];
+    // Improved Fisher-Yates Full Shuffling
+    function getFullShuffledArray(array) {
+        let arr = JSON.parse(JSON.stringify(array));
         for (let i = arr.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [arr[i], arr[j]] = [arr[j], arr[i]];
@@ -470,15 +470,15 @@
         });
         switchScreen('screen-instructions', 'screen-game');
         
-        // Randomize questions and choices on start
         resetAndShuffleGame();
     }
 
     function resetAndShuffleGame() {
-        activeLevels = shuffleArray(baseLevels).map(level => {
+        // Completely randomize all 10 questions and their option choices on every restart
+        activeLevels = getFullShuffledArray(baseLevels).map(level => {
             return {
                 ...level,
-                choices: shuffleArray(level.choices)
+                choices: getFullShuffledArray(level.choices)
             };
         });
 
