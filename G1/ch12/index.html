@@ -418,7 +418,6 @@
     const audioWrong = new Audio('assets/wrong.mp3');
     const audioClaps = new Audio('assets/freesound_community-claps-44774.mp3');
 
-    // Cleaned Base Levels: Questions matched strictly with Game Types
     const baseLevels = [
         { type: "jodo", img: "daud.png", fallbackEmoji: "🏃", math: "द + ौ + ड़", correct: "दौड़", choices: ["दोड़", "दौड़"] },
         { type: "chitra", img: "aurat.png", fallbackEmoji: "👩", math: "यह कौन है?", correct: "औरत", choices: ["औरत", "ओरत"] },
@@ -438,9 +437,9 @@
     let totalScore = 0;
     let wrongAttemptsOnLevel = 0;
 
-    // Full Reshuffle Algorithm
-    function getFullShuffledArray(array) {
-        let arr = JSON.parse(JSON.stringify(array));
+    // Fisher-Yates Complete Shuffle Algorithm
+    function shuffleArray(array) {
+        let arr = [...array];
         for (let i = arr.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [arr[i], arr[j]] = [arr[j], arr[i]];
@@ -474,10 +473,11 @@
     }
 
     function resetAndShuffleGame() {
-        activeLevels = getFullShuffledArray(baseLevels).map(level => {
+        // Randomize questions AND options dynamically every time game resets or starts
+        activeLevels = shuffleArray(baseLevels).map(level => {
             return {
                 ...level,
-                choices: getFullShuffledArray(level.choices)
+                choices: shuffleArray(level.choices)
             };
         });
 
