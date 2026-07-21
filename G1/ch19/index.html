@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>सब्ज़ियों की दुनिया! 🥦🥕</title>
+    <title>सब्ज़ियों की दुनिया!</title>
     
     <!-- Confetti Library -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -164,7 +164,7 @@
             color: #92400e;
             padding: 8px 12px;
             border-radius: 16px;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             font-weight: 700;
             margin-bottom: 12px;
             width: 100%;
@@ -278,9 +278,9 @@
             background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
             border: 3px solid #81c784;
             border-radius: 20px;
-            padding: 14px;
-            margin-bottom: 10px;
-            font-size: 1.1rem;
+            padding: 18px 14px;
+            margin-bottom: 14px;
+            font-size: 1.3rem;
             font-weight: 700;
             color: #1b5e20;
             box-shadow: 0 8px 16px rgba(129, 199, 132, 0.2);
@@ -290,51 +290,52 @@
         .options-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
+            gap: 12px;
             width: 100%;
         }
 
         .veg-opt-btn {
             background: #ffffff;
-            border: 3px solid #f1f2f6;
+            border: 3px solid #81c784;
             border-radius: 20px;
-            padding: 10px 6px;
-            font-size: 0.95rem;
+            padding: 14px 8px;
+            font-size: 1.15rem;
             font-weight: 700;
             color: #2d3436;
             cursor: pointer;
             display: flex;
-            flex-direction: column;
             align-items: center;
-            gap: 4px;
+            justify-content: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
         }
-
-        .veg-opt-btn span { font-size: 2.5rem; }
 
         /* Sorting UI */
         .sorting-pool {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 10px;
             justify-content: center;
-            margin-bottom: 10px;
-            min-height: 50px;
+            margin-bottom: 12px;
+            min-height: 60px;
         }
 
         .draggable-veg {
-            font-size: 2rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #2e7d32;
             background: #ffffff;
-            border: 3px solid #f1f2f6;
+            border: 3px solid #81c784;
             border-radius: 18px;
-            padding: 4px 10px;
+            padding: 8px 16px;
             cursor: pointer;
             box-shadow: 0 6px 12px rgba(0,0,0,0.05);
         }
 
         .draggable-veg.selected {
-            border-color: #4caf50;
-            background: #e8f5e9;
-            transform: scale(1.1) rotate(-4deg);
+            border-color: #f59e0b;
+            background: #fff9db;
+            color: #d97706;
+            transform: scale(1.08) rotate(-3deg);
         }
 
         .baskets-container-3 {
@@ -348,21 +349,30 @@
             background: #ffffff;
             border: 3px dashed #a5d6a7;
             border-radius: 18px;
-            padding: 8px 2px;
+            padding: 10px 4px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-height: 130px;
+            min-height: 140px;
             cursor: pointer;
         }
 
-        .basket-title-3 { font-size: 0.8rem; font-weight: 700; color: #2e7d32; margin-bottom: 4px; }
+        .basket-title-3 { font-size: 0.85rem; font-weight: 700; color: #2e7d32; margin-bottom: 6px; }
+
+        .basket-items-list {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #1b5e20;
+        }
 
         /* Grow Location UI */
         .grow-container {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
             width: 100%;
         }
 
@@ -370,16 +380,16 @@
             background: #ffffff;
             border: 3px dashed #bcaaa4;
             border-radius: 18px;
-            padding: 10px;
-            min-height: 100px;
+            padding: 12px;
+            min-height: 110px;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
 
-        .grow-zone-title { font-size: 0.9rem; font-weight: 700; margin-bottom: 4px; color: #5d4037; }
+        .grow-zone-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 6px; color: #5d4037; }
 
-        .items-row { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; width: 100%; }
+        .items-row { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; width: 100%; font-size: 0.95rem; font-weight: 700; color: #3e2723; }
 
         .win-card {
             background: #ffffff;
@@ -413,9 +423,9 @@
 
         <!-- SCREEN 2: GAME TITLE SCREEN -->
         <div class="screen" id="titleScreen">
-            <h1 class="game-title">सब्ज़ियों की दुनिया! 🥦🥕</h1>
+            <h1 class="game-title">सब्ज़ियों की दुनिया!</h1>
             <p style="color: #636e72; font-weight: 600; font-size: 1rem; margin-top: 4px;">
-                आओ सब्ज़ियों के बारे में सीखें!
+                आओ सब्ज़ियों के नाम सीखें!
             </p>
             <button class="cute-btn" onclick="goToInstructions()">आगे बढ़ें ➡️</button>
         </div>
@@ -426,17 +436,17 @@
             
             <div class="rule-card">
                 <span style="font-size: 1.5rem;">💡</span>
-                <span>सवालों को पढ़कर सही सब्ज़ी चुनें। गलत होने पर क्लू मिलेगा!</span>
+                <span>सवाल पढ़कर सही नाम पर टैप करें।</span>
             </div>
 
             <div class="rule-card">
                 <span style="font-size: 1.5rem;">❤️</span>
-                <span>आपके पास केवल 3 ज़िंदगियाँ (Lives) हैं!</span>
+                <span>आपके पास कुल 3 ज़िंदगियाँ हैं!</span>
             </div>
 
             <div class="rule-card">
                 <span style="font-size: 1.5rem;">⭐</span>
-                <span>सही उत्तर देने पर स्टार्स (⭐) और तालियाँ मिलेंगी!</span>
+                <span>सही उत्तर देने पर स्टार्स (⭐) मिलेंगे!</span>
             </div>
 
             <button class="cute-btn" onclick="goToModeSelection()">खेल शुरू करें 🎮</button>
@@ -450,16 +460,16 @@
                 <div class="mode-card" onclick="startQuizMode()">
                     <div class="mode-icon-box">💡</div>
                     <div class="mode-info">
-                        <h3>1. रोचक बातें (Fact Quiz)</h3>
-                        <p>हिंट पढ़कर सही सब्ज़ी पहचानें</p>
+                        <h3>1. नाम पहचानो (Quiz)</h3>
+                        <p>आसान बात पढ़कर सही नाम चुनें</p>
                     </div>
                 </div>
 
                 <div class="mode-card" onclick="startSortingMode()">
                     <div class="mode-icon-box">🧺</div>
                     <div class="mode-info">
-                        <h3>2. हिस्सा छांटो (Edible Part)</h3>
-                        <p>फल, जड़ और पत्तेदार सब्ज़ी अलग करें</p>
+                        <h3>2. टोकरी में डालो (Sorting)</h3>
+                        <p>फल, जड़ और पत्ते अलग टोकरी में रखें</p>
                     </div>
                 </div>
 
@@ -477,45 +487,45 @@
         <!-- Mode 1: Quiz -->
         <div class="screen" id="quizScreen">
             <button class="hint-btn" onclick="showManualClue()">💡 क्लू (Clue) चाहिए?</button>
-            <div class="clue-box" id="quizClueBox">🔍 क्लू: इसका रंग लाल होता है!</div>
-            <div class="hint-card" id="quizHintText">हिंट लोड हो रहा है...</div>
+            <div class="clue-box" id="quizClueBox">🔍 क्लू: यह लाल रंग का होता है!</div>
+            <div class="hint-card" id="quizHintText">प्रश्न लोड हो रहा है...</div>
             <div class="options-grid" id="quizOptionsGrid"></div>
         </div>
 
         <!-- Mode 2: Sorting -->
         <div class="screen" id="sortScreen">
-            <div class="clue-box" id="sortClueBox">🔍 क्लू: ध्यान से सोचो कि हम इसका कौन सा भाग खाते हैं!</div>
-            <p style="font-weight: 700; color: #2d3436; margin-bottom: 6px; font-size: 0.9rem;">सब्ज़ी चुनकर सही टोकरी में डालें:</p>
+            <div class="clue-box" id="sortClueBox">🔍 क्लू: सोचो हम इसका कौन सा भाग खाते हैं!</div>
+            <p style="font-weight: 700; color: #2d3436; margin-bottom: 8px; font-size: 0.95rem;">सब्ज़ी का नाम चुनो और सही टोकरी पर टैप करो:</p>
             <div class="sorting-pool" id="vegPool"></div>
             <div class="baskets-container-3">
                 <div class="basket-box-3" id="bktFruit" onclick="placeInBasket('फल')">
-                    <div class="basket-title-3">🍅 फल (Fruit)</div>
-                    <div id="bktFruitItems" style="font-size: 1.3rem;"></div>
+                    <div class="basket-title-3">फल (Fruit)</div>
+                    <div class="basket-items-list" id="bktFruitItems"></div>
                 </div>
                 <div class="basket-box-3" id="bktRoot" onclick="placeInBasket('जड़')">
-                    <div class="basket-title-3">🥕 जड़ (Root)</div>
-                    <div id="bktRootItems" style="font-size: 1.3rem;"></div>
+                    <div class="basket-title-3">जड़ (Root)</div>
+                    <div class="basket-items-list" id="bktRootItems"></div>
                 </div>
                 <div class="basket-box-3" id="bktLeaf" onclick="placeInBasket('पत्तेदार')">
-                    <div class="basket-title-3">🥬 पत्तेदार (Leaf)</div>
-                    <div id="bktLeafItems" style="font-size: 1.3rem;"></div>
+                    <div class="basket-title-3">पत्तेदार (Leaf)</div>
+                    <div class="basket-items-list" id="bktLeafItems"></div>
                 </div>
             </div>
         </div>
 
         <!-- Mode 3: Grow Place -->
         <div class="screen" id="growScreen">
-            <div class="clue-box" id="growClueBox">🔍 क्लू: सोचो क्या यह सब्ज़ी मिट्टी के अंदर छुपती है?</div>
-            <p style="font-weight: 700; color: #2d3436; margin-bottom: 6px; font-size: 0.9rem;">सब्ज़ी चुनें और सही जगह पर टैप करें:</p>
+            <div class="clue-box" id="growClueBox">🔍 क्लू: क्या यह मिट्टी के अंदर छुपती है?</div>
+            <p style="font-weight: 700; color: #2d3436; margin-bottom: 8px; font-size: 0.95rem;">सब्ज़ी चुनो और उगने की सही जगह पर टैप करो:</p>
             <div class="sorting-pool" id="growVegPool"></div>
             <div class="grow-container">
                 <div class="grow-zone" id="zoneAbove" onclick="placeInZone('ऊपर')">
                     <div class="grow-zone-title">☀️ ज़मीन के ऊपर (Above Ground)</div>
-                    <div class="items-row" id="zoneAboveItems" style="font-size: 1.4rem;"></div>
+                    <div class="items-row" id="zoneAboveItems"></div>
                 </div>
                 <div class="grow-zone" id="zoneBelow" onclick="placeInZone('नीचे')">
                     <div class="grow-zone-title">🕳️ ज़मीन के नीचे (Below Ground)</div>
-                    <div class="items-row" id="zoneBelowItems" style="font-size: 1.4rem;"></div>
+                    <div class="items-row" id="zoneBelowItems"></div>
                 </div>
             </div>
         </div>
@@ -544,7 +554,7 @@
     let wrongAttemptsInCurrentQ = 0;
     let activeQuizQuestions = [];
 
-    // HELPER FUNCTION: SHUFFLE ARRAY (RANDOMIZE)
+    // SHUFFLE ARRAY FOR RANDOMIZATION
     function shuffleArray(arr) {
         return [...arr].sort(() => Math.random() - 0.5);
     }
@@ -643,27 +653,26 @@
         }
     }
 
-    // VEGETABLES DATABASE WITH SIMPLE CLUES
+    // VEGETABLES DATABASE (NO EMOJIS - SUPER EASY GRADE 1 QUESTIONS)
     const vegData = [
-        { name: 'टमाटर', emoji: '🍅', fact: 'मुझमें लाइकोपीन है, जो दिल को स्वस्थ रखता है!', clue: 'यह गोल और लाल रंग का होता है!', type: 'फल', grow: 'ऊपर' },
-        { name: 'पालक', emoji: '🥬', fact: 'मुझमें आयरन है, जो खून की कमी दूर करता है!', clue: 'यह हरे रंग का पत्तेदार शाक है!', type: 'पत्तेदार', grow: 'ऊपर' },
-        { name: 'फूलगोभी', emoji: '🥦', fact: 'मुझमें विटामिन C है, जो रोगों से लड़ता है!', clue: 'यह सफेद रंग के फूल जैसा दिखता है!', type: 'फल', grow: 'ऊपर' },
-        { name: 'मटर', emoji: '🟢', fact: 'मुझमें प्रोटीन है, जो शरीर को ताकत देता है!', clue: 'इसके छोटे-छोटे गोल दाने छिलके में होते हैं!', type: 'फल', grow: 'ऊपर' },
-        { name: 'आलू', emoji: '🥔', fact: 'मैं हर घर में खाया जाने वाला राजा हूँ!', clue: 'यह भूरे रंग का ज़मीन के नीचे उगता है!', type: 'जड़', grow: 'नीचे' },
-        { name: 'गाजर', emoji: '🥕', fact: 'मुझे खाने से आँखों की रोशनी बढ़ती है!', clue: 'यह नारंगी रंग की लंबी सब्ज़ी है जिसे खरगोश पसंद करते हैं!', type: 'जड़', grow: 'नीचे' },
-        { name: 'मूली', emoji: '🥢', fact: 'मैं सफेद रंग की चटपटी जड़ हूँ!', clue: 'यह सफेद रंग की लंबी जड़ वाली सब्ज़ी है!', type: 'जड़', grow: 'नीचे' },
-        { name: 'बैंगन', emoji: '🍆', fact: 'मेरे सिर पर सुंदर ताज होता है!', clue: 'यह बैंगनी (Purple) रंग का होता है!', type: 'फल', grow: 'ऊपर' },
-        { name: 'चुकंदर', emoji: '🔴', fact: 'मैं लाल रंग की मीठी जड़ हूँ!', clue: 'इसे काटने पर गहरा लाल रंग निकलता है!', type: 'जड़', grow: 'नीचे' },
-        { name: 'मेथी', emoji: '🌿', fact: 'मैं हरी और सेहतमंद पत्तेदार सब्ज़ी हूँ!', clue: 'इसके छोटे-छोटे हरे पत्ते होते हैं!', type: 'पत्तेदार', grow: 'ऊपर' }
+        { name: 'टमाटर', fact: 'मैं लाल और गोल हूँ!', clue: 'यह लाल रंग की गोल सब्ज़ी है!', type: 'फल', grow: 'ऊपर' },
+        { name: 'पालक', fact: 'मैं हरे पत्तों वाली सब्ज़ी हूँ!', clue: 'इसके हरे-हरे पत्ते होते हैं!', type: 'पत्तेदार', grow: 'ऊपर' },
+        { name: 'फूलगोभी', fact: 'मैं सफ़ेद फूल जैसी दिखती हूँ!', clue: 'यह सफ़ेद रंग के फूल जैसी होती है!', type: 'फल', grow: 'ऊपर' },
+        { name: 'मटर', fact: 'मेरे गोल-गोल हरे दाने होते हैं!', clue: 'इसके छोटे-छोटे हरे दाने होते हैं!', type: 'फल', grow: 'ऊपर' },
+        { name: 'आलू', fact: 'मुझसे आलू चिप्स बनते हैं!', clue: 'यह भूरे रंग की सब्ज़ी ज़मीन के नीचे होती है!', type: 'जड़', grow: 'नीचे' },
+        { name: 'गाजर', fact: 'मैं नारंगी रंग की हूँ, खरगोश मुझे खाते हैं!', clue: 'यह नारंगी रंग की लंबी सब्ज़ी है!', type: 'जड़', grow: 'नीचे' },
+        { name: 'मूली', fact: 'मैं सफ़ेद रंग की लंबी सब्ज़ी हूँ!', clue: 'यह सफ़ेद रंग की मिट्टी के नीचे उगती है!', type: 'जड़', grow: 'नीचे' },
+        { name: 'बैंगन', fact: 'मैं बैंगनी रंग का हूँ!', clue: 'यह पर्पल (बैंगनी) रंग का होता है!', type: 'फल', grow: 'ऊपर' },
+        { name: 'चुकंदर', fact: 'मैं लाल रंग का हूँ, मुझे काटने पर हाथ लाल होते हैं!', clue: 'यह गहरे लाल रंग का होता है!', type: 'जड़', grow: 'नीचे' },
+        { name: 'मेथी', fact: 'मैं छोटे हरे पत्तों वाली सब्ज़ी हूँ!', clue: 'इसके छोटे-छोटे हरे पत्ते होते हैं!', type: 'पत्तेदार', grow: 'ऊपर' }
     ];
 
-    /* 1. QUIZ MODE (RANDOMIZED) */
+    /* 1. QUIZ MODE (GRADE 1 SIMPLE TEXT ONLY) */
     let currentQuizIndex = 0;
     function startQuizMode() {
         currentQuizIndex = 0;
-        // SHUFFLE QUIZ QUESTIONS
         activeQuizQuestions = shuffleArray(vegData).slice(0, 6);
-        switchScreen('quizScreen', '1. रोचक बातें 💡');
+        switchScreen('quizScreen', '1. नाम पहचानो 💡');
         loadQuizQuestion();
     }
 
@@ -682,7 +691,7 @@
         }
 
         const currentItem = activeQuizQuestions[currentQuizIndex];
-        document.getElementById('quizHintText').innerText = `💡 ${currentItem.fact}`;
+        document.getElementById('quizHintText').innerText = `❓ ${currentItem.fact}`;
         document.getElementById('quizClueBox').innerText = `🔍 क्लू: ${currentItem.clue}`;
 
         const optionsGrid = document.getElementById('quizOptionsGrid');
@@ -694,13 +703,12 @@
             if (!opts.find(o => o.name === rand.name)) opts.push(rand);
         }
         
-        // SHUFFLE OPTIONS
         opts = shuffleArray(opts);
 
         opts.forEach(opt => {
             const btn = document.createElement('div');
             btn.className = 'veg-opt-btn';
-            btn.innerHTML = `<span>${opt.emoji}</span>${opt.name}`;
+            btn.innerText = opt.name;
             btn.onclick = () => {
                 if (opt.name === currentItem.name) {
                     playAudio('sndCorrect');
@@ -721,22 +729,22 @@
         document.getElementById('quizClueBox').style.display = 'block';
     }
 
-    /* 2. SORTING MODE (RANDOMIZED) */
+    /* 2. SORTING MODE (TEXT ONLY) */
     function startSortingMode() {
         wrongAttemptsInCurrentQ = 0;
-        switchScreen('sortScreen', '2. हिस्सा छांटो 🧺');
+        switchScreen('sortScreen', '2. टोकरी में डालो 🧺');
         document.getElementById('bktFruitItems').innerHTML = '';
         document.getElementById('bktRootItems').innerHTML = '';
         document.getElementById('bktLeafItems').innerHTML = '';
         const pool = document.getElementById('vegPool');
         pool.innerHTML = '';
 
-        // SHUFFLE SUBSET OF VEGETABLES FOR SORTING
         const subset = shuffleArray(vegData).slice(0, 8);
         subset.forEach((v) => {
             const el = document.createElement('div');
             el.className = 'draggable-veg';
-            el.innerText = v.emoji;
+            el.innerText = v.name;
+            el.dataset.name = v.name;
             el.dataset.type = v.type;
             el.dataset.clue = v.clue;
             el.onclick = () => {
@@ -764,7 +772,11 @@
             updateHUD();
             hideAllClues();
             wrongAttemptsInCurrentQ = 0;
-            document.getElementById(targetDivId).innerHTML += ` ${selectedVegForSort.innerText}`;
+            
+            const tag = document.createElement('span');
+            tag.innerText = selectedVegForSort.dataset.name;
+            document.getElementById(targetDivId).appendChild(tag);
+
             selectedVegForSort.remove();
             selectedVegForSort = null;
 
@@ -773,18 +785,18 @@
                     playAudio('sndClaps');
                     triggerConfetti();
                     document.getElementById('winTitle').innerText = "शानदार! 🌟";
-                    document.getElementById('winSub').innerText = "सारे सब्ज़ियाँ सही टोकरी में रखीं!";
+                    document.getElementById('winSub').innerText = "सब सही टोकरी में रखा!";
                     document.getElementById('winScoreText').innerText = `⭐ अंक: ${totalScore} / 130`;
                     switchScreen('winScreen');
                 }, 500);
             }
         } else {
-            let itemClue = selectedVegForSort.dataset.clue || "सही भाग सोचें!";
+            let itemClue = selectedVegForSort.dataset.clue || "सोचो हम इसका कौन सा भाग खाते हैं!";
             handleWrongAnswer(document.getElementById(targetBoxId), 'sortClueBox', itemClue);
         }
     }
 
-    /* 3. GROW PLACE MODE (RANDOMIZED) */
+    /* 3. GROW PLACE MODE (TEXT ONLY) */
     function startGrowMode() {
         wrongAttemptsInCurrentQ = 0;
         switchScreen('growScreen', '3. कहाँ उगती है? 🌱');
@@ -793,12 +805,12 @@
         const pool = document.getElementById('growVegPool');
         pool.innerHTML = '';
 
-        // SHUFFLE GROW ITEMS
         const subset = shuffleArray(vegData).slice(0, 6);
         subset.forEach((v) => {
             const el = document.createElement('div');
             el.className = 'draggable-veg';
-            el.innerText = v.emoji;
+            el.innerText = v.name;
+            el.dataset.name = v.name;
             el.dataset.grow = v.grow;
             el.dataset.clue = v.clue;
             el.onclick = () => {
@@ -823,7 +835,11 @@
             updateHUD();
             hideAllClues();
             wrongAttemptsInCurrentQ = 0;
-            document.getElementById(targetDivId).innerHTML += ` ${selectedVegForSort.innerText}`;
+
+            const tag = document.createElement('span');
+            tag.innerText = selectedVegForSort.dataset.name;
+            document.getElementById(targetDivId).appendChild(tag);
+
             selectedVegForSort.remove();
             selectedVegForSort = null;
 
@@ -840,7 +856,7 @@
                 }, 500);
             }
         } else {
-            let itemClue = selectedVegForSort.dataset.clue || "सोचें कि यह सब्ज़ी मिट्टी के नीचे है या ऊपर!";
+            let itemClue = selectedVegForSort.dataset.clue || "सोचो क्या यह मिट्टी के अंदर होती है?";
             handleWrongAnswer(document.getElementById(targetZoneId), 'growClueBox', itemClue);
         }
     }
