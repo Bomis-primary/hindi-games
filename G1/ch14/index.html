@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>मात्रा कैंडी क्रश 🍬✨</title>
 
-    <!-- Canvas Confetti Library for Visual Feedback -->
+    <!-- Canvas Confetti Library -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <style>
@@ -246,7 +246,6 @@
             transition: transform 0.2s ease;
         }
 
-        /* SHAKE ANIMATION FOR WRONG ANSWER */
         .shake-animation {
             animation: shake 0.4s ease-in-out;
             border-color: #ff0055 !important;
@@ -275,7 +274,6 @@
             letter-spacing: 2px;
         }
 
-        /* HINT BOX FOR WRONG ANSWER */
         .hint-box {
             background: #fff3cd;
             color: #856404;
@@ -308,17 +306,6 @@
             cursor: crosshair;
         }
 
-        .guide-text {
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 5.5rem;
-            color: rgba(255, 0, 127, 0.18);
-            pointer-events: none;
-            font-weight: 900;
-        }
-
-        /* SUCCESS OVERLAY INSIDE MODAL */
         .success-banner {
             display: none;
             font-size: 1.8rem;
@@ -375,11 +362,11 @@
                 </div>
                 <div class="step-card">
                     <div class="step-num">2</div>
-                    <div class="step-text">एक जैसी 3 या अधिक कैंडिज़ मिलाकर <span class="highlight-tag">Match</span> बनाओ 🍬</div>
+                    <div class="step-text">एक जैसी 3 या अधिक कैंडिज़ बनाकर <span class="highlight-tag">Match</span> बनाओ 🍬</div>
                 </div>
                 <div class="step-card">
                     <div class="step-num">3</div>
-                    <div class="step-text">हर 2 मैच के बाद सही मात्रा (<span class="highlight-tag">ँ</span> या <span class="highlight-tag">ः</span>) लिखकर सवाल का जवाब दो! ✏️</div>
+                    <div class="step-text">हर 2 मैच के बाद सही मात्रा (<span class="highlight-tag">ँ</span> या <span class="highlight-tag">ः</span>) सही से लिखो! ✏️</div>
                 </div>
             </div>
             <button class="action-btn" onclick="startGameDirectly()">खेलें 🎮</button>
@@ -407,14 +394,11 @@
                 <div class="tracing-prompt">शब्द पूरा करने के लिए मात्रा लिखो:</div>
                 <div class="tracing-word" id="wordPrompt">चा__द</div>
                 
-                <!-- HINT DISPLAY AREA -->
-                <div class="hint-box" id="hintBox">💡 हिंट: दिए गए गुलाबी अक्षर 'ँ' के ऊपर उंगली फेरकर पूरा करें!</div>
+                <div class="hint-box" id="hintBox">💡 हिंट: दी गई हल्की गुलाबी रेखाओं के ऊपर ध्यान से उंगली फेरें!</div>
 
-                <!-- SUCCESS MESSAGE DISPLAY -->
                 <div class="success-banner" id="successBanner">🎉 सही उत्तर! चाँद</div>
 
                 <div class="canvas-container" id="canvasBox">
-                    <div class="guide-text" id="guideMatra">ँ</div>
                     <canvas id="tracingCanvas" width="250" height="180"></canvas>
                 </div>
 
@@ -441,18 +425,17 @@
         audioObj.play().catch(() => {});
     }
 
-    // MASTER QUESTIONS WITH FULL CORRECT WORD & HINTS
     const masterQuestions = [
-        { wordPrompt: "चा__द",  targetMatra: "ँ", fullWord: "चाँद", hint: "💡 हिंट: 'चंद्रबिंदु' (ँ) मात्रा लगाएँ!" },
-        { wordPrompt: "नम__",   targetMatra: "ः", fullWord: "नमः", hint: "💡 हिंट: 'विसर्ग' (ः) की दो बिंदी लगाएँ!" },
-        { wordPrompt: "सा__प",  targetMatra: "ँ", fullWord: "साँप", hint: "💡 हिंट: ऊपर चंद्रबिंदु (ँ) बनाएँ!" },
-        { wordPrompt: "प्रात__", targetMatra: "ः", fullWord: "प्रातः", hint: "💡 हिंट: 'विसर्ग' (ः) की दो बिंदी लगाएँ!" },
-        { wordPrompt: "कुआ__",  targetMatra: "ँ", fullWord: "कुआँ", hint: "💡 हिंट: 'चंद्रबिंदु' (ँ) ट्रेस करें!" },
-        { wordPrompt: "छ__",    targetMatra: "ः", fullWord: "छः", hint: "💡 हिंट: आगे विसर्ग (ः) बनाएँ!" },
-        { wordPrompt: "आ__ख",   targetMatra: "ँ", fullWord: "आँख", hint: "💡 हिंट: ऊपर चंद्रबिंदु (ँ) ट्रेस करें!" },
-        { wordPrompt: "पुन__",  targetMatra: "ः", fullWord: "पुनः", hint: "💡 हिंट: आगे विसर्ग (ः) की बिंदी बनाएँ!" },
-        { wordPrompt: "मा__",   targetMatra: "ँ", fullWord: "माँ", hint: "💡 हिंट: ऊपर चंद्रबिंदु (ँ) बनाएँ!" },
-        { wordPrompt: "दु__ख",  targetMatra: "ः", fullWord: "दुःख", hint: "💡 हिंट: बीच में विसर्ग (ः) लगाएँ!" }
+        { wordPrompt: "चा__द",  targetMatra: "ँ", fullWord: "चाँद", hint: "💡 हिंट: 'चंद्रबिंदु' (ँ) के ऊपर ठीक से ट्रेस करें!" },
+        { wordPrompt: "नम__",   targetMatra: "ः", fullWord: "नमः", hint: "💡 हिंट: 'विसर्ग' (ः) की दो बिंदुओं के ऊपर ठीक से ट्रेस करें!" },
+        { wordPrompt: "सा__प",  targetMatra: "ँ", fullWord: "साँप", hint: "💡 हिंट: ऊपर चंद्रबिंदु (ँ) के ऊपर ट्रेस करें!" },
+        { wordPrompt: "प्रात__", targetMatra: "ः", fullWord: "प्रातः", hint: "💡 हिंट: 'विसर्ग' (ः) की दोनों बिंदुओं पर ट्रेस करें!" },
+        { wordPrompt: "कुआ__",  targetMatra: "ँ", fullWord: "कुआँ", hint: "💡 हिंट: 'चंद्रबिंदु' (ँ) पर ध्यान से उंगली फेरें!" },
+        { wordPrompt: "छ__",    targetMatra: "ः", fullWord: "छः", hint: "💡 हिंट: आगे विसर्ग (ः) की दो बिंदियाँ ट्रेस करें!" },
+        { wordPrompt: "आ__ख",   targetMatra: "ँ", fullWord: "आँख", hint: "💡 हिंट: ऊपर चंद्रबिंदु (ँ) पर ट्रेस करें!" },
+        { wordPrompt: "पुन__",  targetMatra: "ः", fullWord: "पुनः", hint: "💡 हिंट: विसर्ग (ः) की दो बिंदुओं पर उंगली चलाएँ!" },
+        { wordPrompt: "मा__",   targetMatra: "ँ", fullWord: "माँ", hint: "💡 हिंट: ऊपर चंद्रबिंदु (ँ) को पूरा करें!" },
+        { wordPrompt: "दु__ख",  targetMatra: "ः", fullWord: "दुःख", hint: "💡 हिंट: बीच में विसर्ग (ः) को ट्रेस करें!" }
     ];
 
     const CANDY_SVGS = [
@@ -495,15 +478,29 @@
     let candyTiles = [];
     let firstSelectedTile = null;
 
+    /* FIX 1: BOARD INITIALIZATION WITHOUT INITIAL MATCHES */
     function createBoard() {
         board.innerHTML = '';
         candyTiles = [];
+        
         for (let i = 0; i < width * width; i++) {
             const tile = document.createElement('div');
             tile.classList.add('candy-tile');
             tile.setAttribute('data-id', i);
-            
-            let randomCandy = Math.floor(Math.random() * CANDY_SVGS.length);
+
+            // Ensure no match is formed upon placement
+            let randomCandy;
+            do {
+                randomCandy = Math.floor(Math.random() * CANDY_SVGS.length);
+            } while (
+                (i % width >= 2 && 
+                 candyTiles[i - 1].getAttribute('data-type') == randomCandy && 
+                 candyTiles[i - 2].getAttribute('data-type') == randomCandy) ||
+                (i >= width * 2 && 
+                 candyTiles[i - width].getAttribute('data-type') == randomCandy && 
+                 candyTiles[i - width * 2].getAttribute('data-type') == randomCandy)
+            );
+
             tile.setAttribute('data-type', randomCandy);
 
             const img = document.createElement('img');
@@ -515,7 +512,6 @@
             board.appendChild(tile);
             candyTiles.push(tile);
         }
-        checkMatchesAndRefill();
     }
 
     function onTileClick(e) {
@@ -605,9 +601,10 @@
         tile.querySelector('img').src = CANDY_SVGS[newCandyType];
     }
 
+    /* FIX 2: ACCURACY CHECKER FOR TRACING CANVAS */
     let tCanvas, tCtx;
     let isDrawing = false;
-    let hasDrawn = false;
+    let targetPixelPositions = [];
 
     function setupTracingCanvas() {
         tCanvas = document.getElementById('tracingCanvas');
@@ -615,7 +612,6 @@
 
         function startDraw(e) {
             isDrawing = true;
-            hasDrawn = true;
             tCtx.beginPath();
             const pos = getPos(e);
             tCtx.moveTo(pos.x, pos.y);
@@ -628,6 +624,7 @@
             tCtx.strokeStyle = '#ff007f';
             tCtx.lineWidth = 14;
             tCtx.lineCap = 'round';
+            tCtx.lineJoin = 'round';
             tCtx.stroke();
         }
 
@@ -652,51 +649,94 @@
         tCanvas.addEventListener('touchend', stopDraw);
     }
 
+    function renderGuideTemplate(matra) {
+        tCtx.clearRect(0, 0, tCanvas.width, tCanvas.height);
+        
+        // Draw the guide text on canvas for pixel sampling
+        tCtx.font = "900 6.5rem 'Comic Sans MS', sans-serif";
+        tCtx.textAlign = "center";
+        tCtx.textBaseline = "middle";
+        tCtx.fillStyle = "rgba(255, 0, 127, 0.25)";
+        tCtx.fillText(matra, tCanvas.width / 2, tCanvas.height / 2);
+
+        // Store the target pixel positions
+        const imgData = tCtx.getImageData(0, 0, tCanvas.width, tCanvas.height);
+        targetPixelPositions = [];
+
+        // Sample target pixels every 4px for performance
+        for (let y = 0; y < tCanvas.height; y += 4) {
+            for (let x = 0; x < tCanvas.width; x += 4) {
+                let alpha = imgData.data[(y * tCanvas.width + x) * 4 + 3];
+                if (alpha > 30) {
+                    targetPixelPositions.push({ x, y });
+                }
+            }
+        }
+    }
+
+    function checkTracingAccuracy() {
+        if (targetPixelPositions.length === 0) return 0;
+
+        const currentImgData = tCtx.getImageData(0, 0, tCanvas.width, tCanvas.height);
+        let matchedPixels = 0;
+
+        for (let pt of targetPixelPositions) {
+            let index = (pt.y * tCanvas.width + pt.x) * 4;
+            let r = currentImgData.data[index];
+            let g = currentImgData.data[index + 1];
+            let b = currentImgData.data[index + 2];
+            let alpha = currentImgData.data[index + 3];
+
+            // Check if user drew over target pixels (User color is #ff007f -> High R & Low G)
+            if (alpha > 150 && r > 180 && g < 100) {
+                matchedPixels++;
+            }
+        }
+
+        return matchedPixels / targetPixelPositions.length;
+    }
+
     function triggerTracingModal() {
         if (questionsSolved >= 10) return;
 
         const currentQ = masterQuestions[questionsSolved];
         document.getElementById('wordPrompt').innerText = currentQ.wordPrompt;
-        document.getElementById('guideMatra').innerText = currentQ.targetMatra;
         document.getElementById('hintBox').style.display = 'none';
         document.getElementById('successBanner').style.display = 'none';
         document.getElementById('canvasBox').style.display = 'block';
         document.getElementById('submitBtn').style.display = 'block';
 
-        tCtx.clearRect(0, 0, tCanvas.width, tCanvas.height);
-        hasDrawn = false;
+        renderGuideTemplate(currentQ.targetMatra);
         document.getElementById('tracingModal').style.display = 'flex';
     }
 
-    // SUBMIT WITH CONFETTI, CORRECT ANSWER DISPLAY & SHAKE/HINT FOR WRONG
     function submitTracingAnswer() {
         const tracingCard = document.getElementById('tracingCard');
         const hintBox = document.getElementById('hintBox');
         const currentQ = masterQuestions[questionsSolved];
 
-        // IF USER HAS NOT TRACED ANYTHING (WRONG/INCOMPLETE SUBMISSION)
-        if (!hasDrawn) {
+        // Evaluate user tracing accuracy
+        const coverageRatio = checkTracingAccuracy();
+
+        // Require at least 30% of target area to be traced properly
+        if (coverageRatio < 0.30) {
             playAudio(sndWrong);
 
-            // VIBRATE DEVICE IF SUPPORTED
             if (navigator.vibrate) {
                 navigator.vibrate([100, 50, 100]);
             }
 
-            // TRIGGER SHAKE ANIMATION
             tracingCard.classList.add('shake-animation');
             setTimeout(() => tracingCard.classList.remove('shake-animation'), 450);
 
-            // SHOW HINT
             hintBox.innerText = currentQ.hint;
             hintBox.style.display = 'block';
             return;
         }
 
-        // ON CORRECT SUBMISSION
+        // Correct tracing!
         playAudio(sndCorrect);
 
-        // THROW CONFETTI! 🎉
         if (window.confetti) {
             confetti({
                 particleCount: 100,
@@ -705,7 +745,6 @@
             });
         }
 
-        // SHOW FULL CORRECT ANSWER BANNER
         document.getElementById('canvasBox').style.display = 'none';
         document.getElementById('submitBtn').style.display = 'none';
         hintBox.style.display = 'none';
@@ -714,13 +753,11 @@
         successBanner.innerText = `✨ सही उत्तर: ${currentQ.fullWord} ✨`;
         successBanner.style.display = 'block';
 
-        // UPDATE SCORE & QUESTIONS
         score += 10;
         questionsSolved++;
         document.getElementById('matchProgress').innerText = `0 / 2`;
         updateStatusBar();
 
-        // CLOSE MODAL AFTER 1.5 SECONDS TO LET STUDENT SEE CORRECT ANSWER
         setTimeout(() => {
             document.getElementById('tracingModal').style.display = 'none';
             if (questionsSolved >= 10) {
