@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>असली कैंडी क्रश मात्रा ट्रेसर 🍬✨</title>
+    <title>मात्रा कैंडी क्रश 🍬✨</title>
     <style>
         :root {
             --bright-orange: #ff5e00;
@@ -245,12 +245,12 @@
         <!-- SCREEN 1: SPLASH LOGO -->
         <div id="splashScreen" class="screen">
             <img src="assets/innovine-logo.png" alt="Innovine Logo" class="splash-logo" onerror="autoAdvanceSplash();">
-            <p style="margin-top: 20px; color: #888; font-weight: bold;">कैंडी क्रश चालू हो रहा है...</p>
+            <p style="margin-top: 20px; color: #888; font-weight: bold;">मात्रा कैंडी क्रश शुरू हो रहा है...</p>
         </div>
 
         <!-- SCREEN 2: TITLE SCREEN -->
         <div id="titleScreen" class="screen" style="display: none;">
-            <h1 class="main-title">🍬 कैंडी क्रश मात्रा! ✨</h1>
+            <h1 class="main-title">🍬 मात्रा कैंडी क्रश 🍬</h1>
             <p class="subtitle">कैंडीज़ मिलाओ और मात्रा लिखो!</p>
             <button class="action-btn" onclick="goToInstructions()">शुरू करें ▶</button>
         </div>
@@ -297,7 +297,6 @@
     </div>
 
 <script>
-    // Audio Configuration
     const sndCorrect = new Audio('assets/correct.mp3');
     const sndWrong = new Audio('assets/wrong.mp3');
     const sndClaps = new Audio('assets/freesound_community-claps-44774.mp3');
@@ -307,7 +306,6 @@
         audioObj.play().catch(() => {});
     }
 
-    // Correct Dataset
     const masterQuestions = [
         { wordPrompt: "चाँ__द", targetMatra: "ँ" },
         { wordPrompt: "नम__",   targetMatra: "ः" },
@@ -318,20 +316,14 @@
         { wordPrompt: "आँ__ख", targetMatra: "ँ" },
         { wordPrompt: "पुन__",   targetMatra: "ः" },
         { wordPrompt: "माँ__",   targetMatra: "ँ" },
-        { wordPrompt: "दुः__خ", targetMatra: "ः" }
+        { wordPrompt: "दुः__ख", targetMatra: "ः" }
     ];
 
-    // SVG Candy Graphics (High Quality SVG Vectors)
     const CANDY_SVGS = [
-        // Red Bean Candy
         `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><ellipse cx="50" cy="50" rx="40" ry="25" fill="%23ff0055" transform="rotate(-20 50 50)"/><ellipse cx="40" cy="40" rx="15" ry="8" fill="%23ff99bb" transform="rotate(-20 50 50)"/></svg>`,
-        // Yellow Drop Candy
         `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M50 10 Q85 60 50 90 Q15 60 50 10 Z" fill="%23ffb703"/><ellipse cx="42" cy="45" rx="10" ry="18" fill="%23ffea88" transform="rotate(-15 42 45)"/></svg>`,
-        // Blue Spherical Lollipop
         `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="38" fill="%2300b4d8"/><circle cx="38" cy="38" r="12" fill="%2390e0ef"/><path d="M20 50 A 30 30 0 0 0 80 50" stroke="%230077b6" stroke-width="5" fill="none"/></svg>`,
-        // Green Square Jelly
         `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect x="15" y="15" width="70" height="70" rx="18" fill="%2338b000"/><rect x="25" y="25" width="25" height="25" rx="8" fill="%239ef01a"/></svg>`,
-        // Purple Flower Candy
         `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="38" fill="%237209b7"/><circle cx="50" cy="50" r="15" fill="%23f72585"/><circle cx="38" cy="38" r="8" fill="%23480ca8"/></svg>`
     ];
 
@@ -362,7 +354,6 @@
         startNewGame();
     }
 
-    /* --- MATCH-3 CANDY CRUSH BOARD LOGIC --- */
     const width = 6;
     const board = document.getElementById('board');
     let candyTiles = [];
@@ -403,14 +394,12 @@
             const id1 = parseInt(firstSelectedTile.getAttribute('data-id'));
             const id2 = parseInt(clickedTile.getAttribute('data-id'));
 
-            // Check if adjacent (Left, Right, Up, Down)
             const validMoves = [id1 - 1, id1 + 1, id1 - width, id1 + width];
             
             if (validMoves.includes(id2)) {
                 swapTiles(firstSelectedTile, clickedTile);
                 let matched = checkMatchesAndRefill();
                 if (!matched) {
-                    // Swap back if no match created
                     setTimeout(() => swapTiles(firstSelectedTile, clickedTile), 250);
                 }
             }
@@ -434,7 +423,6 @@
     function checkMatchesAndRefill() {
         let hasMatch = false;
 
-        // Check Row Matches (3 or more)
         for (let i = 0; i < 36; i++) {
             if (i % width > width - 3) continue;
             let rowOfThree = [i, i + 1, i + 2];
@@ -446,7 +434,6 @@
             }
         }
 
-        // Check Column Matches (3 or more)
         for (let i = 0; i < 24; i++) {
             let colOfThree = [i, i + width, i + width * 2];
             let decidedType = candyTiles[i].getAttribute('data-type');
@@ -459,7 +446,6 @@
 
         if (hasMatch) {
             matchCountForCurrentQuestion++;
-            // Show Tracing Question modal every 2 Matches!
             if (matchCountForCurrentQuestion >= 2) {
                 matchCountForCurrentQuestion = 0;
                 setTimeout(triggerTracingModal, 400);
@@ -475,7 +461,6 @@
         tile.querySelector('img').src = CANDY_SVGS[newCandyType];
     }
 
-    /* --- TRACING CANVAS LOGIC --- */
     let tCanvas, tCtx;
     let isDrawing = false;
     let hasDrawn = false;
