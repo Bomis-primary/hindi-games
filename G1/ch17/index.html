@@ -9,13 +9,11 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700;800&display=swap');
 
         :root {
-            --bg-main: linear-gradient(180deg, #4facfe 0%, #00f2fe 100%);
-            --card-border: #ffffff;
-            --btn-orange: linear-gradient(180deg, #ff9f43 0%, #ee5253 100%);
-            --shadow-btn: #b11313;
+            --btn-grad: linear-gradient(180deg, #ff4757 0%, #ff6b81 100%);
+            --btn-shadow: #c0392b;
         }
 
         * {
@@ -28,53 +26,51 @@
 
         body {
             font-family: 'Fredoka', cursive, sans-serif;
-            background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 50%, #74b9ff 100%);
+            background: linear-gradient(135deg, #48dbfb 0%, #0abde3 40%, #5f27cd 100%);
             display: flex;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            padding: 12px;
+            padding: 10px;
             overflow: hidden;
         }
 
-        /* Responsive Mobile Arcade Frame */
+        /* App Wrapper */
         .game-app-container {
             width: 100%;
-            max-width: 420px;
+            max-width: 430px;
             height: 94vh;
-            max-height: 800px;
-            background: rgba(255, 255, 255, 0.92);
-            backdrop-filter: blur(10px);
+            max-height: 820px;
+            background: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(12px);
             border-radius: 36px;
             padding: 16px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.25), 0 0 0 8px rgba(255, 255, 255, 0.6);
+            box-shadow: 0 20px 45px rgba(0,0,0,0.3), 0 0 0 8px rgba(255, 255, 255, 0.7);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             position: relative;
-            overflow: hidden;
+            overflow-y: auto;
         }
 
-        /* Screen Base Class */
+        /* Screen Base */
         .app-screen {
             position: absolute;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            background: linear-gradient(180deg, #ffffff 0%, #f0f3ff 100%);
+            background: linear-gradient(180deg, #ffffff 0%, #f1f2f6 100%);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 24px;
+            padding: 20px;
             text-align: center;
             z-index: 20;
+            overflow-y: auto;
         }
 
         /* 1. Splash Screen */
-        #splashScreen { 
-            z-index: 50; 
-            background: linear-gradient(135deg, #fff5f5 0%, #e0f2fe 100%); 
-        }
+        #splashScreen { z-index: 50; background: linear-gradient(135deg, #fff5f5 0%, #e0f2fe 100%); }
 
         .splash-logo {
             width: 80%;
@@ -82,10 +78,10 @@
             height: auto;
             margin-bottom: 25px;
             filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1));
-            animation: pulseLogo 2s infinite ease-in-out;
+            animation: bounceLogo 2s infinite ease-in-out;
         }
 
-        @keyframes pulseLogo {
+        @keyframes bounceLogo {
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.06); }
         }
@@ -96,63 +92,108 @@
             background: #e2e8f0;
             border-radius: 20px;
             padding: 3px;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.15);
             border: 2px solid #fff;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.12);
         }
 
         .progress-bar-fill {
             width: 0%;
             height: 100%;
-            background: linear-gradient(90deg, #ff7675, #fdcb6e, #00b894);
+            background: linear-gradient(90deg, #ff4757, #ffa502, #2ed573);
             border-radius: 20px;
             transition: width 5s linear;
         }
 
-        /* Cute Title & Headers */
+        /* 🌈 ENHANCED 3D MULTI-COLOR TITLE */
         .arcade-title {
-            font-size: 2.3rem;
+            font-size: 2.4rem;
             font-weight: 800;
-            color: #ff4757;
-            text-shadow: 3px 3px 0px #ffeaa7, 5px 5px 0px #2ed573;
+            background: linear-gradient(180deg, #ff3838 0%, #ff9f1a 50%, #17c0eb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(2px 2px 0px #ffffff) drop-shadow(4px 4px 0px #ff3838);
             line-height: 1.25;
             margin-bottom: 12px;
+            animation: floatTitle 2.5s infinite ease-in-out;
         }
 
-        .instruction-box {
-            background: #fff;
-            border: 4px dashed #ffbe76;
-            border-radius: 24px;
-            padding: 18px;
+        @keyframes floatTitle {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+
+        /* 📜 ENHANCED "HOW TO PLAY" RULE CARDS */
+        .rules-wrapper {
+            width: 100%;
+            margin: 15px 0 20px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .rule-card {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 12px 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.06);
+            border: 2.5px solid #ffeaa7;
             text-align: left;
-            margin: 15px 0 25px 0;
-            font-size: 1rem;
-            line-height: 1.6;
-            color: #2f3542;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
         }
 
-        /* Shiny Cute Buttons */
+        .rule-num {
+            background: linear-gradient(135deg, #ff4757, #ff6b81);
+            color: white;
+            font-weight: 800;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 8px rgba(255, 71, 87, 0.35);
+        }
+
+        .rule-text {
+            font-size: 0.95rem;
+            color: #2d3436;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+
+        .highlight-badge {
+            background: #fff0f6;
+            color: #d63031;
+            padding: 2px 6px;
+            border-radius: 8px;
+            font-weight: 800;
+        }
+
+        /* Cute Action Button */
         .cute-btn {
-            background: var(--btn-orange);
+            background: var(--btn-grad);
             color: #ffffff;
             border: 4px solid #ffffff;
-            padding: 14px 40px;
+            padding: 14px 42px;
             font-size: 1.3rem;
             font-weight: 800;
             border-radius: 50px;
-            box-shadow: 0 8px 0 var(--shadow-btn), 0 15px 20px rgba(0,0,0,0.2);
+            box-shadow: 0 8px 0 var(--btn-shadow), 0 12px 20px rgba(0,0,0,0.2);
             cursor: pointer;
             transition: all 0.1s ease;
-            text-shadow: 1px 2px 2px rgba(0,0,0,0.3);
             letter-spacing: 0.5px;
         }
 
         .cute-btn:active {
             transform: translateY(6px);
-            box-shadow: 0 2px 0 var(--shadow-btn);
+            box-shadow: 0 2px 0 var(--btn-shadow);
         }
 
-        /* Top HUD Bar */
+        /* Top Bar Header */
         .hud-bar {
             display: flex;
             justify-content: space-between;
@@ -164,13 +205,13 @@
             font-weight: 800;
             color: #2d3436;
             font-size: 0.95rem;
-            box-shadow: 0 8px 15px rgba(116, 185, 255, 0.2);
+            box-shadow: 0 6px 12px rgba(116, 185, 255, 0.2);
         }
 
         .hud-badge {
             background: #f1f2f6;
-            padding: 5px 10px;
-            border-radius: 12px;
+            padding: 5px 12px;
+            border-radius: 14px;
         }
 
         /* Dynamic Hint Box */
@@ -188,7 +229,7 @@
             border: 2px solid #fff;
         }
 
-        /* Grid Layout */
+        /* Responsive Grid */
         .card-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -199,7 +240,6 @@
             align-content: center;
         }
 
-        /* Card Container */
         .game-card {
             background: transparent;
             aspect-ratio: 1 / 1;
@@ -235,13 +275,11 @@
             box-shadow: 0 8px 16px rgba(0,0,0,0.1);
         }
 
-        /* Card Back Cover */
         .card-back {
             background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%);
             font-size: 2.5rem;
         }
 
-        /* Card Front Face */
         .card-front {
             background: #ffffff;
             transform: rotateY(180deg);
@@ -257,11 +295,9 @@
         .card-front .word-text {
             font-size: 1.4rem;
             font-weight: 800;
-            color: #0d1216;
-            text-shadow: 1px 1px 0px #ffeaa7;
+            color: #2d3436;
         }
 
-        /* Shake Effect on Wrong Match */
         .shake-animation {
             animation: cuteShake 0.4s ease-in-out;
         }
@@ -279,30 +315,47 @@
 
         <!-- 1. SPLASH SCREEN (5 SECONDS) -->
         <div class="app-screen" id="splashScreen">
-            <img src="assets/innovine-logo.png" alt="Logo" class="splash-logo">
+            <img src="assets/innovine-logo.png" alt="Innovine Logo" class="splash-logo">
             <div class="progress-bar-container">
                 <div class="progress-bar-fill" id="loaderFill"></div>
             </div>
-            <p style="margin-top: 15px; color: #74b9ff; font-weight: 800; font-size: 1.1rem;">लोड हो रहा है... ✨</p>
+            <p style="margin-top: 15px; color: #0984e3; font-weight: 800; font-size: 1.1rem;">गेम लोड हो रहा है... ✨</p>
         </div>
 
         <!-- 2. TITLE SCREEN -->
         <div class="app-screen" id="titleScreen" style="display: none;">
             <h1 class="arcade-title">पशु-पक्षी<br>मेमोरी मैच 🐾✨</h1>
-            <p style="font-size: 1.1rem; color: #636e72; margin-bottom: 30px; font-weight: 600;">सही चित्र को सही नाम से मिलाएँ!</p>
-            <button class="cute-btn" onclick="showInstructions()">खेलें ➔</button>
+            <p style="font-size: 1.1rem; color: #636e72; margin-bottom: 30px; font-weight: 600;">सही फोटो को सही नाम से मिलाएँ!</p>
+            <button class="cute-btn" onclick="showInstructions()">आगे बढ़ें ➔</button>
         </div>
 
-        <!-- 3. INSTRUCTION SCREEN -->
+        <!-- 3. UPGRADED "HOW TO PLAY" SCREEN -->
         <div class="app-screen" id="instructionScreen" style="display: none;">
-            <h2 style="color: #ff4757; font-size: 1.8rem; font-weight: 800;">नियम 📜</h2>
-            <div class="instruction-box">
-                <p>1️⃣ फूलों वाले कार्ड्स को पलटें।</p>
-                <p>2️⃣ **पशु/पक्षी की फोटो** को उसके **हिंदी नाम** से मैच करें!</p>
-                <p>3️⃣ हर सही जोड़ी पर <b>15 पॉइंट्स</b> मिलेंगे! 🎯</p>
-                <p>4️⃣ आपके पास <b>3 लाइफ़ (💖)</b> हैं।</p>
+            <h2 style="color: #ff4757; font-size: 1.8rem; font-weight: 800;">कैसे खेलें? 📜</h2>
+            
+            <div class="rules-wrapper">
+                <div class="rule-card">
+                    <div class="rule-num">1</div>
+                    <div class="rule-text">फूलों वाले कार्ड्स पर टैप करके उन्हें पलटें 🌸</div>
+                </div>
+
+                <div class="rule-card">
+                    <div class="rule-num">2</div>
+                    <div class="rule-text"><span class="highlight-badge">फोटो</span> को उसके सही <span class="highlight-badge">हिंदी नाम</span> से मिलाएँ! 🦁➔शेर</div>
+                </div>
+
+                <div class="rule-card">
+                    <div class="rule-num">3</div>
+                    <div class="rule-text">हर सही जोड़ी पर <span class="highlight-badge">15 पॉइंट्स</span> मिलेंगे! 🎯</div>
+                </div>
+
+                <div class="rule-card">
+                    <div class="rule-num">4</div>
+                    <div class="rule-text">आपके पास <span class="highlight-badge">3 लाइफ (💖)</span> हैं।</div>
+                </div>
             </div>
-            <button class="cute-btn" onclick="startGame()">शुरू करें 🎮</button>
+
+            <button class="cute-btn" onclick="startGame()">खेलें 🎮</button>
         </div>
 
         <!-- 4. MAIN GAMEPLAY HUD -->
@@ -318,15 +371,15 @@
 
         <!-- 5. WIN SCREEN -->
         <div class="app-screen" id="endOverlay" style="display: none;">
-            <h1 style="font-size: 2.3rem; color: #2ed573; margin-bottom: 10px; font-weight: 800;">🎉 शाबाश! 🥳</h1>
+            <h1 style="font-size: 2.3rem; color: #2ed573; margin-bottom: 10px; font-weight: 800;">🎉 बहुत बढ़िया! 🥳</h1>
             <p style="font-size: 1.1rem; color: #2f3542; margin-bottom: 15px; font-weight: 600;">आपने सभी 6 जोड़े ढूंढ लिए!</p>
             <h2 id="finalScore" style="color: #ff4757; font-size: 2.2rem; margin-bottom: 30px; font-weight: 800;">अंक: 90 / 90</h2>
-            <button class="cute-btn" onclick="restartGame()">पुनः खेलें 🔄</button>
+            <button class="cute-btn" onclick="restartGame()">फिर से खेलें 🔄</button>
         </div>
 
         <!-- 6. GAME OVER SCREEN -->
         <div class="app-screen" id="gameOverOverlay" style="display: none;">
-            <h1 style="font-size: 2.3rem; color: #ff4757; margin-bottom: 10px; font-weight: 800;">💔 ओहो! फिर कोशिश करें!</h1>
+            <h1 style="font-size: 2.3rem; color: #ff4757; margin-bottom: 10px; font-weight: 800;">💔 फिर कोशिश करें!</h1>
             <p style="font-size: 1.1rem; color: #2f3542; margin-bottom: 15px; font-weight: 600;">आपकी लाइफ खत्म हो गईं!</p>
             <h2 id="gameOverScore" style="color: #3742fa; font-size: 2rem; margin-bottom: 30px; font-weight: 800;">अंक: 0</h2>
             <button class="cute-btn" onclick="restartGame()">पुनः प्रयास 🔄</button>
@@ -334,7 +387,7 @@
 
     </div>
 
-    <!-- AUDIO ELEMENTS -->
+    <!-- AUDIO ASSETS -->
     <audio id="sndCorrect" src="assets/correct.mp3" preload="auto"></audio>
     <audio id="sndWrong" src="assets/wrong.mp3" preload="auto"></audio>
     <audio id="sndClaps" src="assets/freesound_community-claps-44774.mp3" preload="auto"></audio>
@@ -356,15 +409,24 @@
     let lives = 3;
     let lockBoard = false;
 
+    // Fisher-Yates Complete Randomization Engine
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
     function playAudio(id) {
         const audio = document.getElementById(id);
         if (audio) {
             audio.currentTime = 0;
-            audio.play().catch(e => console.log("Audio play deferred"));
+            audio.play().catch(e => console.log("Audio waiting for user gesture"));
         }
     }
 
-    // Splash Screen Bar Timer (Exact 5 Secs)
+    // Splash Loader Timer
     window.onload = function() {
         document.getElementById('loaderFill').style.width = '100%';
         setTimeout(() => {
@@ -395,7 +457,7 @@
         document.getElementById('hintBox').style.display = 'none';
         updateLives();
 
-        // 6 Pair Generator: 6 Images + 6 Names
+        // Generate 12 Cards (6 Images & 6 Name Words)
         let generatedCards = [];
         itemsData.forEach(item => {
             generatedCards.push({
@@ -412,8 +474,8 @@
             });
         });
 
-        // Shuffle Cards
-        cardsArray = generatedCards.sort(() => 0.5 - Math.random());
+        // 🔀 True Shuffle Implementation
+        cardsArray = shuffleArray(generatedCards);
 
         const grid = document.getElementById('gridContainer');
         grid.innerHTML = '';
@@ -454,7 +516,7 @@
         const [card1, card2] = flippedCards;
 
         if (card1.dataset.id === card2.dataset.id) {
-            // Correct Pair
+            // Correct Pair Match
             playAudio('sndCorrect');
             confetti({ particleCount: 50, spread: 70, origin: { y: 0.7 } });
 
@@ -470,14 +532,14 @@
                 setTimeout(winGame, 600);
             }
         } else {
-            // Wrong Pair
+            // Wrong Match
             playAudio('sndWrong');
             if (navigator.vibrate) navigator.vibrate(200);
 
             card1.querySelector('.card-front').classList.add('shake-animation');
             card2.querySelector('.card-front').classList.add('shake-animation');
 
-            // Show Hint Box
+            // Show Hint
             const hintBox = document.getElementById('hintBox');
             hintBox.innerText = `💡 संकेत: ${card1.dataset.name} - ${card1.dataset.hint}`;
             hintBox.style.display = 'block';
@@ -509,7 +571,7 @@
     }
 
     function winGame() {
-        playAudio('sndClaps'); // Clapping Sound on Final Win
+        playAudio('sndClaps'); // Clapping Sound Trigger
         confetti({ particleCount: 180, spread: 100, origin: { y: 0.6 } });
         document.getElementById('finalScore').innerText = `अंक: ${score} / 90`;
         document.getElementById('endOverlay').style.display = 'flex';
