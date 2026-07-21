@@ -11,16 +11,6 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&display=swap');
 
-        :root {
-            --bg-gradient: linear-gradient(135deg, #ffd3b6 0%, #ffaaa5 50%, #d4a5a5 100%);
-            --card-bg: rgba(255, 255, 255, 0.92);
-            --primary-pink: #ff6b81;
-            --primary-shadow: #eccc68;
-            --mint-green: #2ed573;
-            --soft-yellow: #ffeaa7;
-            --text-color: #2d3436;
-        }
-
         * {
             box-sizing: border-box;
             margin: 0;
@@ -31,7 +21,6 @@
 
         body {
             font-family: 'Fredoka', cursive, sans-serif;
-            background: #ffeaa7;
             background: linear-gradient(135deg, #a8e6cf 0%, #dbede3 30%, #ffd3b6 70%, #ffaaa5 100%);
             background-size: 400% 400%;
             animation: gradientBG 15s ease infinite;
@@ -49,26 +38,12 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* Floating Background Deco */
-        .bg-deco {
-            position: absolute;
-            font-size: 3rem;
-            opacity: 0.18;
-            animation: float 8s infinite ease-in-out;
-            pointer-events: none;
-            z-index: 0;
-        }
-        @keyframes float {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(10deg); }
-        }
-
         .app-container {
             width: 100%;
             max-width: 420px;
             height: 92vh;
             max-height: 800px;
-            background: var(--card-bg);
+            background: rgba(255, 255, 255, 0.94);
             backdrop-filter: blur(16px);
             border-radius: 36px;
             padding: 20px 18px;
@@ -114,7 +89,6 @@
             font-size: 1.1rem;
         }
 
-        /* Screen Base */
         .screen {
             display: none;
             flex-direction: column;
@@ -135,29 +109,26 @@
         .screen.active { display: flex; }
 
         .game-title {
-            font-size: 2.2rem;
+            font-size: 2.3rem;
             font-weight: 700;
             color: #ff4757;
             text-shadow: 2px 3px 0px #ffffff;
-            margin-bottom: 4px;
-            letter-spacing: 0.5px;
+            margin-bottom: 8px;
         }
 
-        /* 3D Cute Button */
+        /* Cute Button */
         .cute-btn {
             background: linear-gradient(180deg, #ff6b81 0%, #ff4757 100%);
             color: #ffffff;
             border: 3px solid #ffffff;
             padding: 14px 32px;
-            font-size: 1.2rem;
+            font-size: 1.25rem;
             font-weight: 700;
             border-radius: 30px;
             box-shadow: 0 6px 0 #ee5253, 0 10px 20px rgba(255, 71, 87, 0.3);
             cursor: pointer;
-            margin-top: 16px;
+            margin-top: 20px;
             transition: all 0.15s ease;
-            position: relative;
-            overflow: hidden;
         }
 
         .cute-btn:active {
@@ -165,7 +136,56 @@
             box-shadow: 0 2px 0 #ee5253, 0 4px 10px rgba(255, 71, 87, 0.3);
         }
 
-        /* Main Menu Cards */
+        /* Splash Screen */
+        .logo-img {
+            width: 180px;
+            height: auto;
+            margin-bottom: 25px;
+            animation: pulseLogo 2s infinite ease-in-out;
+        }
+
+        @keyframes pulseLogo {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.06); }
+        }
+
+        .progress-bar-container {
+            width: 80%;
+            height: 14px;
+            background: #ffeaa7;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid #fdcb6e;
+            margin-top: 15px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #2ed573, #55efc4);
+            border-radius: 10px;
+            transition: width 0.1s linear;
+        }
+
+        /* Instruction Screen Cards */
+        .rule-card {
+            background: #ffffff;
+            border: 3px solid #ffeaa7;
+            border-radius: 20px;
+            padding: 14px 18px;
+            margin: 8px 0;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #2d3436;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.03);
+            text-align: left;
+        }
+
+        /* Game Modes List */
         .mode-list {
             display: flex;
             flex-direction: column;
@@ -184,11 +204,6 @@
             box-shadow: 0 10px 20px rgba(0,0,0,0.03), inset 0 0 0 2px #f1f2f6;
             cursor: pointer;
             text-align: left;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .mode-card:active {
-            transform: scale(0.98);
         }
 
         .mode-icon-box {
@@ -206,7 +221,7 @@
         .mode-card:nth-child(2) .mode-icon-box { background: #74b9ff22; }
         .mode-card:nth-child(3) .mode-icon-box { background: #55efc444; }
 
-        .mode-info h3 { font-size: 1.15rem; color: #2d3436; font-weight: 700; margin-bottom: 2px; }
+        .mode-info h3 { font-size: 1.15rem; color: #2d3436; font-weight: 700; }
         .mode-info p { font-size: 0.85rem; color: #a4b0be; font-weight: 600; }
 
         /* Shake Effect */
@@ -217,7 +232,7 @@
             40%, 80% { transform: translateX(8px); }
         }
 
-        /* Fact Quiz Screen */
+        /* Quiz UI */
         .hint-card {
             background: linear-gradient(135deg, #e3fafc 0%, #c5f6fa 100%);
             border: 3px solid #99e9f2;
@@ -247,18 +262,15 @@
             font-weight: 700;
             color: #2d3436;
             cursor: pointer;
-            box-shadow: 0 6px 12px rgba(0,0,0,0.03);
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 6px;
-            transition: transform 0.15s ease;
         }
 
-        .fruit-opt-btn:active { transform: scale(0.95); }
-        .fruit-opt-btn span { font-size: 2.8rem; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1)); }
+        .fruit-opt-btn span { font-size: 2.8rem; }
 
-        /* Taste Sorting Screen */
+        /* Taste Sorting UI */
         .sorting-fruits-pool {
             display: flex;
             flex-wrap: wrap;
@@ -276,14 +288,12 @@
             padding: 6px 14px;
             cursor: pointer;
             box-shadow: 0 6px 12px rgba(0,0,0,0.05);
-            transition: all 0.2s ease;
         }
 
         .draggable-fruit.selected {
             border-color: #ff6b81;
             background: #fff0f3;
             transform: scale(1.1) rotate(-4deg);
-            box-shadow: 0 10px 20px rgba(255, 107, 129, 0.2);
         }
 
         .baskets-container {
@@ -304,13 +314,11 @@
             align-items: center;
             min-height: 160px;
             cursor: pointer;
-            transition: background 0.2s ease;
         }
 
-        .basket-box:active { background: #fff9db; }
         .basket-title { font-size: 1.05rem; font-weight: 700; color: #e67e22; margin-bottom: 8px; }
 
-        /* Shape Finder Grid */
+        /* Shape Finder UI */
         .shape-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -330,19 +338,17 @@
             font-size: 2.3rem;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.2s ease;
         }
 
         .shape-item.selected {
             border-color: #2ed573;
             background: #e6fffa;
             transform: scale(1.05);
-            box-shadow: 0 8px 16px rgba(46, 213, 115, 0.2);
         }
 
         .shape-item .name { font-size: 0.9rem; color: #636e72; margin-top: 4px; }
 
-        /* Win Modal Card */
+        /* Win Card */
         .win-card {
             background: #ffffff;
             border-radius: 32px;
@@ -355,24 +361,57 @@
 </head>
 <body>
 
-    <!-- Floating Background Deco -->
-    <div class="bg-deco" style="top: 10%; left: 5%;">🍎</div>
-    <div class="bg-deco" style="top: 75%; left: 8%;">🍌</div>
-    <div class="bg-deco" style="top: 15%; right: 6%;">🍊</div>
-    <div class="bg-deco" style="top: 80%; right: 5%;">🍇</div>
-
     <div class="app-container">
 
-        <!-- Top Header HUD -->
-        <div class="hud-header">
-            <span class="hud-badge" id="levelName">होम मेन्यू 🏠</span>
+        <!-- Header HUD (Hidden on Splash/Title/Instruction Screens) -->
+        <div class="hud-header" id="gameHud" style="display: none;">
+            <span class="hud-badge" id="levelName">गेम चालू 🎮</span>
             <span class="hud-badge score-pill" id="scoreDisplay">⭐ 0</span>
         </div>
 
-        <!-- 1. MAIN MENU SCREEN -->
-        <div class="screen active" id="menuScreen">
-            <h1 class="game-title">रंग-बिरंगे फल 🍎</h1>
-            <p style="color: #888; font-weight: 600; font-size: 0.95rem;">खेलें और मज़े से सीखें!</p>
+        <!-- SCREEN 1: SPLASH SCREEN (5 SECONDS) -->
+        <div class="screen active" id="splashScreen">
+            <img src="innovine-logo.png" alt="Innovine Logo" class="logo-img" onerror="this.src='https://via.placeholder.com/180x180/ff6b81/ffffff?text=Innovine'">
+            <h2 style="color: #2d3436; font-size: 1.3rem;">गेम लोडिंग...</h2>
+            <div class="progress-bar-container">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+
+        <!-- SCREEN 2: GAME TITLE SCREEN -->
+        <div class="screen" id="titleScreen">
+            <h1 class="game-title">रंग-बिरंगे फल 🍎✨</h1>
+            <p style="color: #636e72; font-weight: 600; font-size: 1.1rem; margin-top: 6px;">
+                फलों की दुनिया में आपका स्वागत है!
+            </p>
+            <button class="cute-btn" onclick="goToInstructions()">आगे बढ़ें ➡️</button>
+        </div>
+
+        <!-- SCREEN 3: INSTRUCTIONS SCREEN -->
+        <div class="screen" id="instructionsScreen">
+            <h2 style="color: #ff4757; font-size: 1.8rem; margin-bottom: 12px;">खेल के नियम 📜</h2>
+            
+            <div class="rule-card">
+                <span style="font-size: 1.8rem;">⭐</span>
+                <span>हर सही जवाब पर आपको पॉइंट्स (⭐) मिलेंगे।</span>
+            </div>
+
+            <div class="rule-card">
+                <span style="font-size: 1.8rem;">🧺</span>
+                <span>फलों को देखकर ध्यान से सही जगह चुनें।</span>
+            </div>
+
+            <div class="rule-card">
+                <span style="font-size: 1.8rem;">🎉</span>
+                <span>सारे सवाल हल करके विजेता बनें!</span>
+            </div>
+
+            <button class="cute-btn" onclick="goToModeSelection()">खेल शुरू करें 🎮</button>
+        </div>
+
+        <!-- SCREEN 4: MODE SELECTION MENU -->
+        <div class="screen" id="menuScreen">
+            <h2 style="color: #2d3436; font-size: 1.5rem; margin-bottom: 6px;">गेम मोड चुनें 👇</h2>
 
             <div class="mode-list">
                 <div class="mode-card" onclick="startQuizMode()">
@@ -401,20 +440,15 @@
             </div>
         </div>
 
-        <!-- 2. FACT QUIZ SCREEN -->
+        <!-- GAMEPLAY SCREENS -->
         <div class="screen" id="quizScreen">
             <div class="hint-card" id="quizHintText">इसे फलों का राजा कहते हैं! 👑</div>
             <div class="options-grid" id="quizOptionsGrid"></div>
         </div>
 
-        <!-- 3. TASTE SORTING SCREEN -->
         <div class="screen" id="sortScreen">
-            <p style="font-weight: 700; color: #2d3436; margin-bottom: 12px; font-size: 0.95rem;">
-                फल चुनकर सही टोकरी पर टैप करें:
-            </p>
-            
+            <p style="font-weight: 700; color: #2d3436; margin-bottom: 12px;">फल चुनकर सही टोकरी पर टैप करें:</p>
             <div class="sorting-fruits-pool" id="fruitPool"></div>
-
             <div class="baskets-container">
                 <div class="basket-box" id="sweetBasket" onclick="placeInBasket('मीठा')">
                     <div class="basket-title">🥭 मीठा (Sweet)</div>
@@ -427,22 +461,19 @@
             </div>
         </div>
 
-        <!-- 4. SHAPE FINDER SCREEN -->
         <div class="screen" id="shapeScreen">
-            <p style="font-weight: 700; color: #2d3436; margin-bottom: 10px; font-size: 0.95rem;">
-                केवल ⚪ **गोल (Round)** फलों को टिक करें!
-            </p>
+            <p style="font-weight: 700; color: #2d3436; margin-bottom: 10px;">केवल गोल (Round) फलों को टिक करें!</p>
             <div class="shape-grid" id="shapeGrid"></div>
             <button class="cute-btn" onclick="checkShapeAnswers()">उत्तर चेक करें ✔️</button>
         </div>
 
-        <!-- 5. WIN OVERLAY SCREEN -->
+        <!-- WIN OVERLAY SCREEN -->
         <div class="screen" id="winScreen">
             <div class="win-card">
                 <h1 style="font-size: 2.2rem; color: #2ed573; margin-bottom: 6px;">शाबाश! 🥳</h1>
                 <p style="font-size: 1rem; color: #a4b0be; font-weight: 600;">आपने यह लेवल पूरा कर लिया!</p>
                 <h2 id="winScoreText" style="color: #ff4757; margin: 16px 0; font-size: 2.2rem;">⭐ अंक: 0</h2>
-                <button class="cute-btn" onclick="backToMenu()">मेनू पर वापस जाएं 🏠</button>
+                <button class="cute-btn" onclick="goToModeSelection()">मेनू पर वापस जाएं 🏠</button>
             </div>
         </div>
 
@@ -457,6 +488,41 @@
     let totalScore = 0;
     let selectedFruitForSort = null;
 
+    // AUTO LOADING SPLASH SCREEN (5 SECONDS)
+    window.addEventListener('DOMContentLoaded', () => {
+        let progress = 0;
+        const fill = document.getElementById('progressFill');
+        const interval = setInterval(() => {
+            progress += 2;
+            fill.style.width = progress + '%';
+            if (progress >= 100) {
+                clearInterval(interval);
+                switchScreen('titleScreen');
+            }
+        }, 100); // 100ms * 50 steps = 5000ms (5 Sec)
+    });
+
+    function switchScreen(screenId, titleText = '') {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(screenId).classList.add('active');
+
+        const hud = document.getElementById('gameHud');
+        if (['quizScreen', 'sortScreen', 'shapeScreen', 'menuScreen'].includes(screenId)) {
+            hud.style.display = 'flex';
+            if (titleText) document.getElementById('levelName').innerText = titleText;
+        } else {
+            hud.style.display = 'none';
+        }
+    }
+
+    function goToInstructions() {
+        switchScreen('instructionsScreen');
+    }
+
+    function goToModeSelection() {
+        switchScreen('menuScreen', 'होम मेन्यू 🏠');
+    }
+
     function playAudio(id) {
         const sound = document.getElementById(id);
         if (sound) {
@@ -466,11 +532,7 @@
     }
 
     function triggerConfetti() {
-        confetti({
-            particleCount: 50,
-            spread: 60,
-            origin: { y: 0.7 }
-        });
+        confetti({ particleCount: 50, spread: 60, origin: { y: 0.7 } });
     }
 
     const fruitsData = [
@@ -491,17 +553,7 @@
         document.getElementById('scoreDisplay').innerText = `⭐ ${totalScore}`;
     }
 
-    function switchScreen(screenId, titleText) {
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        document.getElementById(screenId).classList.add('active');
-        document.getElementById('levelName').innerText = titleText;
-    }
-
-    function backToMenu() {
-        switchScreen('menuScreen', 'होम मेन्यू 🏠');
-    }
-
-    /* --- 1. FACT QUIZ MODE --- */
+    /* 1. QUIZ MODE */
     function startQuizMode() {
         currentQuizIndex = 0;
         switchScreen('quizScreen', '1. रोचक बातें 💡');
@@ -513,12 +565,13 @@
             playAudio('sndClaps');
             triggerConfetti();
             document.getElementById('winScoreText').innerText = `⭐ अंक: ${totalScore} / 130`;
-            switchScreen('winScreen', 'जीत गए! 🥳');
+            switchScreen('winScreen');
             return;
         }
 
         const currentItem = fruitsData[currentQuizIndex];
-        document.getElementById('quizHintText').innerText = `💡 "${currentItem.fact}"`;
+        // INVERTED COMMAS REMOVED HERE:
+        document.getElementById('quizHintText').innerText = `💡 ${currentItem.fact}`;
 
         const optionsGrid = document.getElementById('quizOptionsGrid');
         optionsGrid.innerHTML = '';
@@ -543,7 +596,6 @@
                     loadQuizQuestion();
                 } else {
                     playAudio('sndWrong');
-                    if (navigator.vibrate) navigator.vibrate(200);
                     btn.classList.add('shake-item');
                     setTimeout(() => btn.classList.remove('shake-item'), 400);
                 }
@@ -552,12 +604,11 @@
         });
     }
 
-    /* --- 2. TASTE SORTING MODE --- */
+    /* 2. SORTING MODE */
     function startSortingMode() {
         switchScreen('sortScreen', '2. स्वाद छांटो 🧺');
         document.getElementById('sweetBasketItems').innerHTML = '';
         document.getElementById('sourBasketItems').innerHTML = '';
-        
         const pool = document.getElementById('fruitPool');
         pool.innerHTML = '';
 
@@ -566,7 +617,6 @@
             el.className = 'draggable-fruit';
             el.innerText = f.emoji;
             el.dataset.taste = f.taste;
-            el.dataset.name = f.name;
             el.onclick = () => {
                 document.querySelectorAll('.draggable-fruit').forEach(i => i.classList.remove('selected'));
                 el.classList.add('selected');
@@ -578,7 +628,6 @@
 
     function placeInBasket(basketTaste) {
         if (!selectedFruitForSort) return;
-
         const correctTaste = selectedFruitForSort.dataset.taste;
         const targetBasketBox = basketTaste === 'मीठा' ? document.getElementById('sweetBasket') : document.getElementById('sourBasket');
 
@@ -586,7 +635,6 @@
             playAudio('sndCorrect');
             triggerConfetti();
             addScore(5);
-
             const targetDiv = basketTaste === 'मीठा' ? 'sweetBasketItems' : 'sourBasketItems';
             document.getElementById(targetDiv).innerHTML += ` ${selectedFruitForSort.innerText}`;
             selectedFruitForSort.remove();
@@ -597,18 +645,17 @@
                     playAudio('sndClaps');
                     triggerConfetti();
                     document.getElementById('winScoreText').innerText = `⭐ अंक: ${totalScore} / 130`;
-                    switchScreen('winScreen', 'जीत गए! 🥳');
+                    switchScreen('winScreen');
                 }, 500);
             }
         } else {
             playAudio('sndWrong');
-            if (navigator.vibrate) navigator.vibrate(200);
             targetBasketBox.classList.add('shake-item');
             setTimeout(() => targetBasketBox.classList.remove('shake-item'), 400);
         }
     }
 
-    /* --- 3. SHAPE FINDER MODE --- */
+    /* 3. SHAPE MODE */
     function startShapeMode() {
         switchScreen('shapeScreen', '3. गोल फल ⚪');
         const grid = document.getElementById('shapeGrid');
@@ -631,10 +678,7 @@
         items.forEach(item => {
             let isRound = item.dataset.isRound === 'true';
             let isSelected = item.classList.contains('selected');
-
-            if (isRound !== isSelected) {
-                correct = false;
-            }
+            if (isRound !== isSelected) correct = false;
         });
 
         if (correct) {
@@ -643,10 +687,9 @@
             triggerConfetti();
             addScore(30);
             document.getElementById('winScoreText').innerText = `⭐ अंक: ${totalScore} / 130`;
-            switchScreen('winScreen', 'जीत गए! 🥳');
+            switchScreen('winScreen');
         } else {
             playAudio('sndWrong');
-            if (navigator.vibrate) navigator.vibrate(200);
             items.forEach(item => {
                 item.classList.add('shake-item');
                 setTimeout(() => item.classList.remove('shake-item'), 400);
