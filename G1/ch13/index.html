@@ -1,1 +1,503 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>बिंदी कहाँ लगेगी? 🔴✨</title>
+    <style>
+        :root {
+            --pastel-pink: #ffb3c6;
+            --pastel-purple: #c8b6ff;
+            --pastel-yellow: #ffea00;
+            --pastel-blue: #9bf6ff;
+            --pastel-mint: #c7f9cc;
+            --deep-purple: #5e503f;
+            --card-bg: #fffbfb;
+        }
 
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #ffe5ec 0%, #e8dff5 50%, #fce1e4 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            user-select: none;
+            padding: 10px;
+        }
+
+        .game-card {
+            width: 100%;
+            max-width: 800px;
+            min-height: 85vh;
+            background: var(--card-bg);
+            border-radius: 35px;
+            padding: 20px 20px 30px 20px;
+            box-shadow: 0 15px 0 #d8b4e2, 0 25px 50px rgba(0,0,0,0.08);
+            text-align: center;
+            border: 6px solid #e0c3fc;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        /* HEADER & LOGO */
+        .top-header {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .brand-logo {
+            max-height: 45px;
+            margin-bottom: 5px;
+            object-fit: contain;
+        }
+
+        .header-title {
+            color: #6b2d5c;
+            font-size: calc(1.8rem + 0.8vw);
+            text-shadow: 2px 2px 0px #ffe5ec;
+        }
+
+        /* STATUS BAR & BALLOONS */
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 8px 18px;
+            background: #f3c4fb;
+            border-radius: 25px;
+            color: #4a1272;
+            font-size: calc(1.1rem + 0.3vw);
+            font-weight: bold;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+            margin-bottom: 10px;
+        }
+
+        .balloon-chances {
+            display: flex;
+            gap: 6px;
+            font-size: 1.6rem;
+        }
+
+        .balloon {
+            display: inline-block;
+            transition: transform 0.3s, opacity 0.3s;
+        }
+
+        .balloon.popped {
+            transform: scale(0);
+            opacity: 0;
+            width: 0;
+            margin: 0;
+        }
+
+        /* MAGIC BOARD AREA */
+        .magic-board {
+            background: #3c096c;
+            width: 100%;
+            min-height: 200px;
+            border-radius: 30px;
+            border: 5px dashed var(--pastel-yellow);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 15px;
+            position: relative;
+            box-shadow: inset 0 0 25px rgba(255, 234, 0, 0.25);
+            margin: 10px 0;
+        }
+
+        .prompt-text {
+            color: var(--pastel-blue);
+            font-size: calc(1.2rem + 0.4vw);
+            font-weight: bold;
+            margin-bottom: 18px;
+        }
+
+        .word-container {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .letter-block {
+            background: #ffffff;
+            border: 4px solid var(--pastel-pink);
+            color: #333;
+            font-size: calc(2.4rem + 1.2vw);
+            font-weight: bold;
+            width: calc(65px + 1.2vw);
+            height: calc(75px + 1.2vw);
+            border-radius: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 8px 0 var(--pastel-pink);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .bindi-dot {
+            position: absolute;
+            top: -15px;
+            color: #ff0055;
+            font-size: 2.2rem;
+            opacity: 0;
+            transform: scale(0);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .letter-block.has-bindi .bindi-dot {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .letter-block.glow-success {
+            background: var(--pastel-yellow) !important;
+            border-color: #fff !important;
+            color: #2b0938 !important;
+            box-shadow: 0 0 25px var(--pastel-yellow) !important;
+            transform: scale(1.1);
+        }
+
+        /* OPTIONS AREA */
+        .options-grid {
+            display: flex;
+            gap: 12px;
+            width: 100%;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 5px;
+        }
+
+        .option-btn {
+            background: #ffffff;
+            border: 5px solid var(--pastel-purple);
+            color: #4a1272;
+            font-size: calc(1.8rem + 0.8vw);
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            box-shadow: 0 8px 0 #b39ddb;
+            flex: 1;
+            min-width: 90px;
+            max-width: 180px;
+            transition: transform 0.1s, box-shadow 0.1s, border-color 0.3s;
+        }
+
+        .option-btn:active {
+            transform: translateY(6px);
+            box-shadow: 0 2px 0 #b39ddb;
+        }
+
+        .option-btn.wrong-shake {
+            animation: shake 0.4s ease-in-out;
+            border-color: #ff4d6d !important;
+            box-shadow: 0 8px 0 #c9184a !important;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-12px); }
+            40%, 80% { transform: translateX(12px); }
+        }
+
+        /* CELEBRATION OVERLAY */
+        .celebration-screen {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 255, 255, 0.96);
+            border-radius: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            padding: 20px;
+            display: none;
+        }
+
+        .action-btn {
+            background: #70e000;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            border-radius: 40px;
+            box-shadow: 0 8px 0 #38b000;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: transform 0.1s;
+        }
+
+        .action-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 4px 0 #38b000;
+        }
+
+        /* PARTICLE ANIMATION */
+        .star-particle {
+            position: absolute;
+            pointer-events: none;
+            animation: starExplode 0.8s forwards ease-out;
+        }
+
+        @keyframes starExplode {
+            0% { transform: translate(0, 0) scale(1); opacity: 1; }
+            100% { transform: translate(var(--x), var(--y)) scale(0); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="game-card">
+        <div class="top-header">
+            <img src="assets/innovine-logo.png" alt="Logo" class="brand-logo" onerror="this.style.display='none';">
+            <h1 class="header-title">🔴 बिंदी कहाँ लगेगी? ✨</h1>
+        </div>
+
+        <div class="status-bar">
+            <span id="progressText">सवाल: १/१०</span>
+            <div class="balloon-chances" id="balloonBox">
+                <span class="balloon">🎈</span>
+                <span class="balloon">🎈</span>
+                <span class="balloon">🎈</span>
+            </div>
+            <span id="scoreText">⭐ अंक: ० / ১০০</span>
+        </div>
+
+        <div class="magic-board" id="magicBoard">
+            <div class="prompt-text" id="questionPrompt">बिंदी (ं) सही अक्षर के ऊपर लगाओ!</div>
+            <div class="word-container" id="wordBox"></div>
+        </div>
+
+        <div style="width: 100%;">
+            <p style="font-size: 1.1rem; color: #6b2d5c; margin-bottom: 8px; font-weight: bold;">सही अक्षर पर बिंदी लगाओ:</p>
+            <div class="options-grid" id="optionsBox"></div>
+        </div>
+
+        <!-- END SCREEN -->
+        <div id="endOverlay" class="celebration-screen">
+            <h1 id="endTitle" style="font-size: 2.8rem; color: #5e503f; margin-bottom: 10px;">🎉 बहुत बढ़िया! 🥳</h1>
+            <p id="finalScore" style="font-size: 1.4rem; color: #333; margin-bottom: 15px;">आपने बनाए कुल १०० अंक!</p>
+            <button class="action-btn" onclick="startNewGame()">फिर से खेलें 🔄</button>
+        </div>
+    </div>
+
+<script>
+    // Audio Paths from Asset directory
+    const sndCorrect = new Audio('assets/correct.mp3');
+    const sndWrong = new Audio('assets/wrong.mp3');
+    const sndClaps = new Audio('assets/freesound_community-claps-44774.mp3');
+
+    const masterQuestions = [
+        { display: ["प", "खा"], correctLetter: "प", prompt: "हवा में उड़ता पंखा! बिंदी कहाँ लगेगी?" },
+        { display: ["ब", "द", "र"], correctLetter: "ब", prompt: "नटखट बंदर! बिंदी किस अक्षर पर चिपकाएँ?" },
+        { display: ["प", "त", "ग"], correctLetter: "त", prompt: "ऊँची उड़ती पतंग! बिंदी कहाँ बैठाएँ?" },
+        { display: ["म", "दि", "र"], correctLetter: "म", prompt: "सुंदर मंदिर! सही अक्षर पहचानो:" },
+        { display: ["ज", "ग", "ल"], correctLetter: "ज", prompt: "हरा-भरा जंगल! बिंदी कहाँ लगेगी?" },
+        { display: ["च", "दा"], correctLetter: "च", prompt: "चंदा मामा की बिंदी किस अक्षर पर होगी?" },
+        { display: ["अ", "गू", "र"], correctLetter: "अ", prompt: "मीठे-मीठे अंगूर! सही जगह छुओ:" },
+        { display: ["ह", "स"], correctLetter: "ह", prompt: "पानी में तैरता हंस! बिंदी कहाँ लगेगी?" },
+        { display: ["स", "त", "रा"], correctLetter: "स", prompt: "रसीला संतरा! जादू की बिंदी कहाँ लगाएँ?" },
+        { display: ["म", "ग", "ल", "वा", "र"], correctLetter: "म", prompt: "मंगलवार! सबसे बड़े शब्द में बिंदी कहाँ लगेगी?" }
+    ];
+
+    let gameQuestions = [];
+    let currentIdx = 0;
+    let score = 0;
+    let balloonsLeft = 3;
+
+    function shuffle(arr) {
+        let array = [...arr];
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    function toHindiNum(num) {
+        const hindiDigits = ['०', '१', '२', '३', '४', '५', '६', '७', '८', '९'];
+        return num.toString().split('').map(d => hindiDigits[d]).join('');
+    }
+
+    function playAudio(audioObj) {
+        audioObj.currentTime = 0;
+        audioObj.play().catch(() => {});
+    }
+
+    function startNewGame() {
+        document.getElementById('endOverlay').style.display = 'none';
+        gameQuestions = shuffle(masterQuestions);
+        currentIdx = 0;
+        score = 0;
+        balloonsLeft = 3;
+        renderBalloons();
+        updateScoreBoard();
+        loadNextQuestion();
+    }
+
+    function renderBalloons() {
+        const box = document.getElementById('balloonBox');
+        box.innerHTML = '';
+        for (let i = 0; i < 3; i++) {
+            if (i < balloonsLeft) {
+                box.innerHTML += `<span class="balloon">🎈</span>`;
+            } else {
+                box.innerHTML += `<span class="balloon popped">🎈</span>`;
+            }
+        }
+    }
+
+    function updateScoreBoard() {
+        document.getElementById('progressText').innerText = `सवाल: ${toHindiNum(currentIdx + 1)}/১০`;
+        document.getElementById('scoreText').innerText = `⭐ अंक: ${toHindiNum(score)}`;
+    }
+
+    function loadNextQuestion() {
+        if (currentIdx >= gameQuestions.length) {
+            showEndGame(true);
+            return;
+        }
+
+        updateScoreBoard();
+        const q = gameQuestions[currentIdx];
+        document.getElementById('questionPrompt').innerText = q.prompt;
+
+        // Render Word Container (Without Bindi)
+        const wordBox = document.getElementById('wordBox');
+        wordBox.innerHTML = '';
+        q.display.forEach((char) => {
+            wordBox.innerHTML += `
+                <div class="letter-block" data-char="${char}">
+                    <span class="bindi-dot">🔴</span>
+                    ${char}
+                </div>
+            `;
+        });
+
+        // Render Choices
+        const optionsBox = document.getElementById('optionsBox');
+        optionsBox.innerHTML = '';
+        const randomizedChoices = shuffle(q.display);
+
+        randomizedChoices.forEach(choice => {
+            optionsBox.innerHTML += `
+                <button class="option-btn" onclick="checkAnswer(this, '${choice}')">${choice}</button>
+            `;
+        });
+    }
+
+    function checkAnswer(btnElement, selectedChar) {
+        const q = gameQuestions[currentIdx];
+
+        if (selectedChar === q.correctLetter) {
+            playAudio(sndCorrect);
+            score += 10;
+            updateScoreBoard();
+
+            // Animate Magic Bindi on the Word
+            const blocks = document.querySelectorAll('.letter-block');
+            blocks.forEach(block => {
+                if (block.getAttribute('data-char') === q.correctLetter) {
+                    block.classList.add('has-bindi', 'glow-success');
+                }
+            });
+
+            createBurstAnimation();
+
+            // Lock buttons temporarily
+            document.querySelectorAll('.option-btn').forEach(btn => btn.style.pointerEvents = 'none');
+
+            setTimeout(() => {
+                currentIdx++;
+                loadNextQuestion();
+            }, 1200);
+
+        } else {
+            // Wrong Answer Flow
+            playAudio(sndWrong);
+
+            // Trigger Device Vibration if supported
+            if (navigator.vibrate) {
+                navigator.vibrate(200);
+            }
+
+            btnElement.classList.add('wrong-shake');
+            balloonsLeft--;
+            renderBalloons();
+
+            if (balloonsLeft <= 0) {
+                setTimeout(() => { showEndGame(false); }, 500);
+            } else {
+                setTimeout(() => {
+                    btnElement.classList.remove('wrong-shake');
+                }, 400);
+            }
+        }
+    }
+
+    function createBurstAnimation() {
+        const board = document.getElementById('magicBoard');
+        for (let i = 0; i < 20; i++) {
+            const star = document.createElement('div');
+            star.className = 'star-particle';
+            star.innerText = '✨';
+            star.style.fontSize = (Math.random() * 18 + 12) + 'px';
+            star.style.left = '50%';
+            star.style.top = '50%';
+
+            const x = (Math.random() - 0.5) * 280;
+            const y = (Math.random() - 0.5) * 180;
+
+            star.style.setProperty('--x', `${x}px`);
+            star.style.setProperty('--y', `${y}px`);
+
+            board.appendChild(star);
+            setTimeout(() => star.remove(), 800);
+        }
+    }
+
+    function showEndGame(isWin) {
+        const screen = document.getElementById('endOverlay');
+        const title = document.getElementById('endTitle');
+        const scoreText = document.getElementById('finalScore');
+
+        screen.style.display = 'flex';
+
+        if (isWin) {
+            playAudio(sndClaps);
+            title.innerText = "🎉 अद्भुत! जीत गए! 🥳";
+            scoreText.innerText = `बधाई हो! आपने पूरे ${toHindiNum(score)} में से ${toHindiNum(score)} अंक प्राप्त किए!`;
+        } else {
+            title.innerText = "ओहो! 🎈 फटने की आवाज़!";
+            scoreText.innerText = `आपके सभी गुब्बारे खत्म हो गए! आपने ${toHindiNum(score)} अंक बनाए। फिर से कोशिश करें!`;
+        }
+    }
+
+    window.onload = startNewGame;
+</script>
+
+</body>
+</html>
