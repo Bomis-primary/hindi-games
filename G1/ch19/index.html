@@ -1,1 +1,850 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>सब्ज़ियों की दुनिया! 🥦🥕</title>
+    
+    <!-- Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&display=swap');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Fredoka', cursive, sans-serif;
+            background: linear-gradient(135deg, #a8e6cf 0%, #dcedc1 30%, #ffd3b6 70%, #ffaaa5 100%);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 12px;
+            overflow: hidden;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 420px;
+            height: 92vh;
+            max-height: 800px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(16px);
+            border-radius: 36px;
+            padding: 18px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12), 
+                        inset 0 0 0 4px rgba(255, 255, 255, 0.8);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        /* Top Header HUD */
+        .hud-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #ffffff;
+            padding: 10px 16px;
+            border-radius: 24px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.04);
+            border: 2px solid #e8f5e9;
+            margin-bottom: 12px;
+            flex-shrink: 0;
+        }
+
+        .hud-badge {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #2e7d32;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .score-pill {
+            background: #fff9db;
+            color: #f59e0b;
+            padding: 4px 12px;
+            border-radius: 16px;
+            border: 2px solid #ffe066;
+            font-size: 1rem;
+        }
+
+        .lives-box {
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+        }
+
+        .screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            text-align: center;
+            flex-grow: 1;
+            overflow-y: auto;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.97); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .screen.active { display: flex; }
+
+        .game-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #2e7d32;
+            text-shadow: 2px 3px 0px #ffffff;
+            margin-bottom: 8px;
+        }
+
+        /* Cute Buttons */
+        .cute-btn {
+            background: linear-gradient(180deg, #4caf50 0%, #2e7d32 100%);
+            color: #ffffff;
+            border: 3px solid #ffffff;
+            padding: 12px 28px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border-radius: 30px;
+            box-shadow: 0 6px 0 #1b5e20, 0 10px 20px rgba(46, 125, 50, 0.3);
+            cursor: pointer;
+            margin-top: 14px;
+            transition: all 0.15s ease;
+        }
+
+        .cute-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #1b5e20, 0 4px 10px rgba(46, 125, 50, 0.3);
+        }
+
+        /* Hint Button */
+        .hint-btn {
+            background: #fff9db;
+            color: #d97706;
+            border: 2px solid #fde047;
+            padding: 6px 16px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            border-radius: 20px;
+            cursor: pointer;
+            margin-bottom: 10px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+
+        /* Clue Banner Box */
+        .clue-box {
+            background: #fef3c7;
+            border: 2px dashed #f59e0b;
+            color: #92400e;
+            padding: 8px 12px;
+            border-radius: 16px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            width: 100%;
+            display: none;
+            animation: bounceIn 0.4s ease;
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            70% { transform: scale(1.05); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Splash Screen */
+        .logo-img {
+            width: 170px;
+            height: auto;
+            margin-bottom: 20px;
+            animation: pulseLogo 2s infinite ease-in-out;
+        }
+
+        @keyframes pulseLogo {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.06); }
+        }
+
+        .progress-bar-container {
+            width: 80%;
+            height: 14px;
+            background: #e8f5e9;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid #a5d6a7;
+            margin-top: 15px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #66bb6a, #4caf50);
+            border-radius: 10px;
+            transition: width 0.1s linear;
+        }
+
+        /* Instruction Cards */
+        .rule-card {
+            background: #ffffff;
+            border: 3px solid #c8e6c9;
+            border-radius: 20px;
+            padding: 10px 14px;
+            margin: 6px 0;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #2d3436;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.02);
+            text-align: left;
+        }
+
+        /* Mode Selection Menu */
+        .mode-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+            margin-top: 12px;
+        }
+
+        .mode-card {
+            background: #ffffff;
+            border-radius: 22px;
+            padding: 12px 14px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.03), inset 0 0 0 2px #f1f2f6;
+            cursor: pointer;
+            text-align: left;
+        }
+
+        .mode-icon-box {
+            width: 48px;
+            height: 48px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            flex-shrink: 0;
+        }
+
+        .mode-card:nth-child(1) .mode-icon-box { background: #ffeaa7; }
+        .mode-card:nth-child(2) .mode-icon-box { background: #d7ccc8; }
+        .mode-card:nth-child(3) .mode-icon-box { background: #c8e6c9; }
+
+        .mode-info h3 { font-size: 1.05rem; color: #2d3436; font-weight: 700; }
+        .mode-info p { font-size: 0.8rem; color: #636e72; font-weight: 600; }
+
+        .shake-item { animation: wrongShake 0.4s ease-in-out; }
+        @keyframes wrongShake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-8px); }
+            40%, 80% { transform: translateX(8px); }
+        }
+
+        /* Quiz UI */
+        .hint-card {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            border: 3px solid #81c784;
+            border-radius: 20px;
+            padding: 14px;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #1b5e20;
+            box-shadow: 0 8px 16px rgba(129, 199, 132, 0.2);
+            width: 100%;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            width: 100%;
+        }
+
+        .veg-opt-btn {
+            background: #ffffff;
+            border: 3px solid #f1f2f6;
+            border-radius: 20px;
+            padding: 10px 6px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #2d3436;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .veg-opt-btn span { font-size: 2.5rem; }
+
+        /* Sorting UI */
+        .sorting-pool {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin-bottom: 10px;
+            min-height: 50px;
+        }
+
+        .draggable-veg {
+            font-size: 2rem;
+            background: #ffffff;
+            border: 3px solid #f1f2f6;
+            border-radius: 18px;
+            padding: 4px 10px;
+            cursor: pointer;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.05);
+        }
+
+        .draggable-veg.selected {
+            border-color: #4caf50;
+            background: #e8f5e9;
+            transform: scale(1.1) rotate(-4deg);
+        }
+
+        .baskets-container-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+            width: 100%;
+        }
+
+        .basket-box-3 {
+            background: #ffffff;
+            border: 3px dashed #a5d6a7;
+            border-radius: 18px;
+            padding: 8px 2px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 130px;
+            cursor: pointer;
+        }
+
+        .basket-title-3 { font-size: 0.8rem; font-weight: 700; color: #2e7d32; margin-bottom: 4px; }
+
+        /* Grow Location UI */
+        .grow-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .grow-zone {
+            background: #ffffff;
+            border: 3px dashed #bcaaa4;
+            border-radius: 18px;
+            padding: 10px;
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .grow-zone-title { font-size: 0.9rem; font-weight: 700; margin-bottom: 4px; color: #5d4037; }
+
+        .items-row { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; width: 100%; }
+
+        .win-card {
+            background: #ffffff;
+            border-radius: 32px;
+            padding: 24px 18px;
+            border: 4px solid #66bb6a;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+
+        <!-- Top Header HUD -->
+        <div class="hud-header" id="gameHud" style="display: none;">
+            <span class="hud-badge" id="levelName">गेम चालू 🎮</span>
+            <div class="lives-box" id="livesDisplay">❤️ ❤️ ❤️</div>
+            <span class="hud-badge score-pill" id="scoreDisplay">⭐ 0</span>
+        </div>
+
+        <!-- SCREEN 1: SPLASH SCREEN (5 SECONDS) -->
+        <div class="screen active" id="splashScreen">
+            <img src="assets/innovine-logo.png" alt="Innovine Logo" class="logo-img" onerror="this.src='https://via.placeholder.com/170x170/4caf50/ffffff?text=Innovine'">
+            <h2 style="color: #2d3436; font-size: 1.2rem;">सब्ज़ियों की दुनिया लोडिंग...</h2>
+            <div class="progress-bar-container">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+
+        <!-- SCREEN 2: GAME TITLE SCREEN -->
+        <div class="screen" id="titleScreen">
+            <h1 class="game-title">सब्ज़ियों की दुनिया! 🥦🥕</h1>
+            <p style="color: #636e72; font-weight: 600; font-size: 1rem; margin-top: 4px;">
+                आओ सब्ज़ियों के बारे में सीखें!
+            </p>
+            <button class="cute-btn" onclick="goToInstructions()">आगे बढ़ें ➡️</button>
+        </div>
+
+        <!-- SCREEN 3: INSTRUCTIONS FOR GRADE 1 -->
+        <div class="screen" id="instructionsScreen">
+            <h2 style="color: #2e7d32; font-size: 1.5rem; margin-bottom: 10px;">खेल के नियम 📜</h2>
+            
+            <div class="rule-card">
+                <span style="font-size: 1.5rem;">💡</span>
+                <span>सवालों को पढ़कर सही सब्ज़ी चुनें। गलत होने पर क्लू मिलेगा!</span>
+            </div>
+
+            <div class="rule-card">
+                <span style="font-size: 1.5rem;">❤️</span>
+                <span>आपके पास केवल 3 ज़िंदगियाँ (Lives) हैं!</span>
+            </div>
+
+            <div class="rule-card">
+                <span style="font-size: 1.5rem;">⭐</span>
+                <span>सही उत्तर देने पर स्टार्स (⭐) और तालियाँ मिलेंगी!</span>
+            </div>
+
+            <button class="cute-btn" onclick="goToModeSelection()">खेल शुरू करें 🎮</button>
+        </div>
+
+        <!-- SCREEN 4: MODE SELECTION MENU -->
+        <div class="screen" id="menuScreen">
+            <h2 style="color: #2d3436; font-size: 1.3rem; margin-bottom: 6px;">गेम मोड चुनें 👇</h2>
+
+            <div class="mode-list">
+                <div class="mode-card" onclick="startQuizMode()">
+                    <div class="mode-icon-box">💡</div>
+                    <div class="mode-info">
+                        <h3>1. रोचक बातें (Fact Quiz)</h3>
+                        <p>हिंट पढ़कर सही सब्ज़ी पहचानें</p>
+                    </div>
+                </div>
+
+                <div class="mode-card" onclick="startSortingMode()">
+                    <div class="mode-icon-box">🧺</div>
+                    <div class="mode-info">
+                        <h3>2. हिस्सा छांटो (Edible Part)</h3>
+                        <p>फल, जड़ और पत्तेदार सब्ज़ी अलग करें</p>
+                    </div>
+                </div>
+
+                <div class="mode-card" onclick="startGrowMode()">
+                    <div class="mode-icon-box">🌱</div>
+                    <div class="mode-info">
+                        <h3>3. कहाँ उगती है? (Grow Place)</h3>
+                        <p>ज़मीन के ऊपर या ज़मीन के नीचे</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- GAMEPLAY SCREENS -->
+        <!-- Mode 1: Quiz -->
+        <div class="screen" id="quizScreen">
+            <button class="hint-btn" onclick="showManualClue()">💡 क्लू (Clue) चाहिए?</button>
+            <div class="clue-box" id="quizClueBox">🔍 क्लू: इसका रंग लाल होता है!</div>
+            <div class="hint-card" id="quizHintText">हिंट लोड हो रहा है...</div>
+            <div class="options-grid" id="quizOptionsGrid"></div>
+        </div>
+
+        <!-- Mode 2: Sorting -->
+        <div class="screen" id="sortScreen">
+            <div class="clue-box" id="sortClueBox">🔍 क्लू: ध्यान से सोचो कि हम इसका कौन सा भाग खाते हैं!</div>
+            <p style="font-weight: 700; color: #2d3436; margin-bottom: 6px; font-size: 0.9rem;">सब्ज़ी चुनकर सही टोकरी में डालें:</p>
+            <div class="sorting-pool" id="vegPool"></div>
+            <div class="baskets-container-3">
+                <div class="basket-box-3" id="bktFruit" onclick="placeInBasket('फल')">
+                    <div class="basket-title-3">🍅 फल (Fruit)</div>
+                    <div id="bktFruitItems" style="font-size: 1.3rem;"></div>
+                </div>
+                <div class="basket-box-3" id="bktRoot" onclick="placeInBasket('जड़')">
+                    <div class="basket-title-3">🥕 जड़ (Root)</div>
+                    <div id="bktRootItems" style="font-size: 1.3rem;"></div>
+                </div>
+                <div class="basket-box-3" id="bktLeaf" onclick="placeInBasket('पत्तेदार')">
+                    <div class="basket-title-3">🥬 पत्तेदार (Leaf)</div>
+                    <div id="bktLeafItems" style="font-size: 1.3rem;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mode 3: Grow Place -->
+        <div class="screen" id="growScreen">
+            <div class="clue-box" id="growClueBox">🔍 क्लू: सोचो क्या यह सब्ज़ी मिट्टी के अंदर छुपती है?</div>
+            <p style="font-weight: 700; color: #2d3436; margin-bottom: 6px; font-size: 0.9rem;">सब्ज़ी चुनें और सही जगह पर टैप करें:</p>
+            <div class="sorting-pool" id="growVegPool"></div>
+            <div class="grow-container">
+                <div class="grow-zone" id="zoneAbove" onclick="placeInZone('ऊपर')">
+                    <div class="grow-zone-title">☀️ ज़मीन के ऊपर (Above Ground)</div>
+                    <div class="items-row" id="zoneAboveItems" style="font-size: 1.4rem;"></div>
+                </div>
+                <div class="grow-zone" id="zoneBelow" onclick="placeInZone('नीचे')">
+                    <div class="grow-zone-title">🕳️ ज़मीन के नीचे (Below Ground)</div>
+                    <div class="items-row" id="zoneBelowItems" style="font-size: 1.4rem;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- WIN OVERLAY SCREEN -->
+        <div class="screen" id="winScreen">
+            <div class="win-card">
+                <h1 style="font-size: 2.2rem; color: #2e7d32; margin-bottom: 4px;" id="winTitle">शाबाश! 🥳</h1>
+                <p style="font-size: 0.95rem; color: #636e72; font-weight: 600;" id="winSub">आपने लेवल पूरा कर लिया!</p>
+                <h2 id="winScoreText" style="color: #f59e0b; margin: 14px 0; font-size: 2rem;">⭐ अंक: 0</h2>
+                <button class="cute-btn" onclick="goToModeSelection()">मेनू पर वापस जाएं 🏠</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- AUDIO ASSETS -->
+    <audio id="sndCorrect" src="assets/correct.mp3" preload="auto"></audio>
+    <audio id="sndWrong" src="assets/wrong.mp3" preload="auto"></audio>
+    <audio id="sndClaps" src="assets/freesound_community-claps-44774.mp3" preload="auto"></audio>
+
+<script>
+    let totalScore = 0;
+    let lives = 3;
+    let selectedVegForSort = null;
+    let wrongAttemptsInCurrentQ = 0;
+    let activeQuizQuestions = [];
+
+    // HELPER FUNCTION: SHUFFLE ARRAY (RANDOMIZE)
+    function shuffleArray(arr) {
+        return [...arr].sort(() => Math.random() - 0.5);
+    }
+
+    // AUTO LOADING SPLASH SCREEN (5 SECONDS)
+    window.addEventListener('DOMContentLoaded', () => {
+        let progress = 0;
+        const fill = document.getElementById('progressFill');
+        const interval = setInterval(() => {
+            progress += 2;
+            fill.style.width = progress + '%';
+            if (progress >= 100) {
+                clearInterval(interval);
+                switchScreen('titleScreen');
+            }
+        }, 100);
+    });
+
+    function switchScreen(screenId, titleText = '') {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(screenId).classList.add('active');
+
+        hideAllClues();
+
+        const hud = document.getElementById('gameHud');
+        if (['quizScreen', 'sortScreen', 'growScreen', 'menuScreen'].includes(screenId)) {
+            hud.style.display = 'flex';
+            if (titleText) document.getElementById('levelName').innerText = titleText;
+            updateHUD();
+        } else {
+            hud.style.display = 'none';
+        }
+    }
+
+    function hideAllClues() {
+        document.querySelectorAll('.clue-box').forEach(cb => cb.style.display = 'none');
+    }
+
+    function updateHUD() {
+        document.getElementById('scoreDisplay').innerText = `⭐ ${totalScore}`;
+        let hearts = '';
+        for (let i = 0; i < lives; i++) hearts += '❤️ ';
+        document.getElementById('livesDisplay').innerText = hearts.trim() || '💔';
+    }
+
+    function goToInstructions() { switchScreen('instructionsScreen'); }
+    function goToModeSelection() { 
+        if(lives <= 0) resetGame();
+        switchScreen('menuScreen', 'होम मेन्यू 🏠'); 
+    }
+
+    function resetGame() {
+        lives = 3;
+        totalScore = 0;
+        updateHUD();
+    }
+
+    function playAudio(id) {
+        const sound = document.getElementById(id);
+        if (sound) {
+            sound.currentTime = 0;
+            sound.play().catch(e => console.log("Audio play blocked"));
+        }
+    }
+
+    function triggerConfetti() {
+        confetti({ particleCount: 50, spread: 60, origin: { y: 0.7 } });
+    }
+
+    function handleWrongAnswer(elementToShake, clueBoxId = '', customClue = '') {
+        playAudio('sndWrong');
+        lives--;
+        wrongAttemptsInCurrentQ++;
+        updateHUD();
+
+        if (elementToShake) {
+            elementToShake.classList.add('shake-item');
+            setTimeout(() => elementToShake.classList.remove('shake-item'), 400);
+        }
+
+        if (wrongAttemptsInCurrentQ >= 1 && clueBoxId) {
+            const clueBox = document.getElementById(clueBoxId);
+            if (clueBox) {
+                if(customClue) clueBox.innerText = `🔍 क्लू: ${customClue}`;
+                clueBox.style.display = 'block';
+            }
+        }
+
+        if (lives <= 0) {
+            setTimeout(() => {
+                document.getElementById('winTitle').innerText = "गेम ओवर! 💔";
+                document.getElementById('winSub').innerText = "आपकी ज़िंदगियाँ खत्म हो गईं!";
+                document.getElementById('winScoreText').innerText = `⭐ कुल अंक: ${totalScore}`;
+                switchScreen('winScreen');
+            }, 500);
+        }
+    }
+
+    // VEGETABLES DATABASE WITH SIMPLE CLUES
+    const vegData = [
+        { name: 'टमाटर', emoji: '🍅', fact: 'मुझमें लाइकोपीन है, जो दिल को स्वस्थ रखता है!', clue: 'यह गोल और लाल रंग का होता है!', type: 'फल', grow: 'ऊपर' },
+        { name: 'पालक', emoji: '🥬', fact: 'मुझमें आयरन है, जो खून की कमी दूर करता है!', clue: 'यह हरे रंग का पत्तेदार शाक है!', type: 'पत्तेदार', grow: 'ऊपर' },
+        { name: 'फूलगोभी', emoji: '🥦', fact: 'मुझमें विटामिन C है, जो रोगों से लड़ता है!', clue: 'यह सफेद रंग के फूल जैसा दिखता है!', type: 'फल', grow: 'ऊपर' },
+        { name: 'मटर', emoji: '🟢', fact: 'मुझमें प्रोटीन है, जो शरीर को ताकत देता है!', clue: 'इसके छोटे-छोटे गोल दाने छिलके में होते हैं!', type: 'फल', grow: 'ऊपर' },
+        { name: 'आलू', emoji: '🥔', fact: 'मैं हर घर में खाया जाने वाला राजा हूँ!', clue: 'यह भूरे रंग का ज़मीन के नीचे उगता है!', type: 'जड़', grow: 'नीचे' },
+        { name: 'गाजर', emoji: '🥕', fact: 'मुझे खाने से आँखों की रोशनी बढ़ती है!', clue: 'यह नारंगी रंग की लंबी सब्ज़ी है जिसे खरगोश पसंद करते हैं!', type: 'जड़', grow: 'नीचे' },
+        { name: 'मूली', emoji: '🥢', fact: 'मैं सफेद रंग की चटपटी जड़ हूँ!', clue: 'यह सफेद रंग की लंबी जड़ वाली सब्ज़ी है!', type: 'जड़', grow: 'नीचे' },
+        { name: 'बैंगन', emoji: '🍆', fact: 'मेरे सिर पर सुंदर ताज होता है!', clue: 'यह बैंगनी (Purple) रंग का होता है!', type: 'फल', grow: 'ऊपर' },
+        { name: 'चुकंदर', emoji: '🔴', fact: 'मैं लाल रंग की मीठी जड़ हूँ!', clue: 'इसे काटने पर गहरा लाल रंग निकलता है!', type: 'जड़', grow: 'नीचे' },
+        { name: 'मेथी', emoji: '🌿', fact: 'मैं हरी और सेहतमंद पत्तेदार सब्ज़ी हूँ!', clue: 'इसके छोटे-छोटे हरे पत्ते होते हैं!', type: 'पत्तेदार', grow: 'ऊपर' }
+    ];
+
+    /* 1. QUIZ MODE (RANDOMIZED) */
+    let currentQuizIndex = 0;
+    function startQuizMode() {
+        currentQuizIndex = 0;
+        // SHUFFLE QUIZ QUESTIONS
+        activeQuizQuestions = shuffleArray(vegData).slice(0, 6);
+        switchScreen('quizScreen', '1. रोचक बातें 💡');
+        loadQuizQuestion();
+    }
+
+    function loadQuizQuestion() {
+        wrongAttemptsInCurrentQ = 0;
+        hideAllClues();
+
+        if (currentQuizIndex >= activeQuizQuestions.length || lives <= 0) {
+            playAudio('sndClaps');
+            triggerConfetti();
+            document.getElementById('winTitle').innerText = "शाबाश! 🥳";
+            document.getElementById('winSub').innerText = "आपने क्विज़ पूरा कर लिया!";
+            document.getElementById('winScoreText').innerText = `⭐ अंक: ${totalScore} / 130`;
+            switchScreen('winScreen');
+            return;
+        }
+
+        const currentItem = activeQuizQuestions[currentQuizIndex];
+        document.getElementById('quizHintText').innerText = `💡 ${currentItem.fact}`;
+        document.getElementById('quizClueBox').innerText = `🔍 क्लू: ${currentItem.clue}`;
+
+        const optionsGrid = document.getElementById('quizOptionsGrid');
+        optionsGrid.innerHTML = '';
+
+        let opts = [currentItem];
+        while (opts.length < 4) {
+            let rand = vegData[Math.floor(Math.random() * vegData.length)];
+            if (!opts.find(o => o.name === rand.name)) opts.push(rand);
+        }
+        
+        // SHUFFLE OPTIONS
+        opts = shuffleArray(opts);
+
+        opts.forEach(opt => {
+            const btn = document.createElement('div');
+            btn.className = 'veg-opt-btn';
+            btn.innerHTML = `<span>${opt.emoji}</span>${opt.name}`;
+            btn.onclick = () => {
+                if (opt.name === currentItem.name) {
+                    playAudio('sndCorrect');
+                    triggerConfetti();
+                    totalScore += 10;
+                    updateHUD();
+                    currentQuizIndex++;
+                    loadQuizQuestion();
+                } else {
+                    handleWrongAnswer(btn, 'quizClueBox');
+                }
+            };
+            optionsGrid.appendChild(btn);
+        });
+    }
+
+    function showManualClue() {
+        document.getElementById('quizClueBox').style.display = 'block';
+    }
+
+    /* 2. SORTING MODE (RANDOMIZED) */
+    function startSortingMode() {
+        wrongAttemptsInCurrentQ = 0;
+        switchScreen('sortScreen', '2. हिस्सा छांटो 🧺');
+        document.getElementById('bktFruitItems').innerHTML = '';
+        document.getElementById('bktRootItems').innerHTML = '';
+        document.getElementById('bktLeafItems').innerHTML = '';
+        const pool = document.getElementById('vegPool');
+        pool.innerHTML = '';
+
+        // SHUFFLE SUBSET OF VEGETABLES FOR SORTING
+        const subset = shuffleArray(vegData).slice(0, 8);
+        subset.forEach((v) => {
+            const el = document.createElement('div');
+            el.className = 'draggable-veg';
+            el.innerText = v.emoji;
+            el.dataset.type = v.type;
+            el.dataset.clue = v.clue;
+            el.onclick = () => {
+                document.querySelectorAll('.draggable-veg').forEach(i => i.classList.remove('selected'));
+                el.classList.add('selected');
+                selectedVegForSort = el;
+            };
+            pool.appendChild(el);
+        });
+    }
+
+    function placeInBasket(basketType) {
+        if (!selectedVegForSort || lives <= 0) return;
+        const correctType = selectedVegForSort.dataset.type;
+
+        let targetBoxId = 'bktFruit';
+        let targetDivId = 'bktFruitItems';
+        if (basketType === 'जड़') { targetBoxId = 'bktRoot'; targetDivId = 'bktRootItems'; }
+        if (basketType === 'पत्तेदार') { targetBoxId = 'bktLeaf'; targetDivId = 'bktLeafItems'; }
+
+        if (correctType === basketType) {
+            playAudio('sndCorrect');
+            triggerConfetti();
+            totalScore += 5;
+            updateHUD();
+            hideAllClues();
+            wrongAttemptsInCurrentQ = 0;
+            document.getElementById(targetDivId).innerHTML += ` ${selectedVegForSort.innerText}`;
+            selectedVegForSort.remove();
+            selectedVegForSort = null;
+
+            if (document.getElementById('vegPool').children.length === 0) {
+                setTimeout(() => {
+                    playAudio('sndClaps');
+                    triggerConfetti();
+                    document.getElementById('winTitle').innerText = "शानदार! 🌟";
+                    document.getElementById('winSub').innerText = "सारे सब्ज़ियाँ सही टोकरी में रखीं!";
+                    document.getElementById('winScoreText').innerText = `⭐ अंक: ${totalScore} / 130`;
+                    switchScreen('winScreen');
+                }, 500);
+            }
+        } else {
+            let itemClue = selectedVegForSort.dataset.clue || "सही भाग सोचें!";
+            handleWrongAnswer(document.getElementById(targetBoxId), 'sortClueBox', itemClue);
+        }
+    }
+
+    /* 3. GROW PLACE MODE (RANDOMIZED) */
+    function startGrowMode() {
+        wrongAttemptsInCurrentQ = 0;
+        switchScreen('growScreen', '3. कहाँ उगती है? 🌱');
+        document.getElementById('zoneAboveItems').innerHTML = '';
+        document.getElementById('zoneBelowItems').innerHTML = '';
+        const pool = document.getElementById('growVegPool');
+        pool.innerHTML = '';
+
+        // SHUFFLE GROW ITEMS
+        const subset = shuffleArray(vegData).slice(0, 6);
+        subset.forEach((v) => {
+            const el = document.createElement('div');
+            el.className = 'draggable-veg';
+            el.innerText = v.emoji;
+            el.dataset.grow = v.grow;
+            el.dataset.clue = v.clue;
+            el.onclick = () => {
+                document.querySelectorAll('.draggable-veg').forEach(i => i.classList.remove('selected'));
+                el.classList.add('selected');
+                selectedVegForSort = el;
+            };
+            pool.appendChild(el);
+        });
+    }
+
+    function placeInZone(zoneType) {
+        if (!selectedVegForSort || lives <= 0) return;
+        const correctGrow = selectedVegForSort.dataset.grow;
+        const targetZoneId = zoneType === 'ऊपर' ? 'zoneAbove' : 'zoneBelow';
+        const targetDivId = zoneType === 'ऊपर' ? 'zoneAboveItems' : 'zoneBelowItems';
+
+        if (correctGrow === zoneType) {
+            playAudio('sndCorrect');
+            triggerConfetti();
+            totalScore += 5;
+            updateHUD();
+            hideAllClues();
+            wrongAttemptsInCurrentQ = 0;
+            document.getElementById(targetDivId).innerHTML += ` ${selectedVegForSort.innerText}`;
+            selectedVegForSort.remove();
+            selectedVegForSort = null;
+
+            if (document.getElementById('growVegPool').children.length === 0) {
+                setTimeout(() => {
+                    playAudio('sndClaps');
+                    triggerConfetti();
+                    totalScore += 10;
+                    updateHUD();
+                    document.getElementById('winTitle').innerText = "अद्भुत कार्य! 🎉";
+                    document.getElementById('winSub').innerText = "आपने सब सही पहचाना!";
+                    document.getElementById('winScoreText').innerText = `⭐ अंक: ${totalScore} / 130`;
+                    switchScreen('winScreen');
+                }, 500);
+            }
+        } else {
+            let itemClue = selectedVegForSort.dataset.clue || "सोचें कि यह सब्ज़ी मिट्टी के नीचे है या ऊपर!";
+            handleWrongAnswer(document.getElementById(targetZoneId), 'growClueBox', itemClue);
+        }
+    }
+</script>
+
+</body>
+</html>
