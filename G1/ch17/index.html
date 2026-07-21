@@ -50,7 +50,7 @@
             flex-direction: column;
             justify-content: space-between;
             position: relative;
-            overflow-y: auto;
+            overflow: hidden; /* Scrollbar Fix */
         }
 
         /* Screen Base */
@@ -66,7 +66,7 @@
             padding: 20px;
             text-align: center;
             z-index: 20;
-            overflow-y: auto;
+            overflow: hidden; /* Scrollbar Fix */
         }
 
         /* 1. Splash Screen */
@@ -171,14 +171,18 @@
             background: var(--btn-grad);
             color: #ffffff;
             border: 4px solid #ffffff;
-            padding: 14px 42px;
-            font-size: 1.3rem;
+            padding: 14px 38px;
+            font-size: 1.25rem;
             font-weight: 800;
             border-radius: 50px;
-            box-shadow: 0 8px 0 var(--btn-shadow), 0 12px 20px rgba(0,0,0,0.2);
+            box-shadow: 0 8px 0 var(--btn-shadow), 0 12px 20px rgba(0,0,0,0.15);
             cursor: pointer;
             transition: all 0.1s ease;
             letter-spacing: 0.5px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
         .cute-btn:active {
@@ -303,13 +307,33 @@
             20%, 60% { transform: rotateY(180deg) translateX(-7px); }
             40%, 80% { transform: rotateY(180deg) translateX(7px); }
         }
+
+        /* 🌟 CLEAN WIN MODAL CARD */
+        .win-modal-card {
+            background: #ffffff;
+            border-radius: 28px;
+            padding: 30px 20px;
+            width: 90%;
+            max-width: 340px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+            border: 3px solid #74b9ff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: modalPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes modalPop {
+            0% { transform: scale(0.7); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
     </style>
 </head>
 <body>
 
     <div class="game-app-container">
 
-        <!-- 1. SPLASH SCREEN (5 SECONDS) -->
+        <!-- 1. SPLASH SCREEN -->
         <div class="app-screen" id="splashScreen">
             <img src="assets/innovine-logo.png" alt="Innovine Logo" class="splash-logo">
             <div class="progress-bar-container">
@@ -325,7 +349,7 @@
             <button class="cute-btn" onclick="showInstructions()">आगे बढ़ें ➔</button>
         </div>
 
-        <!-- 3. HOW TO PLAY SCREEN (NO LIVES RULE) -->
+        <!-- 3. HOW TO PLAY SCREEN -->
         <div class="app-screen" id="instructionScreen" style="display: none;">
             <h2 style="color: #ff4757; font-size: 1.8rem; font-weight: 800;">कैसे खेलें? 📜</h2>
             
@@ -349,7 +373,7 @@
             <button class="cute-btn" onclick="startGame()">खेलें 🎮</button>
         </div>
 
-        <!-- 4. MAIN GAMEPLAY HUD (NO LIVES DISPLAY) -->
+        <!-- 4. MAIN GAMEPLAY HUD -->
         <div class="hud-bar">
             <span class="hud-badge" id="matchText">जोड़े: 0/6</span>
             <span class="hud-badge" id="scoreText">⭐ 0</span>
@@ -359,12 +383,18 @@
 
         <div class="card-grid" id="gridContainer"></div>
 
-        <!-- 5. WIN SCREEN -->
-        <div class="app-screen" id="endOverlay" style="display: none;">
-            <h1 style="font-size: 2.3rem; color: #2ed573; margin-bottom: 10px; font-weight: 800;">🎉 बहुत बढ़िया! 🥳</h1>
-            <p style="font-size: 1.1rem; color: #2f3542; margin-bottom: 15px; font-weight: 600;">आपने सभी 6 जोड़े ढूंढ लिए!</p>
-            <h2 id="finalScore" style="color: #ff4757; font-size: 2.2rem; margin-bottom: 30px; font-weight: 800;">अंक: 90 / 90</h2>
-            <button class="cute-btn" onclick="restartGame()">फिर से खेलें 🔄</button>
+        <!-- 5. FULLY COVERED CLEAN WIN SCREEN -->
+        <div class="app-screen" id="endOverlay" style="display: none; background: #f8fafc; z-index: 100;">
+            <div class="win-modal-card">
+                <h1 style="font-size: 2.1rem; color: #2ed573; margin-bottom: 10px; font-weight: 800; display: flex; align-items: center; gap: 8px;">
+                    🎉 बहुत बढ़िया! 🥳
+                </h1>
+                <p style="font-size: 1rem; color: #636e72; margin-bottom: 15px; font-weight: 600;">आपने सभी 6 जोड़े ढूंढ लिए!</p>
+                
+                <h2 id="finalScore" style="color: #ff4757; font-size: 2.2rem; margin-bottom: 25px; font-weight: 800;">अंक: 90 / 90</h2>
+                
+                <button class="cute-btn" onclick="restartGame()">फिर से खेलें 🔄</button>
+            </div>
         </div>
 
     </div>
