@@ -371,7 +371,7 @@
 
         <!-- SCREEN 1: SPLASH SCREEN (5 SECONDS) -->
         <div class="screen active" id="splashScreen">
-            <img src="innovine-logo.png" alt="Innovine Logo" class="logo-img" onerror="this.src='https://via.placeholder.com/180x180/ff6b81/ffffff?text=Innovine'">
+            <img src="assets/innovine-logo.png" alt="Innovine Logo" class="logo-img" onerror="this.src='https://via.placeholder.com/180x180/ff6b81/ffffff?text=Innovine'">
             <h2 style="color: #2d3436; font-size: 1.3rem;">गेम लोडिंग...</h2>
             <div class="progress-bar-container">
                 <div class="progress-fill" id="progressFill"></div>
@@ -384,7 +384,7 @@
             <p style="color: #636e72; font-weight: 600; font-size: 1.1rem; margin-top: 6px;">
                 फलों की दुनिया में आपका स्वागत है!
             </p>
-            <button class="cute-btn" onclick="goToInstructions()">आगे बढ़ें ➡️</button>
+            <button class="cute-btn" onclick="goToInstructions()">आगे बढ़ें ➡️</button>
         </div>
 
         <!-- SCREEN 3: INSTRUCTIONS SCREEN -->
@@ -418,7 +418,7 @@
                     <div class="mode-icon-box">💡</div>
                     <div class="mode-info">
                         <h3>1. रोचक बातें (Fact Quiz)</h3>
-                        <p>हिंट पढ़कर सही फल पहचानें</p>
+                        <p>हिंट पढ़कर सही फल पहचानें</p>
                     </div>
                 </div>
 
@@ -535,13 +535,14 @@
         confetti({ particleCount: 50, spread: 60, origin: { y: 0.7 } });
     }
 
+    // UPDATED FRUITS DATA: Amarud & Anar changed to 'मीठा'
     const fruitsData = [
         { name: 'आम', emoji: '🥭', fact: 'इसे फलों का राजा कहते हैं!', taste: 'मीठा', isRound: false },
         { name: 'केला', emoji: '🍌', fact: 'यह हमें ऊर्जा देता है!', taste: 'मीठा', isRound: false },
         { name: 'सेब', emoji: '🍎', fact: 'यह हमें डॉक्टर से दूर रखता है!', taste: 'मीठा', isRound: true },
-        { name: 'अमरूद', emoji: '🍈', fact: 'इसमें विटामिन C होता है!', taste: 'खट्टा', isRound: true },
+        { name: 'अमरूद', emoji: '🍈', fact: 'इसमें विटामिन C होता है!', taste: 'मीठा', isRound: true },
         { name: 'तरबूज', emoji: '🍉', fact: 'यह शरीर को ठंडा रखता है!', taste: 'मीठा', isRound: true },
-        { name: 'अनार', emoji: '🔴', fact: 'यह शरीर में खून बढ़ाता है!', taste: 'खट्टा', isRound: true },
+        { name: 'अनार', emoji: '🔴', fact: 'यह शरीर में खून बढ़ाता है!', taste: 'मीठा', isRound: true },
         { name: 'संतरा', emoji: '🍊', fact: 'इसमें रसीला खट्टा-मीठा स्वाद होता है!', taste: 'खट्टा', isRound: true },
         { name: 'अंगूर', emoji: '🍇', fact: 'यह गुच्छों में उगता है!', taste: 'खट्टा', isRound: true }
     ];
@@ -570,7 +571,6 @@
         }
 
         const currentItem = fruitsData[currentQuizIndex];
-        // INVERTED COMMAS REMOVED HERE:
         document.getElementById('quizHintText').innerText = `💡 ${currentItem.fact}`;
 
         const optionsGrid = document.getElementById('quizOptionsGrid');
