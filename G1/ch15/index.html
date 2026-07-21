@@ -1,1 +1,477 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>संयुक्त व्यंजन मैजिक वर्ड क्राफ्ट 🪄✨</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
+    <style>
+        :root {
+            --primary: #8a4af3;
+            --secondary: #ff7675;
+            --accent: #ffeaa7;
+            --card-bg: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', 'Fredoka', cursive, sans-serif;
+            background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 10px;
+        }
+
+        .game-card {
+            width: 100%;
+            max-width: 420px;
+            height: 92vh;
+            max-height: 720px;
+            background: var(--card-bg);
+            border-radius: 30px;
+            padding: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            border: 6px solid #f1c40f;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .screen {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 25px;
+            text-align: center;
+            z-index: 10;
+        }
+
+        #splashScreen { z-index: 50; background: #ffffff; }
+
+        .logo-img {
+            max-width: 220px;
+            height: auto;
+            margin-bottom: 25px;
+            animation: pulse 1.5s infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); }
+            100% { transform: scale(1.05); }
+        }
+
+        .loader-bar {
+            width: 80%;
+            height: 12px;
+            background: #eee;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid #f1c40f;
+        }
+
+        .loader-fill {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #ff7675, #74b9ff);
+            transition: width 5s linear;
+        }
+
+        .game-title {
+            font-size: 2.2rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+            text-shadow: 2px 2px #ffeaa7;
+        }
+
+        .instruction-card {
+            background: #f8efba;
+            border: 3px dashed #fbc531;
+            border-radius: 20px;
+            padding: 15px;
+            text-align: left;
+            margin: 15px 0;
+            font-size: 1.05rem;
+            line-height: 1.6;
+            color: #2c3e50;
+        }
+
+        .action-btn {
+            background: linear-gradient(135deg, #ff7675, #e84393);
+            color: white;
+            border: 3px solid #fff;
+            padding: 14px 35px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            border-radius: 30px;
+            box-shadow: 0 6px 0 #b2bec3;
+            cursor: pointer;
+        }
+
+        .action-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #b2bec3;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #ffeaa7;
+            padding: 10px 18px;
+            border-radius: 20px;
+            border: 3px solid #fdcb6e;
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 1.1rem;
+        }
+
+        .stage-box {
+            background: #f1f2f6;
+            border-radius: 25px;
+            padding: 20px 15px;
+            text-align: center;
+            border: 4px dashed var(--primary);
+            flex-grow: 1;
+            margin: 15px 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .stage-title {
+            font-size: 1.15rem;
+            color: var(--primary);
+            font-weight: 900;
+        }
+
+        .word-hint {
+            font-size: 1.1rem;
+            color: #d63031;
+            font-weight: bold;
+        }
+
+        .equation-box {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: #2d3436;
+            background: #fff;
+            padding: 15px;
+            border-radius: 18px;
+            box-shadow: 0 5px 12px rgba(0,0,0,0.08);
+            width: 100%;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            width: 100%;
+        }
+
+        .opt-btn {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            color: white;
+            font-size: 1.8rem;
+            font-weight: bold;
+            padding: 14px;
+            border-radius: 20px;
+            border: 3px solid #fff;
+            box-shadow: 0 6px 0 #0984e3;
+            cursor: pointer;
+        }
+
+        .opt-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #0984e3;
+        }
+
+        .word-slot-container {
+            display: flex;
+            gap: 12px;
+            margin: 15px 0;
+            justify-content: center;
+        }
+
+        .slot {
+            width: 60px;
+            height: 60px;
+            background: #fff;
+            border: 3px dashed var(--secondary);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #2d3436;
+        }
+
+        .letters-pool {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .letter-tile {
+            background: #ffeaa7;
+            border: 3px solid #f1c40f;
+            border-radius: 16px;
+            padding: 10px 18px;
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #d35400;
+            box-shadow: 0 5px 0 #e67e22;
+            cursor: pointer;
+        }
+
+        .letter-tile:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 #e67e22;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="game-card">
+
+        <!-- 1. SPLASH SCREEN -->
+        <div class="screen" id="splashScreen">
+            <img src="assets/innovine-logo.png" alt="Innovine Logo" class="logo-img" onerror="this.src='https://via.placeholder.com/200x80?text=Innovine+Logo'">
+            <div class="loader-bar">
+                <div class="loader-fill" id="loaderFill"></div>
+            </div>
+            <p style="margin-top: 15px; color: #888; font-weight: bold;">लोड हो रहा है...</p>
+        </div>
+
+        <!-- 2. GAME TITLE SCREEN -->
+        <div class="screen" id="titleScreen" style="display: none;">
+            <h1 class="game-title">✨ संयुक्त व्यंजन ✨<br>वर्ड क्राफ्ट 🪄</h1>
+            <p style="font-size: 1.1rem; color: #666; margin-bottom: 30px;">मज़ेदार खेल-खेल में हिंदी सीखें!</p>
+            <button class="action-btn" onclick="showInstructions()">आगे बढ़ें ➔</button>
+        </div>
+
+        <!-- 3. INSTRUCTION SCREEN -->
+        <div class="screen" id="instructionScreen" style="display: none;">
+            <h2 style="color: var(--primary);">कैसे खेलें? 📜</h2>
+            <div class="instruction-card">
+                <p>1️⃣ गेम में कुल <b>10 प्रश्न</b> हैं।</p>
+                <p>2️⃣ प्रत्येक सही उत्तर पर <b>10 अंक</b> मिलेंगे (कुल: 100)।</p>
+                <p>3️⃣ <b>लेवल 1:</b> सही संयुक्त व्यंजन चुनें।</p>
+                <p>4️⃣ <b>लेवल 2:</b> वर्णों को जोड़कर सही शब्द बनाएं।</p>
+            </div>
+            <button class="action-btn" onclick="startGame()">खेल शुरू करें! 🎮</button>
+        </div>
+
+        <!-- 4. MAIN GAME UI -->
+        <div class="top-bar">
+            <span id="levelText">प्रश्न: 1/10</span>
+            <span id="scoreText">⭐ अंक: 0</span>
+        </div>
+
+        <div class="stage-box" id="gameStage">
+            <div class="stage-title" id="stageTitle">लेवल 1: व्यंजन जोड़ो! 🧩</div>
+            
+            <div id="equationMode" style="width: 100%;">
+                <div class="word-hint" id="wordHint">शब्द उदाहरण: मक्का</div>
+                <div class="equation-box" id="equationPrompt">क् + क = ?</div>
+                <br>
+                <div class="options-grid" id="optionsGrid"></div>
+            </div>
+
+            <div id="wordBuilderMode" style="display: none; width: 100%;">
+                <p style="font-weight: bold; color: #555; font-size: 1rem; margin-bottom: 10px;">वर्णों को चुनकर सही शब्द बनाओ:</p>
+                <div class="word-slot-container" id="wordSlots"></div>
+                <div class="letters-pool" id="lettersPool"></div>
+            </div>
+        </div>
+
+        <!-- 5. END OVERLAY -->
+        <div class="screen" id="endOverlay" style="display: none;">
+            <h1 style="font-size: 2.2rem; color: var(--primary); margin-bottom: 10px;">🎉 बहुत बढ़िया! 🥳</h1>
+            <p style="font-size: 1.2rem; color: #333; margin-bottom: 20px;">आपने खेल सफलतापूर्वक पूरा कर लिया है!</p>
+            <h2 id="finalScore" style="color: #e84393; font-size: 2rem; margin-bottom: 25px;">अंक: 100 / 100</h2>
+            <button class="action-btn" onclick="restartGame()">फिर से खेलें 🔄</button>
+        </div>
+
+    </div>
+
+    <!-- AUDIO ASSETS -->
+    <audio id="sndCorrect" src="assets/correct.mp3" preload="auto"></audio>
+    <audio id="sndWrong" src="assets/wrong.mp3" preload="auto"></audio>
+    <audio id="sndClaps" src="assets/freesound_community-claps-44774.mp3" preload="auto"></audio>
+
+<script>
+    const questions = [
+        // LEVEL 1: COMBINED FROM BOTH IMAGES (Q1 - Q5)
+        { type: "eq", word: "मक्का", equation: "क् + क", correct: "क्क", options: ["क्क", "ब्ब", "प्य", "स्त"] },
+        { type: "eq", word: "गुब्बारा", equation: "ब् + ब", correct: "ब्ब", options: ["ब्ब", "क्क", "स्त", "प्य"] },
+        { type: "eq", word: "पत्र / मित्र", equation: "त् + र् + अ", correct: "त्र", options: ["त्र", "क्ष", "ज्ञ", "श्र"] },
+        { type: "eq", word: "कक्षा / अक्षर", equation: "क् + ष् + अ", correct: "क्ष", options: ["क्ष", "त्र", "ज्ञ", "श्र"] },
+        { type: "eq", word: "प्याज़", equation: "प् + य", correct: "प्य", options: ["प्य", "स्त", "क्क", "ब्ब"] },
+
+        // LEVEL 2: WORD BUILDING FROM BOTH IMAGES (Q6 - Q10)
+        { type: "word", targetWord: ["प्या", "ज़"], pool: ["ज़", "प्या", "क", "ब"] },
+        { type: "word", targetWord: ["रा", "स्ता"], pool: ["स्ता", "रा", "म", "प"] },
+        { type: "word", targetWord: ["गु", "ब्बा", "रा"], pool: ["रा", "गु", "ब्बा", "क्क"] },
+        { type: "word", targetWord: ["ज्ञा", "न"], pool: ["न", "ज्ञा", "नि", "आ"] },
+        { type: "word", targetWord: ["आ", "श्र", "म"], pool: ["म", "आ", "श्र", "रा"] }
+    ];
+
+    let currentQ = 0;
+    let score = 0;
+    let userWord = [];
+
+    function playAudio(id) {
+        const audio = document.getElementById(id);
+        if (audio) {
+            audio.currentTime = 0;
+            audio.play().catch(e => console.log("Audio play deferred"));
+        }
+    }
+
+    window.onload = function() {
+        document.getElementById('loaderFill').style.width = '100%';
+        setTimeout(() => {
+            document.getElementById('splashScreen').style.display = 'none';
+            document.getElementById('titleScreen').style.display = 'flex';
+        }, 5000);
+    };
+
+    function showInstructions() {
+        document.getElementById('titleScreen').style.display = 'none';
+        document.getElementById('instructionScreen').style.display = 'flex';
+    }
+
+    function startGame() {
+        document.getElementById('instructionScreen').style.display = 'none';
+        loadQuestion();
+    }
+
+    function loadQuestion() {
+        const q = questions[currentQ];
+        document.getElementById('levelText').innerText = `प्रश्न: ${currentQ + 1}/10`;
+        document.getElementById('scoreText').innerText = `⭐ अंक: ${score}`;
+
+        if (q.type === "eq") {
+            document.getElementById('stageTitle').innerText = "लेवल 1: व्यंजन जोड़ो! 🧩";
+            document.getElementById('equationMode').style.display = 'block';
+            document.getElementById('wordBuilderMode').style.display = 'none';
+            document.getElementById('wordHint').innerText = `शब्द उदाहरण: ${q.word}`;
+            document.getElementById('equationPrompt').innerText = `${q.equation} = ?`;
+
+            const grid = document.getElementById('optionsGrid');
+            grid.innerHTML = '';
+            q.options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'opt-btn';
+                btn.innerText = opt;
+                btn.onclick = () => checkEquationAnswer(opt);
+                grid.appendChild(btn);
+            });
+        } else {
+            document.getElementById('stageTitle').innerText = "लेवल 2: सही शब्द बनाओ! 🔨";
+            document.getElementById('equationMode').style.display = 'none';
+            document.getElementById('wordBuilderMode').style.display = 'block';
+
+            userWord = [];
+            const slotsContainer = document.getElementById('wordSlots');
+            slotsContainer.innerHTML = '';
+            q.targetWord.forEach(() => {
+                const slot = document.createElement('div');
+                slot.className = 'slot';
+                slotsContainer.appendChild(slot);
+            });
+
+            const pool = document.getElementById('lettersPool');
+            pool.innerHTML = '';
+            const shuffled = [...q.pool].sort(() => Math.random() - 0.5);
+            shuffled.forEach(char => {
+                const tile = document.createElement('div');
+                tile.className = 'letter-tile';
+                tile.innerText = char;
+                tile.onclick = () => pickLetter(char, tile);
+                pool.appendChild(tile);
+            });
+        }
+    }
+
+    function checkEquationAnswer(selected) {
+        const q = questions[currentQ];
+        if (selected === q.correct) {
+            playAudio('sndCorrect');
+            score += 10;
+            nextQuestion();
+        } else {
+            playAudio('sndWrong');
+        }
+    }
+
+    function pickLetter(char, tile) {
+        const q = questions[currentQ];
+        if (userWord.length < q.targetWord.length) {
+            userWord.push(char);
+            tile.style.visibility = 'hidden';
+            updateSlots();
+
+            if (userWord.length === q.targetWord.length) {
+                if (JSON.stringify(userWord) === JSON.stringify(q.targetWord)) {
+                    playAudio('sndCorrect');
+                    score += 10;
+                    setTimeout(nextQuestion, 400);
+                } else {
+                    playAudio('sndWrong');
+                    setTimeout(loadQuestion, 400);
+                }
+            }
+        }
+    }
+
+    function updateSlots() {
+        const slots = document.querySelectorAll('.slot');
+        slots.forEach((s, idx) => {
+            s.innerText = userWord[idx] || '';
+        });
+    }
+
+    function nextQuestion() {
+        currentQ++;
+        if (currentQ < questions.length) {
+            loadQuestion();
+        } else {
+            playAudio('sndClaps');
+            confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
+            document.getElementById('endOverlay').style.display = 'flex';
+            document.getElementById('finalScore').innerText = `अंक: ${score} / 100`;
+        }
+    }
+
+    function restartGame() {
+        currentQ = 0;
+        score = 0;
+        document.getElementById('endOverlay').style.display = 'none';
+        document.getElementById('titleScreen').style.display = 'flex';
+    }
+</script>
+
+</body>
+</html>
