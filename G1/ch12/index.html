@@ -112,7 +112,7 @@
             box-shadow: 0 2px 0 #0096c7;
         }
 
-        /* KIDS INSTRUCTIONS GRID */
+        /* INSTRUCTIONS GRID */
         .instruction-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -212,7 +212,7 @@
             z-index: 10;
         }
 
-        /* MAIN DISPLAY CARD */
+        /* DISPLAY CARD */
         .display-box {
             background: #f8f9fa;
             border: 5px solid var(--sky);
@@ -253,7 +253,7 @@
             color: #333;
         }
 
-        /* CHOICE BUTTONS */
+        /* CHOICES */
         .choices-layout {
             display: flex;
             gap: 15px;
@@ -286,7 +286,7 @@
             box-shadow: 0 2px 0 #4361ee;
         }
 
-        /* GLOW HINT EFFECT */
+        /* HINT GLOW */
         .choice-card.glow-hint {
             animation: intenseGlow 1.2s infinite alternate;
             border-color: #00ff88 !important;
@@ -311,7 +311,6 @@
             100% { transform: translate(var(--x), var(--y)) rotate(var(--r)) scale(0); opacity: 0; }
         }
 
-        /* OVERLAY SCREENS */
         .screen-overlay {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -369,7 +368,7 @@
             </div>
             <div class="instruction-card">
                 <span class="icon">❤️</span>
-                <span class="text">आपके पास कुल 3 जिंदगियां हैं</span>
+                <span class="text">आपके पास कुल 3 Lives हैं</span>
             </div>
         </div>
         <button class="action-btn blue-btn" onclick="initAudioAndStartGame()">खेलें 🎮</button>
@@ -415,29 +414,39 @@
     </div>
 
 <script>
-    // Asset Audio Engine Mapped
     const audioCorrect = new Audio('assets/correct.mp3');
     const audioWrong = new Audio('assets/wrong.mp3');
     const audioClaps = new Audio('assets/freesound_community-claps-44774.mp3');
 
-    // Mapped levels strictly using your assets folder assets
-    const levels = [
+    // Base raw questions with exact asset filenames
+    const baseLevels = [
         { type: "jodo", img: "daud.png", fallbackEmoji: "🏃", math: "द + ौ + ड़", correct: "दौड़", choices: ["दोड़", "दौड़"] },
         { type: "chitra", img: "aurat.png", fallbackEmoji: "👩", math: "यह कौन है?", correct: "औरत", choices: ["औरत", "ओरत"] },
         { type: "pehchano", img: "mausa.png", fallbackEmoji: "👨", math: "सही शब्द छुओ", correct: "मौसा", choices: ["मोसा", "मौसा"] },
         { type: "chitra", img: "mausi.png", fallbackEmoji: "👩‍🦱", math: "यह कौन है?", correct: "मौसी", choices: ["मोसी", "मौसी"] },
         { type: "pehchano", img: "fauji.png", fallbackEmoji: "🪖", math: "देश का वीर जवान", correct: "फ़ौजी", choices: ["फोजी", "फ़ौजी"] },
-        { type: "jodo", img: "square.png", fallbackEmoji: "🪑", math: "च + ौ + क + ी", correct: "चौकी", choices: ["चोकी", "चौकी"] },
+        { type: "jodo", img: "square.png", fallbackEmoji: "🌾", math: "च + ौ + क + र", correct: "चौकर", choices: ["चोकर", "चौकर"] },
         { type: "chitra", img: "daulat.png", fallbackEmoji: "💰", math: "सिक्के और धन", correct: "दौलत", choices: ["दौलत", "दोलत"] },
         { type: "pehchano", img: "naukar.png", fallbackEmoji: "🧑‍🍳", math: "घर का मददगार", correct: "नौकर", choices: ["नोकर", "नौकर"] },
-        { type: "chitra", img: "samosa.png", fallbackEmoji: "🔺", math: "यह क्या है?", correct: "समोसा", choices: ["समौसा", "समोसा"] },
-        { type: "jodo", img: "taufa.png", fallbackEmoji: "🎁", math: "त + ो + ह + फ़ + ा", correct: "तोहफ़ा", choices: ["तोहफ़ा", "तौहफ़ा"] }
+        { type: "chitra", img: "hathoda.png", fallbackEmoji: "🔨", math: "कील ठोकने की चीज़", correct: "हथौड़ा", choices: ["हथोड़ा", "हथौड़ा"] },
+        { type: "pehchano", img: "gauriya.png", fallbackEmoji: "🐦", math: "सुंदर छोटी चिड़िया", correct: "गौरैया", choices: ["गोरैया", "गौरैया"] }
     ];
 
+    let activeLevels = [];
     let currentLevelIndex = 1;
     let totalLives = 3;
     let totalScore = 0;
     let wrongAttemptsOnLevel = 0;
+
+    // Fisher-Yates Shuffle Logic
+    function shuffleArray(array) {
+        let arr = [...array];
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
 
     window.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
@@ -460,6 +469,31 @@
             track.currentTime = 0;
         });
         switchScreen('screen-instructions', 'screen-game');
+        
+        // Randomize questions and choices on start
+        resetAndShuffleGame();
+    }
+
+    function resetAndShuffleGame() {
+        activeLevels = shuffleArray(baseLevels).map(level => {
+            return {
+                ...level,
+                choices: shuffleArray(level.choices)
+            };
+        });
+
+        currentLevelIndex = 1;
+        totalLives = 3;
+        totalScore = 0;
+        wrongAttemptsOnLevel = 0;
+
+        const tiles = document.querySelectorAll('.map-tile');
+        tiles.forEach((tile, index) => {
+            if(index > 0) tile.classList.remove('passed');
+        });
+
+        renderStatusDisplays();
+        alignPawn();
         loadChallenge();
     }
 
@@ -523,7 +557,7 @@
             if (tile) tile.classList.add('passed');
         }
 
-        const currentData = levels[currentLevelIndex - 1];
+        const currentData = activeLevels[currentLevelIndex - 1];
         const badge = document.getElementById('gameModeBadge');
         const cardBox = document.getElementById('mainDisplayCard');
         const cardImg = document.getElementById('cardImg');
@@ -546,7 +580,6 @@
             cardBox.style.boxShadow = "0 8px 0 #e1ccfa";
         }
 
-        // Handle Image loading with Emoji Fallback
         cardImg.src = `assets/${currentData.img}`;
         cardImg.style.display = "block";
         bigEmoji.style.display = "none";
@@ -569,7 +602,7 @@
     }
 
     function handleChoiceClick(buttonElement, selectedOption) {
-        const currentData = levels[currentLevelIndex - 1];
+        const currentData = activeLevels[currentLevelIndex - 1];
         
         if (selectedOption === currentData.correct) {
             audioCorrect.currentTime = 0;
@@ -624,20 +657,8 @@
     }
 
     function resetGame() {
-        currentLevelIndex = 1;
-        totalLives = 3;
-        totalScore = 0;
-        wrongAttemptsOnLevel = 0;
-        
-        const tiles = document.querySelectorAll('.map-tile');
-        tiles.forEach((tile, index) => {
-            if(index > 0) tile.classList.remove('passed');
-        });
-
         document.getElementById('endScreen').style.display = "none";
-        renderStatusDisplays();
-        alignPawn();
-        loadChallenge();
+        resetAndShuffleGame();
     }
 
     window.onresize = alignPawn;
