@@ -1,1 +1,785 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>गिनती का जादू ✨</title>
+    <style>
+        :root {
+            --primary: #ff758f;
+            --sky: #4cc9f0;
+            --grass: #2ecc71;
+            --sunshine: #ffb703;
+            --purple: #9b5de5;
+            --coral: #ff6b6b;
+            --cream: #fff0f3;
+            --wood: #deab68;
+        }
 
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', 'Segoe UI', Arial, sans-serif;
+            background-color: var(--cream);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            user-select: none;
+            padding: 10px;
+        }
+
+        .game-screen {
+            display: none;
+            width: 100%;
+            max-width: 800px;
+            min-height: 85vh;
+            background: white;
+            border-radius: 35px;
+            padding: 25px 20px;
+            box-shadow: 0 15px 0 rgba(255, 117, 143, 0.2), 0 25px 50px rgba(0,0,0,0.08);
+            text-align: center;
+            border: 6px solid var(--primary);
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            animation: fadeIn 0.4s ease-out;
+            overflow: hidden;
+        }
+
+        .game-screen.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.96); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* LOGO SCREEN (5 SECONDS) */
+        #screen-logo {
+            background: #ffffff;
+            border-color: #f0f0f0;
+        }
+        .logo-img {
+            max-width: 75%;
+            max-height: 45vh;
+            object-fit: contain;
+            animation: pulseLogo 2s infinite ease-in-out;
+        }
+        @keyframes pulseLogo {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(76,201,240,0.2)); }
+            50% { transform: scale(1.05); filter: drop-shadow(0 0 25px rgba(255,117,143,0.4)); }
+        }
+
+        /* TYPOGRAPHY & BUTTONS */
+        h1 {
+            color: #ff477e;
+            font-size: calc(2.2rem + 1.2vw);
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 0px #ffe5ec;
+        }
+
+        .action-btn {
+            background: var(--grass);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: calc(1.4rem + 0.5vw);
+            font-weight: bold;
+            border-radius: 40px;
+            box-shadow: 0 8px 0 #27ae60;
+            cursor: pointer;
+            transition: transform 0.1s ease, box-shadow 0.1s ease;
+            margin-top: 15px;
+            display: inline-block;
+        }
+        .action-btn:active {
+            transform: translateY(6px);
+            box-shadow: 0 2px 0 #27ae60;
+        }
+        .action-btn.blue-btn {
+            background: var(--sky);
+            box-shadow: 0 8px 0 #0096c7;
+        }
+
+        /* INSTRUCTIONS GRID */
+        .instruction-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+        .instruction-card {
+            background: #fff0f3;
+            border: 3px dashed var(--primary);
+            border-radius: 20px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-align: left;
+        }
+        .instruction-card .icon {
+            font-size: 2.2rem;
+            background: white;
+            padding: 8px;
+            border-radius: 15px;
+            box-shadow: 0 4px 0 rgba(0,0,0,0.05);
+        }
+        .instruction-card .text {
+            font-size: calc(0.95rem + 0.3vw);
+            color: #444;
+            font-weight: bold;
+            line-height: 1.3;
+        }
+
+        /* STATUS BAR */
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 0 5px;
+            margin-bottom: 12px;
+            font-size: calc(1.2rem + 0.5vw);
+            font-weight: bold;
+        }
+        .heart-box { color: #ff477e; }
+        .score-box {
+            background: #fff3cd;
+            color: #856404;
+            padding: 5px 15px;
+            border-radius: 15px;
+            border: 2px solid #ffeeba;
+        }
+
+        /* MAP TRACK (PROGRESS BAR) */
+        .map-track {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            align-items: center;
+            background: #fff5f6;
+            padding: 12px 5px;
+            border-radius: 20px;
+            margin-bottom: 12px;
+            border: 3px dashed #ffb3c1;
+            position: relative;
+            width: 100%;
+            gap: 2px;
+        }
+        .map-tile {
+            height: calc(28px + 2.5vw);
+            background: #e2e8f0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: calc(0.6rem + 0.4vw);
+            font-weight: bold;
+            color: white;
+            z-index: 5;
+            box-shadow: 0 3px 0 #cbd5e1;
+            transition: background 0.3s;
+        }
+        .map-tile.passed {
+            background: var(--grass);
+            box-shadow: 0 3px 0 #27ae60;
+        }
+        .map-tile.finish-gate {
+            background: var(--purple);
+            border-radius: 12px;
+            box-shadow: 0 3px 0 #7b2cbf;
+        }
+        .pawn-avatar {
+            font-size: calc(1.5rem + 1.8vw);
+            position: absolute;
+            top: calc(-10px - 1vw);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.3);
+            z-index: 10;
+        }
+
+        /* DISPLAY CARD CONTAINER */
+        .display-box {
+            background: #f8f9fa;
+            border: 5px solid var(--sky);
+            border-radius: 25px;
+            padding: 15px 10px;
+            margin-bottom: 12px;
+            box-shadow: 0 8px 0 #bde0fe;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            min-height: 180px;
+            justify-content: center;
+        }
+        .mode-badge {
+            display: inline-block;
+            padding: 4px 16px;
+            font-size: calc(0.9rem + 0.3vw);
+            font-weight: bold;
+            color: white;
+            border-radius: 14px;
+            margin-bottom: 6px;
+            background-color: var(--coral);
+        }
+        .math-spell {
+            font-size: calc(1.3rem + 0.7vw);
+            font-weight: bold;
+            color: #333;
+            margin-top: 6px;
+        }
+
+        /* HINT BUTTON & BOX */
+        .hint-btn {
+            background: #fff3cd;
+            color: #856404;
+            border: 2px solid var(--sunshine);
+            border-radius: 20px;
+            padding: 6px 16px;
+            font-size: calc(0.9rem + 0.3vw);
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 8px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 0 #e6a100;
+            transition: transform 0.1s ease;
+        }
+        .hint-btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0 #e6a100;
+        }
+        .hint-text-box {
+            background: #e8f8f5;
+            border: 2px dashed #2ecc71;
+            color: #1e8449;
+            padding: 6px 14px;
+            border-radius: 12px;
+            font-size: calc(0.95rem + 0.2vw);
+            font-weight: bold;
+            margin-top: 6px;
+            display: none;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        /* GAME CONCEPT 1: TRAIN STYLES */
+        .train-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            margin: 8px 0;
+            animation: chugTrain 1.2s ease-in-out infinite alternate;
+        }
+        @keyframes chugTrain {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-4px); }
+        }
+        .train-engine { font-size: 3rem; }
+        .train-bogey {
+            background: #ffd166;
+            border: 4px solid #f77f00;
+            border-radius: 16px;
+            width: 60px;
+            height: 65px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.7rem;
+            font-weight: bold;
+            color: #333;
+            box-shadow: 0 5px 0 #d66800;
+        }
+        .train-bogey.blank {
+            background: white;
+            border-style: dashed;
+            color: var(--primary);
+            animation: pulseBlank 1s infinite alternate;
+        }
+        @keyframes pulseBlank {
+            0% { transform: scale(0.98); border-color: var(--primary); }
+            100% { transform: scale(1.04); border-color: var(--purple); }
+        }
+
+        /* GAME CONCEPT 2: BALLOON STYLES */
+        .balloon-sky {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            width: 100%;
+            padding: 6px 0;
+        }
+        .floating-balloon {
+            font-size: 3.2rem;
+            animation: floatUp 2.5s infinite ease-in-out alternate;
+            filter: drop-shadow(0 6px 4px rgba(0,0,0,0.15));
+        }
+        @keyframes floatUp {
+            from { transform: translateY(0px) rotate(-3deg); }
+            to { transform: translateY(-10px) rotate(3deg); }
+        }
+
+        /* GAME CONCEPT 3: FRUIT SHOP STYLES */
+        .market-shelf {
+            background: var(--wood);
+            border-radius: 18px;
+            padding: 10px;
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            box-shadow: inset 0 -6px 0 rgba(0,0,0,0.15);
+            width: 90%;
+        }
+        .basket {
+            background: #fff8e7;
+            border: 3px solid #c8963e;
+            border-radius: 16px;
+            padding: 6px 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            justify-content: center;
+            align-items: center;
+            min-width: 90px;
+            min-height: 70px;
+        }
+        .basket-item {
+            font-size: 1.7rem;
+        }
+
+        /* CHOICES LAYOUT */
+        .choices-layout {
+            display: flex;
+            gap: 15px;
+            width: 100%;
+            justify-content: center;
+        }
+        .choice-card {
+            background: white;
+            border: 5px solid var(--sunshine);
+            border-radius: 22px;
+            padding: 12px 5px;
+            font-size: calc(1.5rem + 1vw);
+            font-weight: bold;
+            color: #212529;
+            cursor: pointer;
+            flex: 1;
+            box-shadow: 0 8px 0 #fb8500;
+            transition: transform 0.1s ease, box-shadow 0.1s ease, border-color 0.3s;
+        }
+        .choice-card:active {
+            transform: translateY(6px);
+            box-shadow: 0 2px 0 #fb8500;
+        }
+        .choice-card.alt-color {
+            border-color: var(--sky);
+            box-shadow: 0 8px 0 #4361ee;
+        }
+
+        /* GLOWING OPTION (TRIGGERED BY HINT OR WRONG GUESS) */
+        .choice-card.glow-hint {
+            animation: intenseGlow 1.2s infinite alternate;
+            border-color: #00ff88 !important;
+        }
+        @keyframes intenseGlow {
+            0% { transform: scale(1); box-shadow: 0 0 10px #00ff88, 0 8px 0 #27ae60; }
+            100% { transform: scale(1.04); box-shadow: 0 0 25px #00ff88, 0 8px 0 #27ae60; }
+        }
+
+        /* CONFETTI BURST */
+        .confetti-piece {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            border-radius: 4px;
+            pointer-events: none;
+            z-index: 99;
+            animation: explodeParticles 0.8s forwards cubic-bezier(0.1, 0.8, 0.3, 1);
+        }
+        @keyframes explodeParticles {
+            0% { transform: translate(0, 0) rotate(0deg) scale(1); opacity: 1; }
+            100% { transform: translate(var(--x), var(--y)) rotate(var(--r)) scale(0); opacity: 0; }
+        }
+
+        .screen-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: white;
+            border-radius: 30px;
+            z-index: 200;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        @media (max-width: 500px) {
+            body { padding: 5px; }
+            .game-screen { padding: 15px 10px; }
+            .instruction-grid { grid-template-columns: 1fr; gap: 8px; }
+            .choices-layout { flex-direction: column; gap: 10px; }
+            .train-bogey { width: 48px; height: 52px; font-size: 1.3rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SCREEN 1: INNOVINE LOGO (EXACTLY 5 SECONDS) -->
+    <div id="screen-logo" class="game-screen active">
+        <img src="assets/innovine-logo.png" alt="Innovine Logo" class="logo-img" onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='block';">
+        <h2 id="logo-fallback" style="display:none; font-size: 2.5rem; color: #333;">Innovine Media</h2>
+    </div>
+
+    <!-- SCREEN 2: GAME TITLE SCREEN -->
+    <div id="screen-title" class="game-screen">
+        <span style="font-size: 5rem; margin-bottom: 10px;">✨</span>
+        <h1>गिनती का जादू</h1>
+        <p style="font-size: 1.3rem; color: #666; margin-bottom: 20px;">आओ मिलकर <b>१ से १०</b> तक गिनती सीखें!</p>
+        <button class="action-btn" onclick="switchScreen('screen-title', 'screen-instructions')">आगे बढ़ें 🚀</button>
+    </div>
+
+    <!-- SCREEN 3: INSTRUCTIONS SCREEN -->
+    <div id="screen-instructions" class="game-screen">
+        <h1>कैसे खेलें? 🎯</h1>
+        <div class="instruction-grid">
+            <div class="instruction-card">
+                <span class="icon">🚂</span>
+                <span class="text">ट्रेन, गुब्बारे और फल देखकर सही गिनती पहचानिए।</span>
+            </div>
+            <div class="instruction-card">
+                <span class="icon">💡</span>
+                <span class="text">मदद के लिए संकेत बटन दबाएँ।</span>
+            </div>
+            <div class="instruction-card">
+                <span class="icon">🐘</span>
+                <span class="text">सही जवाब पर हाथी आगे बढ़ेगा।</span>
+            </div>
+            <div class="instruction-card">
+                <span class="icon">❤️</span>
+                <span class="text">आपके पास कुल 3 Lives हैं।</span>
+            </div>
+        </div>
+        <button class="action-btn blue-btn" onclick="initAudioAndStartGame()">खेलें 🎮</button>
+    </div>
+
+    <!-- SCREEN 4: GAME PLAY SCREEN -->
+    <div id="screen-game" class="game-screen">
+        <div class="status-bar">
+            <div class="heart-box" id="heartBox">❤️ ❤️ ❤️</div>
+            <div class="score-box" id="scoreBox">⭐ अंक: 0</div>
+        </div>
+
+        <div class="map-track" id="trackLine">
+            <div class="pawn-avatar" id="heroPawn">🐘</div>
+            <div class="map-tile passed" id="tile-0">शुरू</div>
+            <div class="map-tile" id="tile-1">१</div>
+            <div class="map-tile" id="tile-2">२</div>
+            <div class="map-tile" id="tile-3">३</div>
+            <div class="map-tile" id="tile-4">४</div>
+            <div class="map-tile" id="tile-5">५</div>
+            <div class="map-tile" id="tile-6">६</div>
+            <div class="map-tile" id="tile-7">७</div>
+            <div class="map-tile" id="tile-8">८</div>
+            <div class="map-tile" id="tile-9">९</div>
+            <div class="map-tile" id="tile-10">१०</div>
+            <div class="map-tile finish-gate" id="tile-11">🏆</div>
+        </div>
+
+        <div class="display-box" id="mainDisplayCard">
+            <span class="mode-badge" id="gameModeBadge">🚂 गिनती ट्रेन</span>
+            
+            <button class="hint-btn" onclick="showHintAndGlow()">💡 संकेत</button>
+            <div class="hint-text-box" id="hintBox"></div>
+
+            <div id="visualArea" style="width: 100%;"></div>
+            <div class="math-spell" id="spellFormula">प्रश्न यहाँ आएगा?</div>
+        </div>
+
+        <div class="choices-layout" id="buttonsLayout"></div>
+
+        <div id="endScreen" class="screen-overlay" style="display: none;">
+            <h2 id="endTitle" style="font-size: 3rem; margin-bottom: 10px;">🎉 जीत गए! 🥳</h2>
+            <p id="endDesc" style="font-size: 1.4rem; color: #555; margin-bottom: 25px;">अद्भुत खेल!</p>
+            <button class="action-btn" onclick="resetGame()">फिर खेलें 🔄</button>
+        </div>
+    </div>
+
+<script>
+    const audioCorrect = new Audio('assets/correct.mp3');
+    const audioWrong = new Audio('assets/wrong.mp3');
+    const audioClaps = new Audio('assets/freesound_community-claps-44774.mp3');
+
+    // 10 QUESTIONS WITH HINTS
+    const baseLevels = [
+        { concept: "train", sequence: ["१", "?", "३"], math: "१ के बाद कौन-सा डिब्बा आएगा?", correct: "२ (दो)", choices: ["२ (दो)", "४ (चार)"], hint: "१ के ठीक बाद २ आता है।" },
+        { concept: "train", sequence: ["?", "५", "६"], math: "५ के पहले कौन-सा डिब्बा आएगा?", correct: "४ (चार)", choices: ["३ (तीन)", "४ (चार)"], hint: "५ से एक कम गिनिए।" },
+        { concept: "train", sequence: ["७", "८", "?"], math: "८ के बाद कौन-सा डिब्बा आएगा?", correct: "९ (नौ)", choices: ["९ (नौ)", "१० (दस)"], hint: "८ के आगे की संख्या गिनिए।" },
+
+        { concept: "balloon", visual: "🖐️", math: "हाथ में कितनी उंगलियाँ हैं?", correct: "५ (पाँच)", choices: ["४ (चार)", "५ (पाँच)"], hint: "एक हाथ में ५ उंगलियाँ होती हैं।" },
+        { concept: "balloon", visual: "🖐️ ✌️", math: "हाथों में कुल कितनी उंगलियाँ हैं?", correct: "७ (सात)", choices: ["७ (सात)", "८ (आठ)"], hint: "५ + २ को साथ में गिनिए।" },
+        { concept: "balloon", visual: "🖐️ 🖐️", math: "दोनों हाथों की उंगलियाँ गिनिए?", correct: "१० (दस)", choices: ["९ (नौ)", "१० (दस)"], hint: "दोनों हाथों में पूरी १० उंगलियाँ होती हैं।" },
+
+        { concept: "shop", fruit: "🍎", count: 3, math: "टोकरी में कितने सेब हैं?", correct: "३ (तीन)", choices: ["३ (तीन)", "२ (दो)"], hint: "सेबों को एक-एक करके गिनिए: १, २, ३।" },
+        { concept: "shop", fruit: "🍊", count: 6, math: "टोकरी में कितने संतरे हैं?", correct: "६ (छह)", choices: ["५ (पाँच)", "६ (छह)"], hint: "५ के बाद ६ आता है।" },
+        { concept: "shop", fruit: "🍒", count: 4, math: "टोकरी में कितनी चेरी हैं?", correct: "४ (चार)", choices: ["४ (चार)", "५ (पाँच)"], hint: "चेरी को गिनिए: १, २, ३, ४।" },
+        { concept: "shop", fruit: "🥭", count: 8, math: "टोकरी में कितने आम हैं?", correct: "८ (आठ)", choices: ["८ (आठ)", "९ (नौ)"], hint: "७ के बाद ८ आम आते हैं।" }
+    ];
+
+    let activeLevels = [];
+    let currentLevelIndex = 1;
+    let totalLives = 3;
+    let totalScore = 0;
+    let wrongAttemptsOnLevel = 0;
+
+    function shuffleArray(array) {
+        let arr = [...array];
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+    // LOGO TIMEOUT: 5 SECONDS
+    window.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+            switchScreen('screen-logo', 'screen-title');
+        }, 5000);
+    });
+
+    function switchScreen(hideId, showId) {
+        document.getElementById(hideId).classList.remove('active');
+        document.getElementById(showId).classList.add('active');
+        if(showId === 'screen-game') {
+            alignPawn();
+        }
+    }
+
+    function initAudioAndStartGame() {
+        [audioCorrect, audioWrong, audioClaps].forEach(track => {
+            track.play().catch(() => {});
+            track.pause();
+            track.currentTime = 0;
+        });
+        switchScreen('screen-instructions', 'screen-game');
+        resetAndShuffleGame();
+    }
+
+    function resetAndShuffleGame() {
+        activeLevels = baseLevels.map(level => {
+            return {
+                ...level,
+                choices: shuffleArray(level.choices)
+            };
+        });
+
+        currentLevelIndex = 1;
+        totalLives = 3;
+        totalScore = 0;
+        wrongAttemptsOnLevel = 0;
+
+        const tiles = document.querySelectorAll('.map-tile');
+        tiles.forEach((tile, index) => {
+            if(index > 0) tile.classList.remove('passed');
+        });
+
+        renderStatusDisplays();
+        alignPawn();
+        loadChallenge();
+    }
+
+    function renderStatusDisplays() {
+        const heartBox = document.getElementById('heartBox');
+        let heartString = "";
+        for(let i = 0; i < totalLives; i++) { heartString += "❤️ "; }
+        if(heartString === "") heartString = "💔 खेल खत्म";
+        heartBox.innerText = heartString;
+
+        document.getElementById('scoreBox').innerText = `⭐ अंक: ${totalScore}`;
+    }
+
+    function alignPawn() {
+        const pawn = document.getElementById('heroPawn');
+        const activeTile = document.getElementById(`tile-${currentLevelIndex}`);
+        if(!activeTile || !pawn) return;
+        
+        const centerOffset = activeTile.offsetLeft + (activeTile.offsetWidth / 2) - (pawn.offsetWidth / 2);
+        pawn.style.left = `${centerOffset}px`;
+    }
+
+    function showHintAndGlow() {
+        const currentData = activeLevels[currentLevelIndex - 1];
+        const hintBox = document.getElementById('hintBox');
+        hintBox.innerText = `💡 ${currentData.hint}`;
+        hintBox.style.display = "block";
+
+        const choiceBtns = document.querySelectorAll('.choice-card');
+        choiceBtns.forEach(btn => {
+            if (btn.getAttribute('data-choice') === currentData.correct) {
+                btn.classList.add('glow-hint');
+            }
+        });
+    }
+
+    function launchConfettiBurst() {
+        const arenaCard = document.getElementById('mainDisplayCard');
+        const particleColors = ['#ff758f', '#4cc9f0', '#2ecc71', '#ffb703', '#9b5de5', '#ff6b6b'];
+        const totalParticles = window.innerWidth < 480 ? 25 : 40;
+
+        for (let i = 0; i < totalParticles; i++) {
+            const confettiPiece = document.createElement('div');
+            confettiPiece.classList.add('confetti-piece');
+            confettiPiece.style.backgroundColor = particleColors[Math.floor(Math.random() * particleColors.length)];
+            confettiPiece.style.left = '50%';
+            confettiPiece.style.top = '50%';
+
+            const maxDist = window.innerWidth < 480 ? 160 : 300;
+            const vectorX = (Math.random() - 0.5) * maxDist;
+            const vectorY = (Math.random() - 0.6) * maxDist;
+            const rotationRandom = Math.floor(Math.random() * 360) + 180;
+
+            confettiPiece.style.setProperty('--x', `${vectorX}px`);
+            confettiPiece.style.setProperty('--y', `${vectorY}px`);
+            confettiPiece.style.setProperty('--r', `${rotationRandom}deg`);
+
+            arenaCard.appendChild(confettiPiece);
+
+            setTimeout(() => { confettiPiece.remove(); }, 800);
+        }
+    }
+
+    function loadChallenge() {
+        wrongAttemptsOnLevel = 0;
+        document.getElementById('hintBox').style.display = "none";
+        
+        if (currentLevelIndex > 10) {
+            document.getElementById('tile-11').classList.add('passed');
+            setTimeout(() => { triggerGameEnd(true); }, 500);
+            return;
+        }
+
+        for (let i = 0; i < currentLevelIndex; i++) {
+            const tile = document.getElementById(`tile-${i}`);
+            if (tile) tile.classList.add('passed');
+        }
+
+        const currentData = activeLevels[currentLevelIndex - 1];
+        const badge = document.getElementById('gameModeBadge');
+        const visualArea = document.getElementById('visualArea');
+        document.getElementById('spellFormula').innerText = currentData.math;
+
+        visualArea.innerHTML = "";
+
+        if(currentData.concept === "train") {
+            badge.innerText = "🚂 गिनती ट्रेन";
+            badge.style.backgroundColor = "var(--coral)";
+
+            let trainHtml = '<div class="train-container"><span class="train-engine">🚂</span>';
+            currentData.sequence.forEach(item => {
+                if(item === "?") {
+                    trainHtml += `<div class="train-bogey blank">?</div>`;
+                } else {
+                    trainHtml += `<div class="train-bogey">${item}</div>`;
+                }
+            });
+            trainHtml += '</div>';
+            visualArea.innerHTML = trainHtml;
+        } 
+        else if(currentData.concept === "balloon") {
+            badge.innerText = "🎈 गुब्बारा फोड़ो";
+            badge.style.backgroundColor = "var(--sky)";
+
+            visualArea.innerHTML = `<div class="balloon-sky"><span class="floating-balloon">${currentData.visual}</span></div>`;
+        } 
+        else if(currentData.concept === "shop") {
+            badge.innerText = "🛒 फल की दुकान";
+            badge.style.backgroundColor = "var(--grass)";
+
+            let shopHtml = '<div class="market-shelf"><div class="basket">';
+            for(let i = 0; i < currentData.count; i++) {
+                shopHtml += `<span class="basket-item">${currentData.fruit}</span>`;
+            }
+            shopHtml += '</div></div>';
+            visualArea.innerHTML = shopHtml;
+        }
+
+        const layout = document.getElementById('buttonsLayout');
+        layout.innerHTML = "";
+        
+        currentData.choices.forEach((choice, idx) => {
+            const colorClass = idx === 1 ? 'alt-color' : '';
+            layout.innerHTML += `<button class="choice-card ${colorClass}" data-choice="${choice}" onclick="handleChoiceClick(this, '${choice}')">${choice}</button>`;
+        });
+    }
+
+    function handleChoiceClick(buttonElement, selectedOption) {
+        const currentData = activeLevels[currentLevelIndex - 1];
+        
+        if (selectedOption === currentData.correct) {
+            audioCorrect.currentTime = 0;
+            audioCorrect.play().catch(() => {});
+
+            totalScore += 10;
+            renderStatusDisplays();
+            launchConfettiBurst();
+            
+            currentLevelIndex++;
+            alignPawn();
+            
+            setTimeout(() => { loadChallenge(); }, 800);
+        } else {
+            audioWrong.currentTime = 0;
+            audioWrong.play().catch(() => {});
+            
+            totalLives--;
+            wrongAttemptsOnLevel++;
+            renderStatusDisplays();
+
+            showHintAndGlow();
+
+            if (totalLives <= 0) {
+                setTimeout(() => { triggerGameEnd(false); }, 400);
+            }
+        }
+    }
+
+    function triggerGameEnd(isWin) {
+        const screen = document.getElementById('endScreen');
+        const title = document.getElementById('endTitle');
+        const desc = document.getElementById('endDesc');
+        
+        screen.style.display = "flex";
+        if (isWin) {
+            audioClaps.currentTime = 0;
+            audioClaps.play().catch(() => {});
+            title.innerText = "🎉 जीत गए! 🥳";
+            desc.innerText = `अद्भुत खेल! आपने बनाए कुल ${totalScore} अंक। हाथी अपनी मंजिल तक पहुँच गया!`;
+        } else {
+            title.innerText = "ओहो! 💔";
+            desc.innerText = `आपने शानदार प्रयास किया और ${totalScore} अंक बनाए! चलो फिर से कोशिश करते हैं!`;
+        }
+    }
+
+    function resetGame() {
+        document.getElementById('endScreen').style.display = "none";
+        resetAndShuffleGame();
+    }
+
+    window.onresize = alignPawn;
+</script>
+
+</body>
+</html>
