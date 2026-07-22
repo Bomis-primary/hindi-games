@@ -2,18 +2,18 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>गिनती का जादू ✨</title>
     <style>
         :root {
-            --primary: #ff758f;
-            --sky: #4cc9f0;
-            --grass: #2ecc71;
-            --sunshine: #ffb703;
-            --purple: #9b5de5;
-            --coral: #ff6b6b;
-            --cream: #fff0f3;
-            --wood: #deab68;
+            --bg-gradient: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --primary-pink: #ff477e;
+            --magic-purple: #7209b7;
+            --bright-yellow: #ffb703;
+            --mint-green: #06d6a0;
+            --sky-blue: #4cc9f0;
+            --text-color: #2b2d42;
         }
 
         * {
@@ -25,32 +25,33 @@
 
         body {
             font-family: 'Comic Sans MS', 'Segoe UI', Arial, sans-serif;
-            background-color: var(--cream);
+            background: var(--bg-gradient);
             display: flex;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
+            padding: 10px;
             overflow-x: hidden;
             user-select: none;
-            padding: 10px;
         }
 
+        /* MAIN CONTAINER (GLASSMORPHISM STAGE) */
         .game-screen {
             display: none;
             width: 100%;
-            max-width: 800px;
+            max-width: 850px;
             min-height: 85vh;
-            background: white;
-            border-radius: 35px;
-            padding: 25px 20px;
-            box-shadow: 0 15px 0 rgba(255, 117, 143, 0.2), 0 25px 50px rgba(0,0,0,0.08);
-            text-align: center;
-            border: 6px solid var(--primary);
+            background: var(--card-bg);
+            border-radius: 30px;
+            padding: 20px 16px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.12), inset 0 0 0 4px rgba(255,255,255,0.8);
+            backdrop-filter: blur(10px);
+            border: 4px solid #ffffff;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: space-between;
             position: relative;
-            animation: fadeIn 0.4s ease-out;
+            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             overflow: hidden;
         }
 
@@ -58,352 +59,368 @@
             display: flex;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.96); }
-            to { opacity: 1; transform: scale(1); }
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.92) translateY(10px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
         }
 
-        /* LOGO SCREEN (5 SECONDS) */
+        /* LOGO SCREEN (EXACTLY 5 SECONDS) */
         #screen-logo {
             background: #ffffff;
-            border-color: #f0f0f0;
+            justify-content: center;
         }
         .logo-img {
-            max-width: 75%;
-            max-height: 45vh;
+            max-width: 70%;
+            max-height: 40vh;
             object-fit: contain;
-            animation: pulseLogo 2s infinite ease-in-out;
+            animation: pulseGlow 2s infinite ease-in-out;
         }
-        @keyframes pulseLogo {
-            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(76,201,240,0.2)); }
-            50% { transform: scale(1.05); filter: drop-shadow(0 0 25px rgba(255,117,143,0.4)); }
+        @keyframes pulseGlow {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 8px rgba(76,201,240,0.3)); }
+            50% { transform: scale(1.05); filter: drop-shadow(0 0 20px rgba(255,71,126,0.5)); }
         }
 
-        /* TYPOGRAPHY & BUTTONS */
+        /* HEADINGS & BUTTONS */
         h1 {
-            color: #ff477e;
-            font-size: calc(2.2rem + 1.2vw);
-            margin-bottom: 15px;
-            text-shadow: 2px 2px 0px #ffe5ec;
+            color: var(--primary-pink);
+            font-size: clamp(2rem, 5vw, 3rem);
+            margin-bottom: 10px;
+            text-shadow: 3px 3px 0px #ffe5ec;
+            letter-spacing: 1px;
         }
 
-        .action-btn {
-            background: var(--grass);
+        .magic-btn {
+            background: linear-gradient(180deg, #06d6a0 0%, #05b386 100%);
             color: white;
             border: none;
-            padding: 15px 40px;
-            font-size: calc(1.4rem + 0.5vw);
+            padding: 14px 36px;
+            font-size: clamp(1.2rem, 3vw, 1.6rem);
             font-weight: bold;
-            border-radius: 40px;
-            box-shadow: 0 8px 0 #27ae60;
+            border-radius: 50px;
+            box-shadow: 0 8px 0 #038060, 0 12px 20px rgba(6,214,160,0.3);
             cursor: pointer;
-            transition: transform 0.1s ease, box-shadow 0.1s ease;
+            transition: transform 0.1s, box-shadow 0.1s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
             margin-top: 15px;
-            display: inline-block;
         }
-        .action-btn:active {
+        .magic-btn:active {
             transform: translateY(6px);
-            box-shadow: 0 2px 0 #27ae60;
+            box-shadow: 0 2px 0 #038060;
         }
-        .action-btn.blue-btn {
-            background: var(--sky);
-            box-shadow: 0 8px 0 #0096c7;
+        .magic-btn.blue-btn {
+            background: linear-gradient(180deg, #4cc9f0 0%, #0096c7 100%);
+            box-shadow: 0 8px 0 #0077b6, 0 12px 20px rgba(76,201,240,0.3);
         }
 
-        /* INSTRUCTIONS GRID */
+        /* INSTRUCTIONS CARDS */
         .instruction-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 12px;
             width: 100%;
-            margin-bottom: 15px;
+            margin: 15px 0;
         }
         .instruction-card {
-            background: #fff0f3;
-            border: 3px dashed var(--primary);
+            background: #f8f9fa;
+            border: 3px solid #e9ecef;
             border-radius: 20px;
             padding: 12px;
             display: flex;
             align-items: center;
             gap: 12px;
             text-align: left;
+            box-shadow: 0 6px 0 #dee2e6;
         }
         .instruction-card .icon {
-            font-size: 2.2rem;
+            font-size: 2rem;
             background: white;
             padding: 8px;
-            border-radius: 15px;
-            box-shadow: 0 4px 0 rgba(0,0,0,0.05);
+            border-radius: 14px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
         }
         .instruction-card .text {
-            font-size: calc(0.95rem + 0.3vw);
-            color: #444;
+            font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+            color: var(--text-color);
             font-weight: bold;
             line-height: 1.3;
         }
 
-        /* STATUS BAR */
+        /* STATUS BAR & MAP PROGRESS */
         .status-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
             width: 100%;
-            padding: 0 5px;
-            margin-bottom: 12px;
-            font-size: calc(1.2rem + 0.5vw);
+            font-size: clamp(1.1rem, 3vw, 1.4rem);
             font-weight: bold;
+            margin-bottom: 10px;
         }
-        .heart-box { color: #ff477e; }
+        .heart-box { color: var(--primary-pink); }
         .score-box {
             background: #fff3cd;
             color: #856404;
-            padding: 5px 15px;
-            border-radius: 15px;
+            padding: 6px 16px;
+            border-radius: 20px;
             border: 2px solid #ffeeba;
+            box-shadow: 0 4px 0 #ebd79b;
         }
 
-        /* MAP TRACK (PROGRESS BAR) */
+        /* PROGRESS TRACKER MAP */
         .map-track {
-            display: grid;
-            grid-template-columns: repeat(12, 1fr);
+            display: flex;
+            justify-content: space-between;
             align-items: center;
-            background: #fff5f6;
-            padding: 12px 5px;
+            background: #f1f3f5;
+            padding: 10px 8px;
             border-radius: 20px;
-            margin-bottom: 12px;
-            border: 3px dashed #ffb3c1;
-            position: relative;
             width: 100%;
-            gap: 2px;
+            margin-bottom: 12px;
+            border: 2px solid #e9ecef;
+            position: relative;
         }
         .map-tile {
-            height: calc(28px + 2.5vw);
-            background: #e2e8f0;
+            width: calc(100% / 12 - 4px);
+            aspect-ratio: 1;
+            max-width: 38px;
+            background: #ced4da;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: calc(0.6rem + 0.4vw);
+            font-size: clamp(0.6rem, 2vw, 0.9rem);
             font-weight: bold;
             color: white;
-            z-index: 5;
-            box-shadow: 0 3px 0 #cbd5e1;
-            transition: background 0.3s;
+            box-shadow: inset 0 -2px 0 rgba(0,0,0,0.2);
+            transition: background 0.3s, transform 0.3s;
         }
         .map-tile.passed {
-            background: var(--grass);
-            box-shadow: 0 3px 0 #27ae60;
+            background: var(--mint-green);
+            transform: scale(1.05);
         }
         .map-tile.finish-gate {
-            background: var(--purple);
-            border-radius: 12px;
-            box-shadow: 0 3px 0 #7b2cbf;
+            background: var(--magic-purple);
+            border-radius: 10px;
         }
         .pawn-avatar {
-            font-size: calc(1.5rem + 1.8vw);
+            font-size: clamp(1.4rem, 4vw, 2.2rem);
             position: absolute;
-            top: calc(-10px - 1vw);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.3);
+            top: -12px;
+            transition: left 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             z-index: 10;
+            filter: drop-shadow(0 4px 4px rgba(0,0,0,0.15));
         }
 
-        /* DISPLAY CARD CONTAINER */
-        .display-box {
-            background: #f8f9fa;
-            border: 5px solid var(--sky);
+        /* MAIN MAGIC STAGE DISPLAY */
+        .stage-box {
+            background: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%);
+            border: 4px solid var(--sky-blue);
             border-radius: 25px;
-            padding: 15px 10px;
-            margin-bottom: 12px;
-            box-shadow: 0 8px 0 #bde0fe;
+            padding: 15px 12px;
             width: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
+            box-shadow: 0 10px 0 #bde0fe, 0 15px 25px rgba(0,0,0,0.05);
             position: relative;
-            min-height: 180px;
+            min-height: 200px;
             justify-content: center;
         }
         .mode-badge {
-            display: inline-block;
-            padding: 4px 16px;
-            font-size: calc(0.9rem + 0.3vw);
+            padding: 5px 18px;
+            font-size: clamp(0.85rem, 2.5vw, 1.1rem);
             font-weight: bold;
             color: white;
-            border-radius: 14px;
-            margin-bottom: 6px;
-            background-color: var(--coral);
-        }
-        .math-spell {
-            font-size: calc(1.3rem + 0.7vw);
-            font-weight: bold;
-            color: #333;
-            margin-top: 6px;
+            border-radius: 20px;
+            margin-bottom: 8px;
+            background: var(--primary-pink);
+            box-shadow: 0 4px 10px rgba(255,71,126,0.3);
         }
 
-        /* HINT BUTTON & BOX */
+        /* HINT BUTTON & CLUE BOX */
         .hint-btn {
             background: #fff3cd;
             color: #856404;
-            border: 2px solid var(--sunshine);
+            border: 2px solid var(--bright-yellow);
             border-radius: 20px;
-            padding: 6px 16px;
-            font-size: calc(0.9rem + 0.3vw);
+            padding: 5px 14px;
+            font-size: 0.95rem;
             font-weight: bold;
             cursor: pointer;
             margin-bottom: 8px;
+            box-shadow: 0 4px 0 #e6a100;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            box-shadow: 0 4px 0 #e6a100;
-            transition: transform 0.1s ease;
+            gap: 5px;
         }
-        .hint-btn:active {
-            transform: translateY(3px);
-            box-shadow: 0 1px 0 #e6a100;
-        }
+        .hint-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 #e6a100; }
         .hint-text-box {
             background: #e8f8f5;
-            border: 2px dashed #2ecc71;
+            border: 2px dashed var(--mint-green);
             color: #1e8449;
             padding: 6px 14px;
             border-radius: 12px;
-            font-size: calc(0.95rem + 0.2vw);
+            font-size: clamp(0.9rem, 2.5vw, 1.05rem);
             font-weight: bold;
-            margin-top: 6px;
+            margin-bottom: 8px;
             display: none;
             animation: fadeIn 0.3s ease-out;
         }
 
-        /* GAME CONCEPT 1: TRAIN STYLES */
+        /* CONCEPT 1: TRAIN SCENE */
+        .train-track-wrap {
+            width: 100%;
+            background: repeating-linear-gradient(90deg, #d4a373 0 10px, #bc6c25 10px 20px);
+            height: 8px;
+            border-radius: 4px;
+            margin: 15px 0 5px 0;
+            position: relative;
+        }
         .train-container {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
-            margin: 8px 0;
-            animation: chugTrain 1.2s ease-in-out infinite alternate;
+            gap: 8px;
+            margin-bottom: 10px;
+            animation: trainChug 1s infinite alternate ease-in-out;
         }
-        @keyframes chugTrain {
+        @keyframes trainChug {
             0% { transform: translateY(0); }
-            100% { transform: translateY(-4px); }
+            100% { transform: translateY(-3px); }
         }
-        .train-engine { font-size: 3rem; }
         .train-bogey {
-            background: #ffd166;
-            border: 4px solid #f77f00;
-            border-radius: 16px;
-            width: 60px;
-            height: 65px;
+            background: linear-gradient(180deg, #ffb703 0%, #fb8500 100%);
+            border: 3px solid #d66800;
+            border-radius: 14px;
+            width: clamp(55px, 12vw, 70px);
+            height: clamp(60px, 13vw, 75px);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.7rem;
+            font-size: clamp(1.4rem, 3.5vw, 1.8rem);
             font-weight: bold;
-            color: #333;
-            box-shadow: 0 5px 0 #d66800;
+            color: white;
+            box-shadow: 0 6px 0 #b35400;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
         }
         .train-bogey.blank {
             background: white;
-            border-style: dashed;
-            color: var(--primary);
-            animation: pulseBlank 1s infinite alternate;
+            border: 3px dashed var(--primary-pink);
+            color: var(--primary-pink);
+            animation: pulseBlank 0.8s infinite alternate;
         }
         @keyframes pulseBlank {
-            0% { transform: scale(0.98); border-color: var(--primary); }
-            100% { transform: scale(1.04); border-color: var(--purple); }
+            0% { transform: scale(0.96); border-color: var(--primary-pink); }
+            100% { transform: scale(1.04); border-color: var(--magic-purple); }
         }
 
-        /* GAME CONCEPT 2: BALLOON STYLES */
-        .balloon-sky {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
+        /* CONCEPT 2: BALLOONS SCENE */
+        .balloon-cloud-bg {
+            background: linear-gradient(180deg, #e0f7fa 0%, #ffffff 100%);
+            border-radius: 20px;
+            padding: 10px;
             width: 100%;
-            padding: 6px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         .floating-balloon {
-            font-size: 3.2rem;
-            animation: floatUp 2.5s infinite ease-in-out alternate;
-            filter: drop-shadow(0 6px 4px rgba(0,0,0,0.15));
+            font-size: clamp(3rem, 8vw, 4rem);
+            animation: floatBalloon 2.2s infinite ease-in-out alternate;
+            filter: drop-shadow(0 8px 6px rgba(0,0,0,0.12));
         }
-        @keyframes floatUp {
-            from { transform: translateY(0px) rotate(-3deg); }
-            to { transform: translateY(-10px) rotate(3deg); }
+        @keyframes floatBalloon {
+            0% { transform: translateY(0) rotate(-2deg); }
+            100% { transform: translateY(-12px) rotate(2deg); }
         }
 
-        /* GAME CONCEPT 3: FRUIT SHOP STYLES */
-        .market-shelf {
-            background: var(--wood);
-            border-radius: 18px;
+        /* CONCEPT 3: FRUIT SHOP SCENE */
+        .market-shelf-3d {
+            background: #deab68;
+            border-bottom: 8px solid #b07d3b;
+            border-radius: 16px;
             padding: 10px;
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-            box-shadow: inset 0 -6px 0 rgba(0,0,0,0.15);
             width: 90%;
+            display: flex;
+            justify-content: center;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
         }
-        .basket {
+        .basket-3d {
             background: #fff8e7;
             border: 3px solid #c8963e;
             border-radius: 16px;
-            padding: 6px 10px;
+            padding: 8px;
             display: flex;
             flex-wrap: wrap;
-            gap: 4px;
+            gap: 6px;
             justify-content: center;
             align-items: center;
-            min-width: 90px;
+            min-width: 100px;
             min-height: 70px;
         }
-        .basket-item {
-            font-size: 1.7rem;
+        .fruit-item {
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            animation: popFruit 0.3s ease-out;
         }
 
-        /* CHOICES LAYOUT */
+        /* QUESTION TEXT */
+        .question-text {
+            font-size: clamp(1.2rem, 3.2vw, 1.6rem);
+            font-weight: bold;
+            color: var(--text-color);
+            margin-top: 10px;
+        }
+
+        /* CHOICE BUTTONS */
         .choices-layout {
             display: flex;
-            gap: 15px;
+            gap: 12px;
             width: 100%;
             justify-content: center;
+            margin-top: 10px;
         }
         .choice-card {
             background: white;
-            border: 5px solid var(--sunshine);
-            border-radius: 22px;
-            padding: 12px 5px;
-            font-size: calc(1.5rem + 1vw);
+            border: 4px solid var(--bright-yellow);
+            border-radius: 20px;
+            padding: 12px 6px;
+            font-size: clamp(1.4rem, 3.8vw, 1.8rem);
             font-weight: bold;
-            color: #212529;
+            color: var(--text-color);
             cursor: pointer;
             flex: 1;
-            box-shadow: 0 8px 0 #fb8500;
-            transition: transform 0.1s ease, box-shadow 0.1s ease, border-color 0.3s;
+            box-shadow: 0 8px 0 #fb8500, 0 10px 15px rgba(0,0,0,0.05);
+            transition: transform 0.1s, box-shadow 0.1s, border-color 0.3s;
         }
         .choice-card:active {
             transform: translateY(6px);
             box-shadow: 0 2px 0 #fb8500;
         }
         .choice-card.alt-color {
-            border-color: var(--sky);
-            box-shadow: 0 8px 0 #4361ee;
+            border-color: var(--sky-blue);
+            box-shadow: 0 8px 0 #0096c7;
+        }
+        .choice-card.alt-color:active {
+            box-shadow: 0 2px 0 #0096c7;
         }
 
-        /* GLOWING OPTION (TRIGGERED BY HINT OR WRONG GUESS) */
+        /* NEON GLOW FOR HINT / WRONG ATTEMPTS */
         .choice-card.glow-hint {
-            animation: intenseGlow 1.2s infinite alternate;
+            animation: neonGlow 1s infinite alternate;
             border-color: #00ff88 !important;
         }
-        @keyframes intenseGlow {
-            0% { transform: scale(1); box-shadow: 0 0 10px #00ff88, 0 8px 0 #27ae60; }
-            100% { transform: scale(1.04); box-shadow: 0 0 25px #00ff88, 0 8px 0 #27ae60; }
+        @keyframes neonGlow {
+            0% { transform: scale(1); box-shadow: 0 0 10px #00ff88, 0 8px 0 #038060; }
+            100% { transform: scale(1.04); box-shadow: 0 0 22px #00ff88, 0 8px 0 #038060; }
         }
 
         /* CONFETTI BURST */
         .confetti-piece {
             position: absolute;
-            width: 12px;
-            height: 12px;
-            border-radius: 4px;
+            width: 10px;
+            height: 10px;
+            border-radius: 3px;
             pointer-events: none;
             z-index: 99;
             animation: explodeParticles 0.8s forwards cubic-bezier(0.1, 0.8, 0.3, 1);
@@ -416,8 +433,8 @@
         .screen-overlay {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: white;
-            border-radius: 30px;
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 26px;
             z-index: 200;
             display: flex;
             flex-direction: column;
@@ -427,11 +444,9 @@
         }
 
         @media (max-width: 500px) {
-            body { padding: 5px; }
-            .game-screen { padding: 15px 10px; }
-            .instruction-grid { grid-template-columns: 1fr; gap: 8px; }
+            .game-screen { padding: 15px 10px; min-height: 90vh; }
             .choices-layout { flex-direction: column; gap: 10px; }
-            .train-bogey { width: 48px; height: 52px; font-size: 1.3rem; }
+            .instruction-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -440,15 +455,15 @@
     <!-- SCREEN 1: INNOVINE LOGO (EXACTLY 5 SECONDS) -->
     <div id="screen-logo" class="game-screen active">
         <img src="assets/innovine-logo.png" alt="Innovine Logo" class="logo-img" onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='block';">
-        <h2 id="logo-fallback" style="display:none; font-size: 2.5rem; color: #333;">Innovine Media</h2>
+        <h2 id="logo-fallback" style="display:none; font-size: 2.2rem; color: #333;">Innovine Media</h2>
     </div>
 
     <!-- SCREEN 2: GAME TITLE SCREEN -->
     <div id="screen-title" class="game-screen">
-        <span style="font-size: 5rem; margin-bottom: 10px;">✨</span>
+        <span style="font-size: 4.8rem; margin-bottom: 5px;">✨</span>
         <h1>गिनती का जादू</h1>
-        <p style="font-size: 1.3rem; color: #666; margin-bottom: 20px;">आओ मिलकर <b>१ से १०</b> तक गिनती सीखें!</p>
-        <button class="action-btn" onclick="switchScreen('screen-title', 'screen-instructions')">आगे बढ़ें 🚀</button>
+        <p style="font-size: 1.2rem; color: #555; margin-bottom: 15px;">आओ मिलकर <b>१ से १०</b> तक गिनती सीखें!</p>
+        <button class="magic-btn" onclick="switchScreen('screen-title', 'screen-instructions')">आगे बढ़ें 🚀</button>
     </div>
 
     <!-- SCREEN 3: INSTRUCTIONS SCREEN -->
@@ -472,7 +487,7 @@
                 <span class="text">आपके पास कुल 3 Lives हैं।</span>
             </div>
         </div>
-        <button class="action-btn blue-btn" onclick="initAudioAndStartGame()">खेलें 🎮</button>
+        <button class="magic-btn blue-btn" onclick="initAudioAndStartGame()">खेलें 🎮</button>
     </div>
 
     <!-- SCREEN 4: GAME PLAY SCREEN -->
@@ -498,22 +513,22 @@
             <div class="map-tile finish-gate" id="tile-11">🏆</div>
         </div>
 
-        <div class="display-box" id="mainDisplayCard">
+        <div class="stage-box" id="mainDisplayCard">
             <span class="mode-badge" id="gameModeBadge">🚂 गिनती ट्रेन</span>
             
             <button class="hint-btn" onclick="showHintAndGlow()">💡 संकेत</button>
             <div class="hint-text-box" id="hintBox"></div>
 
             <div id="visualArea" style="width: 100%;"></div>
-            <div class="math-spell" id="spellFormula">प्रश्न यहाँ आएगा?</div>
+            <div class="question-text" id="spellFormula">प्रश्न यहाँ आएगा?</div>
         </div>
 
         <div class="choices-layout" id="buttonsLayout"></div>
 
         <div id="endScreen" class="screen-overlay" style="display: none;">
-            <h2 id="endTitle" style="font-size: 3rem; margin-bottom: 10px;">🎉 जीत गए! 🥳</h2>
-            <p id="endDesc" style="font-size: 1.4rem; color: #555; margin-bottom: 25px;">अद्भुत खेल!</p>
-            <button class="action-btn" onclick="resetGame()">फिर खेलें 🔄</button>
+            <h2 id="endTitle" style="font-size: 2.8rem; margin-bottom: 10px;">🎉 जीत गए! 🥳</h2>
+            <p id="endDesc" style="font-size: 1.3rem; color: #555; margin-bottom: 20px;">अद्भुत खेल!</p>
+            <button class="magic-btn" onclick="resetGame()">फिर खेलें 🔄</button>
         </div>
     </div>
 
@@ -522,7 +537,7 @@
     const audioWrong = new Audio('assets/wrong.mp3');
     const audioClaps = new Audio('assets/freesound_community-claps-44774.mp3');
 
-    // 10 QUESTIONS WITH HINTS
+    // 10 QUESTIONS WITH HINTS & GRAMMAR COMPLIANCE
     const baseLevels = [
         { concept: "train", sequence: ["१", "?", "३"], math: "१ के बाद कौन-सा डिब्बा आएगा?", correct: "२ (दो)", choices: ["२ (दो)", "४ (चार)"], hint: "१ के ठीक बाद २ आता है।" },
         { concept: "train", sequence: ["?", "५", "६"], math: "५ के पहले कौन-सा डिब्बा आएगा?", correct: "४ (चार)", choices: ["३ (तीन)", "४ (चार)"], hint: "५ से एक कम गिनिए।" },
@@ -553,7 +568,7 @@
         return arr;
     }
 
-    // LOGO TIMEOUT: 5 SECONDS
+    // LOGO SCREEN TIMEOUT: EXACTLY 5 SECONDS
     window.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
             switchScreen('screen-logo', 'screen-title');
@@ -616,8 +631,12 @@
         const activeTile = document.getElementById(`tile-${currentLevelIndex}`);
         if(!activeTile || !pawn) return;
         
-        const centerOffset = activeTile.offsetLeft + (activeTile.offsetWidth / 2) - (pawn.offsetWidth / 2);
-        pawn.style.left = `${centerOffset}px`;
+        const track = document.getElementById('trackLine');
+        const tileRect = activeTile.getBoundingClientRect();
+        const trackRect = track.getBoundingClientRect();
+        
+        const leftOffset = (tileRect.left - trackRect.left) + (tileRect.width / 2) - (pawn.offsetWidth / 2);
+        pawn.style.left = `${leftOffset}px`;
     }
 
     function showHintAndGlow() {
@@ -636,8 +655,8 @@
 
     function launchConfettiBurst() {
         const arenaCard = document.getElementById('mainDisplayCard');
-        const particleColors = ['#ff758f', '#4cc9f0', '#2ecc71', '#ffb703', '#9b5de5', '#ff6b6b'];
-        const totalParticles = window.innerWidth < 480 ? 25 : 40;
+        const particleColors = ['#ff758f', '#4cc9f0', '#06d6a0', '#ffb703', '#7209b7'];
+        const totalParticles = window.innerWidth < 480 ? 20 : 35;
 
         for (let i = 0; i < totalParticles; i++) {
             const confettiPiece = document.createElement('div');
@@ -646,7 +665,7 @@
             confettiPiece.style.left = '50%';
             confettiPiece.style.top = '50%';
 
-            const maxDist = window.innerWidth < 480 ? 160 : 300;
+            const maxDist = window.innerWidth < 480 ? 140 : 250;
             const vectorX = (Math.random() - 0.5) * maxDist;
             const vectorY = (Math.random() - 0.6) * maxDist;
             const rotationRandom = Math.floor(Math.random() * 360) + 180;
@@ -685,9 +704,9 @@
 
         if(currentData.concept === "train") {
             badge.innerText = "🚂 गिनती ट्रेन";
-            badge.style.backgroundColor = "var(--coral)";
+            badge.style.backgroundColor = "var(--primary-pink)";
 
-            let trainHtml = '<div class="train-container"><span class="train-engine">🚂</span>';
+            let trainHtml = '<div class="train-container"><span style="font-size: 2.8rem;">🚂</span>';
             currentData.sequence.forEach(item => {
                 if(item === "?") {
                     trainHtml += `<div class="train-bogey blank">?</div>`;
@@ -695,24 +714,24 @@
                     trainHtml += `<div class="train-bogey">${item}</div>`;
                 }
             });
-            trainHtml += '</div>';
+            trainHtml += '</div><div class="train-track-wrap"></div>';
             visualArea.innerHTML = trainHtml;
         } 
         else if(currentData.concept === "balloon") {
             badge.innerText = "🎈 गुब्बारा फोड़ो";
-            badge.style.backgroundColor = "var(--sky)";
+            badge.style.backgroundColor = "var(--sky-blue)";
 
-            visualArea.innerHTML = `<div class="balloon-sky"><span class="floating-balloon">${currentData.visual}</span></div>`;
+            visualArea.innerHTML = `<div class="balloon-cloud-bg"><span class="floating-balloon">${currentData.visual}</span></div>`;
         } 
         else if(currentData.concept === "shop") {
             badge.innerText = "🛒 फल की दुकान";
-            badge.style.backgroundColor = "var(--grass)";
+            badge.style.backgroundColor = "var(--mint-green)";
 
-            let shopHtml = '<div class="market-shelf"><div class="basket">';
+            let shopHtml = '<div style="display:flex; justify-content:center;"><div class="market-shelf-3d"><div class="basket-3d">';
             for(let i = 0; i < currentData.count; i++) {
-                shopHtml += `<span class="basket-item">${currentData.fruit}</span>`;
+                shopHtml += `<span class="fruit-item">${currentData.fruit}</span>`;
             }
-            shopHtml += '</div></div>';
+            shopHtml += '</div></div></div>';
             visualArea.innerHTML = shopHtml;
         }
 
