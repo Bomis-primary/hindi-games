@@ -1,1 +1,681 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>मैजिक कार्निवल: शरीर के अंग और पाँच इंद्रियाँ 🎪🎈</title>
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #a1c4fd 100%);
+            --balloon-red: linear-gradient(135deg, #ff5252, #ff1744);
+            --balloon-yellow: linear-gradient(135deg, #ffca28, #ffb300);
+            --balloon-blue: linear-gradient(135deg, #42a5f5, #1e88e5);
+            --balloon-green: linear-gradient(135deg, #66bb6a, #43a047);
+            --dark-text: #2c3e50;
+        }
 
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', 'Segoe UI', Arial, sans-serif;
+            background: var(--bg-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 10px;
+            overflow-x: hidden;
+            user-select: none;
+        }
+
+        .game-screen {
+            display: none;
+            width: 100%;
+            max-width: 800px;
+            min-height: 85vh;
+            background: rgba(255, 255, 255, 0.96);
+            border-radius: 35px;
+            padding: 20px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15), inset 0 0 0 5px #ffffff;
+            border: 5px solid #ff8f00;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            overflow: hidden;
+        }
+
+        .game-screen.active {
+            display: flex;
+        }
+
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* SCREEN 1: LOGO */
+        #screen-logo {
+            background: #ffffff;
+            justify-content: center;
+            border-color: #f0f0f0;
+        }
+        .logo-img {
+            max-width: 70%;
+            max-height: 40vh;
+            object-fit: contain;
+            animation: pulseGlow 2s infinite ease-in-out;
+        }
+        @keyframes pulseGlow {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(255,143,0,0.3)); }
+            50% { transform: scale(1.05); filter: drop-shadow(0 0 25px rgba(255,64,129,0.5)); }
+        }
+
+        h1 {
+            color: #d81b60;
+            font-size: clamp(2.2rem, 5.5vw, 3.2rem);
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 0px #f8bbd0;
+            text-align: center;
+        }
+
+        .carnival-btn {
+            background: linear-gradient(180deg, #ff4081 0%, #c2185b 100%);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            font-size: clamp(1.3rem, 3.2vw, 1.7rem);
+            font-weight: bold;
+            border-radius: 50px;
+            box-shadow: 0 8px 0 #880e4f, 0 12px 25px rgba(194, 24, 91, 0.35);
+            cursor: pointer;
+            transition: transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.1s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .carnival-btn:active {
+            transform: translateY(6px);
+            box-shadow: 0 2px 0 #880e4f;
+        }
+
+        /* INSTRUCTIONS CARD */
+        .instruction-box {
+            background: #fff8e1;
+            border: 4px dashed #ffb300;
+            border-radius: 25px;
+            padding: 20px;
+            text-align: left;
+            margin: 15px 0;
+            width: 100%;
+            box-shadow: 0 8px 0 #ffe082;
+        }
+        .instruction-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: clamp(1.1rem, 2.8vw, 1.3rem);
+            color: var(--dark-text);
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+        .instruction-item:last-child { margin-bottom: 0; }
+        .instruction-item .icon { font-size: 2rem; }
+
+        /* STATUS BAR */
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            font-size: clamp(1.2rem, 3.2vw, 1.5rem);
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .heart-box { color: #ff1744; }
+        .score-box {
+            background: #fff3cd;
+            color: #856404;
+            padding: 6px 20px;
+            border-radius: 20px;
+            border: 2px solid #ffeeba;
+            box-shadow: 0 4px 0 #ebd79b;
+        }
+
+        /* 3D FLIP MAGIC CARD */
+        .card-container {
+            perspective: 1000px;
+            width: 100%;
+            margin: 10px 0;
+        }
+
+        .flip-card {
+            width: 100%;
+            min-height: 180px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+        }
+
+        .flip-card.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 28px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            border: 4px solid #ffb300;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+        }
+
+        .card-front {
+            background: linear-gradient(180deg, #ffffff 0%, #fffde7 100%);
+        }
+
+        .card-back {
+            background: #8e44ad;
+            color: white;
+            transform: rotateY(180deg);
+            font-size: 3.5rem;
+        }
+
+        .question-emoji {
+            font-size: clamp(3.8rem, 10vw, 4.8rem);
+            margin-bottom: 5px;
+            filter: drop-shadow(0 6px 8px rgba(0,0,0,0.12));
+            animation: bounceEmoji 2s infinite ease-in-out alternate;
+        }
+        @keyframes bounceEmoji {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-8px); }
+        }
+
+        .question-text {
+            font-size: clamp(1.25rem, 3.5vw, 1.65rem);
+            font-weight: bold;
+            color: var(--dark-text);
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        .hint-btn {
+            background: #fff3cd;
+            color: #856404;
+            border: 2px solid #ffeeba;
+            border-radius: 20px;
+            padding: 6px 18px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 3px 0 #ebd79b;
+            margin-bottom: 8px;
+        }
+        .hint-box {
+            background: #e8f8f5;
+            border: 2px dashed #2ecc71;
+            color: #1e8449;
+            padding: 8px 16px;
+            border-radius: 14px;
+            font-size: 1.05rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: none;
+        }
+
+        /* FLOATING BALLOON OPTIONS */
+        .balloons-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .balloon-card {
+            min-height: 105px;
+            border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            box-shadow: 0 10px 15px rgba(0,0,0,0.15), inset -8px -8px 0 rgba(0,0,0,0.15);
+            transition: transform 0.2s ease-in-out;
+            animation: floatBalloon 3s infinite ease-in-out alternate;
+            padding: 10px;
+        }
+
+        .balloon-card:nth-child(1) { background: var(--balloon-red); animation-delay: 0s; }
+        .balloon-card:nth-child(2) { background: var(--balloon-yellow); animation-delay: 0.4s; }
+        .balloon-card:nth-child(3) { background: var(--balloon-blue); animation-delay: 0.2s; }
+        .balloon-card:nth-child(4) { background: var(--balloon-green); animation-delay: 0.6s; }
+
+        @keyframes floatBalloon {
+            0% { transform: translateY(0) rotate(-2deg); }
+            100% { transform: translateY(-8px) rotate(2deg); }
+        }
+
+        .balloon-card:active {
+            transform: scale(0.92);
+        }
+
+        .balloon-card::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            width: 12px;
+            height: 8px;
+            background: inherit;
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+        }
+
+        .balloon-icon {
+            font-size: clamp(2.2rem, 5.5vw, 3rem);
+        }
+
+        .balloon-label {
+            font-size: clamp(1.15rem, 3vw, 1.4rem);
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+
+        /* POP ANIMATION */
+        .balloon-card.popped {
+            animation: popDisappear 0.3s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popDisappear {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.3); opacity: 0.8; }
+            100% { transform: scale(0); opacity: 0; }
+        }
+
+        /* REWARD OVERLAY */
+        .reward-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 30px;
+            z-index: 150;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            animation: popReward 0.3s ease-out;
+            padding: 20px;
+            border: 6px solid #2ecc71;
+        }
+
+        @keyframes popReward {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .reward-card {
+            background: #e8f8f5;
+            border: 4px solid #2ecc71;
+            border-radius: 25px;
+            padding: 22px;
+            text-align: center;
+            width: 90%;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .reward-text {
+            font-size: clamp(1.25rem, 3.5vw, 1.7rem);
+            font-weight: bold;
+            color: #1e8449;
+            line-height: 1.4;
+        }
+
+        .confetti-piece {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 3px;
+            pointer-events: none;
+            z-index: 99;
+            animation: explodeParticles 0.8s forwards;
+        }
+
+        @keyframes explodeParticles {
+            0% { transform: translate(0,0) rotate(0deg); opacity: 1; }
+            100% { transform: translate(var(--x), var(--y)) rotate(var(--r)); opacity: 0; }
+        }
+
+        .screen-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 30px;
+            z-index: 200;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        @media (max-width: 480px) {
+            .game-screen { padding: 12px; }
+            .balloons-grid { grid-template-columns: 1fr; gap: 10px; }
+            .balloon-card { min-height: 85px; flex-direction: row; gap: 15px; border-radius: 25px; }
+            .balloon-card::after { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SCREEN 1: LOGO SCREEN (5 SECONDS AUTO TIMER) -->
+    <div id="screen-logo" class="game-screen active">
+        <img src="assets/innovine-logo.png" alt="Innovine Logo" class="logo-img" onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='block';">
+        <h2 id="logo-fallback" style="display:none; font-size: 2.5rem; color: #333;">Innovine Media</h2>
+    </div>
+
+    <!-- SCREEN 2: GAME TITLE -->
+    <div id="screen-title" class="game-screen">
+        <span style="font-size: 5rem; margin-bottom: 5px;">🎪🎈</span>
+        <h1>मैजिक कार्निवल</h1>
+        <p style="font-size: 1.25rem; color: #555; margin-bottom: 15px;">शरीर के अंग और पाँच इंद्रियाँ!</p>
+        <button class="carnival-btn" onclick="switchScreen('screen-title', 'screen-instructions')">आगे बढ़ें 🚀</button>
+    </div>
+
+    <!-- SCREEN 3: SIMPLIFIED INSTRUCTIONS -->
+    <div id="screen-instructions" class="game-screen">
+        <h1>कैसे खेलें? 🎯</h1>
+        <div class="instruction-box">
+            <div class="instruction-item">
+                <span class="icon">🃏</span>
+                <span><b>1.</b> मैजिक कार्ड पर सवाल देखिए।</span>
+            </div>
+            <div class="instruction-item">
+                <span class="icon">🎈</span>
+                <span><b>2.</b> सही जवाब वाले गुब्बारे को <b>फोड़िए (Pop 🎉)!</b></span>
+            </div>
+            <div class="instruction-item">
+                <span class="icon">💡</span>
+                <span><b>3.</b> मदद के लिए <b>संकेत बटन</b> दबाएँ।</span>
+            </div>
+            <div class="instruction-item">
+                <span class="icon">❤️</span>
+                <span><b>4.</b> आपके पास कुल <b>3 Lives</b> हैं!</span>
+            </div>
+        </div>
+        <button class="carnival-btn" onclick="initAudioAndStartGame()">खेल शुरू करें 🎮</button>
+    </div>
+
+    <!-- SCREEN 4: MAIN GAME SCREEN -->
+    <div id="screen-game" class="game-screen">
+        <div class="status-bar">
+            <div class="heart-box" id="heartBox">❤️ ❤️ ❤️</div>
+            <div class="score-box" id="scoreBox">⭐ अंक: 0</div>
+        </div>
+
+        <button class="hint-btn" onclick="showHint()">💡 संकेत</button>
+        <div class="hint-box" id="hintBox"></div>
+
+        <!-- 3D FLIP MAGIC CARD -->
+        <div class="card-container">
+            <div class="flip-card" id="flipCard">
+                <div class="card-front">
+                    <span class="question-emoji" id="qEmoji">🌹</span>
+                    <div class="question-text" id="qText">प्रश्न यहाँ आएगा?</div>
+                </div>
+                <div class="card-back">✨ 🎪 ✨</div>
+            </div>
+        </div>
+
+        <!-- BALLOON OPTIONS -->
+        <div class="balloons-grid" id="balloonsLayout"></div>
+
+        <!-- REWARD OVERLAY -->
+        <div class="reward-overlay" id="rewardOverlay">
+            <div class="reward-card">
+                <span style="font-size: 3.5rem; display: block; margin-bottom: 8px;">🎉🎈</span>
+                <div class="reward-text" id="rewardAnswerText">शाबाश! नाक सूंघने का काम करती है।</div>
+            </div>
+        </div>
+
+        <!-- END SCREEN -->
+        <div id="endScreen" class="screen-overlay" style="display: none;">
+            <h2 id="endTitle" style="font-size: 2.8rem; margin-bottom: 10px; color: #d81b60;">🎉 जीत गए! 🥳</h2>
+            <p id="endDesc" style="font-size: 1.3rem; color: #555; margin-bottom: 20px;">अद्भुत खेल!</p>
+            <button class="carnival-btn" onclick="resetGame()">फिर खेलें 🔄</button>
+        </div>
+    </div>
+
+<script>
+    const audioCorrect = new Audio('assets/correct.mp3');
+    const audioWrong = new Audio('assets/wrong.mp3');
+    const audioClaps = new Audio('assets/freesound_community-claps-44774.mp3');
+
+    function speakHindiFeedback(text) {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'hi-IN';
+            utterance.rate = 0.95;
+            utterance.pitch = 1.15;
+            window.speechSynthesis.speak(utterance);
+        }
+    }
+
+    // NCERT GRADE 1 VARIETY QUESTIONS POOL (USING 🫸 FOR HANDS)
+    const baseLevels = [
+        { itemEmoji: "🌹", math: "फूल की महक (खुशबू) लेने में हमारी मदद कौन करता है?", correct: "नाक", sentence: "शाबाश! नाक सूंघने का काम करती है।", choices: [{name: "नाक", icon: "👃"}, {name: "आँखें", icon: "👁️"}, {name: "कान", icon: "👂"}, {name: "जीभ", icon: "👅"}], hint: "सूंघने के लिए नाक काम आती है।" },
+        { itemEmoji: "🍦", math: "ठंडी आइसक्रीम मीठी है, यह किससे पता चलेगा?", correct: "जीभ", sentence: "अरे वाह! जीभ स्वाद बताती है।", choices: [{name: "जीभ", icon: "👅"}, {name: "नाक", icon: "👃"}, {name: "हाथ", icon: "🫸"}, {name: "कान", icon: "👂"}], hint: "स्वाद का पता जीभ से चलता है।" },
+        { itemEmoji: "🔔", math: "घंटी की 'टन-टन' आवाज़ आई! हमने किससे सुनी?", correct: "कान", sentence: "सुपर! कानों से हम सुनते हैं।", choices: [{name: "कान", icon: "👂"}, {name: "आँखें", icon: "👁️"}, {name: "जीभ", icon: "👅"}, {name: "नाक", icon: "👃"}], hint: "आवाज़ सुनने के लिए कान काम आते हैं।" },
+        { itemEmoji: "📺", math: "रंगीन कार्टून देखने के लिए कौन-सा अंग चाहिए?", correct: "आँखें", sentence: "बिल्कुल सही! आँखों से हम देखते हैं।", choices: [{name: "आँखें", icon: "👁️"}, {name: "नाक", icon: "👃"}, {name: "कान", icon: "👂"}, {name: "हाथ", icon: "🫸"}], hint: "देखने का काम आँखें करती हैं।" },
+        { itemEmoji: "🧸", math: "नरम टेडी बियर को छूकर देखने पर कैसा लगा?", correct: "हाथ", sentence: "बधाई हो! हाथों से हम छूकर महसूस करते हैं।", choices: [{name: "हाथ", icon: "🫸"}, {name: "आँखें", icon: "👁️"}, {name: "कान", icon: "👂"}, {name: "नाक", icon: "👃"}], hint: "छूने के लिए हाथ काम आते हैं।" },
+        { itemEmoji: "🍎", math: "सेब का टुकड़ा चबाने में कौन मदद करता है?", correct: "दाँत", sentence: "बहुत अच्छे! दाँत खाना चबाते हैं।", choices: [{name: "दाँत", icon: "🦷"}, {name: "बाल", icon: "💇‍♂️"}, {name: "पैर", icon: "🦶"}, {name: "घुटने", icon: "🦵"}], hint: "खाना दाँतों से चबाया जाता है।" },
+        { itemEmoji: "⚽", math: "मैदान में दौड़कर गेंद को किक किससे मारोगे?", correct: "पैर", sentence: "शानदार! पैरों से हम चलते और दौड़ते हैं।", choices: [{name: "पैर", icon: "🦶"}, {name: "हाथ", icon: "🫸"}, {name: "सिर", icon: "🗣️"}, {name: "पेट", icon: "👕"}], hint: "दौड़ने और किक मारने के लिए पैर चाहिए।" },
+        { itemEmoji: "✍️", math: "कागज़ पर सुंदर चित्र बनाने के लिए पेंसिल किसमें पकड़ें?", correct: "उंगलियाँ", sentence: "बढ़िया! उंगलियों से पकड़कर लिखते हैं।", choices: [{name: "उंगलियाँ", icon: "🫸"}, {name: "घुटने", icon: "🦵"}, {name: "बाल", icon: "💇‍♂️"}, {name: "पेट", icon: "👕"}], hint: "पेंसिल हाथों/उंगलियों से पकड़ी जाती है।" },
+        { itemEmoji: "🎧", math: "रेडियो पर गाना बज रहा है, आनंद कौन ले रहा है?", correct: "कान", sentence: "सही उत्तर! कानों से संगीत सुनते हैं।", choices: [{name: "कान", icon: "👂"}, {name: "दाँत", icon: "🦷"}, {name: "नाक", icon: "👃"}, {name: "पैर", icon: "🦶"}], hint: "गाने सुनने के लिए कान चाहिए।" },
+        { itemEmoji: "📚", math: "कहानी की किताब में बने चित्र कौन देख रहा है?", correct: "आँखें", sentence: "अद्भुत! आँखों से हम पढ़ते और देखते हैं।", choices: [{name: "आँखें", icon: "👁️"}, {name: "जीभ", icon: "👅"}, {name: "बाल", icon: "💇‍♂️"}, {name: "नाक", icon: "👃"}], hint: "किताब देखने के लिए आँखें चाहिए।" }
+    ];
+
+    let activeLevels = [];
+    let currentLevelIndex = 1;
+    let totalLives = 3;
+    let totalScore = 0;
+
+    function shuffleArray(array) {
+        let arr = [...array];
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+    // 5-SECOND AUTO TIMER FOR LOGO SCREEN
+    window.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+            switchScreen('screen-logo', 'screen-title');
+        }, 5000);
+    });
+
+    function switchScreen(hideId, showId) {
+        document.getElementById(hideId).classList.remove('active');
+        document.getElementById(showId).classList.add('active');
+    }
+
+    function initAudioAndStartGame() {
+        [audioCorrect, audioWrong, audioClaps].forEach(track => {
+            track.play().catch(() => {});
+            track.pause();
+            track.currentTime = 0;
+        });
+        switchScreen('screen-instructions', 'screen-game');
+        resetAndShuffleGame();
+    }
+
+    function resetAndShuffleGame() {
+        activeLevels = shuffleArray(baseLevels).map(level => {
+            return {
+                ...level,
+                choices: shuffleArray(level.choices)
+            };
+        });
+
+        currentLevelIndex = 1;
+        totalLives = 3;
+        totalScore = 0;
+
+        renderStatusDisplays();
+        loadChallenge();
+    }
+
+    function renderStatusDisplays() {
+        let heartString = "";
+        for(let i = 0; i < totalLives; i++) { heartString += "❤️ "; }
+        if(heartString === "") heartString = "💔 खेल खत्म";
+        document.getElementById('heartBox').innerText = heartString;
+        document.getElementById('scoreBox').innerText = `⭐ अंक: ${totalScore}`;
+    }
+
+    function showHint() {
+        const currentData = activeLevels[currentLevelIndex - 1];
+        const hintBox = document.getElementById('hintBox');
+        hintBox.innerText = `💡 ${currentData.hint}`;
+        hintBox.style.display = "block";
+    }
+
+    function launchConfettiBurst() {
+        const arenaCard = document.getElementById('screen-game');
+        const colors = ['#ff5252', '#ffca28', '#42a5f5', '#66bb6a', '#ab47bc'];
+        for (let i = 0; i < 30; i++) {
+            const piece = document.createElement('div');
+            piece.classList.add('confetti-piece');
+            piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            piece.style.left = '50%';
+            piece.style.top = '40%';
+
+            const vx = (Math.random() - 0.5) * 300;
+            const vy = (Math.random() - 0.5) * 300;
+            const rot = Math.floor(Math.random() * 360);
+
+            piece.style.setProperty('--x', `${vx}px`);
+            piece.style.setProperty('--y', `${vy}px`);
+            piece.style.setProperty('--r', `${rot}deg`);
+
+            arenaCard.appendChild(piece);
+            setTimeout(() => { piece.remove(); }, 800);
+        }
+    }
+
+    function loadChallenge() {
+        document.getElementById('hintBox').style.display = "none";
+        document.getElementById('rewardOverlay').style.display = "none";
+        
+        if (currentLevelIndex > 10) {
+            setTimeout(() => { triggerGameEnd(true); }, 500);
+            return;
+        }
+
+        const currentData = activeLevels[currentLevelIndex - 1];
+        const flipCard = document.getElementById('flipCard');
+
+        // 3D CARD FLIP ANIMATION
+        flipCard.classList.add('flipped');
+        setTimeout(() => {
+            document.getElementById('qEmoji').innerText = currentData.itemEmoji;
+            document.getElementById('qText').innerText = currentData.math;
+            flipCard.classList.remove('flipped');
+        }, 300);
+
+        const layout = document.getElementById('balloonsLayout');
+        layout.innerHTML = "";
+        
+        currentData.choices.forEach((choiceObj) => {
+            layout.innerHTML += `
+                <div class="balloon-card" onclick="handleChoiceClick(this, '${choiceObj.name}')">
+                    <span class="balloon-icon">${choiceObj.icon}</span>
+                    <span class="balloon-label">${choiceObj.name}</span>
+                </div>`;
+        });
+    }
+
+    function handleChoiceClick(balloonElem, selectedOption) {
+        const currentData = activeLevels[currentLevelIndex - 1];
+        
+        if (selectedOption === currentData.correct) {
+            audioCorrect.currentTime = 0;
+            audioCorrect.play().catch(() => {});
+
+            // BALLOON POP ANIMATION
+            balloonElem.classList.add('popped');
+
+            const rewardOverlay = document.getElementById('rewardOverlay');
+            document.getElementById('rewardAnswerText').innerText = currentData.sentence;
+            
+            setTimeout(() => {
+                rewardOverlay.style.display = "flex";
+                speakHindiFeedback(currentData.sentence);
+            }, 300);
+
+            totalScore += 10;
+            renderStatusDisplays();
+            launchConfettiBurst();
+            
+            currentLevelIndex++;
+            setTimeout(() => { loadChallenge(); }, 2000);
+        } else {
+            audioWrong.currentTime = 0;
+            audioWrong.play().catch(() => {});
+            
+            speakHindiFeedback("ओहो! फिर से सोचिए।");
+            totalLives--;
+            renderStatusDisplays();
+            showHint();
+
+            if (totalLives <= 0) {
+                setTimeout(() => { triggerGameEnd(false); }, 600);
+            }
+        }
+    }
+
+    function triggerGameEnd(isWin) {
+        const screen = document.getElementById('endScreen');
+        const title = document.getElementById('endTitle');
+        const desc = document.getElementById('endDesc');
+        
+        screen.style.display = "flex";
+        if (isWin) {
+            audioClaps.currentTime = 0;
+            audioClaps.play().catch(() => {});
+            speakHindiFeedback("बधाई हो! आप जीत गए!");
+            title.innerText = "🎉 जीत गए! 🥳";
+            desc.innerText = `अद्भुत खेल! आपने बनाए कुल ${totalScore} अंक।`;
+        } else {
+            speakHindiFeedback("फिर से कोशिश कीजिए!");
+            title.innerText = "ओहो! 💔";
+            desc.innerText = `आपने शानदार प्रयास किया और ${totalScore} अंक बनाए! चलो फिर से कोशिश करते हैं!`;
+        }
+    }
+
+    function resetGame() {
+        document.getElementById('endScreen').style.display = "none";
+        resetAndShuffleGame();
+    }
+</script>
+
+</body>
+</html>
