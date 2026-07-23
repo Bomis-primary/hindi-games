@@ -149,7 +149,7 @@
             box-shadow: 0 4px 0 #ebd79b;
         }
 
-        /* 3D FLIP MAGIC CARD */
+        /* LIGHTER PASTEL CLUE CARD BACKGROUND (FIXED OVERLAPPING LOOK) */
         .card-container {
             perspective: 1000px;
             width: 100%;
@@ -158,7 +158,7 @@
 
         .flip-card {
             width: 100%;
-            min-height: 180px;
+            min-height: 185px;
             position: relative;
             transform-style: preserve-3d;
             transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
@@ -179,26 +179,28 @@
             align-items: center;
             justify-content: center;
             padding: 15px;
-            border: 4px solid #ffb300;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+            border: 4px solid #ffe082;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
         }
 
+        /* Ultra light, clean pastel background for clear emoji visibility */
         .card-front {
-            background: linear-gradient(180deg, #ffffff 0%, #fffde7 100%);
+            background: linear-gradient(180deg, #ffffff 0%, #fffdf0 100%);
         }
 
         .card-back {
-            background: #8e44ad;
+            background: #ab47bc;
             color: white;
             transform: rotateY(180deg);
             font-size: 3.5rem;
         }
 
         .question-emoji {
-            font-size: clamp(3.8rem, 10vw, 4.8rem);
-            margin-bottom: 5px;
-            filter: drop-shadow(0 6px 8px rgba(0,0,0,0.12));
+            font-size: clamp(4rem, 10.5vw, 5rem);
+            margin-bottom: 8px;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.08));
             animation: bounceEmoji 2s infinite ease-in-out alternate;
+            display: inline-block;
         }
         @keyframes bounceEmoji {
             0% { transform: translateY(0); }
@@ -208,7 +210,7 @@
         .question-text {
             font-size: clamp(1.25rem, 3.5vw, 1.65rem);
             font-weight: bold;
-            color: var(--dark-text);
+            color: #1b4332;
             text-align: center;
             line-height: 1.4;
         }
@@ -449,7 +451,7 @@
         <div class="reward-overlay" id="rewardOverlay">
             <div class="reward-card">
                 <span style="font-size: 3.5rem; display: block; margin-bottom: 8px;">🎉🎈</span>
-                <div class="reward-text" id="rewardAnswerText">शाबाश! नाक सूंघने का काम करती है।</div>
+                <div class="reward-text" id="rewardAnswerText">शाबाश! हम नाक से सूंघते हैं।</div>
             </div>
         </div>
 
@@ -477,18 +479,18 @@
         }
     }
 
-    // NCERT GRADE 1 VARIETY QUESTIONS POOL (USING 🫸 FOR HANDS)
+    // NCERT CLASS 1 SIMPLE & DIRECT QUESTIONS POOL
     const baseLevels = [
-        { itemEmoji: "🌹", math: "फूल की महक (खुशबू) लेने में हमारी मदद कौन करता है?", correct: "नाक", sentence: "शाबाश! नाक सूंघने का काम करती है।", choices: [{name: "नाक", icon: "👃"}, {name: "आँखें", icon: "👁️"}, {name: "कान", icon: "👂"}, {name: "जीभ", icon: "👅"}], hint: "सूंघने के लिए नाक काम आती है।" },
-        { itemEmoji: "🍦", math: "ठंडी आइसक्रीम मीठी है, यह किससे पता चलेगा?", correct: "जीभ", sentence: "अरे वाह! जीभ स्वाद बताती है।", choices: [{name: "जीभ", icon: "👅"}, {name: "नाक", icon: "👃"}, {name: "हाथ", icon: "🫸"}, {name: "कान", icon: "👂"}], hint: "स्वाद का पता जीभ से चलता है।" },
-        { itemEmoji: "🔔", math: "घंटी की 'टन-टन' आवाज़ आई! हमने किससे सुनी?", correct: "कान", sentence: "सुपर! कानों से हम सुनते हैं।", choices: [{name: "कान", icon: "👂"}, {name: "आँखें", icon: "👁️"}, {name: "जीभ", icon: "👅"}, {name: "नाक", icon: "👃"}], hint: "आवाज़ सुनने के लिए कान काम आते हैं।" },
-        { itemEmoji: "📺", math: "रंगीन कार्टून देखने के लिए कौन-सा अंग चाहिए?", correct: "आँखें", sentence: "बिल्कुल सही! आँखों से हम देखते हैं।", choices: [{name: "आँखें", icon: "👁️"}, {name: "नाक", icon: "👃"}, {name: "कान", icon: "👂"}, {name: "हाथ", icon: "🫸"}], hint: "देखने का काम आँखें करती हैं।" },
-        { itemEmoji: "🧸", math: "नरम टेडी बियर को छूकर देखने पर कैसा लगा?", correct: "हाथ", sentence: "बधाई हो! हाथों से हम छूकर महसूस करते हैं।", choices: [{name: "हाथ", icon: "🫸"}, {name: "आँखें", icon: "👁️"}, {name: "कान", icon: "👂"}, {name: "नाक", icon: "👃"}], hint: "छूने के लिए हाथ काम आते हैं।" },
-        { itemEmoji: "🍎", math: "सेब का टुकड़ा चबाने में कौन मदद करता है?", correct: "दाँत", sentence: "बहुत अच्छे! दाँत खाना चबाते हैं।", choices: [{name: "दाँत", icon: "🦷"}, {name: "बाल", icon: "💇‍♂️"}, {name: "पैर", icon: "🦶"}, {name: "घुटने", icon: "🦵"}], hint: "खाना दाँतों से चबाया जाता है।" },
-        { itemEmoji: "⚽", math: "मैदान में दौड़कर गेंद को किक किससे मारोगे?", correct: "पैर", sentence: "शानदार! पैरों से हम चलते और दौड़ते हैं।", choices: [{name: "पैर", icon: "🦶"}, {name: "हाथ", icon: "🫸"}, {name: "सिर", icon: "🗣️"}, {name: "पेट", icon: "👕"}], hint: "दौड़ने और किक मारने के लिए पैर चाहिए।" },
-        { itemEmoji: "✍️", math: "कागज़ पर सुंदर चित्र बनाने के लिए पेंसिल किसमें पकड़ें?", correct: "उंगलियाँ", sentence: "बढ़िया! उंगलियों से पकड़कर लिखते हैं।", choices: [{name: "उंगलियाँ", icon: "🫸"}, {name: "घुटने", icon: "🦵"}, {name: "बाल", icon: "💇‍♂️"}, {name: "पेट", icon: "👕"}], hint: "पेंसिल हाथों/उंगलियों से पकड़ी जाती है।" },
-        { itemEmoji: "🎧", math: "रेडियो पर गाना बज रहा है, आनंद कौन ले रहा है?", correct: "कान", sentence: "सही उत्तर! कानों से संगीत सुनते हैं।", choices: [{name: "कान", icon: "👂"}, {name: "दाँत", icon: "🦷"}, {name: "नाक", icon: "👃"}, {name: "पैर", icon: "🦶"}], hint: "गाने सुनने के लिए कान चाहिए।" },
-        { itemEmoji: "📚", math: "कहानी की किताब में बने चित्र कौन देख रहा है?", correct: "आँखें", sentence: "अद्भुत! आँखों से हम पढ़ते और देखते हैं।", choices: [{name: "आँखें", icon: "👁️"}, {name: "जीभ", icon: "👅"}, {name: "बाल", icon: "💇‍♂️"}, {name: "नाक", icon: "👃"}], hint: "किताब देखने के लिए आँखें चाहिए।" }
+        { itemEmoji: "🌹", math: "फूल की खुशबू हम किससे सूंघते हैं?", correct: "नाक", sentence: "शाबाश! हम नाक से सूंघते हैं।", choices: [{name: "नाक", icon: "👃"}, {name: "आँखें", icon: "👁️"}, {name: "कान", icon: "👂"}, {name: "जीभ", icon: "👅"}], hint: "सूंघने के लिए नाक काम आती है।" },
+        { itemEmoji: "🍦", math: "आइसक्रीम मीठी है, यह हम किससे चखते हैं?", correct: "जीभ", sentence: "अरे वाह! हम जीभ से स्वाद चखते हैं।", choices: [{name: "जीभ", icon: "👅"}, {name: "नाक", icon: "👃"}, {name: "हाथ", icon: "🫸"}, {name: "कान", icon: "👂"}], hint: "स्वाद का पता जीभ से चलता है।" },
+        { itemEmoji: "🔔", math: "घंटी की आवाज हम किससे सुनते हैं?", correct: "कान", sentence: "सुपर! हम कानों से सुनते हैं।", choices: [{name: "कान", icon: "👂"}, {name: "आँखें", icon: "👁️"}, {name: "जीभ", icon: "👅"}, {name: "नाक", icon: "👃"}], hint: "आवाज़ सुनने के लिए कान काम आते हैं।" },
+        { itemEmoji: "📺", math: "टीवी पर कार्टून हम किससे देखते हैं?", correct: "आँखें", sentence: "बिल्कुल सही! हम आँखों से देखते हैं।", choices: [{name: "आँखें", icon: "👁️"}, {name: "नाक", icon: "👃"}, {name: "कान", icon: "👂"}, {name: "हाथ", icon: "🫸"}], hint: "देखने का काम आँखें करती हैं।" },
+        { itemEmoji: "🧸", math: "नरम टेडी बियर को हम किससे छूकर महसूस करते हैं?", correct: "हाथ", sentence: "बहुत बढ़िया! हम हाथों से छूकर महसूस करते हैं।", choices: [{name: "हाथ", icon: "🫸"}, {name: "आँखें", icon: "👁️"}, {name: "कान", icon: "👂"}, {name: "नाक", icon: "👃"}], hint: "छूने के लिए हाथ काम आते हैं।" },
+        { itemEmoji: "🍎", math: "खाना हम किससे चबाते हैं?", correct: "दाँत", sentence: "बहुत अच्छे! हम दाँतों से खाना चबाते हैं।", choices: [{name: "दाँत", icon: "🦷"}, {name: "बाल", icon: "💇‍♂️"}, {name: "पैर", icon: "🦶"}, {name: "घुटने", icon: "🦵"}], hint: "खाना दाँतों से चबाया जाता है।" },
+        { itemEmoji: "⚽", math: "गेंद को किक मारने और दौड़ने का काम कौन करता है?", correct: "पैर", sentence: "शानदार! हम पैरों से दौड़ते हैं।", choices: [{name: "पैर", icon: "🦶"}, {name: "हाथ", icon: "🫸"}, {name: "सिर", icon: "🗣️"}, {name: "पेट", icon: "👕"}], hint: "दौड़ने और किक मारने के लिए पैर चाहिए।" },
+        { itemEmoji: "✍️", math: "पेंसिल पकड़कर हम किससे लिखते हैं?", correct: "उंगलियाँ", sentence: "बढ़िया! हम उंगलियों से लिखते हैं।", choices: [{name: "उंगलियाँ", icon: "🫸"}, {name: "घुटने", icon: "🦵"}, {name: "बाल", icon: "💇‍♂️"}, {name: "पेट", icon: "👕"}], hint: "पेंसिल हाथों/उंगलियों से पकड़ी जाती है।" },
+        { itemEmoji: "🎧", math: "गीत-संगीत हम किससे सुनते हैं?", correct: "कान", sentence: "सही उत्तर! हम कानों से सुनते हैं।", choices: [{name: "कान", icon: "👂"}, {name: "दाँत", icon: "🦷"}, {name: "नाक", icon: "👃"}, {name: "पैर", icon: "🦶"}], hint: "गाने सुनने के लिए कान चाहिए।" },
+        { itemEmoji: "📚", math: "किताब के अक्षर और चित्र हम किससे देखते हैं?", correct: "आँखें", sentence: "अद्भुत! हम आँखों से देखते हैं।", choices: [{name: "आँखें", icon: "👁️"}, {name: "जीभ", icon: "👅"}, {name: "बाल", icon: "💇‍♂️"}, {name: "नाक", icon: "👃"}], hint: "किताब देखने के लिए आँखें चाहिए।" }
     ];
 
     let activeLevels = [];
