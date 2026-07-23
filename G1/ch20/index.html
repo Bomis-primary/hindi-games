@@ -35,7 +35,6 @@
             user-select: none;
         }
 
-        /* GLASSMORPHISM SAFARI STAGE */
         .game-screen {
             display: none;
             width: 100%;
@@ -63,7 +62,7 @@
             to { opacity: 1; transform: scale(1) translateY(0); }
         }
 
-        /* LOGO SCREEN (EXACTLY 5 SECONDS) */
+        /* LOGO SCREEN */
         #screen-logo {
             background: #ffffff;
             justify-content: center;
@@ -80,7 +79,6 @@
             50% { transform: scale(1.05); filter: drop-shadow(0 0 25px rgba(255,71,126,0.5)); }
         }
 
-        /* HEADINGS & BUTTONS */
         h1 {
             color: #1b4332;
             font-size: clamp(2.2rem, 5.5vw, 3.2rem);
@@ -113,7 +111,6 @@
             box-shadow: 0 8px 0 #1c598a, 0 12px 25px rgba(52,152,219,0.35);
         }
 
-        /* INSTRUCTIONS CARDS */
         .instruction-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -145,7 +142,6 @@
             line-height: 1.35;
         }
 
-        /* STATUS BAR & MAP PROGRESS */
         .status-bar {
             display: flex;
             justify-content: space-between;
@@ -165,7 +161,6 @@
             box-shadow: 0 4px 0 #ebd79b;
         }
 
-        /* PROGRESS TRACKER MAP */
         .map-track {
             display: flex;
             justify-content: space-between;
@@ -211,7 +206,6 @@
             filter: drop-shadow(0 6px 6px rgba(0,0,0,0.2));
         }
 
-        /* MAIN STAGE BOX - CENTERED & HIGH VISIBILITY */
         .stage-box {
             background: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%);
             border: 4px solid var(--jungle-green);
@@ -236,18 +230,6 @@
             margin: 12px 0;
         }
 
-        .mode-badge {
-            padding: 6px 22px;
-            font-size: clamp(0.95rem, 2.6vw, 1.2rem);
-            font-weight: bold;
-            color: white;
-            border-radius: 20px;
-            margin-bottom: 8px;
-            background: var(--jungle-green);
-            box-shadow: 0 4px 12px rgba(46,204,113,0.35);
-        }
-
-        /* HINT BUTTON & CLUE BOX */
         .hint-btn {
             background: #fff3cd;
             color: #856404;
@@ -278,7 +260,7 @@
             animation: fadeIn 0.3s ease-out;
         }
 
-        /* HIGH-VISIBILITY SAFARI NUMBER CARDS */
+        /* SAFARI NUMBER CARDS */
         .safari-lineup {
             display: flex;
             align-items: flex-end;
@@ -314,7 +296,6 @@
             box-shadow: 0 8px 0 #d35400;
             min-width: 80px;
             min-height: 85px;
-            text-shadow: 1px 1px 0px #ffeaa7;
         }
         .number-card-box.blank {
             background: #ffffff;
@@ -328,16 +309,40 @@
             100% { transform: scale(1.04); border-color: var(--purple-glow); }
         }
 
-        /* FINGER LEAVES & OBJECT POND */
-        .tree-container {
-            font-size: clamp(3.2rem, 9vw, 4.5rem);
+        /* HAND CARDS */
+        .hand-card-wrapper {
             display: flex;
-            align-items: center;
+            gap: 15px;
             justify-content: center;
-            gap: 18px;
-            width: 100%;
-            text-align: center;
-            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+            align-items: center;
+        }
+        .single-hand-box {
+            background: #fff3cd;
+            border: 4px solid var(--bright-yellow);
+            border-radius: 20px;
+            padding: 10px 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 6px 0 #e6a100;
+        }
+        .hand-title {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #856404;
+            margin-bottom: 4px;
+        }
+        .hand-count-badges {
+            display: flex;
+            gap: 4px;
+        }
+        .finger-pillar {
+            width: 14px;
+            height: 40px;
+            background: linear-gradient(180deg, #ffb703 0%, #fb8500 100%);
+            border-radius: 10px;
+            border: 2px solid #d66800;
+            box-shadow: 0 2px 0 #b35400;
         }
 
         .pond-box {
@@ -363,7 +368,6 @@
             100% { transform: translateY(-8px) rotate(3deg); }
         }
 
-        /* QUESTION TEXT */
         .question-text {
             font-size: clamp(1.3rem, 3.5vw, 1.8rem);
             font-weight: bold;
@@ -372,7 +376,6 @@
             text-align: center;
         }
 
-        /* LARGE & TOUCH-FRIENDLY CHOICE BUTTONS */
         .choices-layout {
             display: flex;
             gap: 16px;
@@ -392,7 +395,6 @@
             flex: 1;
             box-shadow: 0 8px 0 #fb8500, 0 10px 15px rgba(0,0,0,0.05);
             transition: transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.1s;
-            outline: none;
         }
         .choice-card:active {
             transform: translateY(6px) scale(0.98);
@@ -402,21 +404,7 @@
             border-color: var(--sky-blue);
             box-shadow: 0 8px 0 #0096c7;
         }
-        .choice-card.alt-color:active {
-            box-shadow: 0 2px 0 #0096c7;
-        }
 
-        /* NEON GLOW FOR HINT */
-        .choice-card.glow-hint {
-            animation: neonGlow 1s infinite alternate;
-            border-color: #00ff88 !important;
-        }
-        @keyframes neonGlow {
-            0% { transform: scale(1); box-shadow: 0 0 10px #00ff88, 0 8px 0 #1e8449; }
-            100% { transform: scale(1.04); box-shadow: 0 0 22px #00ff88, 0 8px 0 #1e8449; }
-        }
-
-        /* REWARD CARD OVERLAY */
         .reward-overlay {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -459,7 +447,6 @@
             display: inline-block;
         }
 
-        /* CONFETTI BURST */
         .confetti-piece {
             position: absolute;
             width: 10px;
@@ -491,20 +478,16 @@
             .game-screen { padding: 15px 10px; min-height: 90vh; }
             .choices-layout { flex-direction: column; gap: 10px; }
             .instruction-grid { grid-template-columns: 1fr; }
-            .safari-lineup { gap: 10px; }
-            .number-card-box { min-width: 65px; min-height: 75px; padding: 6px 12px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- SCREEN 1: INNOVINE LOGO (EXACTLY 5 SECONDS) -->
     <div id="screen-logo" class="game-screen active">
         <img src="assets/innovine-logo.png" alt="Innovine Logo" class="logo-img" onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='block';">
         <h2 id="logo-fallback" style="display:none; font-size: 2.2rem; color: #333;">Innovine Media</h2>
     </div>
 
-    <!-- SCREEN 2: GAME TITLE SCREEN -->
     <div id="screen-title" class="game-screen">
         <span style="font-size: 4.8rem; margin-bottom: 5px;">🦁✨</span>
         <h1>जादुई चिड़ियाघर</h1>
@@ -512,13 +495,12 @@
         <button class="safari-btn" onclick="switchScreen('screen-title', 'screen-instructions')">आगे बढ़ें 🚀</button>
     </div>
 
-    <!-- SCREEN 3: INSTRUCTIONS SCREEN -->
     <div id="screen-instructions" class="game-screen">
         <h1>कैसे खेलें? 🎯</h1>
         <div class="instruction-grid">
             <div class="instruction-card">
                 <span class="icon">🦁</span>
-                <span class="text">जानवर, पक्षी और मछलियाँ देखकर सही गिनती पहचानिए।</span>
+                <span class="text">जानवर, पक्षी और उंगलियाँ देखकर सही गिनती पहचानिए।</span>
             </div>
             <div class="instruction-card">
                 <span class="icon">💡</span>
@@ -536,7 +518,6 @@
         <button class="safari-btn blue-btn" onclick="initAudioAndStartGame()">खेलें 🎮</button>
     </div>
 
-    <!-- SCREEN 4: GAME PLAY SCREEN -->
     <div id="screen-game" class="game-screen">
         <div class="status-bar">
             <div class="heart-box" id="heartBox">❤️ ❤️ ❤️</div>
@@ -560,15 +541,12 @@
         </div>
 
         <div class="stage-box" id="mainDisplayCard">
-            <span class="mode-badge" id="gameModeBadge">🔢 सही क्रम पहचानिए</span>
-            
             <button class="hint-btn" onclick="showHintAndGlow()">💡 संकेत</button>
             <div class="hint-text-box" id="hintBox"></div>
 
             <div id="visualArea"></div>
             <div class="question-text" id="spellFormula">प्रश्न यहाँ आएगा?</div>
 
-            <!-- SPECIAL REWARD CARD OVERLAY -->
             <div class="reward-overlay" id="rewardOverlay">
                 <div class="reward-card">
                     <div class="reward-badge-text">🎉 बहुत बढ़िया! 🎉</div>
@@ -592,7 +570,6 @@
     const audioWrong = new Audio('assets/wrong.mp3');
     const audioClaps = new Audio('assets/freesound_community-claps-44774.mp3');
 
-    // HINDI VOICE FEEDBACK (TEXT-TO-SPEECH)
     function speakHindiFeedback(text) {
         if ('speechSynthesis' in window) {
             window.speechSynthesis.cancel();
@@ -604,19 +581,19 @@
         }
     }
 
-    // BASE QUESTIONS POOL
+    // BASE QUESTIONS POOL WITH CORRECTED "बतख" SPELLING
     const baseLevels = [
         { concept: "lineup", sequence: [{num: "१", icon: "🐘"}, {num: "?", icon: "❓"}, {num: "३", icon: "🦒"}], math: "१ के बाद कौन-सा अंक आएगा?", correct: "२ (दो)", choices: ["२ (दो)", "४ (चार)"], hint: "१ के ठीक बाद २ आता है।" },
         { concept: "lineup", sequence: [{num: "?", icon: "❓"}, {num: "५", icon: "🦁"}, {num: "६", icon: "🐅"}], math: "५ के पहले कौन-सा अंक आएगा?", correct: "४ (चार)", choices: ["३ (तीन)", "४ (चार)"], hint: "५ से एक कम गिनिए।" },
         { concept: "lineup", sequence: [{num: "७", icon: "🦓"}, {num: "८", icon: "🦘"}, {num: "?", icon: "❓"}], math: "८ के बाद कौन-सा अंक आएगा?", correct: "९ (नौ)", choices: ["९ (नौ)", "१० (दस)"], hint: "८ के आगे की संख्या गिनिए।" },
 
-        { concept: "tree", visual: "🖐️", math: "हाथ में कितनी उंगलियाँ हैं?", correct: "५ (पाँच)", choices: ["४ (चार)", "५ (पाँच)"], hint: "एक हाथ में ५ उंगलियाँ होती हैं।" },
-        { concept: "tree", visual: "🖐️ ✌️", math: "हाथों में कुल कितनी उंगलियाँ हैं?", correct: "७ (सात)", choices: ["७ (सात)", "८ (आठ)"], hint: "५ + २ को साथ में गिनिए।" },
-        { concept: "tree", visual: "🖐️ 🖐️", math: "दोनों हाथों की उंगलियाँ गिनिए?", correct: "१० (दस)", choices: ["९ (नौ)", "१० (दस)"], hint: "दोनों हाथों में पूरी १० उंगलियाँ होती हैं।" },
+        { concept: "hands", hands: [5], math: "हाथ में कितनी उंगलियाँ हैं?", correct: "५ (पाँच)", choices: ["४ (चार)", "५ (पाँच)"], hint: "एक हाथ में ५ उंगलियाँ होती हैं।" },
+        { concept: "hands", hands: [5, 2], math: "हाथों में कुल कितनी उंगलियाँ हैं?", correct: "७ (सात)", choices: ["७ (सात)", "८ (आठ)"], hint: "५ + २ को साथ में गिनिए।" },
+        { concept: "hands", hands: [5, 5], math: "दोनों हाथों की उंगलियाँ गिनिए?", correct: "१० (दस)", choices: ["९ (नौ)", "१० (दस)"], hint: "दोनों हाथों में पूरी १० उंगलियाँ होती हैं।" },
 
         { concept: "pond", item: "🐠", count: 3, math: "तालाब में कितनी मछलियाँ हैं?", correct: "३ (तीन)", choices: ["३ (तीन)", "२ (दो)"], hint: "मछलियों को गिनिए: १, २, ३।" },
         { concept: "pond", item: "🐟", count: 6, math: "तालाब में कितनी मछलियाँ हैं?", correct: "६ (छह)", choices: ["५ (पाँच)", "६ (छह)"], hint: "५ के बाद ६ आता है।" },
-        { concept: "pond", item: "🦆", count: 4, math: "तालाब में कितनी बत्तखें हैं?", correct: "४ (चार)", choices: ["४ (चार)", "५ (पाँच)"], hint: "बत्तखों को गिनिए: १, २, ३, ४।" },
+        { concept: "pond", item: "🦆", count: 4, math: "तालाब में कितनी बतखें हैं?", correct: "४ (चार)", choices: ["४ (चार)", "५ (पाँच)"], hint: "बतखों को गिनिए: १, २, ३, ४।" },
         { concept: "pond", item: "🐸", count: 8, math: "तालाब में कितने मेंढक हैं?", correct: "८ (आठ)", choices: ["८ (आठ)", "९ (नौ)"], hint: "७ के बाद ८ आता है।" }
     ];
 
@@ -624,9 +601,7 @@
     let currentLevelIndex = 1;
     let totalLives = 3;
     let totalScore = 0;
-    let wrongAttemptsOnLevel = 0;
 
-    // Fisher-Yates Shuffle
     function shuffleArray(array) {
         let arr = [...array];
         for (let i = arr.length - 1; i > 0; i--) {
@@ -636,7 +611,6 @@
         return arr;
     }
 
-    // LOGO TIMEOUT: EXACTLY 5 SECONDS
     window.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
             switchScreen('screen-logo', 'screen-title');
@@ -672,7 +646,6 @@
         currentLevelIndex = 1;
         totalLives = 3;
         totalScore = 0;
-        wrongAttemptsOnLevel = 0;
 
         const tiles = document.querySelectorAll('.map-tile');
         tiles.forEach((tile, index) => {
@@ -749,7 +722,6 @@
     }
 
     function loadChallenge() {
-        wrongAttemptsOnLevel = 0;
         document.getElementById('hintBox').style.display = "none";
         document.getElementById('rewardOverlay').style.display = "none";
         
@@ -765,16 +737,12 @@
         }
 
         const currentData = activeLevels[currentLevelIndex - 1];
-        const badge = document.getElementById('gameModeBadge');
         const visualArea = document.getElementById('visualArea');
         document.getElementById('spellFormula').innerText = currentData.math;
 
         visualArea.innerHTML = "";
 
         if(currentData.concept === "lineup") {
-            badge.innerText = "🔢 सही क्रम पहचानिए";
-            badge.style.backgroundColor = "var(--jungle-green)";
-
             let lineupHtml = '<div class="safari-lineup">';
             currentData.sequence.forEach(item => {
                 if(item.num === "?") {
@@ -794,16 +762,19 @@
             lineupHtml += '</div>';
             visualArea.innerHTML = lineupHtml;
         } 
-        else if(currentData.concept === "tree") {
-            badge.innerText = "🌳 उंगलियाँ गिनिए";
-            badge.style.backgroundColor = "var(--sky-blue)";
-
-            visualArea.innerHTML = `<div class="tree-container">${currentData.visual}</div>`;
+        else if(currentData.concept === "hands") {
+            let handsHtml = '<div class="hand-card-wrapper">';
+            currentData.hands.forEach((count, idx) => {
+                handsHtml += `<div class="single-hand-box"><div class="hand-title">हाथ ${idx + 1}</div><div class="hand-count-badges">`;
+                for(let f = 0; f < count; f++) {
+                    handsHtml += `<div class="finger-pillar"></div>`;
+                }
+                handsHtml += `</div></div>`;
+            });
+            handsHtml += '</div>';
+            visualArea.innerHTML = handsHtml;
         } 
         else if(currentData.concept === "pond") {
-            badge.innerText = "🌊 चित्र गिनिए";
-            badge.style.backgroundColor = "var(--purple-glow)";
-
             let pondHtml = '<div class="pond-box">';
             for(let i = 0; i < currentData.count; i++) {
                 pondHtml += `<span class="fish-item">${currentData.item}</span>`;
@@ -828,12 +799,10 @@
             audioCorrect.currentTime = 0;
             audioCorrect.play().catch(() => {});
 
-            // SHOW SPECIAL REWARD OVERLAY POPUP
             const rewardOverlay = document.getElementById('rewardOverlay');
             document.getElementById('rewardAnswerText').innerText = currentData.correct;
             rewardOverlay.style.display = "flex";
 
-            // HINDI VOICE SPEECH
             speakHindiFeedback(`बहुत बढ़िया! सही उत्तर ${currentData.correct} है!`);
 
             totalScore += 10;
@@ -851,7 +820,6 @@
             speakHindiFeedback("ओहो! फिर से सोचिए।");
 
             totalLives--;
-            wrongAttemptsOnLevel++;
             renderStatusDisplays();
 
             showHintAndGlow();
