@@ -260,7 +260,7 @@
             animation: fadeIn 0.3s ease-out;
         }
 
-        /* SAFARI NUMBER CARDS */
+        /* NUMBER LINEUP */
         .safari-lineup {
             display: flex;
             align-items: flex-end;
@@ -309,17 +309,14 @@
             100% { transform: scale(1.04); border-color: var(--purple-glow); }
         }
 
-        /* 🖐️ REAL VECTOR HAND PALM ILLUSTRATION */
-        .hand-card-wrapper {
+        /* LARGE & CLEAN HAND EMOJIS */
+        .hand-emoji-display {
+            font-size: clamp(3.8rem, 10vw, 5rem);
             display: flex;
             gap: 20px;
             justify-content: center;
             align-items: center;
-        }
-        .hand-svg-box {
-            width: clamp(100px, 25vw, 130px);
-            height: clamp(110px, 28vw, 140px);
-            filter: drop-shadow(0 6px 6px rgba(0,0,0,0.12));
+            filter: drop-shadow(0 6px 8px rgba(0,0,0,0.12));
         }
 
         .pond-box {
@@ -558,45 +555,15 @@
         }
     }
 
-    // ACCURATE VECTOR HAND PALM SVGs (5 FINGERS & 2 FINGERS)
-    const handSVG5 = `
-        <svg class="hand-svg-box" viewBox="0 0 100 120">
-            <!-- Palm Base -->
-            <path d="M 25 65 C 20 85 30 110 50 110 C 70 110 80 85 75 65 Z" fill="#ffb703" stroke="#d66800" stroke-width="3"/>
-            <!-- Thumb -->
-            <path d="M 25 70 Q 8 60 18 48 Q 28 48 30 65 Z" fill="#ffd166" stroke="#d66800" stroke-width="3"/>
-            <!-- Index Finger -->
-            <rect x="30" y="15" width="10" height="52" rx="5" fill="#ffd166" stroke="#d66800" stroke-width="3"/>
-            <!-- Middle Finger -->
-            <rect x="44" y="8" width="10" height="58" rx="5" fill="#ffd166" stroke="#d66800" stroke-width="3"/>
-            <!-- Ring Finger -->
-            <rect x="58" y="14" width="10" height="52" rx="5" fill="#ffd166" stroke="#d66800" stroke-width="3"/>
-            <!-- Pinky Finger -->
-            <rect x="71" y="28" width="9" height="40" rx="4.5" fill="#ffd166" stroke="#d66800" stroke-width="3"/>
-        </svg>`;
-
-    const handSVG2 = `
-        <svg class="hand-svg-box" viewBox="0 0 100 120">
-            <!-- Palm Base -->
-            <path d="M 25 65 C 20 85 30 110 50 110 C 70 110 80 85 75 65 Z" fill="#ffb703" stroke="#d66800" stroke-width="3"/>
-            <!-- Index Finger (Open) -->
-            <rect x="38" y="10" width="11" height="58" rx="5.5" fill="#ffd166" stroke="#d66800" stroke-width="3"/>
-            <!-- Middle Finger (Open) -->
-            <rect x="53" y="12" width="11" height="56" rx="5.5" fill="#ffd166" stroke="#d66800" stroke-width="3"/>
-            <!-- Folded Thumb -->
-            <circle cx="28" cy="65" r="8" fill="#ffd166" stroke="#d66800" stroke-width="3"/>
-            <!-- Folded Ring & Pinky -->
-            <rect x="66" y="55" width="10" height="15" rx="5" fill="#ffd166" stroke="#d66800" stroke-width="3"/>
-        </svg>`;
-
     const baseLevels = [
         { concept: "lineup", sequence: [{num: "१", icon: "🐘"}, {num: "?", icon: "❓"}, {num: "३", icon: "🦒"}], math: "१ के बाद कौन-सा अंक आएगा?", correct: "२ (दो)", choices: ["२ (दो)", "४ (चार)"], hint: "१ के ठीक बाद २ आता है।" },
         { concept: "lineup", sequence: [{num: "?", icon: "❓"}, {num: "५", icon: "🦁"}, {num: "६", icon: "🐅"}], math: "५ के पहले कौन-सा अंक आएगा?", correct: "४ (चार)", choices: ["३ (तीन)", "४ (चार)"], hint: "५ से एक कम गिनिए।" },
         { concept: "lineup", sequence: [{num: "७", icon: "🦓"}, {num: "८", icon: "🦘"}, {num: "?", icon: "❓"}], math: "८ के बाद कौन-सा अंक आएगा?", correct: "९ (नौ)", choices: ["९ (नौ)", "१० (दस)"], hint: "८ के आगे की संख्या गिनिए।" },
 
-        { concept: "hands", hands: [5], math: "हाथ में कितनी उंगलियाँ हैं?", correct: "५ (पाँच)", choices: ["४ (चार)", "५ (पाँच)"], hint: "एक हाथ में ५ उंगलियाँ होती हैं।" },
-        { concept: "hands", hands: [5, 2], math: "हाथों में कुल कितनी उंगलियाँ हैं?", correct: "७ (सात)", choices: ["७ (सात)", "८ (आठ)"], hint: "५ + २ को साथ में गिनिए।" },
-        { concept: "hands", hands: [5, 5], math: "दोनों हाथों की उंगलियाँ गिनिए?", correct: "१० (दस)", choices: ["९ (नौ)", "१० (दस)"], hint: "दोनों हाथों में पूरी १० उंगलियाँ होती हैं।" },
+        // CLEAN & ACCURATE HAND EMOJIS
+        { concept: "hands", emoji: "🖐️", math: "हाथ में कितनी उंगलियाँ हैं?", correct: "५ (पाँच)", choices: ["४ (चार)", "५ (पाँच)"], hint: "एक हाथ में ५ उंगलियाँ होती हैं।" },
+        { concept: "hands", emoji: "🖐️ ✌️", math: "हाथों में कुल कितनी उंगलियाँ हैं?", correct: "७ (सात)", choices: ["७ (सात)", "८ (आठ)"], hint: "५ + २ को साथ में गिनिए।" },
+        { concept: "hands", emoji: "🖐️ 🖐️", math: "दोनों हाथों की उंगलियाँ गिनिए?", correct: "१० (दस)", choices: ["९ (नौ)", "१० (दस)"], hint: "दोनों हाथों में पूरी १० उंगलियाँ होती हैं।" },
 
         { concept: "pond", item: "🐠", count: 3, math: "तालाब में कितनी मछलियाँ हैं?", correct: "३ (तीन)", choices: ["३ (तीन)", "२ (दो)"], hint: "मछलियों को गिनिए: १, २, ३।" },
         { concept: "pond", item: "🐟", count: 6, math: "तालाब में कितनी मछलियाँ हैं?", correct: "६ (छह)", choices: ["५ (पाँच)", "६ (छह)"], hint: "५ के बाद ६ आता है।" },
@@ -770,16 +737,7 @@
             visualArea.innerHTML = lineupHtml;
         } 
         else if(currentData.concept === "hands") {
-            let handsHtml = '<div class="hand-card-wrapper">';
-            currentData.hands.forEach((count) => {
-                if(count === 5) {
-                    handsHtml += handSVG5;
-                } else if(count === 2) {
-                    handsHtml += handSVG2;
-                }
-            });
-            handsHtml += '</div>';
-            visualArea.innerHTML = handsHtml;
+            visualArea.innerHTML = `<div class="hand-emoji-display">${currentData.emoji}</div>`;
         } 
         else if(currentData.concept === "pond") {
             let pondHtml = '<div class="pond-box">';
