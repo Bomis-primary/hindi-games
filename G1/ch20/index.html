@@ -309,40 +309,49 @@
             100% { transform: scale(1.04); border-color: var(--purple-glow); }
         }
 
-        /* HAND CARDS */
+        /* 🖐️ REAL PALM WITH ACCURATE FINGERS */
         .hand-card-wrapper {
             display: flex;
-            gap: 15px;
+            gap: 20px;
             justify-content: center;
-            align-items: center;
+            align-items: flex-end;
         }
         .single-hand-box {
-            background: #fff3cd;
+            background: #fff8e7;
             border: 4px solid var(--bright-yellow);
-            border-radius: 20px;
-            padding: 10px 16px;
+            border-radius: 24px;
+            padding: 12px 18px 8px 18px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            box-shadow: 0 6px 0 #e6a100;
+            box-shadow: 0 8px 0 #e6a100;
         }
-        .hand-title {
-            font-size: 1rem;
-            font-weight: bold;
-            color: #856404;
-            margin-bottom: 4px;
-        }
-        .hand-count-badges {
+        .hand-graphic {
             display: flex;
-            gap: 4px;
+            flex-direction: column;
+            align-items: center;
         }
-        .finger-pillar {
+        .finger-row {
+            display: flex;
+            gap: 6px;
+            align-items: flex-end;
+            min-height: 55px;
+        }
+        .real-finger {
             width: 14px;
-            height: 40px;
-            background: linear-gradient(180deg, #ffb703 0%, #fb8500 100%);
-            border-radius: 10px;
+            background: linear-gradient(180deg, #ffd166 0%, #ffb703 100%);
             border: 2px solid #d66800;
-            box-shadow: 0 2px 0 #b35400;
+            border-bottom: none;
+            border-radius: 10px 10px 0 0;
+            box-shadow: inset 0 2px 0 rgba(255,255,255,0.6);
+        }
+        .palm-base {
+            width: 100%;
+            height: 35px;
+            background: linear-gradient(180deg, #ffb703 0%, #fb8500 100%);
+            border: 2px solid #d66800;
+            border-radius: 8px 8px 20px 20px;
+            box-shadow: 0 3px 0 #b35400;
         }
 
         .pond-box {
@@ -581,7 +590,6 @@
         }
     }
 
-    // BASE QUESTIONS POOL WITH CORRECTED "बतख" SPELLING
     const baseLevels = [
         { concept: "lineup", sequence: [{num: "१", icon: "🐘"}, {num: "?", icon: "❓"}, {num: "३", icon: "🦒"}], math: "१ के बाद कौन-सा अंक आएगा?", correct: "२ (दो)", choices: ["२ (दो)", "४ (चार)"], hint: "१ के ठीक बाद २ आता है।" },
         { concept: "lineup", sequence: [{num: "?", icon: "❓"}, {num: "५", icon: "🦁"}, {num: "६", icon: "🐅"}], math: "५ के पहले कौन-सा अंक आएगा?", correct: "४ (चार)", choices: ["३ (तीन)", "४ (चार)"], hint: "५ से एक कम गिनिए।" },
@@ -764,12 +772,22 @@
         } 
         else if(currentData.concept === "hands") {
             let handsHtml = '<div class="hand-card-wrapper">';
-            currentData.hands.forEach((count, idx) => {
-                handsHtml += `<div class="single-hand-box"><div class="hand-title">हाथ ${idx + 1}</div><div class="hand-count-badges">`;
+            const fingerHeights = [38, 48, 54, 46, 34]; // Realistic height variation for 5 fingers
+
+            currentData.hands.forEach((count) => {
+                handsHtml += `
+                    <div class="single-hand-box">
+                        <div class="hand-graphic">
+                            <div class="finger-row">`;
                 for(let f = 0; f < count; f++) {
-                    handsHtml += `<div class="finger-pillar"></div>`;
+                    const h = fingerHeights[f] || 40;
+                    handsHtml += `<div class="real-finger" style="height: ${h}px;"></div>`;
                 }
-                handsHtml += `</div></div>`;
+                handsHtml += `
+                            </div>
+                            <div class="palm-base"></div>
+                        </div>
+                    </div>`;
             });
             handsHtml += '</div>';
             visualArea.innerHTML = handsHtml;
