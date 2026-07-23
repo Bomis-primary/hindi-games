@@ -63,7 +63,7 @@
             to { opacity: 1; transform: scale(1) translateY(0); }
         }
 
-        /* LOGO SCREEN (5 SECONDS) */
+        /* LOGO SCREEN (EXACTLY 5 SECONDS) */
         #screen-logo {
             background: #ffffff;
             justify-content: center;
@@ -211,24 +211,34 @@
             filter: drop-shadow(0 6px 6px rgba(0,0,0,0.2));
         }
 
-        /* MAIN STAGE BOX */
+        /* MAIN STAGE BOX - CENTERED & HIGH VISIBILITY */
         .stage-box {
             background: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%);
             border: 4px solid var(--jungle-green);
             border-radius: 28px;
-            padding: 16px 12px;
+            padding: 18px 12px;
             width: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
             box-shadow: 0 10px 0 #a3e4d7, 0 15px 30px rgba(0,0,0,0.06);
             position: relative;
-            min-height: 220px;
-            justify-content: center;
+            min-height: 230px;
+            text-align: center;
         }
+        
+        #visualArea {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 12px 0;
+        }
+
         .mode-badge {
-            padding: 6px 20px;
-            font-size: clamp(0.9rem, 2.5vw, 1.15rem);
+            padding: 6px 22px;
+            font-size: clamp(0.95rem, 2.6vw, 1.2rem);
             font-weight: bold;
             color: white;
             border-radius: 20px;
@@ -243,8 +253,8 @@
             color: #856404;
             border: 2px solid var(--bright-yellow);
             border-radius: 20px;
-            padding: 6px 16px;
-            font-size: 0.95rem;
+            padding: 6px 18px;
+            font-size: 1rem;
             font-weight: bold;
             cursor: pointer;
             margin-bottom: 8px;
@@ -261,36 +271,56 @@
             color: #1e8449;
             padding: 8px 16px;
             border-radius: 14px;
-            font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+            font-size: clamp(0.95rem, 2.6vw, 1.15rem);
             font-weight: bold;
             margin-bottom: 8px;
             display: none;
             animation: fadeIn 0.3s ease-out;
         }
 
-        /* SAFARI CONCEPT VISUALS */
+        /* HIGH-VISIBILITY SAFARI NUMBER CARDS */
         .safari-lineup {
             display: flex;
-            align-items: center;
+            align-items: flex-end;
             justify-content: center;
-            gap: 12px;
-            margin: 10px 0;
+            gap: 18px;
+            width: 100%;
         }
-        .animal-card-box {
-            background: #fff8e7;
-            border: 3px solid #f39c12;
-            border-radius: 18px;
-            padding: 10px 14px;
-            font-size: clamp(2rem, 5vw, 2.8rem);
+        .number-box-wrapper {
             display: flex;
             flex-direction: column;
             align-items: center;
-            box-shadow: 0 6px 0 #d35400;
+            gap: 6px;
         }
-        .animal-card-box.blank {
-            background: white;
-            border: 3px dashed var(--primary-pink);
+        .animal-mascot-label {
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            animation: bounceMascot 1.2s ease-in-out infinite alternate;
+        }
+        @keyframes bounceMascot {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-6px); }
+        }
+        .number-card-box {
+            background: #fff8e7;
+            border: 4px solid #f39c12;
+            border-radius: 22px;
+            padding: 8px 18px;
+            font-size: clamp(2.4rem, 6vw, 3.2rem);
+            font-weight: 900;
+            color: #d35400;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 0 #d35400;
+            min-width: 80px;
+            min-height: 85px;
+            text-shadow: 1px 1px 0px #ffeaa7;
+        }
+        .number-card-box.blank {
+            background: #ffffff;
+            border: 4px dashed var(--primary-pink);
             color: var(--primary-pink);
+            box-shadow: 0 8px 0 #ff758f;
             animation: pulseBlank 0.8s infinite alternate;
         }
         @keyframes pulseBlank {
@@ -298,22 +328,35 @@
             100% { transform: scale(1.04); border-color: var(--purple-glow); }
         }
 
+        /* FINGER LEAVES & OBJECT POND */
+        .tree-container {
+            font-size: clamp(3.2rem, 9vw, 4.5rem);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 18px;
+            width: 100%;
+            text-align: center;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+        }
+
         .pond-box {
             background: linear-gradient(180deg, #a0c4ff 0%, #bdb2ff 100%);
-            border-radius: 22px;
-            padding: 12px;
+            border-radius: 24px;
+            padding: 16px;
             width: 90%;
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 12px;
             justify-content: center;
             align-items: center;
-            border: 3px solid #70a1ff;
-            box-shadow: inset 0 -4px 0 rgba(0,0,0,0.1);
+            border: 4px solid #70a1ff;
+            box-shadow: inset 0 -5px 0 rgba(0,0,0,0.15);
         }
         .fish-item {
-            font-size: clamp(1.8rem, 4.5vw, 2.5rem);
+            font-size: clamp(2.2rem, 5.5vw, 3rem);
             animation: swimFish 2s infinite alternate ease-in-out;
+            filter: drop-shadow(0 4px 4px rgba(0,0,0,0.15));
         }
         @keyframes swimFish {
             0% { transform: translateY(0) rotate(-3deg); }
@@ -322,32 +365,34 @@
 
         /* QUESTION TEXT */
         .question-text {
-            font-size: clamp(1.2rem, 3.2vw, 1.6rem);
+            font-size: clamp(1.3rem, 3.5vw, 1.8rem);
             font-weight: bold;
             color: var(--dark-text);
-            margin-top: 10px;
+            margin-top: 12px;
+            text-align: center;
         }
 
-        /* CHOICE BUTTONS */
+        /* LARGE & TOUCH-FRIENDLY CHOICE BUTTONS */
         .choices-layout {
             display: flex;
-            gap: 14px;
+            gap: 16px;
             width: 100%;
             justify-content: center;
-            margin-top: 10px;
+            margin-top: 12px;
         }
         .choice-card {
             background: white;
             border: 4px solid var(--bright-yellow);
-            border-radius: 22px;
-            padding: 14px 8px;
-            font-size: clamp(1.4rem, 3.8vw, 1.85rem);
+            border-radius: 24px;
+            padding: 16px 10px;
+            font-size: clamp(1.5rem, 4vw, 2rem);
             font-weight: bold;
             color: var(--dark-text);
             cursor: pointer;
             flex: 1;
             box-shadow: 0 8px 0 #fb8500, 0 10px 15px rgba(0,0,0,0.05);
             transition: transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.1s;
+            outline: none;
         }
         .choice-card:active {
             transform: translateY(6px) scale(0.98);
@@ -356,6 +401,9 @@
         .choice-card.alt-color {
             border-color: var(--sky-blue);
             box-shadow: 0 8px 0 #0096c7;
+        }
+        .choice-card.alt-color:active {
+            box-shadow: 0 2px 0 #0096c7;
         }
 
         /* NEON GLOW FOR HINT */
@@ -368,7 +416,7 @@
             100% { transform: scale(1.04); box-shadow: 0 0 22px #00ff88, 0 8px 0 #1e8449; }
         }
 
-        /* 🌟 SPECIAL CORRECT ANSWER POP-UP CARD 🌟 */
+        /* REWARD CARD OVERLAY */
         .reward-overlay {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -443,6 +491,8 @@
             .game-screen { padding: 15px 10px; min-height: 90vh; }
             .choices-layout { flex-direction: column; gap: 10px; }
             .instruction-grid { grid-template-columns: 1fr; }
+            .safari-lineup { gap: 10px; }
+            .number-card-box { min-width: 65px; min-height: 75px; padding: 6px 12px; }
         }
     </style>
 </head>
@@ -510,15 +560,15 @@
         </div>
 
         <div class="stage-box" id="mainDisplayCard">
-            <span class="mode-badge" id="gameModeBadge">🦁 जानवरों की कतार</span>
+            <span class="mode-badge" id="gameModeBadge">🔢 सही क्रम पहचानिए</span>
             
             <button class="hint-btn" onclick="showHintAndGlow()">💡 संकेत</button>
             <div class="hint-text-box" id="hintBox"></div>
 
-            <div id="visualArea" style="width: 100%;"></div>
+            <div id="visualArea"></div>
             <div class="question-text" id="spellFormula">प्रश्न यहाँ आएगा?</div>
 
-            <!-- 🌟 SPECIAL REWARD CARD POPUP FOR CORRECT ANSWER 🌟 -->
+            <!-- SPECIAL REWARD CARD OVERLAY -->
             <div class="reward-overlay" id="rewardOverlay">
                 <div class="reward-card">
                     <div class="reward-badge-text">🎉 बहुत बढ़िया! 🎉</div>
@@ -554,19 +604,16 @@
         }
     }
 
-    // BASE QUESTIONS POOL (MAGICAL SAFARI THEME)
+    // BASE QUESTIONS POOL
     const baseLevels = [
-        // Style 1: Animal Line-up (Missing Numbers)
-        { concept: "lineup", sequence: ["🐘", "?", "🦒"], math: "१ के बाद कौन-सा अंक आएगा?", correct: "२ (दो)", choices: ["२ (दो)", "४ (चार)"], hint: "१ के ठीक बाद २ आता है।" },
-        { concept: "lineup", sequence: ["?", "🦁", "🐅"], math: "५ के पहले कौन-सा अंक आएगा?", correct: "४ (चार)", choices: ["३ (तीन)", "४ (चार)"], hint: "५ से एक कम गिनिए।" },
-        { concept: "lineup", sequence: ["🦓", "🦘", "?"], math: "८ के बाद कौन-सा अंक आएगा?", correct: "९ (नौ)", choices: ["९ (नौ)", "१० (दस)"], hint: "८ के आगे की संख्या गिनिए।" },
+        { concept: "lineup", sequence: [{num: "१", icon: "🐘"}, {num: "?", icon: "❓"}, {num: "३", icon: "🦒"}], math: "१ के बाद कौन-सा अंक आएगा?", correct: "२ (दो)", choices: ["२ (दो)", "४ (चार)"], hint: "१ के ठीक बाद २ आता है।" },
+        { concept: "lineup", sequence: [{num: "?", icon: "❓"}, {num: "५", icon: "🦁"}, {num: "६", icon: "🐅"}], math: "५ के पहले कौन-सा अंक आएगा?", correct: "४ (चार)", choices: ["३ (तीन)", "४ (चार)"], hint: "५ से एक कम गिनिए।" },
+        { concept: "lineup", sequence: [{num: "७", icon: "🦓"}, {num: "८", icon: "🦘"}, {num: "?", icon: "❓"}], math: "८ के बाद कौन-सा अंक आएगा?", correct: "९ (नौ)", choices: ["९ (नौ)", "१० (दस)"], hint: "८ के आगे की संख्या गिनिए।" },
 
-        // Style 2: Magical Tree (Finger & Object Counting)
         { concept: "tree", visual: "🖐️", math: "हाथ में कितनी उंगलियाँ हैं?", correct: "५ (पाँच)", choices: ["४ (चार)", "५ (पाँच)"], hint: "एक हाथ में ५ उंगलियाँ होती हैं।" },
         { concept: "tree", visual: "🖐️ ✌️", math: "हाथों में कुल कितनी उंगलियाँ हैं?", correct: "७ (सात)", choices: ["७ (सात)", "८ (आठ)"], hint: "५ + २ को साथ में गिनिए।" },
         { concept: "tree", visual: "🖐️ 🖐️", math: "दोनों हाथों की उंगलियाँ गिनिए?", correct: "१० (दस)", choices: ["९ (नौ)", "१० (दस)"], hint: "दोनों हाथों में पूरी १० उंगलियाँ होती हैं।" },
 
-        // Style 3: Swimming Fish (Pond Counting)
         { concept: "pond", item: "🐠", count: 3, math: "तालाब में कितनी मछलियाँ हैं?", correct: "३ (तीन)", choices: ["३ (तीन)", "२ (दो)"], hint: "मछलियों को गिनिए: १, २, ३।" },
         { concept: "pond", item: "🐟", count: 6, math: "तालाब में कितनी मछलियाँ हैं?", correct: "६ (छह)", choices: ["५ (पाँच)", "६ (छह)"], hint: "५ के बाद ६ आता है।" },
         { concept: "pond", item: "🦆", count: 4, math: "तालाब में कितनी बत्तखें हैं?", correct: "४ (चार)", choices: ["४ (चार)", "५ (पाँच)"], hint: "बत्तखों को गिनिए: १, २, ३, ४।" },
@@ -579,7 +626,7 @@
     let totalScore = 0;
     let wrongAttemptsOnLevel = 0;
 
-    // Fisher-Yates Complete Shuffle Algorithm
+    // Fisher-Yates Shuffle
     function shuffleArray(array) {
         let arr = [...array];
         for (let i = arr.length - 1; i > 0; i--) {
@@ -725,35 +772,43 @@
         visualArea.innerHTML = "";
 
         if(currentData.concept === "lineup") {
-            badge.innerText = "🦁 जानवरों की कतार";
+            badge.innerText = "🔢 सही क्रम पहचानिए";
             badge.style.backgroundColor = "var(--jungle-green)";
 
             let lineupHtml = '<div class="safari-lineup">';
             currentData.sequence.forEach(item => {
-                if(item === "?") {
-                    lineupHtml += `<div class="animal-card-box blank">?</div>`;
+                if(item.num === "?") {
+                    lineupHtml += `
+                        <div class="number-box-wrapper">
+                            <span class="animal-mascot-label">${item.icon}</span>
+                            <div class="number-card-box blank">?</div>
+                        </div>`;
                 } else {
-                    lineupHtml += `<div class="animal-card-box">${item}</div>`;
+                    lineupHtml += `
+                        <div class="number-box-wrapper">
+                            <span class="animal-mascot-label">${item.icon}</span>
+                            <div class="number-card-box">${item.num}</div>
+                        </div>`;
                 }
             });
             lineupHtml += '</div>';
             visualArea.innerHTML = lineupHtml;
         } 
         else if(currentData.concept === "tree") {
-            badge.innerText = "🌳 जादुई पेड़";
+            badge.innerText = "🌳 उंगलियाँ गिनिए";
             badge.style.backgroundColor = "var(--sky-blue)";
 
-            visualArea.innerHTML = `<div style="font-size: clamp(3rem, 8vw, 4rem); margin: 8px 0;">${currentData.visual}</div>`;
+            visualArea.innerHTML = `<div class="tree-container">${currentData.visual}</div>`;
         } 
         else if(currentData.concept === "pond") {
-            badge.innerText = "🌊 नीला तालाब";
+            badge.innerText = "🌊 चित्र गिनिए";
             badge.style.backgroundColor = "var(--purple-glow)";
 
-            let pondHtml = '<div style="display:flex; justify-content:center;"><div class="pond-box">';
+            let pondHtml = '<div class="pond-box">';
             for(let i = 0; i < currentData.count; i++) {
                 pondHtml += `<span class="fish-item">${currentData.item}</span>`;
             }
-            pondHtml += '</div></div>';
+            pondHtml += '</div>';
             visualArea.innerHTML = pondHtml;
         }
 
@@ -773,12 +828,12 @@
             audioCorrect.currentTime = 0;
             audioCorrect.play().catch(() => {});
 
-            // SHOW SPECIAL CORRECT ANSWER REWARD CARD POPUP
+            // SHOW SPECIAL REWARD OVERLAY POPUP
             const rewardOverlay = document.getElementById('rewardOverlay');
             document.getElementById('rewardAnswerText').innerText = currentData.correct;
             rewardOverlay.style.display = "flex";
 
-            // VOICE FEEDBACK IN HINDI
+            // HINDI VOICE SPEECH
             speakHindiFeedback(`बहुत बढ़िया! सही उत्तर ${currentData.correct} है!`);
 
             totalScore += 10;
@@ -788,7 +843,6 @@
             currentLevelIndex++;
             alignPawn();
             
-            // DELAY TO LET CHILD SEE THE REWARD CARD
             setTimeout(() => { loadChallenge(); }, 1600);
         } else {
             audioWrong.currentTime = 0;
