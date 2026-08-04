@@ -305,83 +305,85 @@
             40%, 80% { transform: translateX(8px); }
         }
 
-        /* Quiz UI */
+        /* Generic Drag & Drop Styling */
+        .drag-pool {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 16px;
+            min-height: 60px;
+            background: rgba(255, 255, 255, 0.6);
+            padding: 10px;
+            border-radius: 20px;
+            border: 2px dashed #a5d6a7;
+            width: 100%;
+        }
+
+        .draggable-item {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #1b5e20;
+            background: #ffffff;
+            border: 3px solid #81c784;
+            border-radius: 20px;
+            padding: 10px 18px;
+            cursor: grab;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+            transition: transform 0.15s ease, background-color 0.2s, border-color 0.2s;
+            touch-action: none;
+        }
+
+        .draggable-item:active {
+            cursor: grabbing;
+        }
+
+        .draggable-item.selected {
+            border-color: #f59e0b;
+            background: #fff9db;
+            color: #d97706;
+            transform: scale(1.08) rotate(-2deg);
+            box-shadow: 0 8px 20px rgba(245, 158, 11, 0.3);
+        }
+
+        /* Mode 1: Drag-and-Drop Quiz */
         .hint-card {
             background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
             border: 3px solid #81c784;
             border-radius: 22px;
             padding: 18px 14px;
             margin-bottom: 14px;
-            font-size: 1.3rem;
+            font-size: 1.25rem;
             font-weight: 700;
             color: #1b5e20;
             box-shadow: 0 8px 20px rgba(129, 199, 132, 0.25);
             width: 100%;
         }
 
-        .options-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
+        .drop-target-box {
             width: 100%;
-        }
-
-        .veg-opt-btn {
+            min-height: 80px;
             background: #ffffff;
-            border: 3px solid #81c784;
-            border-radius: 20px;
-            padding: 14px 8px;
-            font-size: 1.15rem;
-            font-weight: 700;
-            color: #2d3436;
-            cursor: pointer;
+            border: 3px dashed #4caf50;
+            border-radius: 24px;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 6px 12px rgba(0,0,0,0.05);
-            transition: all 0.15s ease;
-        }
-
-        .veg-opt-btn:hover {
-            background: #f1f8e9;
-            transform: translateY(-2px);
-        }
-
-        .veg-opt-btn:active { transform: scale(0.96); }
-
-        /* Sorting UI */
-        .sorting-pool {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: center;
-            margin-bottom: 12px;
-            min-height: 60px;
-        }
-
-        .draggable-veg {
+            margin-bottom: 16px;
             font-size: 1.1rem;
             font-weight: 700;
-            color: #2e7d32;
-            background: #ffffff;
-            border: 3px solid #81c784;
-            border-radius: 20px;
-            padding: 8px 16px;
-            cursor: pointer;
-            box-shadow: 0 6px 14px rgba(0,0,0,0.06);
-            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            color: #81c784;
+            transition: all 0.2s ease;
+            box-shadow: inset 0 2px 6px rgba(0,0,0,0.03);
         }
 
-        .draggable-veg:hover { transform: scale(1.05); }
-
-        .draggable-veg.selected {
-            border-color: #f59e0b;
-            background: #fff9db;
-            color: #d97706;
-            transform: scale(1.1) rotate(-3deg);
-            box-shadow: 0 8px 20px rgba(245, 158, 11, 0.3);
+        .drop-target-box.drag-over {
+            background: #e8f5e9;
+            border-color: #2e7d32;
+            transform: scale(1.02);
         }
 
+        /* Mode 2: Sorting Baskets */
         .baskets-container-3 {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -397,14 +399,15 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-height: 140px;
+            min-height: 150px;
             cursor: pointer;
             transition: all 0.2s;
         }
 
-        .basket-box-3:hover {
+        .basket-box-3.drag-over {
             border-color: #4caf50;
             background: #f1f8e9;
+            transform: scale(1.02);
         }
 
         .basket-title-3 { font-size: 0.85rem; font-weight: 700; color: #2e7d32; margin-bottom: 6px; }
@@ -413,12 +416,21 @@
             display: flex;
             flex-direction: column;
             gap: 4px;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 700;
             color: #1b5e20;
+            width: 100%;
         }
 
-        /* Grow Location UI */
+        .basket-items-list span {
+            background: #e8f5e9;
+            border: 1px solid #a5d6a7;
+            border-radius: 12px;
+            padding: 4px 6px;
+            word-break: break-word;
+        }
+
+        /* Mode 3: Grow Place Zones */
         .grow-container {
             display: flex;
             flex-direction: column;
@@ -438,14 +450,31 @@
             transition: all 0.2s;
         }
 
-        .grow-zone:hover {
+        .grow-zone.drag-over {
             border-color: #8d6e63;
             background: #efebe9;
+            transform: scale(1.01);
         }
 
         .grow-zone-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 6px; color: #5d4037; }
 
-        .items-row { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; width: 100%; font-size: 0.95rem; font-weight: 700; color: #3e2723; }
+        .items-row { 
+            display: flex; 
+            flex-wrap: wrap; 
+            gap: 8px; 
+            justify-content: center; 
+            width: 100%; 
+            font-size: 0.9rem; 
+            font-weight: 700; 
+            color: #3e2723; 
+        }
+
+        .items-row span {
+            background: #efebe9;
+            border: 1px solid #d7ccc8;
+            border-radius: 12px;
+            padding: 4px 10px;
+        }
 
         .win-card {
             background: #ffffff;
@@ -456,53 +485,11 @@
             width: 100%;
         }
 
-        /* Spin the Wheel Styles */
-        .wheel-wrapper {
-            position: relative;
-            width: 220px;
-            height: 220px;
-            margin: 10px auto 16px auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .wheel-pointer {
-            position: absolute;
-            top: -12px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0;
-            height: 0;
-            border-left: 14px solid transparent;
-            border-right: 14px solid transparent;
-            border-top: 24px solid #ef4444;
-            z-index: 10;
-            filter: drop-shadow(0 3px 3px rgba(0,0,0,0.2));
-        }
-
-        .wheel-canvas {
-            width: 220px;
-            height: 220px;
-            border-radius: 50%;
-            border: 6px solid #ffffff;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15), 0 0 0 4px #81c784;
-            transition: transform 4s cubic-bezier(0.15, 0.9, 0.2, 1);
-        }
-
-        .selected-veg-banner {
-            background: #e8f5e9;
-            border: 2px solid #81c784;
-            color: #2e7d32;
-            padding: 8px 16px;
-            border-radius: 16px;
-            font-size: 1.1rem;
-            font-weight: 700;
-            margin-bottom: 12px;
-            min-height: 42px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .instruction-sub {
+            font-size: 0.85rem;
+            color: #636e72;
+            margin-bottom: 8px;
+            font-weight: 600;
         }
     </style>
 </head>
@@ -540,8 +527,8 @@
             <h2 style="color: #2e7d32; font-size: 1.5rem; margin-bottom: 10px;">खेल के नियम 📜</h2>
             
             <div class="rule-card">
-                <span style="font-size: 1.5rem;">🎡</span>
-                <span>चक्का घुमाएं (Spin Wheel) और सवाल का जवाब दें!</span>
+                <span style="font-size: 1.5rem;">🖐️</span>
+                <span>सब्ज़ी को खींचकर (Drag करके) सही जगह पर छोड़ें!</span>
             </div>
 
             <div class="rule-card">
@@ -565,15 +552,15 @@
                 <div class="mode-card" onclick="startQuizMode()">
                     <div class="mode-icon-box">💡</div>
                     <div class="mode-info">
-                        <h3>1. नाम पहचानो (Quiz)</h3>
-                        <p>आसान बात पढ़कर सही नाम चुनें</p>
+                        <h3>1. सही नाम खींचें (Quiz Drag)</h3>
+                        <p>बात पढ़कर सही सब्ज़ी को बॉक्स में डालें</p>
                     </div>
                 </div>
 
                 <div class="mode-card" onclick="startSortingMode()">
                     <div class="mode-icon-box">🧺</div>
                     <div class="mode-info">
-                        <h3>2. टोकरी में डालो (Sorting)</h3>
+                        <h3>2. टोकरी में डालें (Basket Sort)</h3>
                         <p>फल, जड़ और पत्ते अलग टोकरी में रखें</p>
                     </div>
                 </div>
@@ -589,84 +576,60 @@
         </div>
 
         <!-- GAMEPLAY SCREENS -->
-        <!-- Mode 1: Quiz -->
+        
+        <!-- Mode 1: Drag & Drop Quiz -->
         <div class="screen" id="quizScreen">
             <button class="hint-btn" onclick="showManualClue()">💡 क्लू (Clue) चाहिए?</button>
             <div class="clue-box" id="quizClueBox">🔍 क्लू: यह लाल रंग का होता है!</div>
 
-            <!-- SPIN WHEEL FOR QUIZ -->
-            <div id="wheelAreaQuiz">
-                <div class="wheel-wrapper">
-                    <div class="wheel-pointer"></div>
-                    <canvas id="wheelCanvasQuiz" class="wheel-canvas" width="220" height="220"></canvas>
-                </div>
-                <button class="cute-btn" id="spinBtnQuiz" onclick="spinWheelForQuiz()">चक्का घुमाओ 🎡</button>
+            <div class="hint-card" id="quizHintText">प्रश्न लोड हो रहा है...</div>
+            <p class="instruction-sub">👉 सही नाम को खींचकर नीचे वाले बॉक्स में छोड़ें या टैप करें:</p>
+
+            <div class="drop-target-box" id="quizDropZone" ondragover="allowDrop(event)" ondragleave="dragLeave(event)" ondrop="handleQuizDrop(event)">
+                🎯 यहाँ सब्ज़ी खींचकर लाएं!
             </div>
 
-            <div id="quizQuestionArea" style="display: none; width: 100%;">
-                <div class="hint-card" id="quizHintText">प्रश्न लोड हो रहा है...</div>
-                <div class="options-grid" id="quizOptionsGrid"></div>
-            </div>
+            <div class="drag-pool" id="quizDragPool"></div>
         </div>
 
-        <!-- Mode 2: Sorting -->
+        <!-- Mode 2: Sorting Baskets Drag & Drop -->
         <div class="screen" id="sortScreen">
             <div class="clue-box" id="sortClueBox">🔍 क्लू: सोचो हम इसका कौन सा भाग खाते हैं!</div>
-            
-            <!-- SPIN WHEEL FOR SORTING -->
-            <div id="wheelAreaSort">
-                <div class="wheel-wrapper">
-                    <div class="wheel-pointer"></div>
-                    <canvas id="wheelCanvasSort" class="wheel-canvas" width="220" height="220"></canvas>
-                </div>
-                <button class="cute-btn" id="spinBtnSort" onclick="spinWheelForSort()">सब्ज़ी चुननें के लिए घुमाओ 🎡</button>
-            </div>
+            <p class="instruction-sub">👉 सब्ज़ी को खींचकर सही टोकरी में छोड़ें (या टैप करें):</p>
 
-            <div id="sortPlayArea" style="display: none; width: 100%;">
-                <div class="selected-veg-banner" id="currentSelectedSortVeg">चुनी गई सब्ज़ी: -</div>
-                <p style="font-weight: 700; color: #2d3436; margin-bottom: 8px; font-size: 0.95rem;">सही टोकरी पर टैप करो:</p>
-                <div class="baskets-container-3">
-                    <div class="basket-box-3" id="bktFruit" onclick="placeInBasket('फल')">
-                        <div class="basket-title-3">फल (Fruit)</div>
-                        <div class="basket-items-list" id="bktFruitItems"></div>
-                    </div>
-                    <div class="basket-box-3" id="bktRoot" onclick="placeInBasket('जड़')">
-                        <div class="basket-title-3">जड़ (Root)</div>
-                        <div class="basket-items-list" id="bktRootItems"></div>
-                    </div>
-                    <div class="basket-box-3" id="bktLeaf" onclick="placeInBasket('पत्तेदार')">
-                        <div class="basket-title-3">पत्तेदार (Leaf)</div>
-                        <div class="basket-items-list" id="bktLeafItems"></div>
-                    </div>
+            <div class="drag-pool" id="sortDragPool"></div>
+
+            <div class="baskets-container-3">
+                <div class="basket-box-3" id="bktFruit" ondragover="allowDrop(event)" ondragleave="dragLeave(event)" ondrop="handleSortDrop(event, 'फल')" onclick="handleBasketClick('फल')">
+                    <div class="basket-title-3">फल (Fruit)</div>
+                    <div class="basket-items-list" id="bktFruitItems"></div>
+                </div>
+                <div class="basket-box-3" id="bktRoot" ondragover="allowDrop(event)" ondragleave="dragLeave(event)" ondrop="handleSortDrop(event, 'जड़')" onclick="handleBasketClick('जड़')">
+                    <div class="basket-title-3">जड़ (Root)</div>
+                    <div class="basket-items-list" id="bktRootItems"></div>
+                </div>
+                <div class="basket-box-3" id="bktLeaf" ondragover="allowDrop(event)" ondragleave="dragLeave(event)" ondrop="handleSortDrop(event, 'पत्तेदार')" onclick="handleBasketClick('पत्तेदार')">
+                    <div class="basket-title-3">पत्तेदार (Leaf)</div>
+                    <div class="basket-items-list" id="bktLeafItems"></div>
                 </div>
             </div>
         </div>
 
-        <!-- Mode 3: Grow Place -->
+        <!-- Mode 3: Grow Place Drag & Drop -->
         <div class="screen" id="growScreen">
             <div class="clue-box" id="growClueBox">🔍 क्लू: क्या यह मिट्टी के अंदर छुपती है?</div>
-            
-            <!-- SPIN WHEEL FOR GROW -->
-            <div id="wheelAreaGrow">
-                <div class="wheel-wrapper">
-                    <div class="wheel-pointer"></div>
-                    <canvas id="wheelCanvasGrow" class="wheel-canvas" width="220" height="220"></canvas>
-                </div>
-                <button class="cute-btn" id="spinBtnGrow" onclick="spinWheelForGrow()">सब्ज़ी चुननें के लिए घुमाओ 🎡</button>
-            </div>
+            <p class="instruction-sub">👉 सब्ज़ी को खींचकर सही जगह पर छोड़ें (या टैप करें):</p>
 
-            <div id="growPlayArea" style="display: none; width: 100%;">
-                <div class="selected-veg-banner" id="currentSelectedGrowVeg">चुनी गई सब्ज़ी: -</div>
-                <p style="font-weight: 700; color: #2d3436; margin-bottom: 8px; font-size: 0.95rem;">उगने की सही जगह पर टैप करो:</p>
-                <div class="grow-container">
-                    <div class="grow-zone" id="zoneAbove" onclick="placeInZone('ऊपर')">
-                        <div class="grow-zone-title">☀️ ज़मीन के ऊपर (Above Ground)</div>
-                        <div class="items-row" id="zoneAboveItems"></div>
-                    </div>
-                    <div class="grow-zone" id="zoneBelow" onclick="placeInZone('नीचे')">
-                        <div class="grow-zone-title">🕳️ ज़मीन के नीचे (Below Ground)</div>
-                        <div class="items-row" id="zoneBelowItems"></div>
-                    </div>
+            <div class="drag-pool" id="growDragPool"></div>
+
+            <div class="grow-container">
+                <div class="grow-zone" id="zoneAbove" ondragover="allowDrop(event)" ondragleave="dragLeave(event)" ondrop="handleGrowDrop(event, 'ऊपर')" onclick="handleZoneClick('ऊपर')">
+                    <div class="grow-zone-title">☀️ ज़मीन के ऊपर (Above Ground)</div>
+                    <div class="items-row" id="zoneAboveItems"></div>
+                </div>
+                <div class="grow-zone" id="zoneBelow" ondragover="allowDrop(event)" ondragleave="dragLeave(event)" ondrop="handleGrowDrop(event, 'नीचे')" onclick="handleZoneClick('नीचे')">
+                    <div class="grow-zone-title">🕳️ ज़मीन के नीचे (Below Ground)</div>
+                    <div class="items-row" id="zoneBelowItems"></div>
                 </div>
             </div>
         </div>
@@ -692,15 +655,9 @@
     let totalScore = 0;
     let lives = 3;
     let wrongAttemptsInCurrentQ = 0;
-    let activeQuizQuestions = [];
-
-    // Wheel State Variables
-    let currentWheelRotation = 0;
-    let isSpinning = false;
-    let currentWheelItems = [];
-    let selectedWheelVeg = null;
-
-    const wheelColors = ['#ff7675', '#74b9ff', '#55efc4', '#ffeaa7', '#a29bfe', '#fd79a8', '#fab1a0', '#00b894'];
+    
+    // Tap-to-select fallback variables
+    let selectedVegItem = null;
 
     // SHUFFLE ARRAY FOR RANDOMIZATION
     function shuffleArray(arr) {
@@ -726,6 +683,7 @@
         document.getElementById(screenId).classList.add('active');
 
         hideAllClues();
+        selectedVegItem = null;
 
         const hud = document.getElementById('gameHud');
         if (['quizScreen', 'sortScreen', 'growScreen', 'menuScreen'].includes(screenId)) {
@@ -815,283 +773,189 @@
         { name: 'मेथी', fact: 'मैं छोटे हरे पत्तों वाली सब्ज़ी हूँ!', clue: 'इसके छोटे-छोटे हरे पत्ते होते हैं!', type: 'पत्तेदार', grow: 'ऊपर' }
     ];
 
-    // DRAW SPIN WHEEL CANVAS
-    function drawWheel(canvasId, items) {
-        const canvas = document.getElementById(canvasId);
-        if(!canvas) return;
-        const ctx = canvas.getContext('2d');
-        const numSegments = items.length;
-        const anglePerSeg = (2 * Math.PI) / numSegments;
-        const radius = canvas.width / 2;
-
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        for (let i = 0; i < numSegments; i++) {
-            const startAngle = i * anglePerSeg;
-            const endAngle = startAngle + anglePerSeg;
-
-            ctx.beginPath();
-            ctx.moveTo(radius, radius);
-            ctx.arc(radius, radius, radius, startAngle, endAngle);
-            ctx.fillStyle = wheelColors[i % wheelColors.length];
-            ctx.fill();
-            ctx.lineWidth = 2;
-            ctx.strokeStyle = '#ffffff';
-            ctx.stroke();
-
-            // Draw Text
-            ctx.save();
-            ctx.translate(radius, radius);
-            ctx.rotate(startAngle + anglePerSeg / 2);
-            ctx.textAlign = "right";
-            ctx.fillStyle = "#2d3436";
-            ctx.font = "bold 13px Fredoka";
-            ctx.fillText(items[i].name, radius - 12, 5);
-            ctx.restore();
-        }
+    /* GENERIC DRAG AND DROP HANDLERS */
+    function allowDrop(ev) {
+        ev.preventDefault();
+        ev.currentTarget.classList.add('drag-over');
     }
 
-    /* 1. QUIZ MODE WITH SPIN WHEEL */
-    let currentQuizIndex = 0;
+    function dragLeave(ev) {
+        ev.currentTarget.classList.remove('drag-over');
+    }
+
+    function handleDragStart(ev, vegObj) {
+        ev.dataTransfer.setData("text/plain", JSON.stringify(vegObj));
+        selectedVegItem = vegObj;
+    }
+
+    /* Create Draggable Item Elements */
+    function createDraggableElement(vegObj, clickHandler = null) {
+        const el = document.createElement('div');
+        el.className = 'draggable-item';
+        el.innerText = vegObj.name;
+        el.setAttribute('draggable', 'true');
+        
+        el.addEventListener('dragstart', (e) => handleDragStart(e, vegObj));
+
+        // Tap/Click fallback for touch accessibility
+        el.onclick = (e) => {
+            e.stopPropagation();
+            document.querySelectorAll('.draggable-item').forEach(d => d.classList.remove('selected'));
+            el.classList.add('selected');
+            selectedVegItem = vegObj;
+            if (clickHandler) clickHandler(vegObj, el);
+        };
+
+        return el;
+    }
+
+    /* 1. QUIZ MODE (DRAG & DROP) */
+    let quizQueue = [];
+    let currentQuizItem = null;
+
     function startQuizMode() {
-        currentQuizIndex = 0;
-        activeQuizQuestions = shuffleArray(vegData).slice(0, 6);
-        currentWheelItems = [...activeQuizQuestions];
-        switchScreen('quizScreen', '1. नाम पहचानो 💡');
-        
-        document.getElementById('wheelAreaQuiz').style.display = 'block';
-        document.getElementById('quizQuestionArea').style.display = 'none';
-        document.getElementById('spinBtnQuiz').disabled = false;
-        
-        drawWheel('wheelCanvasQuiz', currentWheelItems);
+        quizQueue = shuffleArray(vegData).slice(0, 5);
+        switchScreen('quizScreen', '1. सही नाम खींचें 💡');
+        loadNextQuizQuestion();
     }
 
-    function spinWheelForQuiz() {
-        if (isSpinning || currentWheelItems.length === 0) return;
-        isSpinning = true;
-        document.getElementById('spinBtnQuiz').disabled = true;
-
-        const selectedIndex = Math.floor(Math.random() * currentWheelItems.length);
-        selectedWheelVeg = currentWheelItems[selectedIndex];
-
-        const numSegments = currentWheelItems.length;
-        const segAngle = 360 / numSegments;
-        const targetAngle = 360 - (selectedIndex * segAngle + segAngle / 2);
-        
-        const extraRotations = (4 + Math.floor(Math.random() * 2)) * 360;
-        currentWheelRotation += extraRotations + (targetAngle - (currentWheelRotation % 360));
-
-        const canvas = document.getElementById('wheelCanvasQuiz');
-        canvas.style.transform = `rotate(${currentWheelRotation}deg)`;
-
-        setTimeout(() => {
-            isSpinning = false;
-            document.getElementById('wheelAreaQuiz').style.display = 'none';
-            document.getElementById('quizQuestionArea').style.display = 'block';
-            loadQuizQuestion(selectedWheelVeg);
-        }, 4200);
-    }
-
-    function loadQuizQuestion(currentItem) {
+    function loadNextQuizQuestion() {
         wrongAttemptsInCurrentQ = 0;
         hideAllClues();
+        selectedVegItem = null;
 
-        document.getElementById('quizHintText').innerText = `❓ ${currentItem.fact}`;
-        document.getElementById('quizClueBox').innerText = `🔍 क्लू: ${currentItem.clue}`;
-
-        const optionsGrid = document.getElementById('quizOptionsGrid');
-        optionsGrid.innerHTML = '';
-
-        let opts = [currentItem];
-        while (opts.length < 4) {
-            let rand = vegData[Math.floor(Math.random() * vegData.length)];
-            if (!opts.find(o => o.name === rand.name)) opts.push(rand);
+        if (quizQueue.length === 0 || lives <= 0) {
+            playAudio('sndClaps');
+            triggerConfetti();
+            document.getElementById('winTitle').innerText = "शाबाश! 🥳";
+            document.getElementById('winSub').innerText = "आपने क्विज़ पूरा कर लिया!";
+            document.getElementById('winScoreText').innerText = `⭐ अंक: ${totalScore}`;
+            switchScreen('winScreen');
+            return;
         }
+
+        currentQuizItem = quizQueue.pop();
+        document.getElementById('quizHintText').innerText = `❓ ${currentQuizItem.fact}`;
+        document.getElementById('quizClueBox').innerText = `🔍 क्लू: ${currentQuizItem.clue}`;
         
-        opts = shuffleArray(opts);
+        const dropZone = document.getElementById('quizDropZone');
+        dropZone.innerText = "🎯 यहाँ सब्ज़ी खींचकर लाएं!";
+        dropZone.classList.remove('drag-over');
 
-        opts.forEach(opt => {
-            const btn = document.createElement('div');
-            btn.className = 'veg-opt-btn';
-            btn.innerText = opt.name;
-            btn.onclick = () => {
-                if (opt.name === currentItem.name) {
-                    playAudio('sndCorrect');
-                    triggerConfetti();
-                    totalScore += 10;
-                    updateHUD();
+        // Prepare 4 choices in drag pool
+        let choices = [currentQuizItem];
+        while (choices.length < 4) {
+            let rand = vegData[Math.floor(Math.random() * vegData.length)];
+            if (!choices.find(c => c.name === rand.name)) choices.push(rand);
+        }
+        choices = shuffleArray(choices);
 
-                    // Remove current item from wheel pool
-                    currentWheelItems = currentWheelItems.filter(item => item.name !== currentItem.name);
-
-                    if (currentWheelItems.length === 0 || lives <= 0) {
-                        setTimeout(() => {
-                            playAudio('sndClaps');
-                            triggerConfetti();
-                            document.getElementById('winTitle').innerText = "शाबाश! 🥳";
-                            document.getElementById('winSub').innerText = "आपने क्विज़ पूरा कर लिया!";
-                            document.getElementById('winScoreText').innerText = `⭐ अंक: ${totalScore} / 130`;
-                            switchScreen('winScreen');
-                        }, 500);
-                    } else {
-                        setTimeout(() => {
-                            document.getElementById('wheelAreaQuiz').style.display = 'block';
-                            document.getElementById('quizQuestionArea').style.display = 'none';
-                            document.getElementById('spinBtnQuiz').disabled = false;
-                            drawWheel('wheelCanvasQuiz', currentWheelItems);
-                        }, 800);
-                    }
-                } else {
-                    handleWrongAnswer(btn, 'quizClueBox');
-                }
-            };
-            optionsGrid.appendChild(btn);
+        const pool = document.getElementById('quizDragPool');
+        pool.innerHTML = '';
+        choices.forEach(veg => {
+            const el = createDraggableElement(veg, () => {
+                // Clicking drop zone fallback handles selection
+            });
+            pool.appendChild(el);
         });
+
+        // Add click listener to drop zone for fallback selection
+        dropZone.onclick = () => {
+            if (selectedVegItem) {
+                processQuizAnswer(selectedVegItem);
+            }
+        };
+    }
+
+    function handleQuizDrop(ev) {
+        ev.preventDefault();
+        ev.currentTarget.classList.remove('drag-over');
+        const data = ev.dataTransfer.getData("text/plain");
+        if (!data) return;
+        const droppedVeg = JSON.parse(data);
+        processQuizAnswer(droppedVeg);
+    }
+
+    function processQuizAnswer(vegObj) {
+        if (!currentQuizItem) return;
+
+        if (vegObj.name === currentQuizItem.name) {
+            playAudio('sndCorrect');
+            triggerConfetti();
+            totalScore += 10;
+            updateHUD();
+            document.getElementById('quizDropZone').innerText = `✅ ${vegObj.name}`;
+            setTimeout(() => {
+                loadNextQuizQuestion();
+            }, 800);
+        } else {
+            handleWrongAnswer(document.getElementById('quizDropZone'), 'quizClueBox');
+        }
     }
 
     function showManualClue() {
         document.getElementById('quizClueBox').style.display = 'block';
     }
 
-    /* 2. SORTING MODE WITH SPIN WHEEL */
+    /* 2. SORTING MODE (BASKET DRAG & DROP) */
+    let sortItems = [];
+
     function startSortingMode() {
         wrongAttemptsInCurrentQ = 0;
-        switchScreen('sortScreen', '2. टोकरी में डालो 🧺');
+        hideAllClues();
+        selectedVegItem = null;
+        switchScreen('sortScreen', '2. टोकरी में डालें 🧺');
+
         document.getElementById('bktFruitItems').innerHTML = '';
         document.getElementById('bktRootItems').innerHTML = '';
         document.getElementById('bktLeafItems').innerHTML = '';
 
-        currentWheelItems = shuffleArray(vegData).slice(0, 6);
-        document.getElementById('wheelAreaSort').style.display = 'block';
-        document.getElementById('sortPlayArea').style.display = 'none';
-        document.getElementById('spinBtnSort').disabled = false;
-
-        drawWheel('wheelCanvasSort', currentWheelItems);
+        sortItems = shuffleArray(vegData).slice(0, 6);
+        renderSortPool();
     }
 
-    function spinWheelForSort() {
-        if (isSpinning || currentWheelItems.length === 0) return;
-        isSpinning = true;
-        document.getElementById('spinBtnSort').disabled = true;
+    function renderSortPool() {
+        const pool = document.getElementById('sortDragPool');
+        pool.innerHTML = '';
+        sortItems.forEach(veg => {
+            const el = createDraggableElement(veg);
+            pool.appendChild(el);
+        });
 
-        const selectedIndex = Math.floor(Math.random() * currentWheelItems.length);
-        selectedWheelVeg = currentWheelItems[selectedIndex];
-
-        const numSegments = currentWheelItems.length;
-        const segAngle = 360 / numSegments;
-        const targetAngle = 360 - (selectedIndex * segAngle + segAngle / 2);
-        
-        const extraRotations = (4 + Math.floor(Math.random() * 2)) * 360;
-        currentWheelRotation += extraRotations + (targetAngle - (currentWheelRotation % 360));
-
-        const canvas = document.getElementById('wheelCanvasSort');
-        canvas.style.transform = `rotate(${currentWheelRotation}deg)`;
-
-        setTimeout(() => {
-            isSpinning = false;
-            document.getElementById('wheelAreaSort').style.display = 'none';
-            document.getElementById('sortPlayArea').style.display = 'block';
-            document.getElementById('currentSelectedSortVeg').innerText = `चुनी गई सब्ज़ी: ${selectedWheelVeg.name}`;
-            document.getElementById('sortClueBox').innerText = `🔍 क्लू: ${selectedWheelVeg.clue}`;
-        }, 4200);
-    }
-
-    function placeInBasket(basketType) {
-        if (!selectedWheelVeg || lives <= 0) return;
-        const correctType = selectedWheelVeg.type;
-
-        let targetBoxId = 'bktFruit';
-        let targetDivId = 'bktFruitItems';
-        if (basketType === 'जड़') { targetBoxId = 'bktRoot'; targetDivId = 'bktRootItems'; }
-        if (basketType === 'पत्तेदार') { targetBoxId = 'bktLeaf'; targetDivId = 'bktLeafItems'; }
-
-        if (correctType === basketType) {
-            playAudio('sndCorrect');
-            triggerConfetti();
-            totalScore += 5;
-            updateHUD();
-            hideAllClues();
-            wrongAttemptsInCurrentQ = 0;
-            
-            const tag = document.createElement('span');
-            tag.innerText = selectedWheelVeg.name;
-            document.getElementById(targetDivId).appendChild(tag);
-
-            currentWheelItems = currentWheelItems.filter(item => item.name !== selectedWheelVeg.name);
-            selectedWheelVeg = null;
-
-            if (currentWheelItems.length === 0) {
-                setTimeout(() => {
-                    playAudio('sndClaps');
-                    triggerConfetti();
-                    document.getElementById('winTitle').innerText = "शानदार! 🌟";
-                    document.getElementById('winSub').innerText = "सब सही टोकरी में रखा!";
-                    document.getElementById('winScoreText').innerText = `⭐ अंक: ${totalScore} / 130`;
-                    switchScreen('winScreen');
-                }, 500);
-            } else {
-                setTimeout(() => {
-                    document.getElementById('wheelAreaSort').style.display = 'block';
-                    document.getElementById('sortPlayArea').style.display = 'none';
-                    document.getElementById('spinBtnSort').disabled = false;
-                    drawWheel('wheelCanvasSort', currentWheelItems);
-                }, 800);
-            }
-        } else {
-            let itemClue = selectedWheelVeg.clue || "सोचो हम इसका कौन सा भाग खाते हैं!";
-            handleWrongAnswer(document.getElementById(targetBoxId), 'sortClueBox', itemClue);
+        if (sortItems.length === 0) {
+            setTimeout(() => {
+                playAudio('sndClaps');
+                triggerConfetti();
+                document.getElementById('winTitle').innerText = "शानदार! 🌟";
+                document.getElementById('winSub').innerText = "सब सही टोकरी में रखा!";
+                document.getElementById('winScoreText').innerText = `⭐ अंक: ${totalScore}`;
+                switchScreen('winScreen');
+            }, 500);
         }
     }
 
-    /* 3. GROW PLACE MODE WITH SPIN WHEEL */
-    function startGrowMode() {
-        wrongAttemptsInCurrentQ = 0;
-        switchScreen('growScreen', '3. कहाँ उगती है? 🌱');
-        document.getElementById('zoneAboveItems').innerHTML = '';
-        document.getElementById('zoneBelowItems').innerHTML = '';
-
-        currentWheelItems = shuffleArray(vegData).slice(0, 6);
-        document.getElementById('wheelAreaGrow').style.display = 'block';
-        document.getElementById('growPlayArea').style.display = 'none';
-        document.getElementById('spinBtnGrow').disabled = false;
-
-        drawWheel('wheelCanvasGrow', currentWheelItems);
+    function handleSortDrop(ev, basketType) {
+        ev.preventDefault();
+        ev.currentTarget.classList.remove('drag-over');
+        const data = ev.dataTransfer.getData("text/plain");
+        if (!data) return;
+        const vegObj = JSON.parse(data);
+        processSortAnswer(vegObj, basketType);
     }
 
-    function spinWheelForGrow() {
-        if (isSpinning || currentWheelItems.length === 0) return;
-        isSpinning = true;
-        document.getElementById('spinBtnGrow').disabled = true;
-
-        const selectedIndex = Math.floor(Math.random() * currentWheelItems.length);
-        selectedWheelVeg = currentWheelItems[selectedIndex];
-
-        const numSegments = currentWheelItems.length;
-        const segAngle = 360 / numSegments;
-        const targetAngle = 360 - (selectedIndex * segAngle + segAngle / 2);
-        
-        const extraRotations = (4 + Math.floor(Math.random() * 2)) * 360;
-        currentWheelRotation += extraRotations + (targetAngle - (currentWheelRotation % 360));
-
-        const canvas = document.getElementById('wheelCanvasGrow');
-        canvas.style.transform = `rotate(${currentWheelRotation}deg)`;
-
-        setTimeout(() => {
-            isSpinning = false;
-            document.getElementById('wheelAreaGrow').style.display = 'none';
-            document.getElementById('growPlayArea').style.display = 'block';
-            document.getElementById('currentSelectedGrowVeg').innerText = `चुनी गई सब्ज़ी: ${selectedWheelVeg.name}`;
-            document.getElementById('growClueBox').innerText = `🔍 क्लू: ${selectedWheelVeg.clue}`;
-        }, 4200);
+    function handleBasketClick(basketType) {
+        if (selectedVegItem) {
+            processSortAnswer(selectedVegItem, basketType);
+        }
     }
 
-    function placeInZone(zoneType) {
-        if (!selectedWheelVeg || lives <= 0) return;
-        const correctGrow = selectedWheelVeg.grow;
-        const targetZoneId = zoneType === 'ऊपर' ? 'zoneAbove' : 'zoneBelow';
-        const targetDivId = zoneType === 'ऊपर' ? 'zoneAboveItems' : 'zoneBelowItems';
+    function processSortAnswer(vegObj, targetBasketType) {
+        let targetBoxId = 'bktFruit';
+        let targetDivId = 'bktFruitItems';
+        if (targetBasketType === 'जड़') { targetBoxId = 'bktRoot'; targetDivId = 'bktRootItems'; }
+        if (targetBasketType === 'पत्तेदार') { targetBoxId = 'bktLeaf'; targetDivId = 'bktLeafItems'; }
 
-        if (correctGrow === zoneType) {
+        if (vegObj.type === targetBasketType) {
             playAudio('sndCorrect');
             triggerConfetti();
             totalScore += 5;
@@ -1100,34 +964,89 @@
             wrongAttemptsInCurrentQ = 0;
 
             const tag = document.createElement('span');
-            tag.innerText = selectedWheelVeg.name;
+            tag.innerText = vegObj.name;
             document.getElementById(targetDivId).appendChild(tag);
 
-            currentWheelItems = currentWheelItems.filter(item => item.name !== selectedWheelVeg.name);
-            selectedWheelVeg = null;
-
-            if (currentWheelItems.length === 0) {
-                setTimeout(() => {
-                    playAudio('sndClaps');
-                    triggerConfetti();
-                    totalScore += 10;
-                    updateHUD();
-                    document.getElementById('winTitle').innerText = "अद्भुत कार्य! 🎉";
-                    document.getElementById('winSub').innerText = "आपने सब सही पहचाना!";
-                    document.getElementById('winScoreText').innerText = `⭐ अंक: ${totalScore} / 130`;
-                    switchScreen('winScreen');
-                }, 500);
-            } else {
-                setTimeout(() => {
-                    document.getElementById('wheelAreaGrow').style.display = 'block';
-                    document.getElementById('growPlayArea').style.display = 'none';
-                    document.getElementById('spinBtnGrow').disabled = false;
-                    drawWheel('wheelCanvasGrow', currentWheelItems);
-                }, 800);
-            }
+            sortItems = sortItems.filter(item => item.name !== vegObj.name);
+            selectedVegItem = null;
+            renderSortPool();
         } else {
-            let itemClue = selectedWheelVeg.clue || "सोचो क्या यह मिट्टी के अंदर होती है?";
-            handleWrongAnswer(document.getElementById(targetZoneId), 'growClueBox', itemClue);
+            handleWrongAnswer(document.getElementById(targetBoxId), 'sortClueBox', vegObj.clue);
+        }
+    }
+
+    /* 3. GROW PLACE MODE (ZONE DRAG & DROP) */
+    let growItems = [];
+
+    function startGrowMode() {
+        wrongAttemptsInCurrentQ = 0;
+        hideAllClues();
+        selectedVegItem = null;
+        switchScreen('growScreen', '3. कहाँ उगती है? 🌱');
+
+        document.getElementById('zoneAboveItems').innerHTML = '';
+        document.getElementById('zoneBelowItems').innerHTML = '';
+
+        growItems = shuffleArray(vegData).slice(0, 6);
+        renderGrowPool();
+    }
+
+    function renderGrowPool() {
+        const pool = document.getElementById('growDragPool');
+        pool.innerHTML = '';
+        growItems.forEach(veg => {
+            const el = createDraggableElement(veg);
+            pool.appendChild(el);
+        });
+
+        if (growItems.length === 0) {
+            setTimeout(() => {
+                playAudio('sndClaps');
+                triggerConfetti();
+                document.getElementById('winTitle').innerText = "अद्भुत कार्य! 🎉";
+                document.getElementById('winSub').innerText = "आपने सब सही पहचाना!";
+                document.getElementById('winScoreText').innerText = `⭐ अंक: ${totalScore}`;
+                switchScreen('winScreen');
+            }, 500);
+        }
+    }
+
+    function handleGrowDrop(ev, zoneType) {
+        ev.preventDefault();
+        ev.currentTarget.classList.remove('drag-over');
+        const data = ev.dataTransfer.getData("text/plain");
+        if (!data) return;
+        const vegObj = JSON.parse(data);
+        processGrowAnswer(vegObj, zoneType);
+    }
+
+    function handleZoneClick(zoneType) {
+        if (selectedVegItem) {
+            processGrowAnswer(selectedVegItem, zoneType);
+        }
+    }
+
+    function processGrowAnswer(vegObj, targetZoneType) {
+        const targetZoneId = targetZoneType === 'ऊपर' ? 'zoneAbove' : 'zoneBelow';
+        const targetDivId = targetZoneType === 'ऊपर' ? 'zoneAboveItems' : 'zoneBelowItems';
+
+        if (vegObj.grow === targetZoneType) {
+            playAudio('sndCorrect');
+            triggerConfetti();
+            totalScore += 5;
+            updateHUD();
+            hideAllClues();
+            wrongAttemptsInCurrentQ = 0;
+
+            const tag = document.createElement('span');
+            tag.innerText = vegObj.name;
+            document.getElementById(targetDivId).appendChild(tag);
+
+            growItems = growItems.filter(item => item.name !== vegObj.name);
+            selectedVegItem = null;
+            renderGrowPool();
+        } else {
+            handleWrongAnswer(document.getElementById(targetZoneId), 'growClueBox', vegObj.clue);
         }
     }
 </script>
