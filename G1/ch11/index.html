@@ -2,9 +2,9 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ओ' स्वर और मात्रा का मज़ेदार खेल</title>
-    <!-- Canvas Confetti Library -->
+    <!-- Canvas Confetti Library for Celebrations -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     
     <style>
@@ -14,6 +14,7 @@
             padding: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -23,6 +24,7 @@
             justify-content: center;
             align-items: center;
             overflow-x: hidden;
+            padding: 10px;
         }
 
         /* ---------------- SPLASH SCREEN ---------------- */
@@ -39,14 +41,15 @@
             align-items: center;
             z-index: 99999;
             transition: opacity 0.8s ease-out;
+            padding: 20px;
         }
 
         #splash-screen img {
-            max-width: 300px;
-            width: 75%;
+            max-width: 280px;
+            width: 80%;
             height: auto;
             animation: pulse 2s infinite;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
         @keyframes pulse {
@@ -58,40 +61,40 @@
         /* ---------------- GAME CONTAINER ---------------- */
         #game-container {
             display: none;
-            width: 95%;
-            max-width: 850px;
+            width: 100%;
+            max-width: 800px;
             background: #ffffff;
-            border-radius: 24px;
-            padding: 25px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+            border-radius: 20px;
+            padding: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
             text-align: center;
             position: relative;
-            margin: 20px auto;
+            margin: auto;
         }
 
         .header-logo {
-            max-width: 130px;
+            max-width: 110px;
             height: auto;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
         }
 
         .game-title {
             color: #ea580c;
-            font-size: 28px;
-            margin-bottom: 5px;
+            font-size: 24px;
+            margin-bottom: 8px;
         }
 
         .score-bar {
             display: flex;
-            justify-content: space-around;
+            justify-content: space-between;
             background-color: #fff7ed;
             border: 2px solid #fdba74;
-            padding: 10px;
+            padding: 8px 15px;
             border-radius: 12px;
             font-weight: bold;
             color: #c2410c;
-            font-size: 18px;
-            margin-bottom: 20px;
+            font-size: 16px;
+            margin-bottom: 15px;
         }
 
         .level-screen {
@@ -109,31 +112,33 @@
             background: #ea580c;
             color: #ffffff;
             border: none;
-            padding: 12px 28px;
+            padding: 12px 24px;
             font-size: 18px;
             font-weight: bold;
             border-radius: 12px;
             cursor: pointer;
             margin-top: 15px;
+            width: 90%;
+            max-width: 300px;
             transition: transform 0.2s, background 0.2s;
             box-shadow: 0 4px 10px rgba(234, 88, 12, 0.3);
+            touch-action: manipulation;
         }
 
-        .btn-action:hover {
-            background: #c2410c;
-            transform: translateY(-2px);
+        .btn-action:active {
+            transform: scale(0.96);
         }
 
         /* ---------------- LEVEL 1: CATCH GAME ---------------- */
         #catch-area {
             position: relative;
             width: 100%;
-            height: 400px;
+            height: 380px;
             background: linear-gradient(180deg, #e0f2fe 0%, #bae6fd 100%);
             border: 3px solid #0284c7;
             border-radius: 16px;
             overflow: hidden;
-            cursor: crosshair;
+            touch-action: manipulation;
         }
 
         .falling-word {
@@ -141,24 +146,20 @@
             background: #ffffff;
             border: 2px solid #0284c7;
             color: #0369a1;
-            padding: 10px 20px;
+            padding: 8px 16px;
             border-radius: 20px;
             font-weight: bold;
-            font-size: 22px;
+            font-size: 20px;
             cursor: pointer;
             box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-            transition: transform 0.1s;
-        }
-
-        .falling-word:active {
-            transform: scale(0.9);
+            touch-action: manipulation;
         }
 
         /* ---------------- LEVEL 2: SPIN WHEEL ---------------- */
         .wheel-container {
             position: relative;
-            width: 300px;
-            height: 300px;
+            width: 260px;
+            height: 260px;
             margin: 15px auto;
         }
 
@@ -166,21 +167,21 @@
             width: 100%;
             height: 100%;
             border-radius: 50%;
-            border: 8px solid #ea580c;
+            border: 6px solid #ea580c;
             transition: transform 4s cubic-bezier(0.15, 0.99, 0.35, 1);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
         }
 
         .wheel-pointer {
             position: absolute;
-            top: -15px;
+            top: -12px;
             left: 50%;
             transform: translateX(-50%);
             width: 0;
             height: 0;
-            border-left: 15px solid transparent;
-            border-right: 15px solid transparent;
-            border-top: 25px solid #dc2626;
+            border-left: 12px solid transparent;
+            border-right: 12px solid transparent;
+            border-top: 22px solid #dc2626;
             z-index: 10;
         }
 
@@ -190,16 +191,20 @@
             flex-wrap: wrap;
             justify-content: center;
             margin-top: 15px;
+            width: 100%;
         }
 
         .opt-btn {
             background: #f1f5f9;
             border: 2px solid #cbd5e1;
-            padding: 10px 18px;
-            font-size: 18px;
+            padding: 10px 16px;
+            font-size: 16px;
             font-weight: bold;
             border-radius: 10px;
             cursor: pointer;
+            flex: 1 1 40%;
+            max-width: 140px;
+            touch-action: manipulation;
         }
 
         /* ---------------- LEVEL 3: TRACING & FILL ---------------- */
@@ -207,7 +212,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 15px;
+            gap: 10px;
             width: 100%;
         }
 
@@ -217,22 +222,23 @@
             background-color: #fff8f1;
             cursor: pointer;
             touch-action: none;
+            max-width: 100%;
         }
 
         .fill-blanks-container {
             width: 100%;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
             margin-top: 15px;
             text-align: left;
         }
 
         .blank-item {
             background: #fff7ed;
-            padding: 12px;
+            padding: 10px 12px;
             border-radius: 12px;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 600;
             color: #431407;
             display: flex;
@@ -241,8 +247,8 @@
         }
 
         .blank-item select {
-            padding: 6px 12px;
-            font-size: 16px;
+            padding: 6px 10px;
+            font-size: 15px;
             border: 2px solid #ea580c;
             border-radius: 8px;
             background: white;
@@ -251,21 +257,30 @@
         }
 
         .item-img {
-            width: 45px;
-            height: 45px;
+            width: 38px;
+            height: 38px;
             object-fit: contain;
         }
 
         /* ---------------- SCOREBOARD ---------------- */
         #scoreboard {
-            padding: 20px;
+            padding: 15px;
         }
 
         .final-score {
-            font-size: 48px;
+            font-size: 42px;
             color: #ea580c;
-            margin: 15px 0;
+            margin: 10px 0;
             font-weight: 800;
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 480px) {
+            .game-title { font-size: 20px; }
+            .score-bar { font-size: 14px; }
+            .falling-word { font-size: 18px; padding: 6px 12px; }
+            .wheel-container { width: 220px; height: 220px; }
+            .blank-item { font-size: 14px; }
         }
     </style>
 </head>
@@ -290,24 +305,24 @@
         <!-- LEVEL 1: CATCH CORRECT 'O' MATRA WORDS -->
         <div id="level-1" class="level-screen active-level">
             <h3>स्तर 1: सही 'ओ' मात्रा वाले शब्दों को पकड़ो! 🎯</h3>
-            <p style="margin-bottom: 10px; color: #64748b;">('ओ' की मात्रा वाले शब्दों पर क्लिक करें, गलत शब्दों से बचें)</p>
+            <p style="margin-bottom: 8px; color: #64748b; font-size: 14px;">('ओ' वाले शब्दों को छूकर अंक पाएँ)</p>
             <div id="catch-area"></div>
         </div>
 
         <!-- LEVEL 2: SPIN THE WHEEL -->
         <div id="level-2" class="level-screen">
             <h3>स्तर 2: पहिया घुमाओ और शब्द पहचानो! 🎡</h3>
-            <p style="color: #64748b;">पहिया घुमाने के लिए बटन दबाएँ और सही उत्तर चुनें!</p>
+            <p style="color: #64748b; font-size: 14px;">पहिया घुमाने के लिए बटन दबाएँ!</p>
             
             <div class="wheel-container">
                 <div class="wheel-pointer"></div>
-                <canvas id="wheel" width="300" height="300"></canvas>
+                <canvas id="wheel" width="260" height="260"></canvas>
             </div>
 
             <button class="btn-action" id="btn-spin" onclick="spinWheel()">पहिया घुमाओ (Spin)!</button>
 
-            <div id="wheel-question-box" style="margin-top: 15px; display: none;">
-                <h4 id="wheel-q-text" style="color: #c2410c; margin-bottom: 10px;"></h4>
+            <div id="wheel-question-box" style="margin-top: 15px; display: none; width: 100%;">
+                <h4 id="wheel-q-text" style="color: #c2410c; margin-bottom: 10px; font-size: 18px;"></h4>
                 <div class="wheel-options" id="wheel-options-container"></div>
             </div>
         </div>
@@ -317,13 +332,13 @@
             <h3>स्तर 3: 'ओ' मात्रा ट्रेसिंग और सही शब्द पूर्ति ✍️</h3>
             
             <div class="tracing-box">
-                <p style="color: #64748b;">नीचे 'ओ' ( ो ) मात्रा को ट्रेस (अभ्यास) करें:</p>
-                <canvas id="trace-canvas" width="280" height="120"></canvas>
+                <p style="color: #64748b; font-size: 14px;">नीचे 'ओ' ( ो ) मात्रा को ट्रेस करें:</p>
+                <canvas id="trace-canvas" width="260" height="110"></canvas>
                 <button style="background:#94a3b8; border:none; color:white; padding:5px 12px; border-radius:6px; cursor:pointer;" onclick="clearTraceCanvas()">साफ़ करें (Clear)</button>
             </div>
 
             <div class="fill-blanks-container">
-                <p style="color: #64748b; font-weight:bold; margin-top:10px;">चित्र देखकर सही शब्द चुनकर वाक्य पूरा करें:</p>
+                <p style="color: #64748b; font-weight:bold; margin-top:8px; font-size:14px;">सही शब्द चुनकर वाक्य पूरा करें:</p>
                 
                 <div class="blank-item">
                     <span>१. बोलता हुआ - </span>
@@ -368,7 +383,7 @@
     </div>
 
     <script>
-        /* ---------------- WEB AUDIO SYNTHESIZER (Guaranteed Sound) ---------------- */
+        /* ---------------- WEB AUDIO SYNTHESIZER (FULL VOLUME) ---------------- */
         let audioCtx;
 
         function initAudio() {
@@ -392,7 +407,8 @@
             osc.frequency.setValueAtTime(523.25, now); // C5
             osc.frequency.exponentialRampToValueAtTime(880, now + 0.3); // A5
 
-            gain.gain.setValueAtTime(0.3, now);
+            // SET TO MAXIMUM (FULL) VOLUME
+            gain.gain.setValueAtTime(1.0, now);
             gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
 
             osc.connect(gain);
@@ -414,7 +430,8 @@
             osc.frequency.setValueAtTime(180, now);
             osc.frequency.exponentialRampToValueAtTime(110, now + 0.3);
 
-            gain.gain.setValueAtTime(0.3, now);
+            // SET TO MAXIMUM (FULL) VOLUME
+            gain.gain.setValueAtTime(1.0, now);
             gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
 
             osc.connect(gain);
@@ -426,7 +443,6 @@
 
         /* ---------------- SCORE & LEVEL STATE ---------------- */
         let globalScore = 0;
-        let currentLevel = 1;
 
         function updateScore(pts) {
             globalScore += pts;
@@ -435,7 +451,6 @@
 
         /* ---------------- 1. 10 SECONDS SPLASH SCREEN ---------------- */
         window.addEventListener('DOMContentLoaded', () => {
-            // Show Start button after 10 seconds (or auto start if user clicks)
             setTimeout(() => {
                 document.getElementById('start-btn').style.display = 'inline-block';
             }, 10000);
@@ -452,14 +467,13 @@
             }, 800);
         }
 
-        // Allow clicking anywhere on splash after 10 sec to start
         document.getElementById('splash-screen').addEventListener('click', () => {
             if (document.getElementById('start-btn').style.display !== 'none') {
                 startGame();
             }
         });
 
-        /* ---------------- LEVEL 1: CATCH GAME LOGIC (ULTRA SLOW SPEED) ---------------- */
+        /* ---------------- LEVEL 1: CATCH GAME LOGIC (ULTRA SLOW) ---------------- */
         let catchInterval;
         let caughtCount = 0;
         const validOWords = ["मोर", "तोता", "ढोल", "गोभी", "समोसा", "बोतल", "सोना", "टोपी", "कोयल", "लोटा"];
@@ -474,32 +488,32 @@
             wordElem.className = 'falling-word';
             wordElem.innerText = wordText;
             
-            // Positioning across 2 halves of the screen
-            const halfWidth = (catchArea.clientWidth / 2) - 120;
+            const areaWidth = catchArea.clientWidth;
             const leftPos = xOffset === 1 
-                ? Math.random() * halfWidth 
-                : (catchArea.clientWidth / 2) + Math.random() * halfWidth;
+                ? Math.random() * (areaWidth / 2 - 90) 
+                : (areaWidth / 2) + Math.random() * (areaWidth / 2 - 90);
 
             wordElem.style.left = Math.max(10, leftPos) + 'px';
             wordElem.style.top = '0px';
 
             let posY = 0;
-            // VERY SLOW FALL SPEED (0.4 px per frame)
+            // SLOW FALL SPEED (0.4px per frame)
             const fallSpeed = 0.4;
 
             const fallTimer = setInterval(() => {
                 posY += fallSpeed;
                 wordElem.style.top = posY + 'px';
 
-                if (posY > catchArea.clientHeight - 45) {
+                if (posY > catchArea.clientHeight - 40) {
                     clearInterval(fallTimer);
                     if (catchArea.contains(wordElem)) {
                         catchArea.removeChild(wordElem);
                     }
                 }
-            }, 16); // 60 FPS Smooth Animation
+            }, 16);
 
-            wordElem.onclick = () => {
+            const handleTap = (e) => {
+                e.preventDefault();
                 clearInterval(fallTimer);
                 if (validOWords.includes(wordText)) {
                     playCorrectSound();
@@ -514,13 +528,15 @@
                 }
             };
 
+            wordElem.addEventListener('touchstart', handleTap);
+            wordElem.addEventListener('click', handleTap);
+
             catchArea.appendChild(wordElem);
         }
 
         function startLevel1() {
             const catchArea = document.getElementById('catch-area');
             
-            // Spawn 2 words at a time every 3.5 seconds
             catchInterval = setInterval(() => {
                 if (caughtCount >= 8) {
                     clearInterval(catchInterval);
@@ -528,13 +544,10 @@
                     return;
                 }
 
-                // Word 1 on Left Side
                 createFallingWord(catchArea, 1);
-                
-                // Word 2 on Right Side
                 setTimeout(() => {
                     createFallingWord(catchArea, 2);
-                }, 300);
+                }, 400);
 
             }, 3500);
         }
@@ -546,15 +559,17 @@
             initWheel();
         }
 
-        /* ---------------- LEVEL 2: SPIN THE WHEEL LOGIC ---------------- */
+        /* ---------------- LEVEL 2: SPIN WHEEL (EXACT STOP & UPDATED OPTIONS) ---------------- */
         const wheelSlices = ["मोर", "गोभी", "ढोल", "तोता", "समोसा", "टोपी"];
+        
+        // Questions with 1 Correct word & 2 Different Wrong words
         const wheelQuestions = {
-            "मोर": { q: "नाचता हुआ कौन होता है?", opts: ["मोर", "शेर", "हाथी"], ans: "मोर" },
-            "गोभी": { q: "सब्ज़ी का नाम पहचानो:", opts: ["आलू", "गोभी", "पालक"], ans: "गोभी" },
-            "ढोल": { q: "बजाने वाला वाद्य यंत्र:", opts: ["ढोल", "कार", "घर"], ans: "ढोल" },
-            "तोता": { q: "बोलता हुआ पक्षी:", opts: ["तोता", "चील", "बत्तख"], ans: "तोता" },
-            "समोसा": { q: "गरम-गरम स्वादिष्ट पकवान:", opts: ["समोसा", "रोटी", "चावल"], ans: "समोसा" },
-            "टोपी": { q: "सिर पर क्या पहनते हैं?", opts: ["टोपी", "जूता", "दस्ताने"], ans: "टोपी" }
+            "तोता": { q: "बोलता हुआ पक्षी कौन सा है?", opts: ["तोता", "गाय", "बिल्ली"], ans: "तोता" },
+            "मोर": { q: "नाचता हुआ सुंदर पक्षी:", opts: ["मोर", "हाथी", "शेर"], ans: "मोर" },
+            "गोभी": { q: "इनमें से सब्ज़ी कौन सी है?", opts: ["गोभी", "सेब", "दूध"], ans: "गोभी" },
+            "ढोल": { q: "बजाने वाला बाजा कौन सा है?", opts: ["ढोल", "कलम", "किताब"], ans: "ढोल" },
+            "समोसा": { q: "गरम-गरम नमकीन पकवान:", opts: ["समोसा", "पानी", "कागज़"], ans: "समोसा" },
+            "टोपी": { q: "सिर पर क्या पहना जाता है?", opts: ["टोपी", "जूता", "चम्मच"], ans: "टोपी" }
         };
 
         let currentRotation = 0;
@@ -571,17 +586,17 @@
             for (let i = 0; i < numSlices; i++) {
                 ctx.beginPath();
                 ctx.fillStyle = colors[i];
-                ctx.moveTo(150, 150);
-                ctx.arc(150, 150, 140, i * angle, (i + 1) * angle);
+                ctx.moveTo(130, 130);
+                ctx.arc(130, 130, 120, i * angle, (i + 1) * angle);
                 ctx.fill();
 
                 ctx.save();
-                ctx.translate(150, 150);
+                ctx.translate(130, 130);
                 ctx.rotate(i * angle + angle / 2);
                 ctx.textAlign = "right";
                 ctx.fillStyle = "white";
-                ctx.font = "bold 20px Arial";
-                ctx.fillText(wheelSlices[i], 120, 10);
+                ctx.font = "bold 18px Arial";
+                ctx.fillText(wheelSlices[i], 100, 6);
                 ctx.restore();
             }
         }
@@ -593,20 +608,26 @@
 
             document.getElementById('wheel-question-box').style.display = 'none';
 
-            const randomDegrees = Math.floor(1800 + Math.random() * 360);
-            currentRotation += randomDegrees;
+            // Choose a target slice randomly
+            const targetIndex = Math.floor(Math.random() * wheelSlices.length);
+            const targetWord = wheelSlices[targetIndex];
+
+            // Calculate precise angle so the top pointer lands exactly on target slice
+            const numSlices = wheelSlices.length;
+            const sliceDeg = 360 / numSlices;
+            const targetAngleDeg = 240 - (targetIndex * sliceDeg); 
+            
+            // Add 5 full spins (1800 deg)
+            const extraRounds = 1800;
+            const nextRotation = currentRotation + extraRounds + ((targetAngleDeg - (currentRotation % 360) + 360) % 360);
+            
+            currentRotation = nextRotation;
             const wheelCanvas = document.getElementById('wheel');
             wheelCanvas.style.transform = `rotate(${currentRotation}deg)`;
 
             setTimeout(() => {
                 isSpinning = false;
-                const actualDeg = currentRotation % 360;
-                const sliceAngle = 360 / wheelSlices.length;
-                
-                const selectedIndex = Math.floor((360 - (actualDeg % 360)) / sliceAngle) % wheelSlices.length;
-                const selectedWord = wheelSlices[selectedIndex];
-
-                showWheelQuestion(selectedWord);
+                showWheelQuestion(targetWord);
             }, 4000);
         }
 
@@ -657,18 +678,28 @@
             const ctx = canvas.getContext('2d');
             let drawing = false;
 
-            ctx.font = 'bold 70px Arial';
+            ctx.font = 'bold 65px Arial';
             ctx.fillStyle = '#fed7aa';
             ctx.textAlign = 'center';
-            ctx.fillText('ो', canvas.width / 2, 85);
+            ctx.fillText('ो', canvas.width / 2, 78);
 
-            function startDraw(e) { initAudio(); drawing = true; draw(e); }
-            function endDraw() { drawing = false; ctx.beginPath(); }
+            function startDraw(e) { 
+                initAudio(); 
+                drawing = true; 
+                draw(e); 
+            }
+            function endDraw() { 
+                drawing = false; 
+                ctx.beginPath(); 
+            }
             function draw(e) {
                 if (!drawing) return;
                 const rect = canvas.getBoundingClientRect();
-                const x = (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left;
-                const y = (e.clientY || (e.touches && e.touches[0].clientY)) - rect.top;
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                
+                const x = clientX - rect.left;
+                const y = clientY - rect.top;
 
                 ctx.lineWidth = 8;
                 ctx.lineCap = 'round';
@@ -701,13 +732,13 @@
             const q2Val = document.getElementById('q2').value;
             const q3Val = document.getElementById('q3').value;
 
-            if (q1Val === "मोर" && q2Val === "धोबी" && q3Val === "टोपी") {
+            if (q1Val === "तोता" && q2Val === "धोबी" && q3Val === "टोपी") {
                 playCorrectSound();
                 updateScore(30);
                 showScoreboard();
             } else {
                 playWrongSound();
-                alert("ओह! कुछ उत्तर सही नहीं हैं। दोबारा प्रयास करें!");
+                alert("ओह! कुछ उत्तर सही नहीं हैं। सही शब्द चुनकर दोबारा प्रयास करें!");
             }
         }
 
