@@ -131,8 +131,6 @@
             font-weight: 900;
         }
 
-        .lives-box { font-size: 1.4rem; letter-spacing: 2px; }
-
         /* TASK BANNER */
         .task-banner {
             width: 100%;
@@ -267,11 +265,48 @@
         }
 
         .tracing-word {
+            min-height: 78px;
+            padding: 24px 6px 0;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
             font-size: 2.5rem;
             font-weight: 900;
+            line-height: 1;
             color: var(--dark-purple);
-            margin-bottom: 6px;
-            letter-spacing: 2px;
+            letter-spacing: 0;
+            white-space: nowrap;
+        }
+
+        /* The blank for chandrabindu must be above the vowel-bearing syllable,
+           never between two letters. */
+        .mark-anchor {
+            position: relative;
+            display: inline-block;
+        }
+
+        .mark-slot-above {
+            position: absolute;
+            top: -22px;
+            right: var(--slot-right, 0.04em);
+            width: 0.62em;
+            height: 0.40em;
+            border: 3px dashed var(--neon-pink);
+            border-radius: 50%;
+            background: rgba(255, 0, 127, 0.04);
+        }
+
+        /* Visarga belongs after a word or between अक्षर, so its blank remains inline. */
+        .mark-slot-inline {
+            display: inline-block;
+            width: 0.58em;
+            height: 0.88em;
+            margin: 0 0.06em;
+            border: 3px dashed var(--neon-pink);
+            border-radius: 10px;
+            transform: translateY(0.08em);
+            background: rgba(255, 0, 127, 0.04);
         }
 
         .hint-box {
@@ -359,11 +394,11 @@
             <div class="instruction-list">
                 <div class="step-card">
                     <div class="step-num">1</div>
-                    <div class="step-text">पास वाली 2 कैंडिज़ पर क्लिक करके आपस में बदलो <span class="highlight-tag">Swap</span>।</div>
+                    <div class="step-text">पास वाली 2 कैंडीज़ पर क्लिक करके आपस में बदलो <span class="highlight-tag">Swap</span>।</div>
                 </div>
                 <div class="step-card">
                     <div class="step-num">2</div>
-                    <div class="step-text">एक जैसी 3 या अधिक कैंडिज़ बनाकर <span class="highlight-tag">Match</span> बनाओ। 🍬</div>
+                    <div class="step-text">एक जैसी 3 या अधिक कैंडीज़ बनाकर <span class="highlight-tag">Match</span> बनाओ। 🍬</div>
                 </div>
                 <div class="step-card">
                     <div class="step-num">3</div>
@@ -376,7 +411,6 @@
         <!-- TOP STATUS BAR -->
         <div class="status-bar">
             <span id="progressText">सवाल: 0/10</span>
-            <div class="lives-box" id="livesBox">🍬🍬🍬</div>
             <span id="scoreText">⭐: 0</span>
         </div>
 
@@ -393,7 +427,7 @@
         <div id="tracingModal">
             <div class="tracing-card" id="tracingCard">
                 <div class="tracing-prompt">शब्द पूरा करने के लिए मात्रा लिखो।</div>
-                <div class="tracing-word" id="wordPrompt">चा__द</div>
+                <div class="tracing-word" id="wordPrompt" aria-label="अधूरा शब्द"></div>
                 
                 <div class="hint-box" id="hintBox">💡 हिंट: रेखा साफ़ कर दी गई है। दोबारा ध्यान से ट्रेस करें।</div>
 
@@ -411,7 +445,7 @@
         <!-- END OVERLAY -->
         <div id="endOverlay" class="screen" style="display: none;">
             <h1 id="endTitle" style="font-size: 2.2rem; color: var(--bright-orange); margin-bottom: 15px;">🎉 स्वीट विक्ट्री! 🥳</h1>
-            <p id="finalScore" style="font-size: 1.3rem; color: #333; margin-bottom: 25px;">आपने पूरे 100 अंक बनाए।</p>
+            <p id="finalScore" style="font-size: 1.3rem; color: #333; margin-bottom: 25px;">आपने 100 अंक प्राप्त किए।</p>
             <button class="action-btn" onclick="startNewGame()">फिर से खेलें 🔄</button>
         </div>
 
@@ -428,16 +462,16 @@
     }
 
     const masterQuestions = [
-        { wordPrompt: "चा__द",  targetMatra: "ँ", fullWord: "चाँद", hint: "💡 गलत ट्रेस हुआ! कैनवास साफ़ कर दिया गया है। 'चंद्रबिंदु' (ँ) पर दोबारा ट्रेस करें।" },
-        { wordPrompt: "नम__",   targetMatra: "ः", fullWord: "नमः", hint: "💡 गलत ट्रेस हुआ! विसर्ग (ः) के दो बिंदुओं पर दोबारा ट्रेस करें।" },
-        { wordPrompt: "सा__प",  targetMatra: "ँ", fullWord: "साँप", hint: "💡 फिर से कोशिश करें! चंद्रबिंदु (ँ) के ऊपर ध्यान से उँगली फेरें।" },
-        { wordPrompt: "प्रात__", targetMatra: "ः", fullWord: "प्रातः", hint: "💡 गलत ट्रेस हुआ! विसर्ग (ः) के दोनों बिंदुओं पर साफ़-साफ़ ट्रेस करें।" },
-        { wordPrompt: "कुआ__",  targetMatra: "ँ", fullWord: "कुआँ", hint: "💡 कैनवास साफ़ किया गया है। 'चंद्रबिंदु' (ँ) पर दोबारा उँगली चलाएँ।" },
-        { wordPrompt: "छ__",    targetMatra: "ः", fullWord: "छः", hint: "💡 विसर्ग (ः) के दोनों बिंदुओं पर ठीक से ट्रेस करें।" },
-        { wordPrompt: "आ__ख",   targetMatra: "ँ", fullWord: "आँख", hint: "💡 गलत ट्रेस हुआ! चंद्रबिंदु (ँ) पर फिर से ध्यान से उँगली फेरें।" },
-        { wordPrompt: "पुन__",  targetMatra: "ः", fullWord: "पुनः", hint: "💡 विसर्ग (ः) के दो बिंदुओं पर उँगली चलाएँ।" },
-        { wordPrompt: "मा__",   targetMatra: "ँ", fullWord: "माँ", hint: "💡 कैनवास रीसेट हो गया है। चंद्रबिंदु (ँ) को दोबारा ट्रेस करें।" },
-        { wordPrompt: "दु__ख",  targetMatra: "ः", fullWord: "दुःख", hint: "💡 बीच में विसर्ग (ः) के दोनों बिंदुओं को साफ़-साफ़ ट्रेस करें।" }
+        { placement: "above", before: "",   anchor: "चा", after: "द", targetMatra: "ँ", fullWord: "चाँद",  slotRight: "0.02em", hint: "💡 गलत ट्रेस हुआ! कैनवास साफ़ कर दिया गया है। 'चंद्रबिंदु' (ँ) पर दोबारा ट्रेस करें।" },
+        { placement: "inline", before: "नम",   after: "",  targetMatra: "ः", fullWord: "नमः",   hint: "💡 गलत ट्रेस हुआ! विसर्ग (ः) के दो बिंदुओं पर दोबारा ट्रेस करें।" },
+        { placement: "above", before: "",   anchor: "सा", after: "प", targetMatra: "ँ", fullWord: "साँप",  slotRight: "0.02em", hint: "💡 फिर से कोशिश करें! चंद्रबिंदु (ँ) के ऊपर ध्यान से उँगली फेरें।" },
+        { placement: "inline", before: "प्रात", after: "",  targetMatra: "ः", fullWord: "प्रातः", hint: "💡 गलत ट्रेस हुआ! विसर्ग (ः) के दोनों बिंदुओं पर साफ़-साफ़ ट्रेस करें।" },
+        { placement: "above", before: "कु", anchor: "आ", after: "",  targetMatra: "ँ", fullWord: "कुआँ",  slotRight: "0.18em", hint: "💡 कैनवास साफ़ किया गया है। 'चंद्रबिंदु' (ँ) पर दोबारा उँगली चलाएँ।" },
+        { placement: "inline", before: "छ",    after: "",  targetMatra: "ः", fullWord: "छः",    hint: "💡 विसर्ग (ः) के दोनों बिंदुओं पर ठीक से ट्रेस करें।" },
+        { placement: "above", before: "",   anchor: "आ", after: "ख", targetMatra: "ँ", fullWord: "आँख",  slotRight: "0.18em", hint: "💡 गलत ट्रेस हुआ! चंद्रबिंदु (ँ) पर फिर से ध्यान से उँगली फेरें।" },
+        { placement: "inline", before: "पुन",  after: "",  targetMatra: "ः", fullWord: "पुनः",   hint: "💡 विसर्ग (ः) के दो बिंदुओं पर उँगली चलाएँ।" },
+        { placement: "above", before: "",   anchor: "मा", after: "",  targetMatra: "ँ", fullWord: "माँ",   slotRight: "0.02em", hint: "💡 कैनवास रीसेट हो गया है। चंद्रबिंदु (ँ) को दोबारा ट्रेस करें।" },
+        { placement: "inline", before: "दु",   after: "ख", targetMatra: "ः", fullWord: "दुःख",   hint: "💡 बीच में विसर्ग (ः) के दोनों बिंदुओं को साफ़-साफ़ ट्रेस करें।" }
     ];
 
     const CANDY_SVGS = [
@@ -452,7 +486,6 @@
     let score = 0;
     let questionsSolved = 0;
     let matchCountForCurrentQuestion = 0;
-    let lives = 3;
     let activeQuestions = [];
     let traceAttempts = 0;
     let boardLocked = false;
@@ -517,6 +550,9 @@
             board.appendChild(tile);
             candyTiles.push(tile);
         }
+
+        // Very rarely a random board can have no legal move. Rebuild it immediately.
+        if (!hasPossibleMove()) createBoard();
     }
 
     function onTileClick(e) {
@@ -531,8 +567,8 @@
         }
 
         const tile1 = firstSelectedTile;
-        const id1 = parseInt(tile1.getAttribute('data-id'));
-        const id2 = parseInt(clickedTile.getAttribute('data-id'));
+        const id1 = Number(tile1.getAttribute('data-id'));
+        const id2 = Number(clickedTile.getAttribute('data-id'));
 
         const row1 = Math.floor(id1 / width);
         const col1 = id1 % width;
@@ -540,25 +576,24 @@
         const col2 = id2 % width;
         const isAdjacent = Math.abs(row1 - row2) + Math.abs(col1 - col2) === 1;
 
-        if (isAdjacent) {
-            boardLocked = true;
-            swapTiles(tile1, clickedTile);
-            const matched = checkMatchesAndRefill();
-
-            if (!matched) {
-                setTimeout(() => {
-                    swapTiles(tile1, clickedTile);
-                    boardLocked = false;
-                }, 250);
-            } else {
-                setTimeout(() => {
-                    if (!tracingPending) boardLocked = false;
-                }, 350);
-            }
-        }
-
         tile1.classList.remove('selected');
         firstSelectedTile = null;
+
+        if (!isAdjacent) return;
+
+        boardLocked = true;
+        swapTiles(tile1, clickedTile);
+        const matchedIndices = findMatchedIndices();
+
+        if (matchedIndices.size === 0) {
+            setTimeout(() => {
+                swapTiles(tile1, clickedTile);
+                boardLocked = false;
+            }, 250);
+            return;
+        }
+
+        processMatchedTiles(matchedIndices);
     }
 
     function swapTiles(tile1, tile2) {
@@ -572,54 +607,156 @@
         tile2.querySelector('img').src = CANDY_SVGS[type1];
     }
 
-    function checkMatchesAndRefill() {
-        let hasMatch = false;
+    function findMatchedIndices() {
+        const matched = new Set();
 
-        for (let i = 0; i < 36; i++) {
-            if (i % width > width - 3) continue;
-            let rowOfThree = [i, i + 1, i + 2];
-            let decidedType = candyTiles[i].getAttribute('data-type');
+        // Full horizontal runs of three or more.
+        for (let row = 0; row < width; row++) {
+            let runStart = 0;
+            for (let col = 1; col <= width; col++) {
+                const currentIndex = row * width + col;
+                const previousIndex = row * width + col - 1;
+                const sameType = col < width &&
+                    candyTiles[currentIndex].getAttribute('data-type') ===
+                    candyTiles[previousIndex].getAttribute('data-type');
 
-            if (rowOfThree.every(index => candyTiles[index].getAttribute('data-type') === decidedType)) {
-                hasMatch = true;
-                rowOfThree.forEach(index => {
-                    candyTiles[index].classList.add('popping');
-                    setTimeout(() => replaceWithNewCandy(candyTiles[index]), 200);
-                });
+                if (!sameType) {
+                    const runLength = col - runStart;
+                    if (runLength >= 3) {
+                        for (let c = runStart; c < col; c++) matched.add(row * width + c);
+                    }
+                    runStart = col;
+                }
             }
         }
 
-        for (let i = 0; i < 24; i++) {
-            let colOfThree = [i, i + width, i + width * 2];
-            let decidedType = candyTiles[i].getAttribute('data-type');
+        // Full vertical runs of three or more.
+        for (let col = 0; col < width; col++) {
+            let runStart = 0;
+            for (let row = 1; row <= width; row++) {
+                const currentIndex = row * width + col;
+                const previousIndex = (row - 1) * width + col;
+                const sameType = row < width &&
+                    candyTiles[currentIndex].getAttribute('data-type') ===
+                    candyTiles[previousIndex].getAttribute('data-type');
 
-            if (colOfThree.every(index => candyTiles[index].getAttribute('data-type') === decidedType)) {
-                hasMatch = true;
-                colOfThree.forEach(index => {
-                    candyTiles[index].classList.add('popping');
-                    setTimeout(() => replaceWithNewCandy(candyTiles[index]), 200);
-                });
+                if (!sameType) {
+                    const runLength = row - runStart;
+                    if (runLength >= 3) {
+                        for (let r = runStart; r < row; r++) matched.add(r * width + col);
+                    }
+                    runStart = row;
+                }
             }
         }
 
-        if (hasMatch) {
-            matchCountForCurrentQuestion++;
-            document.getElementById('matchProgress').innerText = `${matchCountForCurrentQuestion} / 2`;
-            if (matchCountForCurrentQuestion >= 2) {
-                matchCountForCurrentQuestion = 0;
-                tracingPending = true;
-                setTimeout(triggerTracingModal, 500);
-            }
-        }
-
-        return hasMatch;
+        return matched;
     }
 
-    function replaceWithNewCandy(tile) {
+    function processMatchedTiles(matchedIndices) {
+        matchedIndices.forEach(index => candyTiles[index].classList.add('popping'));
+
+        matchCountForCurrentQuestion++;
+        document.getElementById('matchProgress').innerText = `${matchCountForCurrentQuestion} / 2`;
+
+        const shouldOpenTracing = matchCountForCurrentQuestion >= 2;
+        if (shouldOpenTracing) {
+            matchCountForCurrentQuestion = 0;
+            tracingPending = true;
+        }
+
+        setTimeout(() => {
+            matchedIndices.forEach(index => replaceWithSafeCandy(index));
+
+            // This should normally be empty because replacements are chosen safely.
+            // Clear any accidental match without awarding another match point.
+            removeAccidentalMatches(() => {
+                ensurePlayableBoard();
+
+                if (shouldOpenTracing) {
+                    setTimeout(triggerTracingModal, 250);
+                } else {
+                    boardLocked = false;
+                }
+            });
+        }, 220);
+    }
+
+    function replaceWithSafeCandy(index) {
+        const tile = candyTiles[index];
         tile.classList.remove('popping');
-        let newCandyType = Math.floor(Math.random() * CANDY_SVGS.length);
-        tile.setAttribute('data-type', newCandyType);
-        tile.querySelector('img').src = CANDY_SVGS[newCandyType];
+
+        const candidates = shuffleArray([...Array(CANDY_SVGS.length).keys()]);
+        const chosenType = candidates.find(type => !wouldCreateMatch(index, String(type))) ?? candidates[0];
+
+        tile.setAttribute('data-type', chosenType);
+        tile.querySelector('img').src = CANDY_SVGS[chosenType];
+    }
+
+    function wouldCreateMatch(index, candidateType) {
+        const row = Math.floor(index / width);
+        const col = index % width;
+        const typeAt = (r, c) => {
+            if (r < 0 || r >= width || c < 0 || c >= width) return null;
+            const i = r * width + c;
+            return i === index ? candidateType : candyTiles[i].getAttribute('data-type');
+        };
+
+        let horizontal = 1;
+        for (let c = col - 1; c >= 0 && typeAt(row, c) === candidateType; c--) horizontal++;
+        for (let c = col + 1; c < width && typeAt(row, c) === candidateType; c++) horizontal++;
+
+        let vertical = 1;
+        for (let r = row - 1; r >= 0 && typeAt(r, col) === candidateType; r--) vertical++;
+        for (let r = row + 1; r < width && typeAt(r, col) === candidateType; r++) vertical++;
+
+        return horizontal >= 3 || vertical >= 3;
+    }
+
+    function removeAccidentalMatches(done) {
+        const accidental = findMatchedIndices();
+        if (accidental.size === 0) {
+            done();
+            return;
+        }
+
+        accidental.forEach(index => replaceWithSafeCandy(index));
+        setTimeout(() => removeAccidentalMatches(done), 20);
+    }
+
+    function hasPossibleMove() {
+        for (let i = 0; i < candyTiles.length; i++) {
+            const neighbours = [];
+            if (i % width < width - 1) neighbours.push(i + 1);
+            if (i < width * (width - 1)) neighbours.push(i + width);
+
+            for (const neighbour of neighbours) {
+                const type1 = candyTiles[i].getAttribute('data-type');
+                const type2 = candyTiles[neighbour].getAttribute('data-type');
+
+                candyTiles[i].setAttribute('data-type', type2);
+                candyTiles[neighbour].setAttribute('data-type', type1);
+                const createsMatch = findMatchedIndices().size > 0;
+                candyTiles[i].setAttribute('data-type', type1);
+                candyTiles[neighbour].setAttribute('data-type', type2);
+
+                if (createsMatch) return true;
+            }
+        }
+        return false;
+    }
+
+    function ensurePlayableBoard() {
+        if (hasPossibleMove()) return;
+        createBoard();
+    }
+
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
     }
 
     /* ENHANCED CANVAS TRACING & AUTO-CLEAR */
@@ -805,11 +942,41 @@
         };
     }
 
+    function escapeHtml(value) {
+        return String(value)
+            .replaceAll('&', '&amp;')
+            .replaceAll('<', '&lt;')
+            .replaceAll('>', '&gt;')
+            .replaceAll('"', '&quot;')
+            .replaceAll("'", '&#039;');
+    }
+
+    function renderWordPrompt(question) {
+        const prompt = document.getElementById('wordPrompt');
+
+        if (question.placement === 'above') {
+            prompt.innerHTML =
+                `${escapeHtml(question.before)}` +
+                `<span class="mark-anchor" style="--slot-right:${escapeHtml(question.slotRight || '0.04em')}">` +
+                    `${escapeHtml(question.anchor)}` +
+                    `<span class="mark-slot-above" aria-hidden="true"></span>` +
+                `</span>` +
+                `${escapeHtml(question.after)}`;
+        } else {
+            prompt.innerHTML =
+                `${escapeHtml(question.before)}` +
+                `<span class="mark-slot-inline" aria-hidden="true"></span>` +
+                `${escapeHtml(question.after)}`;
+        }
+
+        prompt.setAttribute('aria-label', `अधूरा शब्द: ${question.fullWord}`);
+    }
+
     function triggerTracingModal() {
         if (questionsSolved >= 10) return;
 
         const currentQ = activeQuestions[questionsSolved];
-        document.getElementById('wordPrompt').innerText = currentQ.wordPrompt;
+        renderWordPrompt(currentQ);
         document.getElementById('hintBox').style.display = 'none';
         document.getElementById('successBanner').style.display = 'none';
         document.getElementById('canvasBox').style.display = 'block';
@@ -897,9 +1064,6 @@
         document.getElementById('progressText').innerText = `सवाल: ${questionsSolved}/10`;
         document.getElementById('scoreText').innerText = `⭐: ${score}`;
         
-        let cStr = "";
-        for(let i=0; i<lives; i++) cStr += "🍬";
-        document.getElementById('livesBox').innerText = cStr;
     }
 
     function startNewGame() {
@@ -907,11 +1071,10 @@
         score = 0;
         questionsSolved = 0;
         matchCountForCurrentQuestion = 0;
-        lives = 3;
         traceAttempts = 0;
         boardLocked = false;
         tracingPending = false;
-        activeQuestions = [...masterQuestions].sort(() => Math.random() - 0.5);
+        activeQuestions = shuffleArray([...masterQuestions]);
         document.getElementById('matchProgress').innerText = `0 / 2`;
         updateStatusBar();
         createBoard();
@@ -922,7 +1085,7 @@
         if (isWin) {
             playAudio(sndClaps);
             document.getElementById('endTitle').innerText = "🎉 अद्भुत! जीत गए। 🥳";
-            document.getElementById('finalScore').innerText = `आपने पूरे ${score} अंक बनाए।`;
+            document.getElementById('finalScore').innerText = `आपने ${score} अंक प्राप्त किए।`;
             
             if (window.confetti) {
                 confetti({ particleCount: 200, spread: 100, origin: { y: 0.5 } });
