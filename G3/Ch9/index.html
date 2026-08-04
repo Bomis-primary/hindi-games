@@ -270,10 +270,10 @@
         <p class="subtitle">खेल के नियम और निर्देश</p>
         
         <ul class="instructions-box">
-            <li>📌 <strong>लक्ष्य:</strong> डॉ. कलाम के पाठ पर आधारित सवालों का सही जवाब देना।</li>
-            <li>🎯 <strong>अंक प्रणाली:</strong> प्रत्येक सही उत्तर पर आपको <strong>20 अंक</strong> मिलेंगे।</li>
-            <li>💡 <strong>व्याख्या:</strong> उत्तर देने के बाद आपको सही जवाब की व्याख्या मिलेगी।</li>
-            <li>🚀 <strong>मिशन:</strong> 100% अंक प्राप्त करके 'मिसाइल मास्टर' का पदक हासिल करें!</li>
+            <li>📌 <strong>लक्ष्य:</strong> 15 प्रश्नों के पूल में से चुने गए <strong>10 प्रश्नों</strong> का सही उत्तर देना।</li>
+            <li>🎯 <strong>अंक प्रणाली:</strong> प्रत्येक सही उत्तर पर आपको <strong>10 अंक</strong> मिलेंगे (कुल अंक: 100)।</li>
+            <li>💡 <strong>व्याख्या:</strong> प्रत्येक उत्तर के बाद आपको सही जवाब की स्पष्ट व्याख्या मिलेगी।</li>
+            <li>🚀 <strong>मिशन:</strong> अधिकतम अंक प्राप्त कर अध्याय की संपूर्ण पुनरावृत्ति करें!</li>
         </ul>
 
         <div>
@@ -284,7 +284,7 @@
     <!-- SCREEN 3: GAME PLAY SCREEN -->
     <div id="game-screen" class="screen">
         <div class="hud">
-            <div>प्रश्न: <span id="current-q">1</span>/<span id="total-q">5</span></div>
+            <div>प्रश्न: <span id="current-q">1</span>/<span id="total-q">10</span></div>
             <div>अंक: <span id="score">0</span></div>
         </div>
 
@@ -340,84 +340,127 @@
         document.getElementById(screenId).classList.add('active');
     }
 
-    // Hindi Questions List
-    const chapterQuestions = [
+    // Full Pool of 15 Questions
+    const questionPool = [
         {
             question: "डॉ. ए.पी.जे. अब्दुल कलाम का जन्म कहाँ हुआ था?",
-            options: [
-                "रामेश्वरम, तमिलनाडु",
-                "तिरुवनंतपुरम, केरल",
-                "बेंगलुरु, कर्नाटक",
-                "हैदराबाद, तेलंगाना"
-            ],
+            options: ["रामेश्वरम, तमिलनाडु", "तिरुवनंतपुरम, केरल", "बेंगलुरु, कर्नाटक", "हैदराबाद, तेलंगाना"],
             correct: 0,
             explanation: "डॉ. कलाम का जन्म 15 अक्टूबर 1931 को तमिलनाडु के प्रसिद्ध द्वीप शहर रामेश्वरम में हुआ था।"
         },
         {
-            question: "बचपन में अपने परिवार की आर्थिक मदद के लिए अब्दुल कलाम क्या काम करते थे?",
-            options: [
-                "मंदिर में फूल बेचते थे",
-                "इमली के बीज इकट्ठा करते थे और समाचार पत्र बांटते थे",
-                "मछली फार्म में काम करते थे",
-                "साइकिल की मरम्मत करते थे"
-            ],
+            question: "बचपन में अपने परिवार की आर्थिक मदद के लिए कलाम क्या काम करते थे?",
+            options: ["मंदिर में फूल बेचते थे", "इमली के बीज इकट्ठा करते थे और अखबार बांटते थे", "मछली फार्म में काम करते थे", "साइकिल की मरम्मत करते थे"],
             correct: 1,
-            explanation: "कलाम इमली के बीज इकट्ठा करके बेचते थे और अपने चचेरे भाई शमसुद्दीन की मदद के लिए अखबार बांटते थे।"
+            explanation: "कलाम इमली के बीज इकट्ठा कर बेचते थे तथा चचेरे भाई शमसुद्दीन की मदद के लिए अखबार बांटते थे।"
         },
         {
-            question: "इसरो (ISRO) में परियोजना निदेशक के रूप में डॉ. कलाम ने किस प्रमुख उपग्रह प्रक्षेपण यान का नेतृत्व किया?",
-            options: [
-                "चंद्रयान-1",
-                "मंगलयान",
-                "एस.एल.वी.-3 (SLV-3)",
-                "इनसैट-1ए"
-            ],
+            question: "इसरो (ISRO) में डॉ. कलाम ने किस प्रमुख उपग्रह प्रक्षेपण यान का नेतृत्व किया?",
+            options: ["चंद्रयान-1", "मंगलयान", "एस.एल.वी.-3 (SLV-3)", "इनसैट-1ए"],
             correct: 2,
-            explanation: "डॉ. कलाम भारत के पहले स्वदेशी उपग्रह प्रक्षेपण यान (SLV-3) के प्रोजेक्ट डायरेक्टर थे, जिसने रोहिणी उपग्रह को कक्षा में स्थापित किया।"
+            explanation: "डॉ. कलाम भारत के पहले स्वदेशी उपग्रह प्रक्षेपण यान (SLV-3) के प्रोजेक्ट डायरेक्टर थे।"
         },
         {
             question: "डॉ. कलाम को 'मिसाइल मैन ऑफ इंडिया' क्यों कहा जाता है?",
-            options: [
-                "उन्होंने तोपखाने की खोज की थी",
-                "उन्होंने अग्नि और पृथ्वी जैसी मिसाइलों का सफल विकास किया",
-                "वे वायुसेना के फाइटर पायलट थे",
-                "उन्होंने पहली परमाणु पनडुब्बी बनाई थी"
-            ],
+            options: ["उन्होंने तोपखाने की खोज की", "अग्नि और पृथ्वी मिसाइलों का सफल विकास किया", "वे वायुसेना के पायलट थे", "उन्होंने परमाणु पनडुब्बी बनाई"],
             correct: 1,
-            explanation: "उन्होंने एकीकृत निर्देशित मिसाइल विकास कार्यक्रम (IGMDP) का सफल नेतृत्व किया और अग्नि तथा पृथ्वी मिसाइलों को विकसित किया।"
+            explanation: "उन्होंने भारत के एकीकृत निर्देशित मिसाइल विकास कार्यक्रम का सफल नेतृत्व किया।"
         },
         {
             question: "डॉ. अब्दुल कलाम भारत के कौन-से नंबर के राष्ट्रपति बने?",
-            options: [
-                "9वें",
-                "10वें",
-                "11वें",
-                "12वें"
-            ],
+            options: ["9वें", "10वें", "11वें", "12वें"],
             correct: 2,
-            explanation: "डॉ. कलाम वर्ष 2002 से 2007 तक भारत के 11वें राष्ट्रपति रहे। उन्हें 'जनता के राष्ट्रपति' (People's President) के रूप में भी जाना जाता है।"
+            explanation: "डॉ. कलाम वर्ष 2002 से 2007 तक भारत के 11वें राष्ट्रपति रहे।"
+        },
+        {
+            question: "डॉ. कलाम का पूरा नाम क्या था?",
+            options: ["अब्दुल पाकिर जैनुलआब्दीन कलाम", "अवुल पाकिर जैनुलआब्दीन अब्दुल कलाम", "अहमद पाकिर जैनुल कलाम", "अबुल कलाम आजाद"],
+            correct: 1,
+            explanation: "उनका पूर्ण नाम 'अवुल पाकिर जैनुलआब्दीन अब्दुल कलाम' था।"
+        },
+        {
+            question: "कलाम जी के पिता जी का क्या नाम था?",
+            options: ["जैनुलआब्दीन", "शमसुद्दीन", "जलालुद्दीन", "अहमद हुसैन"],
+            correct: 0,
+            explanation: "उनके पिता का नाम जैनुलआब्दीन था, जो बहुत ही उदार और सरल विचार वाले व्यक्ति थे।"
+        },
+        {
+            question: "अब्दुल कलाम की माता जी का क्या नाम था?",
+            options: ["आशियम्मा", "फातिमा", "रेशमा", "ज़ोहरा"],
+            correct: 0,
+            explanation: "उनकी माता जी का नाम आशियम्मा था, जो एक अत्यंत दयालु और गृहिणी महिला थीं।"
+        },
+        {
+            question: "डॉ. कलाम को भारत का सर्वोच्च नागरिक सम्मान 'भारत रत्न' किस वर्ष दिया गया?",
+            options: ["1990", "1997", "2001", "2005"],
+            correct: 1,
+            explanation: "डॉ. कलाम को देश सेवा और विज्ञान के क्षेत्र में अतुलनीय योगदान के लिए 1997 में 'भारत रत्न' से सम्मानित किया गया।"
+        },
+        {
+            question: "डॉ. कलाम को किस नाम से जनता के बीच प्रियता मिली?",
+            options: ["जनता के राष्ट्रपति (People's President)", "राष्ट्रपिता", "लौह पुरुष", "युग पुरुष"],
+            correct: 0,
+            explanation: "अपने सादगी और छात्रों से लगाव के कारण उन्हें 'जनता के राष्ट्रपति' (People's President) कहा जाता है।"
+        },
+        {
+            question: "डॉ. कलाम की प्रसिद्ध आत्मकथा (Autobiography) का क्या नाम है?",
+            options: ["माई एक्सपेरिमेंट्स विद ट्रुथ", "विंग्स ऑफ फायर (Wings of Fire)", "इग्नाइटेड माइंड्स", "द डिस्कवरी ऑफ इंडिया"],
+            correct: 1,
+            explanation: "'विंग्स ऑफ फायर' (अग्नि की उड़ान) डॉ. एपीजे अब्दुल कलाम की प्रसिद्ध आत्मकथा है।"
+        },
+        {
+            question: "बचपन में कलाम के सबसे करीबी मित्र कौन थे, जो मंदिर के मुख्य पुजारी के बेटे थे?",
+            options: ["रामानंद शास्त्री", "अराविंदन", "शिवप्रकाशन", "शमसुद्दीन"],
+            correct: 0,
+            explanation: "रामानंद शास्त्री, रामेश्वरम मंदिर के मुख्य पुजारी पक्षी लक्ष्मण शास्त्री के पुत्र थे और कलाम के परम मित्र थे।"
+        },
+        {
+            question: "डॉ. कलाम ने स्नातक (Graduation) की शिक्षा किस विषय में पूरी की?",
+            options: ["कंप्यूटर साइंस", "भौतिक विज्ञान (Physics)", "रसायन विज्ञान", "गणित"],
+            correct: 1,
+            explanation: "उन्होंने सेंट जोसेफ कॉलेज, तिरुचिरापल्ली से 1954 में भौतिक विज्ञान (Physics) में स्नातक किया।"
+        },
+        {
+            question: "डॉ. कलाम ने एयरोस्पेस इंजीनियरिंग की पढ़ाई कहाँ से की?",
+            options: ["IIT मद्रास", "एम.आई.टी. (MIT - मद्रास इंस्टीट्यूट ऑफ टेक्नोलॉजी)", "IIT दिल्ली", "IISc बेंगलुरु"],
+            correct: 1,
+            explanation: "उन्होंने मद्रास इंस्टीट्यूट ऑफ टेक्नोलॉजी (MIT) से एयरोस्पेस इंजीनियरिंग की डिग्री हासिल की।"
+        },
+        {
+            question: "डॉ. कलाम का निधन किस स्थान पर छात्रों को संबोधित करते समय हुआ?",
+            options: ["शिलॉन्ग (IIM Shillong)", "दिल्ली", "बेंगलुरु", "गुवाहाटी"],
+            correct: 0,
+            explanation: "27 जुलाई 2015 को IIM शिलॉन्ग में व्याख्यान देते समय डॉ. कलाम का निधन हुआ।"
         }
     ];
 
+    let currentGameQuestions = [];
     let currentQuestionIndex = 0;
     let score = 0;
     let selectedOption = false;
 
+    // Helper Function: Pick 10 Random Questions from 15
+    function selectRandomQuestions() {
+        const shuffled = [...questionPool].sort(() => 0.5 - Math.random());
+        return shuffled.slice(0, 10);
+    }
+
     function startGame() {
+        currentGameQuestions = selectRandomQuestions();
         currentQuestionIndex = 0;
         score = 0;
         showScreen('game-screen');
-        document.getElementById('total-q').innerText = chapterQuestions.length;
+        document.getElementById('total-q').innerText = currentGameQuestions.length;
         loadQuestion();
     }
 
     function loadQuestion() {
         selectedOption = false;
-        const qData = chapterQuestions[currentQuestionIndex];
+        const qData = currentGameQuestions[currentQuestionIndex];
         
         document.getElementById('current-q').innerText = currentQuestionIndex + 1;
         document.getElementById('score').innerText = score;
-        const progressPercent = ((currentQuestionIndex) / chapterQuestions.length) * 100;
+        const progressPercent = ((currentQuestionIndex) / currentGameQuestions.length) * 100;
         document.getElementById('progress-bar').style.width = progressPercent + '%';
 
         document.getElementById('question').innerText = qData.question;
@@ -445,12 +488,12 @@
         if (selectedOption) return;
         selectedOption = true;
 
-        const qData = chapterQuestions[currentQuestionIndex];
+        const qData = currentGameQuestions[currentQuestionIndex];
         const allButtons = document.querySelectorAll('.option-btn');
         const feedbackEl = document.getElementById('feedback');
 
         if (index === qData.correct) {
-            score += 20;
+            score += 10;
             button.classList.add('correct');
             feedbackEl.innerText = "✨ सही उत्तर! " + qData.explanation;
             feedbackEl.classList.add('show', 'correct-text');
@@ -467,7 +510,7 @@
 
     function nextQuestion() {
         currentQuestionIndex++;
-        if (currentQuestionIndex < chapterQuestions.length) {
+        if (currentQuestionIndex < currentGameQuestions.length) {
             loadQuestion();
         } else {
             showEndScreen();
@@ -478,12 +521,12 @@
         document.getElementById('progress-bar').style.width = '100%';
         showScreen('end-screen');
 
-        document.getElementById('final-stats').innerText = `आपका अंतिम स्कोर: ${score} / ${chapterQuestions.length * 20}`;
+        document.getElementById('final-stats').innerText = `आपका अंतिम स्कोर: ${score} / ${currentGameQuestions.length * 10}`;
         
         const msgEl = document.getElementById('revision-msg');
         if (score === 100) {
             msgEl.innerText = "🌟 उत्कृष्ट! आपको इस अध्याय की पूर्ण और सटीक जानकारी है!";
-        } else if (score >= 60) {
+        } else if (score >= 70) {
             msgEl.innerText = "👍 बहुत बढ़िया! आपकी पाठ पर अच्छी पकड़ है।";
         } else {
             msgEl.innerText = "📚 अच्छा प्रयास! पाठ को एक बार फिर ध्यान से पढ़ें और पुनः प्रयास करें।";
