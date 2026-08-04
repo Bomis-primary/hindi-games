@@ -1,793 +1,914 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>मात्रा ज्ञान - आ की मात्रा (कक्षा 1)</title>
-    <style>
-        :root {
-            --village-sky: #bae6fd;
-            --grass-green: #4ade80;
-            --sun-yellow: #fef08a;
-            --mud-brown: #ca8a04;
-            --clay-red: #f87171;
-            --text-dark: #1e293b;
-            --card-bg: #ffffff;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#fff9ef">
+  <title>आ की मात्रा का खेल | कक्षा 1</title>
+  <style>
+    :root {
+      --ink:#25324a;
+      --muted:#687086;
+      --primary:#6c5ce7;
+      --primary-dark:#4d42b7;
+      --accent:#f28c28;
+      --yellow:#ffd166;
+      --green:#28a867;
+      --green-soft:#e8f8ef;
+      --red:#d94f4f;
+      --red-soft:#fff0f0;
+      --card:#ffffff;
+      --line:#e5e8f0;
+      --shadow:0 14px 36px rgba(37,50,74,.14);
+    }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', 'Noto Sans Devanagari', system-ui, sans-serif;
-            -webkit-user-select: none;
-            user-select: none;
-        }
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    html,body{width:100%;height:100%;margin:0;overflow:hidden}
+    body{
+      font-family:"Noto Sans Devanagari","Mangal","Arial Unicode MS",Arial,sans-serif;
+      color:var(--ink);
+      background:#fff9ef;
+      touch-action:manipulation;
+    }
+    button{font:inherit}
 
-        body {
-            min-height: 100vh;
-            background: linear-gradient(to bottom, var(--village-sky) 60%, var(--grass-green) 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 10px;
-            overflow-x: hidden;
-        }
+    .app{
+      position:relative;
+      width:100%;
+      height:100vh;
+      height:100dvh;
+      overflow:hidden;
+      background:
+        radial-gradient(circle at 12% 16%,rgba(255,209,102,.28),transparent 24%),
+        radial-gradient(circle at 88% 20%,rgba(108,92,231,.16),transparent 22%),
+        linear-gradient(145deg,#fffaf1 0%,#f4f7ff 55%,#fff1f8 100%);
+    }
 
-        /* STAGE 1: EXCLUSIVE 5-SECOND LOGO SPLASH SCREEN */
-        #splash {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #ffffff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-        }
-        #splash img {
-            width: 300px;
-            max-width: 80%;
-            animation: bouncePulse 2s infinite ease-in-out;
-        }
-        @keyframes bouncePulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
+    .screen{
+      position:absolute;
+      inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:max(16px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(16px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left));
+    }
+    .screen.active{display:flex}
 
-        /* GAME FRAMEWORK CONTAINER */
-        .game-window {
-            width: 100%;
-            max-width: 850px;
-            background: rgba(255, 255, 255, 0.95);
-            border: 8px solid var(--sun-yellow);
-            border-radius: 30px;
-            padding: 25px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-            position: relative;
-            text-align: center;
-            min-height: 550px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
+    #logo-screen{z-index:30;background:#fff}
+    #logo-screen img{display:block;width:min(62vw,310px);max-height:42vh;object-fit:contain}
 
-        .hidden { display: none !important; }
+    .ambient{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+    .float-mark{position:absolute;opacity:.18;font-weight:900;color:var(--accent);animation:float 8s ease-in-out infinite}
+    .f1{left:6%;top:13%;font-size:2rem;animation-delay:-1s}
+    .f2{right:7%;top:17%;font-size:2.6rem;animation-delay:-4s}
+    .f3{left:12%;bottom:12%;font-size:2.4rem;animation-delay:-6s}
+    .f4{right:12%;bottom:14%;font-size:2rem;animation-delay:-2s}
+    .f5{left:48%;top:6%;font-size:1.8rem;animation-delay:-5s}
+    @keyframes float{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-14px) rotate(8deg)}}
 
-        /* UI TYPOGRAPHY & HEADER ELEMENTS */
-        h1 { color: #b91c1c; font-size: 2.3rem; margin-bottom: 5px; text-shadow: 2px 2px #fef08a; }
-        h2 { color: #4338ca; font-size: 1.6rem; margin-bottom: 15px; }
-        .subtitle { font-size: 1.1rem; color: #475569; margin-bottom: 20px; font-weight: bold; }
-        
-        .hud {
-            display: flex;
-            justify-content: space-between;
-            background: #fef08a;
-            padding: 10px 20px;
-            border-radius: 50px;
-            font-weight: bold;
-            font-size: 1.2rem;
-            color: #854d0e;
-            margin-bottom: 20px;
-            border: 2px solid #eab308;
-        }
+    .panel{
+      position:relative;
+      z-index:2;
+      width:min(92vw,760px);
+      max-height:94vh;
+      max-height:94dvh;
+      overflow:auto;
+      padding:clamp(20px,4vw,40px);
+      border-radius:28px;
+      background:rgba(255,255,255,.97);
+      box-shadow:var(--shadow);
+      text-align:center;
+      -webkit-overflow-scrolling:touch;
+    }
 
-        /* VIBRANT INTERACTIVE BUTTON DESIGN */
-        .btn-main {
-            background: linear-gradient(135deg, #ff7e5f, #feb47b);
-            color: white;
-            padding: 15px 40px;
-            font-size: 1.5rem;
-            font-weight: bold;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            box-shadow: 0 6px 0 #dd6b20;
-            transition: transform 0.1s;
-        }
-        .btn-main:active { transform: translateY(4px); box-shadow: 0 2px 0 #dd6b20; }
+    .title-badge{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-width:72px;
+      min-height:72px;
+      margin-bottom:12px;
+      border-radius:22px;
+      background:linear-gradient(145deg,var(--yellow),#ffb84c);
+      color:#5b3e00;
+      font-size:2.5rem;
+      font-weight:1000;
+      box-shadow:0 8px 0 #e7a536;
+    }
 
-        /* ACTIVITY MECHANICS GRID STYLES */
-        .letter-pool, .options-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 15px;
-            margin: 20px 0;
-        }
+    h1,h2,p{margin-top:0}
+    h1{margin-bottom:10px;font-size:clamp(2rem,6vw,3.25rem);line-height:1.15}
+    .intro-copy{max-width:620px;margin:0 auto 18px;color:var(--muted);font-size:clamp(1rem,2.8vw,1.2rem);line-height:1.55}
 
-        .bubble-card {
-            background: white;
-            border: 4px solid #bfdbfe;
-            border-radius: 20px;
-            padding: 20px;
-            font-size: 2.2rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.2s;
-            box-shadow: 0 6px 0 #bfdbfe;
-        }
-        .bubble-card:hover { transform: scale(1.05); background: #eff6ff; }
+    .rules{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:18px 0 22px}
+    .rule{padding:13px 10px;border-radius:16px;background:#eef4ff;font-size:.96rem;line-height:1.42;font-weight:850}
 
-        /* DRAG AND DROP MATRIX DESIGN */
-        .matching-matrix {
-            display: flex;
-            gap: 20px;
-            justify-content: space-around;
-            flex-wrap: wrap;
-            margin: 20px 0;
-        }
-        .drag-box, .drop-target {
-            background: #f1f5f9;
-            border: 3px dashed #cbd5e1;
-            padding: 15px;
-            border-radius: 15px;
-            min-width: 140px;
-            text-align: center;
-        }
-        .drag-item {
-            background: #3b82f6;
-            color: white;
-            padding: 10px;
-            border-radius: 10px;
-            font-size: 1.4rem;
-            font-weight: bold;
-            cursor: grab;
-            margin: 5px 0;
-        }
-        .picture-node { font-size: 3rem; display: block; }
+    .target-mark{color:var(--accent);font-weight:1000;text-shadow:0 1px 0 #fff}
 
-        /* VILLAGE PICTURE HUNT CANVAS MAP */
-        .village-canvas {
-            position: relative;
-            width: 100%;
-            height: 320px;
-            background: url('https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=800&auto=format&fit=crop') center/cover no-repeat;
-            border-radius: 20px;
-            border: 4px solid #ca8a04;
-            overflow: hidden;
-            margin-bottom: 15px;
-        }
-        .hunt-hotspot {
-            position: absolute;
-            background: rgba(255, 255, 255, 0.4);
-            border: 2px dashed #ff1744;
-            border-radius: 50%;
-            width: 70px;
-            height: 70px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 2.5rem;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-        .hunt-hotspot:hover { transform: scale(1.2); background: rgba(255, 255, 255, 0.8); }
+    .primary-btn,.small-btn{
+      min-height:50px;
+      padding:11px 22px;
+      border-radius:999px;
+      cursor:pointer;
+      font-weight:950;
+      transition:transform .12s ease,box-shadow .12s ease;
+    }
+    .primary-btn{min-width:190px;border:0;background:var(--primary);color:#fff;box-shadow:0 7px 0 var(--primary-dark);font-size:1.07rem}
+    .small-btn{border:2px solid var(--primary);background:#fff;color:var(--primary-dark);box-shadow:0 4px 0 #d8d4ff}
+    .primary-btn:active,.small-btn:active{transform:translateY(3px);box-shadow:0 2px 0 var(--primary-dark)}
+    button:focus-visible{outline:4px solid rgba(108,92,231,.25);outline-offset:3px}
 
-        /* POEM TIMELINE MATRIX */
-        .timeline-flex {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin: 25px 0;
-        }
-        .timeline-card {
-            background: #fef3c7;
-            border: 2px solid #f59e0b;
-            padding: 15px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            font-size: 1.3rem;
-            font-weight: bold;
-            cursor: grab;
-        }
+    #game-screen{padding:0;align-items:stretch;justify-content:stretch}
+    .game-shell{position:relative;z-index:2;display:flex;flex-direction:column;width:min(100%,960px);height:100%;margin:0 auto;background:rgba(255,255,255,.9);box-shadow:0 0 36px rgba(37,50,74,.12)}
 
-        .feedback-banner {
-            min-height: 50px;
-            font-size: 1.4rem;
-            font-weight: bold;
-            margin-top: 15px;
-            padding: 10px;
-            border-radius: 10px;
-        }
-        .correct-flash { color: #16a34a; background: #dcfce7; }
-        .wrong-flash { color: #dc2626; background: #fee2e2; }
+    .topbar{
+      flex:0 0 auto;
+      display:grid;
+      grid-template-columns:minmax(0,1fr) auto auto auto;
+      align-items:center;
+      gap:10px;
+      min-height:76px;
+      padding:max(12px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) 12px max(14px,env(safe-area-inset-left));
+      border-bottom:1px solid var(--line);
+      background:rgba(255,255,255,.98);
+    }
+    .level-info{min-width:0}
+    .level-name{display:block;overflow:hidden;color:var(--primary-dark);font-size:clamp(.98rem,2.5vw,1.16rem);font-weight:950;text-overflow:ellipsis;white-space:nowrap}
+    .challenge-count{display:block;margin-top:2px;color:var(--muted);font-size:.86rem;font-weight:800}
+    .score-box,.timer-box{display:flex;align-items:center;justify-content:center;min-height:48px;padding:8px 12px;border-radius:14px;background:#eef4ff;font-weight:950;white-space:nowrap}
+    .timer-box.low{color:#a61b1b;background:#ffeaea;animation:timerPulse .9s ease-in-out infinite}
+    @keyframes timerPulse{50%{transform:scale(1.04)}}
+    .sound-btn{width:46px;height:46px;border:0;border-radius:50%;background:#fff;box-shadow:0 3px 12px rgba(37,50,74,.12);cursor:pointer;font-size:1.2rem}
 
-        /* CONFETTI GRAPHIC GENERATOR */
-        .confetti {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            background: #f59e0b;
-            position: absolute;
-            animation: fall 2s linear infinite;
-            top: -10px;
-        }
-        @keyframes fall {
-            to { transform: translateY(550px) rotate(360deg); }
-        }
-    </style>
+    .progress-track{flex:0 0 auto;width:100%;height:8px;overflow:hidden;background:#e9ecf4}
+    .progress-fill{width:0;height:100%;background:linear-gradient(90deg,var(--primary),#9b8cff);transition:width .35s ease}
+
+    .game-main{flex:1 1 auto;display:flex;flex-direction:column;justify-content:center;min-height:0;padding:clamp(12px,2.8vw,26px);overflow:auto;-webkit-overflow-scrolling:touch}
+    .prompt-card{width:min(100%,790px);margin:0 auto 14px;padding:clamp(14px,2.8vw,22px);border:1px solid #eceef5;border-radius:22px;background:#fff;box-shadow:0 8px 24px rgba(37,50,74,.08);text-align:center}
+    .prompt-label{display:inline-block;margin-bottom:7px;padding:5px 12px;border-radius:999px;background:#f1efff;color:var(--primary-dark);font-size:.9rem;font-weight:950}
+    .question-text{margin:0;font-size:clamp(1.12rem,3.25vw,1.72rem);line-height:1.5;font-weight:950;word-break:break-word;overflow-wrap:anywhere}
+    .task-area{width:min(100%,790px);margin:0 auto}
+    .feedback-line{width:min(100%,790px);min-height:50px;margin:13px auto 0;padding:10px 14px;border-radius:15px;color:var(--muted);font-size:.97rem;line-height:1.4;font-weight:850;text-align:center}
+    .feedback-line.good{color:#17623b;background:var(--green-soft)}
+    .feedback-line.bad{color:#8f2020;background:var(--red-soft)}
+    .feedback-line.info{color:#403a91;background:#f1efff}
+
+    .picture-card{display:flex;align-items:center;justify-content:center;width:124px;height:124px;margin:0 auto 14px;border:3px solid #f1d59a;border-radius:26px;background:#fff9e9;box-shadow:0 6px 0 #ead19b;font-size:4rem;line-height:1;overflow:hidden}.picture-card svg{width:104px;height:88px;display:block}.picture-card img{display:block;width:100%;height:100%;object-fit:contain;padding:6px}
+
+    /* Level 1 */
+    .letter-stage{display:flex;flex-direction:column;align-items:center}
+    .letter-row{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin:8px auto 14px}
+    .letter-box{position:relative;min-width:78px;min-height:74px;padding:10px 15px;border:3px solid #dce1ec;border-radius:20px;background:#fff;color:var(--ink);box-shadow:0 6px 0 #d6dbe6;cursor:pointer;font-size:2rem;font-weight:1000}
+    .letter-box.selected{border-color:var(--accent);background:#fff4e6;box-shadow:0 6px 0 #e3b06f}
+    .letter-box.correct{border-color:var(--green);background:var(--green-soft);box-shadow:none}
+    .letter-box.wrong{border-color:var(--red);background:var(--red-soft);animation:shake .35s ease}
+    .letter-box .matra{position:absolute;top:8px;right:8px;color:var(--accent);font-size:1.65rem;font-weight:1000}
+    .preview-word{min-height:54px;margin:0 auto 14px;padding:7px 18px;border-radius:16px;background:#f7f7fb;color:var(--primary-dark);font-size:2rem;font-weight:1000}
+
+    /* Level 2 */
+    .count-stage{display:flex;flex-direction:column;align-items:center}
+    .count-word{margin:2px auto 14px;padding:10px 24px;border:3px solid #d9e5ff;border-radius:20px;background:#f7fbff;box-shadow:0 6px 0 #d3def4;font-size:clamp(2rem,7vw,3rem);font-weight:1000}
+    .tap-counter{display:flex;align-items:center;justify-content:center;gap:18px;margin:0 auto 14px}
+    .drum-btn{display:flex;align-items:center;justify-content:center;width:112px;height:112px;border:0;border-radius:50%;background:linear-gradient(145deg,#ffcf70,#f49b38);box-shadow:0 8px 0 #c87820;cursor:pointer;font-size:3.8rem;transition:transform .1s ease}
+    .drum-btn:active{transform:translateY(4px);box-shadow:0 3px 0 #c87820}
+    .count-display{display:flex;align-items:center;justify-content:center;min-width:84px;height:84px;border-radius:22px;background:#f1efff;color:var(--primary-dark);font-size:2.5rem;font-weight:1000}
+    .count-marks{min-height:32px;margin-bottom:12px;color:var(--accent);font-size:1.8rem;letter-spacing:5px}
+    .action-row{display:flex;flex-wrap:wrap;justify-content:center;gap:10px}
+
+    /* Level 3 */
+    .memory-board{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;width:min(100%,680px);margin:0 auto}
+    .memory-card{position:relative;min-height:142px;border:0;border-radius:20px;background:transparent;cursor:pointer;perspective:800px}
+    .memory-inner{position:absolute;inset:0;transition:transform .35s ease;transform-style:preserve-3d}
+    .memory-card.flipped .memory-inner,.memory-card.matched .memory-inner{transform:rotateY(180deg)}
+    .memory-face{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;border-radius:20px;backface-visibility:hidden;-webkit-backface-visibility:hidden;box-shadow:0 7px 18px rgba(37,50,74,.12)}
+    .memory-front{background:linear-gradient(145deg,#7467ef,#5c4fd0);color:#fff;font-size:2.5rem;font-weight:1000}
+    .memory-back{transform:rotateY(180deg);border:3px solid #e2e6ef;background:#fff;padding:10px;text-align:center;font-size:clamp(1.4rem,4vw,2rem);font-weight:1000}
+    .memory-back.picture{font-size:3.4rem}.memory-back.picture svg{width:90%;height:90%;display:block}
+    .memory-card.matched .memory-back{border-color:var(--green);background:var(--green-soft)}
+    .memory-card.wrong .memory-back{border-color:var(--red);background:var(--red-soft)}
+
+    @keyframes shake{25%{transform:translateX(-5px)}50%{transform:translateX(5px)}75%{transform:translateX(-3px)}}
+
+    .feedback-pop{position:fixed;left:50%;top:50%;z-index:40;display:none;align-items:center;justify-content:center;width:108px;height:108px;border-radius:50%;transform:translate(-50%,-50%);color:#fff;font-size:4rem;font-weight:1000;box-shadow:0 14px 35px rgba(37,50,74,.25);pointer-events:none}
+    .feedback-pop.show{display:flex;animation:popIn .55s ease both}
+    .feedback-pop.correct-pop{background:var(--green)}
+    .feedback-pop.wrong-pop{width:80px;height:80px;background:rgba(217,79,79,.94);font-size:3rem}
+    @keyframes popIn{0%{opacity:0;transform:translate(-50%,-50%) scale(.35)}60%{opacity:1;transform:translate(-50%,-50%) scale(1.12)}100%{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+
+    .confetti-layer{position:fixed;inset:0;z-index:39;pointer-events:none;overflow:hidden}
+    .confetti-star{position:absolute;top:50%;left:50%;font-size:24px;animation:starBurst 900ms ease-out forwards;will-change:transform,opacity}
+    @keyframes starBurst{0%{opacity:1;transform:translate(-50%,-50%) scale(.4) rotate(0)}100%{opacity:0;transform:translate(var(--tx),var(--ty)) scale(1.15) rotate(300deg)}}
+
+    .level-overlay{position:fixed;inset:0;z-index:35;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(40,45,72,.5);backdrop-filter:blur(3px)}
+    .level-overlay.show{display:flex}
+    .level-card{width:min(90vw,480px);padding:28px 22px;border-radius:26px;background:#fff;box-shadow:var(--shadow);text-align:center;animation:levelRise .45s ease both}
+    .level-card .big-icon{margin-bottom:8px;font-size:3.2rem}
+    .level-card h2{margin-bottom:8px;font-size:2rem}
+    .level-card p{margin-bottom:0;color:var(--muted);font-size:1.04rem;line-height:1.45}
+    @keyframes levelRise{from{opacity:0;transform:translateY(18px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+
+    .result-stars{margin:10px 0 14px;color:#f4b942;font-size:clamp(2rem,7vw,3.3rem);letter-spacing:4px}
+    .result-score{margin:10px auto;color:var(--primary-dark);font-size:clamp(2.5rem,9vw,4.5rem);font-weight:1000}
+    .result-summary{margin:0 auto 20px;color:var(--muted);font-size:1.06rem;line-height:1.55}
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+    @media(max-width:680px){
+      .rules{grid-template-columns:1fr}
+      .topbar{min-height:68px;gap:7px}
+      .score-box,.timer-box{min-height:43px;padding:7px 9px;font-size:.9rem}
+      .sound-btn{width:42px;height:42px}
+      .memory-board{grid-template-columns:repeat(2,minmax(0,1fr));max-width:420px}
+      .memory-card{min-height:118px}
+    }
+
+    @media(max-width:390px){
+      .score-label,.timer-label{display:none}
+      .level-name{font-size:.92rem}
+      .letter-box{min-width:66px;min-height:64px;padding:8px 12px;font-size:1.75rem}
+      .picture-card{width:102px;height:102px;font-size:3.2rem}
+      .drum-btn{width:96px;height:96px;font-size:3.1rem}
+      .count-display{min-width:72px;height:72px;font-size:2.1rem}
+      .memory-card{min-height:105px}
+    }
+
+    @media(max-height:610px) and (orientation:landscape){
+      .panel{max-height:96vh;padding:14px 22px}
+      .title-badge{min-width:52px;min-height:52px;margin-bottom:6px;font-size:2rem;box-shadow:0 5px 0 #e7a536}
+      h1{margin-bottom:5px;font-size:1.75rem}
+      .intro-copy{margin-bottom:8px;font-size:.94rem}
+      .rules{margin:8px 0 12px}
+      .topbar{min-height:58px;padding-top:7px;padding-bottom:7px}
+      .game-main{justify-content:flex-start;padding:8px 18px}
+      .prompt-card{margin-bottom:8px;padding:9px 15px}
+      .prompt-label{margin-bottom:3px}
+      .question-text{font-size:1.13rem}
+      .picture-card{width:78px;height:78px;margin-bottom:7px;font-size:2.5rem;box-shadow:0 4px 0 #ead19b}
+      .letter-row{gap:8px;margin:4px auto 8px}
+      .letter-box{min-width:60px;min-height:48px;padding:5px 10px;font-size:1.4rem;box-shadow:0 4px 0 #d6dbe6}
+      .preview-word{min-height:42px;margin-bottom:7px;padding:4px 14px;font-size:1.45rem}
+      .count-word{margin-bottom:7px;padding:6px 18px;font-size:1.8rem;box-shadow:0 4px 0 #d3def4}
+      .tap-counter{margin-bottom:7px}
+      .drum-btn{width:78px;height:78px;font-size:2.7rem;box-shadow:0 5px 0 #c87820}
+      .count-display{min-width:64px;height:64px;font-size:1.9rem}
+      .count-marks{margin-bottom:6px;font-size:1.35rem}
+      .small-btn{min-height:38px;padding:6px 13px}
+      .memory-board{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;max-width:650px}
+      .memory-card{min-height:92px}
+      .memory-front{font-size:2rem}
+      .memory-back{font-size:1.15rem}
+      .memory-back.picture{font-size:2.7rem}
+      .feedback-line{min-height:38px;margin-top:6px;padding:6px 10px;font-size:.87rem}
+    }
+
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+  </style>
 </head>
 <body>
+  <main class="app">
+    <section class="screen active" id="logo-screen" aria-label="Innovine logo">
+      <img src="assets/innovine-logo.png" alt="" draggable="false">
+    </section>
 
-    <!-- STAGE 1: EXCLUSIVE 5-SECOND INNOVINE SPLASH LOGO -->
-    <div id="splash">
-        <img src="assets/innovine-logo.png" alt="Innovine Logo">
+    <div class="ambient" aria-hidden="true">
+      <span class="float-mark f1">★</span>
+      <span class="float-mark f2">★</span>
+      <span class="float-mark f3">✦</span>
+      <span class="float-mark f4">★</span>
+      <span class="float-mark f5">★</span>
     </div>
 
-    <!-- MAIN GAME CANVAS FRAMEWORK -->
-    <div class="game-window hidden" id="mainframe">
-        
-        <!-- MODULE 0: WELCOME SCREEN -->
-        <div id="screen-welcome">
-            <h1>हिंदी मात्रा ज्ञान</h1>
-            <h2>कक्षा - 1 (विषय: हिंदी)</h2>
-            <div class="subtitle">अध्याय 3 – 'आ' (ा) की मात्रा</div>
-            
-            <!-- Animated SVG Avatar for Grandpupil Welcome -->
-            <div style="font-size: 6rem; animation: bouncePulse 2s infinite;">👵🌾🏡</div>
-            <p class="subtitle" style="margin-top:15px;">आओ बच्चों, एक सुंदर गाँव की सैर करें और 'आ' की मात्रा सीखें!</p>
-            <button class="btn-main" onclick="nextSection(1)">खेल शुरू करें ➜</button>
+    <section class="screen" id="title-screen">
+      <div class="panel">
+        <div class="title-badge" aria-hidden="true">आ</div>
+        <h1>आ की मात्रा का खेल</h1>
+        <p class="intro-copy">कक्षा 1 • हिंदी</p>
+        <button class="primary-btn" id="start-btn" type="button">शुरू करें</button>
+      </div>
+    </section>
+
+    <section class="screen" id="how-screen">
+      <div class="panel">
+        <div class="title-badge" aria-hidden="true">?</div>
+        <h1>कैसे खेलें</h1>
+        <p class="intro-copy">हर स्तर में दिए गए निर्देश को ध्यान से पढ़ें। गलत उत्तर के बाद आपको एक बार फिर कोशिश करने का अवसर मिलेगा।</p>
+        <div class="rules" aria-label="खेलने के निर्देश">
+          <div class="rule">स्तर 1<br>चित्र देखकर सही अक्षर पर आ की मात्रा लगाएँ।</div>
+          <div class="rule">स्तर 2<br>शब्द में आ की मात्रा गिनकर ढोल उतनी बार बजाएँ।</div>
+          <div class="rule">स्तर 3<br>3 सेकंड कार्ड देखें और सही चित्र–शब्द जोड़ियाँ बनाएँ।</div>
         </div>
+        <button class="primary-btn" id="play-btn" type="button">खेलें</button>
+      </div>
+    </section>
 
-        <!-- STAGES FRAME GAMEPLAY CONTAINER -->
-        <div id="screen-gameplay" class="hidden">
-            <div class="hud">
-                <span id="hud-activity-name">गतिविधि 1</span>
-                <span id="hud-stars">⭐ सितारे: 0</span>
-            </div>
+    <section class="screen" id="game-screen">
+      <div class="game-shell">
+        <header class="topbar">
+          <div class="level-info">
+            <span class="level-name" id="level-name">स्तर 1</span>
+            <span class="challenge-count" id="challenge-count">चुनौती 1/10</span>
+          </div>
+          <div class="score-box"><span class="score-label">स्कोर:&nbsp;</span><span id="score-value">0</span></div>
+          <div class="timer-box" id="timer-box"><span class="timer-label">समय:&nbsp;</span><span id="timer-value">60</span>s</div>
+          <button class="sound-btn" id="sound-btn" type="button" aria-label="ध्वनि बंद करें">🔊</button>
+        </header>
 
-            <div id="activity-node-root">
-                <!-- Interactive Dynamic Activity Content Injected Here by Core System -->
-            </div>
+        <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
 
-            <div id="feedback-tray" class="feedback-banner"></div>
-        </div>
+        <section class="game-main">
+          <div class="prompt-card">
+            <span class="prompt-label" id="prompt-label">खेल</span>
+            <h2 class="question-text" id="question-text"></h2>
+          </div>
+          <div class="task-area" id="task-area"></div>
+          <div class="feedback-line" id="feedback-line" role="status" aria-live="polite"></div>
+        </section>
+      </div>
+    </section>
 
-        <!-- FINAL SCOREBOARD PANEL -->
-        <div id="screen-scoreboard" class="hidden">
-            <h1>🎉 अद्भुत! बधाई हो! 🎉</h1>
-            <div style="font-size: 5rem; margin: 20px 0;">🏆👑🌈</div>
-            <h2>आपने 'आ' की मात्रा के सभी खेल पूरे कर लिए हैं!</h2>
-            <div class="subtitle" style="font-size: 1.8rem; color:#16a34a;" id="final-star-tally">कुल सितारे: 0</div>
-            <button class="btn-main" onclick="location.reload()">फिर से खेलें 🔄</button>
-        </div>
+    <section class="screen" id="result-screen">
+      <div class="panel">
+        <div class="title-badge" aria-hidden="true">★</div>
+        <h1 id="result-title">बहुत अच्छा!</h1>
+        <div class="result-stars" id="result-stars">★★★</div>
+        <div class="result-score"><span id="final-score">0</span>/300</div>
+        <p class="result-summary" id="result-summary"></p>
+        <button class="primary-btn" id="play-again-btn" type="button">फिर से खेलें</button>
+      </div>
+    </section>
 
+    <div class="feedback-pop" id="feedback-pop"></div>
+    <div class="confetti-layer" id="confetti-layer"></div>
+
+    <div class="level-overlay" id="level-overlay" aria-hidden="true">
+      <div class="level-card">
+        <div class="big-icon" id="level-icon">⭐</div>
+        <h2 id="overlay-title">स्तर 1</h2>
+        <p id="overlay-copy"></p>
+      </div>
     </div>
 
-    <!-- AUDIO INFRASTRUCTURE WIRED TO ASSETS -->
-    <audio id="sound-correct" src="assets/correct.mp3" preload="auto"></audio>
-    <audio id="sound-wrong" src="assets/wrong.mp3" preload="auto"></audio>
-    <audio id="sound-clap" src="assets/clap.mp3" preload="auto"></audio>
+    <audio id="audio-correct" src="assets/correct.mp3" preload="auto"></audio>
+    <audio id="audio-wrong" src="assets/wrong.mp3" preload="auto"></audio>
+    <audio id="audio-clap" src="assets/clap.mp3" preload="auto"></audio>
+    <span class="sr-only" id="live-region" aria-live="assertive"></span>
+  </main>
 
-    <script>
-        // Splash Engine Core Handler
-        setTimeout(() => {
-            document.getElementById('splash').style.display = 'none';
-            document.getElementById('mainframe').classList.remove('hidden');
-        }, 5000);
+  <script>
+    (function(){
+      "use strict";
 
-        // Core Game Engine Global Variables
-        let currentActivityIndex = 1;
-        let scoreStars = 0;
-        let runningRoundCounter = 1;
-        let targetHuntItems = ['आम', 'आग', 'आटा', 'आदमी'];
-        let itemsHuntedCount = 0;
+      var QUESTION_TIME=60;
+      var FIRST_POINTS=10;
+      var SECOND_POINTS=5;
+      var QUESTIONS_PER_LEVEL=10;
+      var TOTAL_QUESTIONS=30;
 
-        // Activity Node Orchestration Map
-        function nextSection(activityId) {
-            currentActivityIndex = activityId;
-            document.getElementById('screen-welcome').classList.add('hidden');
-            document.getElementById('screen-gameplay').classList.remove('hidden');
-            document.getElementById('screen-scoreboard').classList.add('hidden');
-            clearFeedbackTray();
+      function villageMarketSvg(){
+        return '<svg viewBox="0 0 120 100" aria-hidden="true"><rect x="0" y="78" width="120" height="22" fill="#d7b37a"/><rect x="18" y="34" width="84" height="40" rx="4" fill="#f6d58e" stroke="#8a6439" stroke-width="3"/><path d="M12 34h96L96 18H24z" fill="#d95d4f" stroke="#8a372f" stroke-width="3"/><path d="M20 25h68" stroke="#fff1dc" stroke-width="5" stroke-dasharray="7 5"/><rect x="26" y="48" width="68" height="12" rx="3" fill="#9b6a3c"/><circle cx="36" cy="54" r="4" fill="#e74c3c"/><circle cx="46" cy="54" r="4" fill="#f1c40f"/><circle cx="57" cy="54" r="4" fill="#7cb342"/><circle cx="68" cy="54" r="4" fill="#e67e22"/><circle cx="79" cy="54" r="4" fill="#f06292"/><rect x="27" y="62" width="18" height="10" rx="2" fill="#b67d47"/><rect x="51" y="62" width="18" height="10" rx="2" fill="#b67d47"/><rect x="75" y="62" width="18" height="10" rx="2" fill="#b67d47"/><circle cx="13" cy="74" r="7" fill="#f2c9a0"/><rect x="9" y="80" width="8" height="13" rx="2" fill="#4a78c2"/><circle cx="107" cy="74" r="7" fill="#f2c9a0"/><rect x="103" y="80" width="8" height="13" rx="2" fill="#d97f2b"/></svg>';
+      }
 
-            const root = document.getElementById('activity-node-root');
-            root.innerHTML = '';
+      function grassSvg(){
+        return '<svg viewBox="0 0 120 100" aria-hidden="true"><path d="M10 86h100" stroke="#7a5a2f" stroke-width="6" stroke-linecap="round"/><path d="M20 84c0-18 2-30 8-45M28 84c1-24 7-42 14-57M38 84c-1-20 2-35 8-50M50 84c0-28 4-50 10-67M61 84c1-20 5-39 12-55M73 84c0-23 4-40 9-54M84 84c1-17 5-30 11-42M97 84c0-15 3-25 8-35" fill="none" stroke="#4e9e43" stroke-width="6" stroke-linecap="round"/><path d="M27 58l-9-8M42 49l-10-7M60 38l-10-8M74 52l10-10M92 60l10-8" stroke="#67b85a" stroke-width="5" stroke-linecap="round"/></svg>';
+      }
 
-            switch(activityId) {
-                case 1: startFindAaActivity(); break;
-                case 2: startPictureMatchActivity(); break;
-                case 3: startCompleteWordActivity(); break;
-                case 4: startListenChooseActivity(); break;
-                case 5: startPictureHuntActivity(); break;
-                case 6: startCirclePictureActivity(); break;
-                case 7: startReadFlashcardActivity(); break;
-                case 8: startPoemSequenceActivity(); break;
-                case 9: startCompetencyQuizActivity(); break;
-                default: displayScoreboard(); break;
+      function pictureMarkup(value){
+        if(value==='market-image')return '<img src="assets/market.png" alt="गाँव का बाज़ार" draggable="false">';
+        if(value==='grass')return grassSvg();
+        return '';
+      }
+
+      var levels=[
+        {
+          type:"stamp",
+          name:"स्तर 1: मात्रा की मोहर",
+          label:"मात्रा लगाओ",
+          icon:"🖍️",
+          intro:"चित्र देखकर सही अक्षरों पर आ की मात्रा लगाइए।",
+          questions:[
+            {id:"s1",word:"माला",picture:"📿",bases:["म","ल"],correct:[0,1],explanation:"म और ल—दोनों पर मात्रा लगाने से माला शब्द बनता है।"},
+            {id:"s2",word:"ताला",picture:"🔒",bases:["त","ल"],correct:[0,1],explanation:"त और ल—दोनों पर मात्रा लगाने से ताला शब्द बनता है।"},
+            {id:"s3",word:"राजा",picture:"🤴",bases:["र","ज"],correct:[0,1],explanation:"र और ज—दोनों पर मात्रा लगाने से राजा शब्द बनता है।"},
+            {id:"s4",word:"नाक",picture:"👃",bases:["न","क"],correct:[0],explanation:"न पर मात्रा लगाने से नाक शब्द बनता है।"},
+            {id:"s5",word:"कान",picture:"👂",bases:["क","न"],correct:[0],explanation:"क पर मात्रा लगाने से कान शब्द बनता है।"},
+            {id:"s6",word:"दाल",picture:"🍲",bases:["द","ल"],correct:[0],explanation:"द पर मात्रा लगाने से दाल शब्द बनता है।"},
+            {id:"s7",word:"गाजर",picture:"🥕",bases:["ग","ज","र"],correct:[0],explanation:"ग पर मात्रा लगाने से गाजर शब्द बनता है।"},
+            {id:"s8",word:"बादल",picture:"☁️",bases:["ब","द","ल"],correct:[0],explanation:"ब पर मात्रा लगाने से बादल शब्द बनता है।"},
+            {id:"s9",word:"चावल",picture:"🍚",bases:["च","व","ल"],correct:[0],explanation:"च पर मात्रा लगाने से चावल शब्द बनता है।"},
+            {id:"s10",word:"बाज़ार",picture:"market-image",bases:["ब","ज़","र"],correct:[0,1],explanation:"ब और ज़—दोनों पर मात्रा लगाने से बाज़ार शब्द बनता है।"}
+          ]
+        },
+        {
+          type:"count",
+          name:"स्तर 2: मात्रा गिनो",
+          label:"ढोल बजाओ",
+          icon:"🥁",
+          intro:"शब्द में आ की मात्रा जितनी बार आए, ढोल उतनी बार बजाइए।",
+          questions:[
+            {id:"c1",word:"काला",count:2,explanation:"काला शब्द में आ की मात्रा 2 बार है।"},
+            {id:"c2",word:"चाचा",count:2,explanation:"चाचा शब्द में आ की मात्रा 2 बार है।"},
+            {id:"c3",word:"कार",count:1,explanation:"कार शब्द में आ की मात्रा 1 बार है।"},
+            {id:"c4",word:"खाना",count:2,explanation:"खाना शब्द में आ की मात्रा 2 बार है।"},
+            {id:"c5",word:"पालक",count:1,explanation:"पालक शब्द में आ की मात्रा 1 बार है।"},
+            {id:"c6",word:"बरसात",count:1,explanation:"बरसात शब्द में आ की मात्रा 1 बार है।"},
+            {id:"c7",word:"रामायण",count:2,explanation:"रामायण शब्द में आ की मात्रा 2 बार है।"},
+            {id:"c8",word:"पाठशाला",count:3,explanation:"पाठशाला शब्द में आ की मात्रा 3 बार है।"},
+            {id:"c9",word:"समाचार",count:2,explanation:"समाचार शब्द में आ की मात्रा 2 बार है।"},
+            {id:"c10",word:"दरवाज़ा",count:2,explanation:"दरवाज़ा शब्द में आ की मात्रा 2 बार है।"}
+          ]
+        },
+        {
+          type:"memory",
+          name:"स्तर 3: अंतिम स्मृति चुनौती",
+          label:"जोड़ी मिलाओ",
+          icon:"🧠",
+          intro:"पहले कार्ड 5 सेकंड के लिए देखिए, फिर आ की मात्रा वाले चित्र और शब्द की सही जोड़ियाँ बनाइए।",
+          questions:[
+            {id:"m1",pairs:[{word:"नाव",picture:"⛵"},{word:"तारा",picture:"⭐"}],explanation:"नाव और तारा की सही चित्र–शब्द जोड़ियाँ दिखाई गई हैं।"},
+            {id:"m2",pairs:[{word:"हाथ",picture:"✋"},{word:"बाजा",picture:"🎺"}],explanation:"हाथ और बाजा की सही चित्र–शब्द जोड़ियाँ दिखाई गई हैं।"},
+            {id:"m3",pairs:[{word:"चाबी",picture:"🔑"},{word:"छाता",picture:"☂️"}],explanation:"चाबी और छाता की सही चित्र–शब्द जोड़ियाँ दिखाई गई हैं।"},
+            {id:"m4",pairs:[{word:"ताज़",picture:"👑"},{word:"गाय",picture:"🐄"}],explanation:"ताज़ और गाय की सही चित्र–शब्द जोड़ियाँ दिखाई गई हैं।"},
+            {id:"m5",pairs:[{word:"घास",picture:"grass"},{word:"थाली",picture:"🍽️"}],explanation:"घास और थाली की सही चित्र–शब्द जोड़ियाँ दिखाई गई हैं।"},
+            {id:"m6",pairs:[{word:"पहाड़",picture:"⛰️"},{word:"झाड़ू",picture:"🧹"}],explanation:"पहाड़ और झाड़ू की सही चित्र–शब्द जोड़ियाँ दिखाई गई हैं।"},
+            {id:"m7",pairs:[{word:"कागज़",picture:"📄"},{word:"जाल",picture:"🕸️"}],explanation:"कागज़ और जाल की सही चित्र–शब्द जोड़ियाँ दिखाई गई हैं।"},
+            {id:"m8",pairs:[{word:"तालाब",picture:"🏞️"},{word:"रास्ता",picture:"🛣️"}],explanation:"तालाब और रास्ता की सही चित्र–शब्द जोड़ियाँ दिखाई गई हैं।"},
+            {id:"m9",pairs:[{word:"बाघ",picture:"🐅"},{word:"टमाटर",picture:"🍅"}],explanation:"बाघ और टमाटर की सही चित्र–शब्द जोड़ियाँ दिखाई गई हैं।"},
+            {id:"m10",pairs:[{word:"कान",picture:"👂"},{word:"दादा",picture:"👴"}],explanation:"कान और दादा की सही चित्र–शब्द जोड़ियाँ दिखाई गई हैं।"}
+          ]
+        }
+      ];
+
+      var logoScreen=document.getElementById("logo-screen");
+      var titleScreen=document.getElementById("title-screen");
+      var howScreen=document.getElementById("how-screen");
+      var gameScreen=document.getElementById("game-screen");
+      var resultScreen=document.getElementById("result-screen");
+      var startBtn=document.getElementById("start-btn");
+      var playBtn=document.getElementById("play-btn");
+      var playAgainBtn=document.getElementById("play-again-btn");
+      var soundBtn=document.getElementById("sound-btn");
+      var levelName=document.getElementById("level-name");
+      var challengeCount=document.getElementById("challenge-count");
+      var scoreValue=document.getElementById("score-value");
+      var timerValue=document.getElementById("timer-value");
+      var timerBox=document.getElementById("timer-box");
+      var progressFill=document.getElementById("progress-fill");
+      var promptLabel=document.getElementById("prompt-label");
+      var questionText=document.getElementById("question-text");
+      var taskArea=document.getElementById("task-area");
+      var feedbackLine=document.getElementById("feedback-line");
+      var feedbackPop=document.getElementById("feedback-pop");
+      var confettiLayer=document.getElementById("confetti-layer");
+      var levelOverlay=document.getElementById("level-overlay");
+      var levelIcon=document.getElementById("level-icon");
+      var overlayTitle=document.getElementById("overlay-title");
+      var overlayCopy=document.getElementById("overlay-copy");
+      var finalScore=document.getElementById("final-score");
+      var resultTitle=document.getElementById("result-title");
+      var resultStars=document.getElementById("result-stars");
+      var resultSummary=document.getElementById("result-summary");
+      var liveRegion=document.getElementById("live-region");
+      var audioCorrect=document.getElementById("audio-correct");
+      var audioWrong=document.getElementById("audio-wrong");
+      var audioClap=document.getElementById("audio-clap");
+
+      var gameLevels=[];
+      var currentLevelIndex=0;
+      var currentQuestionIndex=0;
+      var score=0;
+      var completedTasks=0;
+      var attempts=0;
+      var timeLeft=QUESTION_TIME;
+      var timerId=null;
+      var accepting=true;
+      var resolved=false;
+      var soundEnabled=true;
+      var cleanup=null;
+      var levelState=null;
+
+      function showScreen(screen){
+        var screens=document.querySelectorAll('.screen');
+        for(var i=0;i<screens.length;i++){screens[i].classList.remove('active')}
+        screen.classList.add('active');
+      }
+
+      function shuffle(array){
+        var copy=array.slice();
+        for(var i=copy.length-1;i>0;i--){
+          var j=Math.floor(Math.random()*(i+1));
+          var t=copy[i];copy[i]=copy[j];copy[j]=t;
+        }
+        return copy;
+      }
+
+      function makePlaythrough(){
+        gameLevels=levels.map(function(level){
+          return {type:level.type,name:level.name,label:level.label,icon:level.icon,intro:level.intro,questions:shuffle(level.questions)};
+        });
+      }
+
+      function highlightTarget(element,text){
+        element.textContent='';
+        for(var i=0;i<text.length;i++){
+          var ch=text.charAt(i);
+          if(ch==='आ'){
+            var span=document.createElement('span');
+            span.className='target-mark';
+            span.textContent=ch;
+            element.appendChild(span);
+          }else{
+            element.appendChild(document.createTextNode(ch));
+          }
+        }
+      }
+
+      function unlockAudio(){
+        [audioCorrect,audioWrong,audioClap].forEach(function(audio){
+          try{
+            audio.volume=0;
+            var p=audio.play();
+            if(p&&typeof p.then==='function'){
+              p.then(function(){audio.pause();audio.currentTime=0;audio.volume=1}).catch(function(){audio.volume=1});
             }
+          }catch(e){audio.volume=1}
+        });
+      }
+
+      function playAudio(audio){
+        if(!soundEnabled||!audio)return;
+        try{audio.currentTime=0;var p=audio.play();if(p&&p.catch)p.catch(function(){})}catch(e){}
+      }
+
+      var drumAudioContext=null;
+      function getDrumAudioContext(){
+        var AC=window.AudioContext||window.webkitAudioContext;
+        if(!AC)return null;
+        if(!drumAudioContext){
+          try{drumAudioContext=new AC();}catch(e){drumAudioContext=null;}
+        }
+        return drumAudioContext;
+      }
+
+      function playDrumBeat(){
+        if(!soundEnabled)return;
+        var ctx=getDrumAudioContext();
+        if(!ctx)return;
+        try{
+          if(ctx.state==='suspended'&&ctx.resume){ctx.resume();}
+          var now=ctx.currentTime;
+          var osc=ctx.createOscillator();
+          var gain=ctx.createGain();
+          osc.type='triangle';
+          osc.frequency.setValueAtTime(170, now);
+          osc.frequency.exponentialRampToValueAtTime(55, now+0.18);
+          gain.gain.setValueAtTime(0.0001, now);
+          gain.gain.linearRampToValueAtTime(0.38, now+0.01);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now+0.24);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now+0.25);
+        }catch(e){}
+      }
+
+      function clearTimer(){if(timerId!==null){clearInterval(timerId);timerId=null}}
+
+      function startTimer(){
+        clearTimer();
+        timeLeft=QUESTION_TIME;
+        timerValue.textContent=String(timeLeft);
+        timerBox.classList.remove('low');
+        timerId=setInterval(function(){
+          timeLeft--;
+          if(timeLeft<0)timeLeft=0;
+          timerValue.textContent=String(timeLeft);
+          if(timeLeft<=10)timerBox.classList.add('low');
+          if(timeLeft===0)handleTimeout();
+        },1000);
+      }
+
+      function setFeedback(message,type){
+        feedbackLine.className='feedback-line';
+        if(type)feedbackLine.classList.add(type);
+        feedbackLine.textContent=message;
+        liveRegion.textContent=message;
+      }
+
+      function showPop(type){
+        feedbackPop.className='feedback-pop show '+(type==='correct'?'correct-pop':'wrong-pop');
+        feedbackPop.textContent=type==='correct'?'✓':'×';
+        setTimeout(function(){feedbackPop.className='feedback-pop';feedbackPop.textContent=''},type==='correct'?850:650);
+      }
+
+      function confetti(){
+        var symbols=['★','✦','★','✧'];
+        var colours=['#ffd166','#6c5ce7','#28a867','#ff8fab','#4aa8ff'];
+        confettiLayer.innerHTML='';
+        for(var i=0;i<18;i++){
+          var star=document.createElement('span');
+          var angle=(Math.PI*2*i)/18;
+          var distance=95+Math.random()*150;
+          star.className='confetti-star';
+          star.textContent=symbols[i%symbols.length];
+          star.style.color=colours[i%colours.length];
+          star.style.setProperty('--tx',(Math.cos(angle)*distance).toFixed(0)+'px');
+          star.style.setProperty('--ty',(Math.sin(angle)*distance).toFixed(0)+'px');
+          confettiLayer.appendChild(star);
+        }
+        setTimeout(function(){confettiLayer.innerHTML=''},1100);
+      }
+
+      function currentLevel(){return gameLevels[currentLevelIndex]}
+      function currentQuestion(){return currentLevel().questions[currentQuestionIndex]}
+
+      function promptFor(level){
+        if(level.type==='stamp')return 'चित्र देखकर सही अक्षरों पर आ की मात्रा लगाइए।';
+        if(level.type==='count')return 'शब्द में आ की मात्रा जितनी बार आए, ढोल उतनी बार बजाइए।';
+        return 'आ की मात्रा वाले चित्र और शब्द की सही जोड़ियाँ बनाइए।';
+      }
+
+      function cleanupTask(){if(typeof cleanup==='function')cleanup();cleanup=null;levelState=null}
+
+      function renderQuestion(){
+        var level=currentLevel();
+        var q=currentQuestion();
+        var done=currentLevelIndex*QUESTIONS_PER_LEVEL+currentQuestionIndex;
+        cleanupTask();
+        attempts=0;
+        accepting=true;
+        resolved=false;
+        levelName.textContent=level.name;
+        challengeCount.textContent='चुनौती '+(currentQuestionIndex+1)+'/10';
+        scoreValue.textContent=String(score);
+        promptLabel.textContent=level.label;
+        highlightTarget(questionText,promptFor(level));
+        progressFill.style.width=((done/TOTAL_QUESTIONS)*100).toFixed(2)+'%';
+        taskArea.innerHTML='';
+        setFeedback('खेल पूरा कीजिए।','');
+
+        if(level.type==='stamp'){renderStamp(q);startTimer();}
+        else if(level.type==='count'){renderCount(q);startTimer();}
+        else{renderMemory(q);}
+      }
+
+      function resolveCorrect(visual){
+        if(resolved)return;
+        resolved=true;
+        accepting=false;
+        clearTimer();
+        if(typeof visual==='function')visual();
+        completedTasks++;
+        if(attempts===0){score+=FIRST_POINTS;setFeedback('बहुत अच्छा! पहली कोशिश में सही। +10 अंक','good')}
+        else{score+=SECOND_POINTS;setFeedback('सही! दूसरी कोशिश में +5 अंक','good')}
+        scoreValue.textContent=String(score);
+        playAudio(audioCorrect);playAudio(audioClap);showPop('correct');confetti();
+        setTimeout(nextQuestion,1250);
+      }
+
+      function wrongAttempt(onRetry,onReveal){
+        if(resolved||!accepting)return;
+        accepting=false;
+        attempts++;
+        playAudio(audioWrong);showPop('wrong');
+        if(attempts===1){
+          setFeedback('अभी सही नहीं। एक बार फिर कोशिश करें।','bad');
+          if(typeof onRetry==='function')onRetry();
+          setTimeout(function(){if(!resolved&&timeLeft>0)accepting=true},650);
+        }else{
+          resolved=true;clearTimer();
+          if(typeof onReveal==='function')onReveal();
+          setFeedback('सही उत्तर दिखाया गया है। '+currentQuestion().explanation,'info');
+          setTimeout(nextQuestion,2700);
+        }
+      }
+
+      function renderStamp(q){
+        var stage=document.createElement('div');
+        var picture=document.createElement('div');
+        var row=document.createElement('div');
+        var preview=document.createElement('div');
+        var check=document.createElement('button');
+        var selected=[];
+        var buttons=[];
+
+        stage.className='letter-stage';
+        picture.className='picture-card';var stampMarkup=pictureMarkup(q.picture);if(stampMarkup){picture.innerHTML=stampMarkup}else{picture.textContent=q.picture;}
+        row.className='letter-row';
+        preview.className='preview-word';
+        check.type='button';check.className='primary-btn';check.textContent='जाँच करें';
+
+        function renderPreview(){
+          preview.textContent=q.bases.map(function(base,index){return base+(selected.indexOf(index)!==-1?'ा':'')}).join('');
         }
 
-        function updateHUD(name) {
-            document.getElementById('hud-activity-name').innerText = name;
-            document.getElementById('hud-stars').innerText = `⭐ सितारे: ${scoreStars}`;
-        }
+        q.bases.forEach(function(base,index){
+          var btn=document.createElement('button');
+          btn.type='button';btn.className='letter-box';btn.textContent=base;
+          btn.addEventListener('click',function(){
+            if(!accepting||resolved)return;
+            var pos=selected.indexOf(index);
+            if(pos===-1){selected.push(index);btn.classList.add('selected')}
+            else{selected.splice(pos,1);btn.classList.remove('selected')}
+            renderPreview();
+          });
+          buttons.push(btn);row.appendChild(btn);
+        });
 
-        function clearFeedbackTray() {
-            const tray = document.getElementById('feedback-tray');
-            tray.innerText = '';
-            tray.className = 'feedback-banner';
-        }
+        check.addEventListener('click',function(){
+          if(!accepting||resolved)return;
+          var chosen=selected.slice().sort(function(a,b){return a-b});
+          var correct=q.correct.slice().sort(function(a,b){return a-b});
+          if(JSON.stringify(chosen)===JSON.stringify(correct)){
+            resolveCorrect(function(){buttons.forEach(function(btn,i){btn.disabled=true;if(correct.indexOf(i)!==-1)btn.classList.add('correct')});check.disabled=true});
+          }else{
+            buttons.forEach(function(btn){if(btn.classList.contains('selected'))btn.classList.add('wrong')});
+            wrongAttempt(function(){setTimeout(function(){selected=[];buttons.forEach(function(btn){btn.className='letter-box'});renderPreview()},450)},function(){
+              selected=q.correct.slice();
+              buttons.forEach(function(btn,i){btn.disabled=true;btn.className='letter-box';if(q.correct.indexOf(i)!==-1){btn.classList.add('correct','selected')}});
+              renderPreview();check.disabled=true;
+            });
+          }
+        });
 
-        function playSound(id) {
-            try {
-                const audio = document.getElementById(id);
-                audio.currentTime = 0;
-                audio.play().catch(()=>{});
-            } catch(e){}
-        }
+        renderPreview();
+        stage.appendChild(picture);stage.appendChild(row);stage.appendChild(preview);stage.appendChild(check);taskArea.appendChild(stage);
+        levelState={type:'stamp',buttons:buttons,check:check,q:q,setSelection:function(values){selected=values.slice();renderPreview();}};
+        cleanup=function(){buttons.forEach(function(btn){btn.disabled=true});check.disabled=true};
+      }
 
-        function triggerConfetti() {
-            for(let i=0; i<30; i++) {
-                let div = document.createElement('div');
-                div.className = 'confetti';
-                div.style.left = Math.random() * 100 + '%';
-                div.style.background = ['#f43f5e','#eab308','#3b82f6','#10b981'][Math.floor(Math.random()*4)];
-                div.style.animationDelay = Math.random() * 2 + 's';
-                document.body.appendChild(div);
-                setTimeout(() => div.remove(), 2000);
+      function renderCount(q){
+        var stage=document.createElement('div');
+        var word=document.createElement('div');
+        var counterWrap=document.createElement('div');
+        var drum=document.createElement('button');
+        var countBox=document.createElement('div');
+        var marks=document.createElement('div');
+        var actions=document.createElement('div');
+        var reset=document.createElement('button');
+        var check=document.createElement('button');
+        var count=0;
+
+        stage.className='count-stage';
+        word.className='count-word';word.textContent=q.word;
+        counterWrap.className='tap-counter';
+        drum.type='button';drum.className='drum-btn';drum.textContent='🥁';drum.setAttribute('aria-label','ढोल बजाएँ');
+        countBox.className='count-display';countBox.textContent='0';
+        marks.className='count-marks';
+        actions.className='action-row';
+        reset.type='button';reset.className='small-btn';reset.textContent='गिनती मिटाएँ';
+        check.type='button';check.className='primary-btn';check.textContent='जाँच करें';
+
+        function renderCount(){countBox.textContent=String(count);marks.textContent='●'.repeat(count)}
+
+        drum.addEventListener('click',function(){if(!accepting||resolved)return;playDrumBeat();if(count<5){count++;renderCount()}});
+        reset.addEventListener('click',function(){if(!accepting||resolved)return;count=0;renderCount()});
+        check.addEventListener('click',function(){
+          if(!accepting||resolved)return;
+          if(count===q.count){
+            resolveCorrect(function(){drum.disabled=true;reset.disabled=true;check.disabled=true});
+          }else{
+            marks.classList.add('wrong');
+            wrongAttempt(function(){setTimeout(function(){count=0;renderCount()},400)},function(){count=q.count;renderCount();drum.disabled=true;reset.disabled=true;check.disabled=true});
+          }
+        });
+
+        counterWrap.appendChild(drum);counterWrap.appendChild(countBox);
+        actions.appendChild(reset);actions.appendChild(check);
+        stage.appendChild(word);stage.appendChild(counterWrap);stage.appendChild(marks);stage.appendChild(actions);taskArea.appendChild(stage);
+        levelState={type:'count',q:q,drum:drum,reset:reset,check:check,setCount:function(v){count=v;renderCount()}};
+        cleanup=function(){drum.disabled=true;reset.disabled=true;check.disabled=true};
+      }
+
+      function renderMemory(q){
+        var board=document.createElement('div');
+        var cards=[];
+        var flipped=[];
+        var matchedPairs=0;
+        var locked=true;
+        var previewNotice=document.createElement('p');
+
+        board.className='memory-board';
+        previewNotice.className='feedback-line info';
+        previewNotice.style.marginBottom='12px';
+        previewNotice.textContent='कार्ड 3 सेकंड के लिए खुले हैं। ध्यान से देखिए।';
+        taskArea.appendChild(previewNotice);
+        q.pairs.forEach(function(pair,index){
+          cards.push({pair:index,type:'picture',content:pair.picture});
+          cards.push({pair:index,type:'word',content:pair.word});
+        });
+        cards=shuffle(cards);
+
+        cards.forEach(function(cardData){
+          var card=document.createElement('button');
+          var inner=document.createElement('span');
+          var front=document.createElement('span');
+          var back=document.createElement('span');
+          card.type='button';card.className='memory-card flipped';card.dataset.pair=String(cardData.pair);card.dataset.type=cardData.type;
+          inner.className='memory-inner';front.className='memory-face memory-front';front.textContent='?';
+          back.className='memory-face memory-back'+(cardData.type==='picture'?' picture':'');var memoryMarkup=cardData.type==='picture'?pictureMarkup(cardData.content):'';if(memoryMarkup){back.innerHTML=memoryMarkup}else{back.textContent=cardData.content;}
+          inner.appendChild(front);inner.appendChild(back);card.appendChild(inner);board.appendChild(card);
+
+          card.addEventListener('click',function(){
+            if(!accepting||resolved||locked||card.classList.contains('flipped')||card.classList.contains('matched'))return;
+            card.classList.add('flipped');flipped.push(card);
+            if(flipped.length===2){
+              locked=true;
+              var first=flipped[0],second=flipped[1];
+              var isPair=first.dataset.pair===second.dataset.pair&&first.dataset.type!==second.dataset.type;
+              if(isPair){
+                setTimeout(function(){
+                  first.classList.add('matched');second.classList.add('matched');
+                  flipped=[];locked=false;matchedPairs++;
+                  if(matchedPairs===q.pairs.length){resolveCorrect(function(){Array.from(board.children).forEach(function(c){c.disabled=true})})}
+                },450);
+              }else{
+                first.classList.add('wrong');second.classList.add('wrong');
+                wrongAttempt(function(){
+                  setTimeout(function(){first.classList.remove('flipped','wrong');second.classList.remove('flipped','wrong');flipped=[];locked=false},650);
+                },function(){
+                  Array.from(board.children).forEach(function(c){c.classList.add('flipped');c.disabled=true});
+                  locked=true;
+                });
+              }
             }
+          });
+        });
+
+        taskArea.appendChild(board);
+        levelState={type:'memory',board:board,q:q,notice:previewNotice};
+        accepting=false;
+        setTimeout(function(){
+          if(resolved||currentLevel().type!=='memory')return;
+          Array.from(board.children).forEach(function(c){c.classList.remove('flipped');});
+          locked=false;
+          accepting=true;
+          previewNotice.textContent='अब सही जोड़ियाँ बनाइए।';
+          startTimer();
+        },3000);
+        cleanup=function(){Array.from(board.children).forEach(function(c){c.disabled=true})};
+      }
+
+      function revealCurrent(){
+        if(!levelState)return;
+        if(levelState.type==='stamp'){
+          levelState.setSelection(levelState.q.correct);
+          levelState.buttons.forEach(function(btn,i){btn.disabled=true;btn.className='letter-box';if(levelState.q.correct.indexOf(i)!==-1)btn.classList.add('correct','selected')});
+          levelState.check.disabled=true;
+        }else if(levelState.type==='count'){
+          levelState.setCount(levelState.q.count);levelState.drum.disabled=true;levelState.reset.disabled=true;levelState.check.disabled=true;
+        }else{
+          Array.from(levelState.board.children).forEach(function(c){c.classList.add('flipped');c.disabled=true});
         }
+      }
 
-        function giveRewardEffects(isClap = false) {
-            scoreStars += 10;
-            updateHUD(document.getElementById('hud-activity-name').innerText);
-            playSound('sound-correct');
-            if(isClap) playSound('sound-clap');
-            triggerConfetti();
-            const tray = document.getElementById('feedback-tray');
-            tray.innerText = "🎈 बहुत बढ़िया! सही उत्तर।";
-            tray.className = "feedback-banner correct-flash";
-        }
+      function handleTimeout(){
+        if(resolved)return;
+        resolved=true;accepting=false;clearTimer();revealCurrent();playAudio(audioWrong);showPop('wrong');
+        setFeedback('समय पूरा। '+currentQuestion().explanation,'info');
+        setTimeout(nextQuestion,2800);
+      }
 
-        function giveWrongEffects(customMsg = "गलत उत्तर, फिर से प्रयास करें।") {
-            playSound('sound-wrong');
-            const tray = document.getElementById('feedback-tray');
-            tray.innerText = `⚠️ ${customMsg}`;
-            tray.className = "feedback-banner wrong-flash";
-        }
+      function showLevel(level,callback){
+        levelIcon.textContent=level.icon;overlayTitle.textContent=level.name;overlayCopy.textContent=level.intro;
+        levelOverlay.classList.add('show');levelOverlay.setAttribute('aria-hidden','false');
+        setTimeout(function(){levelOverlay.classList.remove('show');levelOverlay.setAttribute('aria-hidden','true');callback()},1650);
+      }
 
-        /* ACTIVITY 1: FIND THE "आ" (10 ROUNDS) */
-        function startFindAaActivity() {
-            updateHUD(`गतिविधि 1: आ खोजो (दौर: ${runningRoundCounter}/10)`);
-            const root = document.getElementById('activity-node-root');
-            root.innerHTML = `<h3>नीचे दिए गए अक्षरों में से "आ" पर क्लिक करो:</h3>`;
-            
-            const pools = ['अ', 'आ', 'इ', 'ई', 'उ', 'ऊ', 'ए', 'ऐ'];
-            // Shuffle Pool Mix
-            pools.sort(() => Math.random() - 0.5);
+      function nextQuestion(){
+        cleanupTask();
+        currentQuestionIndex++;
+        if(currentQuestionIndex<currentLevel().questions.length){renderQuestion();return}
+        currentLevelIndex++;currentQuestionIndex=0;
+        if(currentLevelIndex<gameLevels.length)showLevel(currentLevel(),renderQuestion);else finishGame();
+      }
 
-            const grid = document.createElement('div');
-            grid.className = 'letter-pool';
+      function startGame(){
+        unlockAudio();clearTimer();cleanupTask();makePlaythrough();
+        currentLevelIndex=0;currentQuestionIndex=0;score=0;completedTasks=0;
+        scoreValue.textContent='0';progressFill.style.width='0%';feedbackPop.className='feedback-pop';confettiLayer.innerHTML='';
+        showScreen(gameScreen);showLevel(currentLevel(),renderQuestion);
+      }
 
-            pools.forEach(letter => {
-                const btn = document.createElement('button');
-                btn.className = 'bubble-card';
-                btn.innerText = letter;
-                btn.onclick = () => {
-                    if(letter === 'आ') {
-                        giveRewardEffects(true);
-                        setTimeout(() => {
-                            if(runningRoundCounter < 10) {
-                                runningRoundCounter++;
-                                startFindAaActivity();
-                            } else {
-                                runningRoundCounter = 1;
-                                nextSection(2);
-                            }
-                        }, 1500);
-                    } else {
-                        giveWrongEffects("यह 'आ' नहीं है! ध्यान से खोजें।");
-                    }
-                };
-                grid.appendChild(btn);
-            });
-            root.appendChild(grid);
-        }
+      function finishGame(){
+        clearTimer();cleanupTask();progressFill.style.width='100%';finalScore.textContent=String(score);
+        if(score>=240){resultTitle.textContent='शानदार काम!';resultStars.textContent='★★★'}
+        else if(score>=150){resultTitle.textContent='बहुत अच्छा!';resultStars.textContent='★★☆'}
+        else{resultTitle.textContent='अच्छा प्रयास!';resultStars.textContent='★☆☆'}
+        resultSummary.textContent='आपने 30 में से '+completedTasks+' चुनौतियाँ स्वयं पूरी कीं। आपने मात्रा लगाना, मात्रा गिनना और चित्र–शब्द की जोड़ियाँ बनाना सीखा।';
+        showScreen(resultScreen);playAudio(audioClap);confetti();
+      }
 
-        /* ACTIVITY 2: PICTURE MATCH (DRAG AND DROP) */
-        function startPictureMatchActivity() {
-            updateHUD("गतिविधि 2: चित्र का शब्द से मिलान");
-            const root = document.getElementById('activity-node-root');
-            root.innerHTML = `<h3>शब्द को सही चित्र के बॉक्स में ड्रैग (Drag) करें:</h3>`;
+      function toggleSound(){
+        soundEnabled=!soundEnabled;
+        soundBtn.textContent=soundEnabled?'🔊':'🔇';
+        soundBtn.setAttribute('aria-label',soundEnabled?'ध्वनि बंद करें':'ध्वनि चालू करें');
+      }
 
-            const data = [
-                { word: 'आम', img: '🍋' },
-                { word: 'आग', img: '🔥' },
-                { word: 'आलू', img: '🥔' }
-            ];
-
-            const container = document.createElement('div');
-            container.className = 'matching-matrix';
-
-            // Elements Source Panel
-            const sourceBox = document.createElement('div');
-            sourceBox.className = 'drag-box';
-            sourceBox.innerHTML = '<strong>शब्द सूची</strong>';
-            data.forEach(item => {
-                const dItem = document.createElement('div');
-                dItem.className = 'drag-item';
-                dItem.innerText = item.word;
-                dItem.draggable = true;
-                dItem.id = `drag-${item.word}`;
-                dItem.ondragstart = (e) => e.dataTransfer.setData("text", e.target.id);
-                sourceBox.appendChild(dItem);
-            });
-
-            // Target Panel
-            const targetsContainer = document.createElement('div');
-            targetsContainer.style.display = 'flex';
-            targetsContainer.style.gap = '15px';
-
-            data.sort(() => Math.random() - 0.5).forEach(item => {
-                const targetNode = document.createElement('div');
-                targetNode.className = 'drop-target';
-                targetNode.innerHTML = `<span class="picture-node">${item.img}</span><br>यहाँ ड्रॉप करें`;
-                targetNode.ondragover = (e) => e.preventDefault();
-                targetNode.ondrop = (e) => {
-                    e.preventDefault();
-                    const id = e.dataTransfer.getData("text");
-                    if(id === `drag-${item.word}`) {
-                        targetNode.style.background = '#dcfce7';
-                        targetNode.innerHTML = `<span class="picture-node">${item.img}</span><br><strong>${item.word}</strong>`;
-                        document.getElementById(id).remove();
-                        giveRewardEffects();
-                        if(sourceBox.children.length === 1) { // Only title left
-                            setTimeout(() => nextSection(3), 2000);
-                        }
-                    } else {
-                        giveWrongEffects("गलत मिलान! सही चित्र पर ड्रैग करें।");
-                    }
-                };
-                targetsContainer.appendChild(targetNode);
-            });
-
-            container.appendChild(sourceBox);
-            container.appendChild(targetsContainer);
-            root.appendChild(container);
-        }
-
-        /* ACTIVITY 3: COMPLETE THE WORD (ा मात्रा) */
-        function startCompleteWordActivity() {
-            updateHUD("गतिविधि 3: सही मात्रा चुनकर शब्द पूरा करो");
-            const dataSet = [
-                { display: 'च_य', correct: 'ा', word: 'चाय' },
-                { display: 'का_ल', correct: 'ा', word: 'काजल' },
-                { display: 'बा_दल', correct: 'ा', word: 'बादल' }
-            ];
-            const currentItem = dataSet[Math.floor(Math.random() * dataSet.length)];
-
-            const root = document.getElementById('activity-node-root');
-            root.innerHTML = `<h3>खाली स्थान में आने वाली सही मात्रा चुनें:</h3>
-                              <div style="font-size:3rem; margin:20px; font-weight:bold; letter-spacing:5px;">${currentItem.display}</div>`;
-
-            const options = ['ा', 'ि', 'ी', 'ु'];
-            const grid = document.createElement('div');
-            grid.className = 'options-grid';
-
-            options.forEach(opt => {
-                const btn = document.createElement('button');
-                btn.className = 'bubble-card';
-                btn.innerText = opt;
-                btn.onclick = () => {
-                    if(opt === currentItem.correct) {
-                        giveRewardEffects(true);
-                        root.innerHTML += `<div style="font-size:2rem; color:#16a34a; font-weight:bold;">पूर्ण शब्द: ${currentItem.word}</div>`;
-                        setTimeout(() => nextSection(4), 2000);
-                    } else {
-                        giveWrongEffects("यह गलत मात्रा है! 'आ' की मात्रा (ा) चुनें।");
-                    }
-                };
-                grid.appendChild(btn);
-            });
-            root.appendChild(grid);
-        }
-
-        /* ACTIVITY 4: LISTEN AND CHOOSE */
-        let listenRound = 1;
-        const audioPrompts = [
-            { txt: 'आम', img: '🍋', wrong: '🚗' },
-            { txt: 'आग', img: '🔥', wrong: '🏠' },
-            { txt: 'आलू', img: '🥔', wrong: '🍍' },
-            { txt: 'आकाश', img: '☁️', wrong: '🌾' }
-        ];
-        function startListenChooseActivity() {
-            updateHUD(`गतिविधि 4: सुनो और चुनो (दौर: ${listenRound}/4)`);
-            const root = document.getElementById('activity-node-root');
-            const q = audioPrompts[listenRound - 1];
-
-            root.innerHTML = `<h3>नीचे दिए गए लाउडस्पीकर बटन को दबाकर शब्द सुनें और सही चित्र चुनें:</h3>
-                              <button class="btn-main" style="margin:15px;" onclick="speakText('${q.txt}')">🔊 शब्द सुनें</button>`;
-
-            const grid = document.createElement('div');
-            grid.className = 'options-grid';
-
-            const opts = [
-                { type: 'correct', val: q.img },
-                { type: 'wrong', val: q.wrong }
-            ].sort(() => Math.random() - 0.5);
-
-            opts.forEach(opt => {
-                const btn = document.createElement('button');
-                btn.className = 'bubble-card';
-                btn.style.fontSize = '4rem';
-                btn.innerText = opt.val;
-                btn.onclick = () => {
-                    if(opt.type === 'correct') {
-                        giveRewardEffects();
-                        setTimeout(() => {
-                            if(listenRound < 4) {
-                                listenRound++;
-                                startListenChooseActivity();
-                            } else {
-                                nextSection(5);
-                            }
-                        }, 2000);
-                    } else {
-                        giveWrongEffects("यह सही चित्र नहीं है! फिर से सुनकर प्रयास करें।");
-                    }
-                };
-                grid.appendChild(btn);
-            });
-            root.appendChild(grid);
-            // Automatic speech on load for assistive experience
-            setTimeout(() => speakText(q.txt), 600);
-        }
-
-        function speakText(text) {
-            if ('speechSynthesis' in window) {
-                const utterance = new SpeechSynthesisUtterance(text);
-                utterance.lang = 'hi-IN';
-                window.speechSynthesis.speak(utterance);
-            }
-        }
-
-        /* ACTIVITY 5: PICTURE HUNT (VILLAGE MAP) */
-        function startPictureHuntActivity() {
-            updateHUD("गतिविधि 5: गाँव का चित्र शिकार (Picture Hunt)");
-            const root = document.getElementById('activity-node-root');
-            root.innerHTML = `<h3>गाँव की तस्वीर में छिपे इन शब्दों को ढूंढकर क्लिक करें: <br> 
-                              <span style="color:#c2410c;">[${targetHuntItems.join(', ')}]</span></h3>`;
-
-            const canvas = document.createElement('div');
-            canvas.className = 'village-canvas';
-
-            // Coordinates mapping elements inside responsive viewport representation
-            const spots = [
-                { name: 'आम', top: '15%', left: '20%', icon: '🍋' },
-                { name: 'आग', top: '70%', left: '45%', icon: '🔥' },
-                { name: 'आटा', top: '65%', left: '75%', icon: '🌾' },
-                { name: 'आदमी', top: '40%', left: '60%', icon: '👨' }
-            ];
-
-            spots.forEach(spot => {
-                const node = document.createElement('div');
-                node.className = 'hunt-hotspot';
-                node.style.top = spot.top;
-                node.style.left = spot.left;
-                node.innerText = spot.icon;
-                node.onclick = () => {
-                    if(targetHuntItems.includes(spot.name)) {
-                        node.style.border = '4px solid #10b981';
-                        node.style.background = '#dcfce7';
-                        node.onclick = null; // Disable re-click
-                        itemsHuntedCount++;
-                        giveRewardEffects();
-                        if(itemsHuntedCount === 4) {
-                            setTimeout(() => nextSection(6), 2000);
-                        }
-                    }
-                };
-                canvas.appendChild(node);
-            });
-
-            root.appendChild(canvas);
-        }
-
-        /* ACTIVITY 6: CIRCLE THE CORRECT PICTURE */
-        function startCirclePictureActivity() {
-            updateHUD("गतिविधि 6: सही चित्र पर गोला लगाओ");
-            const root = document.getElementById('activity-node-root');
-            
-            root.innerHTML = `<h3>लिखे हुए शब्द के लिए सही चित्र को चुनें:</h3>
-                              <div style="font-size:2.5rem; color:#b91c1c; font-weight:bold; margin:10px;">शब्द: आग</div>`;
-
-            const grid = document.createElement('div');
-            grid.className = 'options-grid';
-
-            const choices = [
-                { icon: '🔥', correct: true },
-                { icon: '🚗', correct: false },
-                { icon: '🏠', correct: false }
-            ].sort(() => Math.random() - 0.5);
-
-            choices.forEach(choice => {
-                const btn = document.createElement('button');
-                btn.className = 'bubble-card';
-                btn.style.fontSize = '4.5rem';
-                btn.innerText = choice.icon;
-                btn.onclick = () => {
-                    if(choice.correct) {
-                        btn.style.borderColor = '#10b981';
-                        btn.style.background = '#e6fffa';
-                        giveRewardEffects(true);
-                        setTimeout(() => nextSection(7), 2000);
-                    } else {
-                        giveWrongEffects("यह गलत चित्र है! 'आग' को पहचानें।");
-                    }
-                };
-                grid.appendChild(btn);
-            });
-            root.appendChild(grid);
-        }
-
-        /* ACTIVITY 7: READ THE WORD (FLASH CARD) */
-        let flashcardIndex = 0;
-        const flashWords = ['आम', 'आना', 'आशा', 'ताल', 'काजल', 'पाठशाला'];
-        function startReadFlashcardActivity() {
-            updateHUD(`गतिविधि 7: शब्द पढ़ो (कार्ड: ${flashcardIndex + 1}/${flashWords.length})`);
-            const root = document.getElementById('activity-node-root');
-
-            root.innerHTML = `<h3>इस शब्द को ज़ोर से बोलकर पढ़ें:</h3>
-                              <div style="background:#fff; border:4px solid #f59e0b; padding:40px; font-size:3.5rem; font-weight:bold; border-radius:20px; margin:20px 0; color:#1e3a8a;">
-                                ${flashWords[flashcardIndex]}
-                              </div>
-                              <button class="btn-main" onclick="confirmRead()">मैंने पढ़ लिया 👍</button>`;
-        }
-
-        function confirmRead() {
-            giveRewardEffects();
-            setTimeout(() => {
-                if(flashcardIndex < flashWords.length - 1) {
-                    flashcardIndex++;
-                    startReadFlashcardActivity();
-                } else {
-                    nextSection(8);
-                }
-            }, 1500);
-        }
-
-        /* ACTIVITY 8: POEM SEQUENCE (DRAG AND DROP) */
-        function startPoemSequenceActivity() {
-            updateHUD("गतिविधि 8: आम की कविता का क्रम लगाओ");
-            const root = document.getElementById('activity-node-root');
-            root.innerHTML = `<h3>कहानी/कविता के वाक्यों को सही क्रम में व्यवस्थित करें:</h3>`;
-
-            const lines = [
-                { id: 1, text: "🧑 मोहन आम लाया।" },
-                { id: 2, text: "👵 दादी ने आम काटा।" },
-                { id: 3, text: "👨‍👩‍👦 सबने मिलकर आम खाया।" }
-            ];
-
-            const flexContainer = document.createElement('div');
-            flexContainer.className = 'timeline-flex';
-            flexContainer.id = 'timeline-sortable';
-
-            // Scramble for student manipulation task
-            lines.sort(() => Math.random() - 0.5).forEach(line => {
-                const card = document.createElement('div');
-                card.className = 'timeline-card';
-                card.innerText = line.text;
-                card.draggable = true;
-                card.dataset.id = line.id;
-                
-                card.ondragstart = (e) => {
-                    e.dataTransfer.setData("text/plain", card.dataset.id);
-                    window.draggedCardRef = card;
-                };
-                card.ondragover = (e) => e.preventDefault();
-                card.ondrop = (e) => {
-                    e.preventDefault();
-                    if (window.draggedCardRef !== card) {
-                        let allCards = Array.from(flexContainer.children);
-                        let dragIdx = allCards.indexOf(window.draggedCardRef);
-                        let dropIdx = allCards.indexOf(card);
-                        if (dragIdx < dropIdx) {
-                            flexContainer.insertBefore(window.draggedCardRef, card.nextSibling);
-                        } else {
-                            flexContainer.insertBefore(window.draggedCardRef, card);
-                        }
-                    }
-                };
-                flexContainer.appendChild(card);
-            });
-
-            root.appendChild(flexContainer);
-
-            const verifyBtn = document.createElement('button');
-            verifyBtn.className = 'btn-main';
-            verifyBtn.innerText = 'क्रम की जाँच करें ✔️';
-            verifyBtn.onclick = () => {
-                const currentOrder = Array.from(flexContainer.children).map(c => parseInt(c.dataset.id));
-                if(JSON.stringify(currentOrder) === JSON.stringify([1, 2, 3])) {
-                    giveRewardEffects(true);
-                    setTimeout(() => nextSection(9), 2000);
-                } else {
-                    giveWrongEffects("क्रम सही नहीं है! सोचें कि पहले आम कौन लाया, फिर किसने काटा।");
-                }
-            };
-            root.appendChild(verifyBtn);
-        }
-
-        /* ACTIVITY 9: COMPETENCY QUIZ (10 QUESTIONS) */
-        let quizIndex = 0;
-        const quizQuestions = [
-            { q: 'कौन सा शब्द "आ" से शुरू होता है?', opts: ['🍍 अनानास', '🚗 कार', '🏠 घर'], ans: '🍍 अनानास' },
-            { q: 'आग का सही चित्र चुनें:', opts: ['🔥 आग', '☁️ आकाश', '🥔 आलू'], ans: '🔥 आग' },
-            { q: 'आलू का सही चित्र पहचानें:', opts: ['🥔 आलू', '🌾 आटा', '🍋 आम'], ans: '🥔 आलू' },
-            { q: '"क + ा + ज + ल" को जोड़ने पर क्या शब्द बनेगा?', opts: ['काजल', 'कल', 'कला'], ans: 'काजल' },
-            { q: '"बाजार" शब्द में किस मात्रा का प्रयोग हुआ है?', opts: ['ा (आ की मात्रा)', 'ि (इ की मात्रा)', 'ी (ई की मात्रा)'], ans: 'ा (आ की मात्रा)' },
-            { q: 'ताले के चित्र के लिए सही शब्द कौन सा है?', opts: ['ताला', 'ताल', 'तल'], ans: 'ताला' },
-            { q: 'इनमें से कौन सा फल राजा कहलाता है और "आ" से शुरू होता है?', opts: ['आम', 'अंगूर', 'केला'], ans: 'आम' },
-            { q: '"बादल" शब्द का पहला अक्षर क्या है?', opts: ['बा', 'दा', 'ल'], ans: 'बा' },
-            { q: 'पाठशाला जाने के लिए सही शब्द कौन सा है?', opts: ['पाठशाला', 'घर', 'बाज़ार'], ans: 'पाठशाला' },
-            { q: 'माला के चित्र के लिए सही शब्द चुनें:', opts: ['माला', 'माल', 'मल'], ans: 'माला' }
-        ];
-
-        function startCompetencyQuizActivity() {
-            updateHUD(`गतिविधि 9: योग्यता प्रश्नोत्तरी (प्रश्न: ${quizIndex + 1}/10)`);
-            const root = document.getElementById('activity-node-root');
-            const currentQ = quizQuestions[quizIndex];
-
-            root.innerHTML = `<h3>${currentQ.q}</h3>`;
-            const grid = document.createElement('div');
-            grid.className = 'options-grid';
-
-            currentQ.opts.forEach(opt => {
-                const btn = document.createElement('button');
-                btn.className = 'bubble-card';
-                btn.style.fontSize = '1.5rem';
-                btn.innerText = opt;
-                btn.onclick = () => {
-                    if(opt === currentQ.ans || opt.includes(currentQ.ans)) {
-                        giveRewardEffects();
-                        setTimeout(() => {
-                            if(quizIndex < 9) {
-                                quizIndex++;
-                                startCompetencyQuizActivity();
-                            } else {
-                                nextSection(10); // Trigger completion state evaluation routing
-                            }
-                        }, 2000);
-                    } else {
-                        giveWrongEffects("गलत विकल्प! ध्यान से सोचकर सही उत्तर चुनें।");
-                    }
-                };
-                grid.appendChild(btn);
-            });
-            root.appendChild(grid);
-        }
-
-        function displayScoreboard() {
-            document.getElementById('screen-gameplay').classList.add('hidden');
-            document.getElementById('screen-scoreboard').classList.remove('hidden');
-            document.getElementById('final-star-tally').innerText = `कुल अर्जित सितारे: ⭐ ${scoreStars}`;
-            playSound('sound-clap');
-        }
-    </script>
+      startBtn.addEventListener('click',function(){showScreen(howScreen)});
+      playBtn.addEventListener('click',startGame);
+      playAgainBtn.addEventListener('click',startGame);
+      soundBtn.addEventListener('click',toggleSound);
+      setTimeout(function(){showScreen(titleScreen)},5000);
+    }());
+  </script>
 </body>
 </html>
