@@ -1,1 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sequence Builder: Derek Redmond's Journey</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f7f6;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
 
+    .game-container {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      max-width: 600px;
+      width: 100%;
+    }
+
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 10px;
+    }
+
+    p.instructions {
+      text-align: center;
+      color: #7f8c8d;
+      margin-bottom: 25px;
+    }
+
+    .list-container {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .draggable-item {
+      background-color: #3498db;
+      color: white;
+      padding: 15px;
+      margin-bottom: 10px;
+      border-radius: 6px;
+      cursor: grab;
+      display: flex;
+      align-items: center;
+      user-select: none;
+      transition: background-color 0.2s, transform 0.2s;
+    }
+
+    .draggable-item:active {
+      cursor: grabbing;
+    }
+
+    .draggable-item.dragging {
+      opacity: 0.5;
+      transform: scale(0.98);
+    }
+
+    .draggable-item .number {
+      font-weight: bold;
+      background: rgba(255, 255, 255, 0.2);
+      width: 28px;
+      height: 28px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50%;
+      margin-right: 15px;
+      flex-shrink: 0;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 25px;
+    }
+
+    button {
+      background-color: #2ecc71;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background-color: #27ae60;
+    }
+
+    button.reset-btn {
+      background-color: #e74c3c;
+    }
+
+    button.reset-btn:hover {
+      background-color: #c0392b;
+    }
+
+    #message {
+      text-align: center;
+      margin-top: 15px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .correct {
+      color: #2ecc71;
+    }
+
+    .incorrect {
+      color: #e74c3c;
+    }
+  </style>
+</head>
+<body>
+
+<div class="game-container">
+  <h1>Sequence Builder 🏃‍♂️</h1>
+  <p class="instructions">Drag and drop the events from Derek Redmond's life into the correct order!</p>
+
+  <ul class="list-container" id="draggable-list">
+    <!-- List items populated by JavaScript -->
+  </ul>
+
+  <div class="controls">
+    <button id="check-btn">Check Order</button>
+    <button class="reset-btn" id="reset-btn">Reset</button>
+  </div>
+
+  <div id="message"></div>
+</div>
+
+<script>
+  // Correct sequence based on Derek Redmond's story (Ch13)
+  const correctEvents = [
+    "Derek joined a local athletics club at 7 years old.",
+    "Derek set a British national record of 44.82s in 1985.",
+    "He won Gold in the 4x400m relay at Tokyo World Championship (1991).",
+    "Derek reached the 400m semifinals at the 1992 Barcelona Olympics.",
+    "His right hamstring tore mid-race (~250m), causing him to drop to the ground.",
+    "His father, Jim Redmond, ran onto the track to support him.",
+    "Together, Derek and his father crossed the finish line to a standing ovation."
+  ];
+
+  const draggableList = document.getElementById('draggable-list');
+  const checkBtn = document.getElementById('check-btn');
+  const resetBtn = document.getElementById('reset-btn');
+  const messageEl = document.getElementById('message');
+
+  let listItems = [];
+  let dragStartIndex;
+
+  // Initialize Game
+  function initGame() {
+    draggableList.innerHTML = '';
+    messageEl.textContent = '';
+    messageEl.className = '';
+    listItems = [];
+
+    // Shuffle events for display
+    const shuffledEvents = [...correctEvents]
+      .map(a => ({ value: a, sort: Math.random() }))
+      .sort((a, b) => a.sort - b.sort)
+      .map(a => a.value);
+
+    shuffledEvents.forEach((eventText, index) => {
+      const listItem = document.createElement('li');
+      listItem.setAttribute('data-index', index);
+
+      listItem.innerHTML = `
+        <div class="draggable-item" draggable="true">
+          <span class="number">${index + 1}</span>
+          <span class="event-text">${eventText}</span>
+        </div>
+      `;
+
+      listItems.push(listItem);
+      draggableList.appendChild(listItem);
+    });
+
+    addEventListeners();
+  }
+
+  // Drag and Drop Logic
+  function dragStart() {
+    dragStartIndex = +this.closest('li').getAttribute('data-index');
+    this.classList.add('dragging');
+  }
+
+  function dragEnter() {
+    this.classList.add('over');
+  }
+
+  function dragLeave() {
+    this.classList.remove('over');
+  }
+
+  function dragOver(e) {
+    e.preventDefault();
+  }
+
+  function dragDrop() {
+    const dragEndIndex = +this.getAttribute('data-index');
+    swapItems(dragStartIndex, dragEndIndex);
+    this.classList.remove('over');
+  }
+
+  function swapItems(fromIndex, toIndex) {
+    const itemOne = listItems[fromIndex].querySelector('.draggable-item');
+    const itemTwo = listItems[toIndex].querySelector('.draggable-item');
+
+    listItems[fromIndex].appendChild(itemTwo);
+    listItems[toIndex].appendChild(itemOne);
+  }
+
+  function checkOrder() {
+    let allCorrect = true;
+
+    listItems.forEach((listItem, index) => {
+      const eventText = listItem.querySelector('.event-text').innerText.trim();
+      
+      if (eventText !== correctEvents[index]) {
+        listItem.querySelector('.draggable-item').style.backgroundColor = '#e74c3c'; // Red
+        allCorrect = false;
+      } else {
+        listItem.querySelector('.draggable-item').style.backgroundColor = '#2ecc71'; // Green
+      }
+    });
+
+    if (allCorrect) {
+      messageEl.textContent = "🎉 Excellent! You built the complete sequence correctly!";
+      messageEl.className = "correct";
+    } else {
+      messageEl.textContent = "❌ Some steps are incorrect. Try adjusting the order!";
+      messageEl.className = "incorrect";
+    }
+  }
+
+  function addEventListeners() {
+    const draggables = document.querySelectorAll('.draggable-item');
+    const dragListItems = document.querySelectorAll('.list-container li');
+
+    draggables.forEach(draggable => {
+      draggable.addEventListener('dragstart', dragStart);
+      draggable.addEventListener('dragend', function() {
+        this.classList.remove('dragging');
+      });
+    });
+
+    dragListItems.forEach(item => {
+      item.addEventListener('dragover', dragOver);
+      item.addEventListener('drop', dragDrop);
+      item.addEventListener('dragenter', dragEnter);
+      item.addEventListener('dragleave', dragLeave);
+    });
+  }
+
+  checkBtn.addEventListener('click', checkOrder);
+  resetBtn.addEventListener('click', initGame);
+
+  // Start game on page load
+  initGame();
+</script>
+
+</body>
+</html>
