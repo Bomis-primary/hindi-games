@@ -1,296 +1,686 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>मीनू की बगिया - 'ऊ' की मात्रा का खेल</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>'ऊ' और 'ू' (बड़ी ऊ) की मात्रा - खेल और अभ्यास</title>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+    }
 
-        body { 
-            font-family: 'Arial', sans-serif; 
-            text-align: center; 
-            background: linear-gradient(135deg, #f0fdf4, #dcfce7); 
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow-x: hidden;
-            cursor: pointer;
-        }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Fredoka', 'Comic Sans MS', 'Chalkboard SE', sans-serif;
+      background: linear-gradient(135deg, #a8ff78 0%, #78ffd6 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
 
-        /* 1. Splash Screen */
-        #splash-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #ffffff;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            opacity: 1;
-            transition: opacity 0.5s ease-in-out;
-        }
+    /* Screen Overlays */
+    .screen-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: #ffffff;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      text-align: center;
+      padding: 20px;
+    }
 
-        #splash-screen img {
-            max-width: 260px;
-            height: auto;
-            margin-bottom: 20px;
-        }
+    #page-splash { 
+      background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%); 
+      cursor: pointer;
+    }
 
-        .loader {
-            width: 45px;
-            height: 45px;
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid #22c55e;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
+    #splash-logo {
+      max-width: 280px;
+      width: 70%;
+      animation: bounce 2s infinite ease-in-out;
+    }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-15px) scale(1.05); }
+    }
 
-        .tap-hint {
-            margin-top: 15px;
-            font-size: 14px;
-            color: #6b7280;
-            font-weight: 500;
-        }
+    .title-heading {
+      font-size: 2.2rem;
+      color: #2d3436;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
 
-        /* 2. Main Game Container */
-        #game-container { 
-            display: none; 
-            width: 95%;
-            max-width: 850px; 
-            margin: 20px auto; 
-            padding: 30px; 
-            background: white; 
-            border-radius: 20px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05); 
-        }
+    .title-subheading {
+      font-size: 1.2rem;
+      color: #0984e3;
+      margin-bottom: 25px;
+      font-weight: bold;
+    }
 
-        .top-logo {
-            max-width: 160px;
-            height: auto;
-            margin-bottom: 15px;
-        }
+    .green-btn {
+      background: linear-gradient(135deg, #00b894, #00cec9);
+      color: white;
+      font-size: 1.3rem;
+      font-weight: bold;
+      padding: 14px 36px;
+      border-radius: 50px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(0, 184, 148, 0.4);
+      transition: all 0.2s ease;
+    }
 
-        h1 {
-            color: #166534;
-            margin-bottom: 10px;
-            font-size: 32px;
-        }
+    .green-btn:active { transform: scale(0.95); }
 
-        .instruction {
-            font-size: 18px;
-            color: #374151;
-            margin-bottom: 25px;
-        }
+    .instructions-card {
+      background: #f1f2f6;
+      border-left: 6px solid #0984e3;
+      border-radius: 16px;
+      padding: 12px 20px;
+      margin: 8px 0;
+      width: 90%;
+      max-width: 480px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #2d3436;
+      text-align: left;
+    }
 
-        .game-layout {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            align-items: center;
-        }
+    header {
+      width: 100%;
+      max-width: 900px;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(10px);
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+      border-bottom-left-radius: 20px;
+      border-bottom-right-radius: 20px;
+    }
 
-        /* Target Zone (Basket/Garden Box) */
-        .target-zone {
-            background-color: #dcfce7;
-            border: 3px dashed #22c55e;
-            padding: 20px;
-            border-radius: 15px;
-            width: 100%;
-            max-width: 450px;
-            margin-bottom: 20px;
-        }
+    .header-logo { height: 40px; object-fit: contain; }
 
-        .target-title {
-            font-size: 22px;
-            color: #166534;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
+    .scoreboard {
+      display: flex;
+      gap: 10px;
+      font-size: 1rem;
+      font-weight: bold;
+    }
 
-        .target-counter {
-            font-size: 16px;
-            color: #14532d;
-        }
+    .score-box {
+      background: #ffffff;
+      padding: 6px 14px;
+      border-radius: 20px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+      color: #2d3436;
+      border: 2px solid #74b9ff;
+    }
 
-        /* Word Grid */
-        .word-grid { 
-            display: grid; 
-            grid-template-columns: repeat(3, 1fr); 
-            gap: 20px; 
-            width: 100%;
-        }
+    .game-container {
+      width: 95%;
+      max-width: 900px;
+      margin: 15px auto;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 24px;
+      padding: 20px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+      text-align: center;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
 
-        .card { 
-            padding: 25px 15px; 
-            border: 2px solid #86efac; 
-            border-radius: 12px; 
-            cursor: pointer; 
-            font-size: 24px; 
-            font-weight: bold;
-            background: #f8fafc;
-            transition: all 0.2s ease;
-        }
+    .level-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
 
-        .card:hover {
-            transform: translateY(-3px);
-            background-color: #f0fdf4;
-            box-shadow: 0 6px 12px rgba(34, 197, 94, 0.15);
-        }
+    .tab-btn {
+      padding: 8px 14px;
+      border: none;
+      background: #dfe6e9;
+      border-radius: 16px;
+      font-weight: bold;
+      color: #636e72;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.3s;
+    }
 
-        .card.disabled {
-            background-color: #e2e8f0;
-            border-color: #cbd5e1;
-            color: #94a3b8;
-            cursor: not-allowed;
-            transform: none;
-        }
+    .tab-btn.active {
+      background: linear-gradient(135deg, #0984e3, #74b9ff);
+      color: white;
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(9, 132, 227, 0.3);
+    }
 
-        .btn { 
-            padding: 12px 28px; 
-            font-size: 18px; 
-            cursor: pointer; 
-            background: #22c55e; 
-            color: white; 
-            border: none; 
-            border-radius: 10px; 
-            font-weight: bold;
-            margin-top: 20px;
-        }
+    .q-title {
+      font-size: 1.3rem;
+      color: #2d3436;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
 
-        .btn:hover {
-            background: #16a34a;
-        }
+    .feedback-banner {
+      height: 28px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #00b894;
+      margin-bottom: 8px;
+      transition: all 0.3s ease;
+    }
 
-        .hidden { display: none; }
-    </style>
+    .asset-img {
+      max-height: 140px;
+      max-width: 100%;
+      border-radius: 16px;
+      margin: 10px auto;
+      display: block;
+      object-fit: contain;
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 12px;
+      max-width: 500px;
+      margin: 15px auto;
+    }
+
+    .opt-btn {
+      padding: 14px 16px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      border-radius: 18px;
+      border: none;
+      background: #6c5ce7;
+      color: white;
+      box-shadow: 0 5px 0 #574b90;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .opt-btn:active {
+      transform: translateY(3px);
+      box-shadow: 0 2px 0 #574b90;
+    }
+
+    /* LEVEL 4: Destination Track */
+    .destination-board {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+      margin: 15px 0;
+    }
+
+    .track-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 90%;
+      max-width: 550px;
+      background: #ffeaa7;
+      padding: 15px 20px;
+      border-radius: 30px;
+      border: 3px dashed #fdcb6e;
+      position: relative;
+    }
+
+    .track-character {
+      font-size: 2.5rem;
+      transition: all 0.5s ease-in-out;
+    }
+
+    .track-target {
+      font-size: 2.5rem;
+    }
+
+    .path-choices {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      width: 100%;
+      flex-wrap: wrap;
+    }
+
+    .choice-card {
+      background: #ffffff;
+      border: 3px solid #0984e3;
+      border-radius: 20px;
+      padding: 12px 20px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #2d3436;
+      cursor: pointer;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+      transition: all 0.2s ease;
+      min-width: 110px;
+    }
+
+    .choice-card:active {
+      transform: scale(0.95);
+    }
+
+    .final-score-card {
+      background: #ffffff;
+      border-radius: 28px;
+      padding: 25px 15px;
+      max-width: 420px;
+      width: 90%;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+      border: 4px solid #00b894;
+    }
+  </style>
 </head>
 <body>
 
-    <!-- Audio Elements (Using precise relative paths as requested) -->
-    <audio id="sound-clap" src="assets/correct.mp3" preload="auto"></audio>
-    <audio id="sound-wrong" src="assets/wrong.mp3" preload="auto"></audio>
+  <!-- SPLASH & SCREENS -->
+  <div id="page-splash" class="screen-overlay" onclick="goToTitlePage()">
+    <img id="splash-logo" src="assets/innovine-logo.png" alt="Innovine Logo" onerror="this.src='https://via.placeholder.com/280x100?text=Innovine+Logo'">
+    <p style="color: #636e72; font-weight: bold; margin-top: 20px;">आगे बढ़ने के लिए कहीं भी क्लिक करें ➔</p>
+  </div>
 
-    <!-- 1. Splash Screen Section (5 Seconds Display) -->
-    <div id="splash-screen">
-        <img src="assets/innovine-logo.png" alt="Innovine Logo">
-        <div class="loader"></div>
-        <p class="tap-hint font-hindi">आवाज़ सक्रिय करने के लिए स्क्रीन पर कहीं भी एक बार टच करें 👇</p>
+  <div id="page-title" class="screen-overlay" style="display: none;">
+    <div class="title-heading">🐪 'ऊ' और 'ू' (बड़ी ऊ) की मात्रा 🌸</div>
+    <div class="title-subheading">मज़ेदार खेल और अभ्यास - अध्याय ८</div>
+    <button class="green-btn" onclick="goToInstructionPage()">शुरू करें ▶</button>
+  </div>
+
+  <div id="page-instructions" class="screen-overlay" style="display: none;">
+    <div class="title-heading" style="font-size: 1.8rem;">खेल के नियम 🎮</div>
+    
+    <div class="instructions-card"><span>🔍 <b>स्तर १:</b> चित्र देखकर सही नाम चुनें।</span></div>
+    <div class="instructions-card"><span>🧩 <b>स्तर २:</b> 'ू' (बड़ी ऊ) की मात्रा वाले सही शब्द ढूँढें।</span></div>
+    <div class="instructions-card"><span>✍️ <b>स्तर ३:</b> प्रश्नों के उत्तर देकर सही शब्द पहचानें।</span></div>
+    <div class="instructions-card"><span>🚀 <b>स्तर ४:</b> सही रास्ता चुनकर अपनी मंज़िल तक पहुँचें!</span></div>
+
+    <br>
+    <button class="green-btn" onclick="startGame()">खेलें 🎮</button>
+  </div>
+
+  <div id="page-final-score" class="screen-overlay" style="display: none;">
+    <div class="final-score-card">
+      <div style="font-size:3.5rem;">🏆🥳🎉</div>
+      <div class="title-heading" style="font-size: 1.6rem; color:#6c5ce7;">शानदार प्रदर्शन!</div>
+      <div style="font-size: 1.1rem; color:#00b894; font-weight:bold;">आपने सभी ४ स्तर सफलतापूर्वक पूर्ण कर लिए!</div>
+      <div style="background:#f8f9fa; border-radius:16px; padding:12px; margin:15px 0; font-size:1.2rem; font-weight:bold;">
+        कुल अंक: <span id="final-score-val" style="color:#e63946;">0</span>
+      </div>
+      <button class="green-btn" onclick="resetGame()">पुनः खेलें 🔄</button>
+    </div>
+  </div>
+
+  <!-- HEADER -->
+  <header>
+    <img src="assets/innovine-logo.png" alt="Innovine Logo" class="header-logo" onerror="this.style.display='none'">
+    <div class="scoreboard">
+      <div class="score-box">स्तर: <span id="level-num">1</span>/4</div>
+      <div class="score-box">अंक: <span id="score-val">0</span></div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <div class="game-container">
+    <div>
+      <div class="level-tabs">
+        <button class="tab-btn active" onclick="loadLevel(1)">L1: शब्द चुनो</button>
+        <button class="tab-btn" onclick="loadLevel(2)">L2: चित्र पहचानो</button>
+        <button class="tab-btn" onclick="loadLevel(3)">L3: सही वर्तनी</button>
+        <button class="tab-btn" onclick="loadLevel(4)">L4: मंज़िल तक पहुँचो</button>
+      </div>
+      <hr style="border:0; border-top: 1px solid #eee; margin-bottom: 10px;">
+      
+      <div class="feedback-banner" id="feedback-msg"></div>
+      <div id="game-view"></div>
     </div>
 
-    <!-- 2. Master Game Platform -->
-    <div id="game-container">
-        <!-- Logo inside main container -->
-        <img src="assets/innovine-logo.png" alt="Innovine Logo" class="top-logo">
-        
-        <h1>प्र.१. 'ऊ' की बगिया 🌸</h1>
-        
-        <div id="level-1" class="game-layout">
-            <p class="instruction"><strong>निर्देश:</strong> केवल उन शब्दों पर क्लिक करें जिनमें <strong>'ऊ' स्वर</strong> या <strong>'ू' (बड़ा ऊ) की मात्रा</strong> है, ताकि वे मीनू की बगिया में खिल सकें!</p>
-            
-            <!-- Target Collection Zone -->
-            <div class="target-zone">
-                <div class="target-title">🌸 मीनू की बगिया</div>
-                <div class="target-counter">बगिया में खिले शब्द: <span id="score-display">0</span> / 6</div>
-            </div>
+    <!-- AUDIO assets -->
+    <audio id="audio-correct" src="assets/correct.mp3"></audio>
+    <audio id="audio-wrong" src="assets/wrong.mp3"></audio>
+  </div>
 
-            <!-- Vocabulary taken directly from the provided textbook page text lists -->
-            <div class="word-grid">
-                <!-- Correct options from lists: ऊन, ऊँट, फूल, जूता, सूरजमुखी, कबूतर -->
-                <div class="card" id="w1" onclick="checkWord(true, 'ऊन', 'w1')">ऊन</div>
-                <div class="card" id="w2" onclick="checkWord(true, 'फूल', 'w2')">फूल</div>
-                <!-- Distractors without long U sound -->
-                <div class="card" id="w3" onclick="checkWord(false, 'घर', 'w3')">घर</div>
-                <div class="card" id="w4" onclick="checkWord(true, 'जूता', 'w4')">जूता</div>
-                <div class="card" id="w5" onclick="checkWord(false, 'किताब', 'w5')">किताब</div>
-                <div class="card" id="w6" onclick="checkWord(true, 'कबूतर', 'w6')">कबूतर</div>
-                <div class="card" id="w7" onclick="checkWord(false, 'बर्तन', 'w7')">बर्तन</div>
-                <div class="card" id="w8" onclick="checkWord(true, 'सूरजमुखी', 'w8')">सूरजमुखी</div>
-                <div class="card" id="w9" onclick="checkWord(true, 'ऊँट', 'w9')">ऊँट</div>
-            </div>
+  <script>
+    let splashTimeout = null;
+
+    window.onload = function() {
+      splashTimeout = setTimeout(goToTitlePage, 8000);
+    };
+
+    function goToTitlePage() {
+      if (splashTimeout) clearTimeout(splashTimeout);
+      document.getElementById('page-splash').style.display = 'none';
+      document.getElementById('page-title').style.display = 'flex';
+    }
+
+    function goToInstructionPage() {
+      document.getElementById('page-title').style.display = 'none';
+      document.getElementById('page-instructions').style.display = 'flex';
+    }
+
+    function startGame() {
+      document.getElementById('page-instructions').style.display = 'none';
+      loadLevel(1);
+    }
+
+    function playSound(type) {
+      let sndId = (type === 'correct') ? 'audio-correct' : 'audio-wrong';
+      const snd = document.getElementById(sndId);
+      if (snd) {
+        snd.currentTime = 0;
+        snd.play().catch(() => {});
+      }
+    }
+
+    function showFeedback(msg, isSuccess = true) {
+      const banner = document.getElementById('feedback-msg');
+      if (!banner) return;
+      banner.innerText = msg;
+      banner.style.color = isSuccess ? '#00b894' : '#d63031';
+      setTimeout(() => { banner.innerText = ''; }, 1500);
+    }
+
+    function shuffleArray(arr) {
+      return [...arr].sort(() => Math.random() - 0.5);
+    }
+
+    let currentLevel = 1;
+    let currentQIndex = 0;
+    let totalScore = 0;
+
+    // --- QUESTION DATASETS ---
+    // Level 1: Word Selector (Replacing Memory Cards)
+    const level1Master = [
+      { img: 'assets/chuha.png', correct: 'चूहा', options: ['चूहा', 'चिड़िया', 'बिल्ली'] },
+      { img: 'assets/kabutar.png', correct: 'कबूतर', options: ['कबूतर', 'तोता', 'मोर'] },
+      { img: 'assets/phool.png', correct: 'फूल', options: ['फूल', 'पत्ता', 'फल'] },
+      { img: 'assets/gudiya.png', correct: 'गुड़िया', options: ['गुड़िया', 'खिलौना', 'परी'] },
+      { img: 'assets/spoon.png', correct: 'चम्मच', options: ['चम्मच', 'काँटा', 'कटोरी'] },
+      { img: 'assets/tortoise.png', correct: 'कछुआ', options: ['कछुआ', 'मछली', 'मगरमच्छ'] }
+    ];
+
+    // Level 2: Identify picture & Spelling
+    const level2Master = [
+      { img: 'assets/chuha.png', correct: 'चूहा', wrong: ['चुहा', 'चीहा'] },
+      { img: 'assets/kabutar.png', correct: 'कबूतर', wrong: ['कबुतर', 'कबोतर'] },
+      { img: 'assets/phool.png', correct: 'फूल', wrong: ['फुल', 'फोल'] },
+      { img: 'assets/spoon.png', correct: 'चम्मच', wrong: ['चाकू', 'कटोरी'] },
+      { img: 'assets/tortoise.png', correct: 'कछुआ', wrong: ['खरगोश', 'मछली'] },
+      { img: 'assets/ullu.png', correct: 'उल्लू', wrong: ['तोता', 'मैना'] }
+    ];
+
+    // Level 3: Quiz questions (Chapter 8 PDF context)
+    const level3Master = [
+      { prompt: 'रेगिस्तान का जहाज़ कौन-सा है?', correct: 'ऊँट', options: ['ऊँट', 'उंट', 'औंट'] },
+      { prompt: 'इनमें से बड़ी "ू" मात्रा वाला सही शब्द चुनें:', correct: 'सूरजमुखी', options: ['सूरजमुखी', 'सुरजमुखि', 'सूरजमुखि'] },
+      { prompt: 'सर्दी में हम गर्म कपड़े किससे बनाते हैं?', correct: 'ऊन', options: ['ऊन', 'उन', 'ओन'] },
+      { prompt: 'मीठा और रसीला फल कौन-सा है?', correct: 'तरबूज', options: ['तरबूज', 'तरबुज', 'तरबोज'] },
+      { prompt: 'पूजा में प्रयोग होने वाली सामग्री:', correct: 'कपूर', options: ['कपूर', 'कपुर', 'कपार'] }
+    ];
+
+    // Level 4: Reach Your Destination Game (Replacing Balloon Pop)
+    const level4DestinationMaster = [
+      { runner: '🐭', target: '🧀', prompt: 'चूहे को पनीर तक पहुँचाने के लिए "ू" मात्रा वाला सही रास्ता चुनें:', correct: 'दूध', wrong: ['दुकान', 'दिन'] },
+      { runner: '🕊️', target: '🌾', prompt: 'कबूतर को दाने तक पहुँचाएँ (सही शब्द चुनें):', correct: 'सूरज', wrong: ['सुनार', 'सपना'] },
+      { runner: '🐢', target: '🌊', prompt: 'कछुए को तालाब तक पहुँचाइए:', correct: 'झूला', wrong: ['झुका', 'झोपड़ी'] },
+      { runner: '👧', target: '🌺', prompt: 'मीना को बगीचे तक पहुँचाएँ:', correct: 'फूलदान', wrong: ['फुटबॉल', 'फसल'] },
+      { runner: '🐫', target: '🏜️', prompt: 'ऊँट को रेगिस्तान पहुँचाइए:', correct: 'खजूर', wrong: ['खिलौना', 'खाना'] }
+    ];
+
+    let currentL1Questions = [];
+    let currentL2Questions = [];
+    let currentL3Questions = [];
+    let currentL4Questions = [];
+
+    function loadLevel(lvl) {
+      currentLevel = lvl;
+      currentQIndex = 0;
+      document.getElementById('level-num').innerText = lvl;
+
+      document.querySelectorAll('.tab-btn').forEach((btn, idx) => {
+        btn.classList.toggle('active', idx + 1 === lvl);
+      });
+
+      const view = document.getElementById('game-view');
+      view.innerHTML = '';
+
+      if (lvl === 1) {
+        currentL1Questions = shuffleArray(level1Master).slice(0, 5);
+        renderLevel1();
+      }
+      else if (lvl === 2) {
+        currentL2Questions = shuffleArray(level2Master).slice(0, 5);
+        renderLevel2();
+      }
+      else if (lvl === 3) {
+        currentL3Questions = shuffleArray(level3Master).slice(0, 5);
+        renderLevel3();
+      }
+      else if (lvl === 4) {
+        currentL4Questions = shuffleArray(level4DestinationMaster).slice(0, 5);
+        renderLevel4();
+      }
+    }
+
+    // --- LEVEL 1: Word Selector ---
+    function renderLevel1() {
+      const view = document.getElementById('game-view');
+      const q = currentL1Questions[currentQIndex];
+      const opts = shuffleArray(q.options);
+
+      view.innerHTML = `
+        <div class="q-title">शब्द चुनो - प्रश्न ${currentQIndex + 1}/5</div>
+        <p style="color:#2d3436; font-weight:bold;">चित्र देखकर सही शब्द पर क्लिक करें:</p>
+        <img src="${q.img}" class="asset-img" alt="Quiz Image" onerror="this.src='https://via.placeholder.com/150?text=Item'">
+        <div class="options-grid">
+          ${opts.map(opt => `
+            <button class="opt-btn" onclick="checkLevel1('${opt}', '${q.correct}')">${opt}</button>
+          `).join('')}
         </div>
+      `;
+    }
 
-        <!-- FINAL GAME END WRAPPER -->
-        <div id="result-screen" class="hidden">
-            <h2 id="msg" style="color: #166534; font-size: 30px; margin-bottom: 15px;"></h2>
-            <button class="btn" onclick="location.reload()">फिर से खेलें</button>
-        </div>
-    </div>
-
-    <script>
-        let correctAnswersCount = 0;
-        const totalRequired = 6; // ऊन, फूल, जूता, कबूतर, सूरजमुखी, ऊँट
-
-        const clapSnd = document.getElementById('sound-clap');
-        const wrongSnd = document.getElementById('sound-wrong');
-
-        // Global touch/click interaction to trigger browser audio permissions instantly
-        document.body.addEventListener('click', () => {
-            clapSnd.play().then(() => { clapSnd.pause(); clapSnd.currentTime = 0; }).catch(e => console.log(e));
-            wrongSnd.play().then(() => { wrongSnd.pause(); wrongSnd.currentTime = 0; }).catch(e => console.log(e));
-        }, { once: true });
-
-        // Splash screen timer logic: Keeps logo up for exactly 5000ms
-        window.addEventListener('DOMContentLoaded', () => {
-            setTimeout(() => {
-                const splash = document.getElementById('splash-screen');
-                splash.style.opacity = 0;
-                setTimeout(() => {
-                    splash.style.display = 'none';
-                    document.getElementById('game-container').style.display = 'block';
-                }, 500);
-            }, 5000);
-        });
-
-        function checkWord(isCorrect, wordText, cardId) {
-            const selectedCard = document.getElementById(cardId);
-            
-            if (selectedCard.classList.contains('disabled')) return;
-
-            if(isCorrect) {
-                // Instantly plays approved sound clip
-                clapSnd.currentTime = 0;
-                clapSnd.play().catch(err => console.log("Audio play blocked:", err));
-                
-                correctAnswersCount++;
-                document.getElementById('score-display').innerText = correctAnswersCount;
-                
-                selectedCard.classList.add('disabled');
-                selectedCard.style.border = "2px solid #22c55e";
-                selectedCard.style.backgroundColor = "#f0fdf4";
-                
-                alert("बहुत बढ़िया! \"" + wordText + "\" में 'ऊ' की ध्वनि है और यह बगिया में खिल गया।");
-            } else {
-                wrongSnd.currentTime = 0;
-                wrongSnd.play().catch(err => console.log("Audio play blocked:", err));
-                
-                alert("सोचिए! \"" + wordText + "\" में 'ऊ' या 'ू' की मात्रा नहीं है। दोबारा प्रयास करें!");
-            }
-
-            // Victory state handler
-            if(correctAnswersCount >= totalRequired) {
-                setTimeout(() => {
-                    document.getElementById('level-1').classList.add('hidden');
-                    document.getElementById('result-screen').classList.remove('hidden');
-                    document.getElementById('msg').innerHTML = "अद्भुत! 🎉<br>आपने सभी सही शब्दों को मीनू की बगिया में पहुँचा दिया है।";
-                }, 500);
-            }
+    function checkLevel1(selected, correct) {
+      if (selected === correct) {
+        playSound('correct');
+        addScore(10);
+        showFeedback('बिल्कुल सही! ✨');
+        if (currentQIndex < 4) {
+          currentQIndex++;
+          renderLevel1();
+        } else {
+          triggerConfetti();
+          showFeedback('शानदार! स्तर 1 पूरा हुआ!', true);
+          setTimeout(() => { loadLevel(2); }, 1400);
         }
-    </script>
+      } else {
+        playSound('wrong');
+        showFeedback('गलत उत्तर! पुनः प्रयास करें', false);
+      }
+    }
+
+    // --- LEVEL 2: Picture Identification ---
+    function renderLevel2() {
+      const view = document.getElementById('game-view');
+      const q = currentL2Questions[currentQIndex];
+      const allOpts = shuffleArray([q.correct, ...q.wrong]);
+
+      view.innerHTML = `
+        <div class="q-title">चित्र पहचानो - प्रश्न ${currentQIndex + 1}/5</div>
+        <p style="color:#2d3436; font-weight:bold;">चित्र को देखकर सही शब्द चुनें:</p>
+        <img src="${q.img}" class="asset-img" alt="Quiz Image" onerror="this.src='https://via.placeholder.com/150?text=Item'">
+        <div class="options-grid">
+          ${allOpts.map(opt => `
+            <button class="opt-btn" style="background:#0984e3; box-shadow:0 5px 0 #0984e3;" onclick="checkLevel2('${opt}', '${q.correct}')">${opt}</button>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function checkLevel2(selected, correct) {
+      if (selected === correct) {
+        playSound('correct');
+        addScore(10);
+        showFeedback('सही उत्तर! 🎯');
+        if (currentQIndex < 4) {
+          currentQIndex++;
+          renderLevel2();
+        } else {
+          triggerConfetti();
+          showFeedback('शाबाश! स्तर 2 पूरा हुआ!', true);
+          setTimeout(() => { loadLevel(3); }, 1400);
+        }
+      } else {
+        playSound('wrong');
+        showFeedback('गलत! सही उत्तर चुनें', false);
+      }
+    }
+
+    // --- LEVEL 3: Spelling Quiz ---
+    function renderLevel3() {
+      const view = document.getElementById('game-view');
+      const q = currentL3Questions[currentQIndex];
+      const opts = shuffleArray(q.options);
+
+      view.innerHTML = `
+        <div class="q-title">सही वर्तनी और मात्रा - प्रश्न ${currentQIndex + 1}/5</div>
+        <p style="font-size:1.1rem; color:#2d3436; font-weight:bold;">${q.prompt}</p>
+        <div class="options-grid" style="margin-top:25px;">
+          ${opts.map(opt => `
+            <button class="opt-btn" style="background:#00b894; box-shadow:0 5px 0 #00897b;" onclick="checkLevel3('${opt}', '${q.correct}')">${opt}</button>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function checkLevel3(selected, correct) {
+      if (selected === correct) {
+        playSound('correct');
+        addScore(10);
+        showFeedback('उत्कृष्ट! सही वर्तनी 👍');
+        if (currentQIndex < 4) {
+          currentQIndex++;
+          renderLevel3();
+        } else {
+          triggerConfetti();
+          showFeedback('बहुत बढ़िया! स्तर 3 पूरा हुआ!', true);
+          setTimeout(() => { loadLevel(4); }, 1400);
+        }
+      } else {
+        playSound('wrong');
+        showFeedback('गलत! पुनः प्रयास करें', false);
+      }
+    }
+
+    // --- LEVEL 4: Reach Your Destination ---
+    let destProgress = 0;
+
+    function renderLevel4() {
+      const view = document.getElementById('game-view');
+      const q = currentL4Questions[currentQIndex];
+      const choices = shuffleArray([q.correct, ...q.wrong]);
+      destProgress = 0;
+
+      view.innerHTML = `
+        <div class="q-title">मंज़िल तक पहुँचो (Destination Game) - ${currentQIndex + 1}/5</div>
+        <p style="font-size:1.05rem; color:#2d3436; font-weight:bold;">${q.prompt}</p>
+        
+        <div class="destination-board">
+          <div class="track-container">
+            <span class="track-character" id="runner-char" style="transform: translateX(0px);">${q.runner}</span>
+            <span class="track-target">${q.target}</span>
+          </div>
+
+          <div class="path-choices">
+            ${choices.map(choice => `
+              <div class="choice-card" onclick="stepDestination('${choice}', '${q.correct}')">${choice}</div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    function stepDestination(selected, correct) {
+      const runner = document.getElementById('runner-char');
+      
+      if (selected === correct) {
+        playSound('correct');
+        addScore(10);
+        showFeedback('सही रास्ता! 🏁');
+
+        if (runner) {
+          runner.style.transform = 'translateX(180px)';
+        }
+
+        setTimeout(() => {
+          if (currentQIndex < 4) {
+            currentQIndex++;
+            renderLevel4();
+          } else {
+            showFinalScoreboard();
+          }
+        }, 1000);
+
+      } else {
+        playSound('wrong');
+        showFeedback('गलत रास्ता! यह सही शब्द नहीं है', false);
+      }
+    }
+
+    // --- SCOREBOARD & RESET ---
+    function showFinalScoreboard() {
+      triggerMassiveConfetti();
+      document.getElementById('final-score-val').innerText = totalScore;
+      document.getElementById('page-final-score').style.display = 'flex';
+    }
+
+    function resetGame() {
+      totalScore = 0;
+      document.getElementById('score-val').innerText = '0';
+      document.getElementById('page-final-score').style.display = 'none';
+      loadLevel(1);
+    }
+
+    function addScore(pts) {
+      totalScore += pts;
+      document.getElementById('score-val').innerText = totalScore;
+    }
+
+    function triggerConfetti() {
+      if (typeof confetti === 'function') {
+        confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
+      }
+    }
+
+    function triggerMassiveConfetti() {
+      if (typeof confetti === 'function') {
+        confetti({ particleCount: 180, spread: 100, origin: { y: 0.6 } });
+      }
+    }
+  </script>
 </body>
 </html>
