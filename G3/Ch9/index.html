@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>सच्चा देशप्रेम - Word Cable Repair</title>
+    <title>सच्चा देशप्रेम - Cable Word Repair</title>
     <style>
         * {
             box-sizing: border-box;
@@ -40,6 +40,7 @@
             overflow: hidden;
         }
 
+        /* Screen Management */
         .screen {
             display: none;
             flex-direction: column;
@@ -49,11 +50,29 @@
             height: 100%;
         }
 
-        .screen.active { display: flex; }
+        .screen.active { 
+            display: flex; 
+        }
 
+        /* Screen 1: Innovine Logo Splash */
+        .splash-logo {
+            max-width: 280px;
+            height: auto;
+            margin-bottom: 20px;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        .timer-text {
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 15px;
+        }
+
+        /* Typography */
         h1 { color: #0f2027; font-size: 2rem; margin-bottom: 10px; }
         p.subtitle { color: #555; font-size: 1rem; margin-bottom: 20px; }
 
+        /* Instructions */
         .instructions-list {
             background: #f0f4f8;
             border-radius: 12px;
@@ -70,6 +89,7 @@
             line-height: 1.5;
         }
 
+        /* Gameplay Elements */
         #game-canvas {
             width: 100%;
             height: 380px;
@@ -93,7 +113,6 @@
             color: #0f2027;
         }
 
-        /* Riddle Prompt Display */
         #riddle-box {
             position: absolute;
             top: 10px;
@@ -110,7 +129,6 @@
             z-index: 10;
         }
 
-        /* Cable Wire Line */
         #cable-wire {
             position: absolute;
             bottom: 40px;
@@ -121,7 +139,6 @@
             border-radius: 3px;
         }
 
-        /* Slots for Building the Word */
         #word-slots {
             position: absolute;
             bottom: 50px;
@@ -147,7 +164,6 @@
             box-shadow: inset 0 0 5px rgba(0,230,118,0.3);
         }
 
-        /* Falling Letter Node */
         .falling-node {
             position: absolute;
             width: 36px;
@@ -207,28 +223,39 @@
         }
 
         .btn:hover { background: #0081cb; transform: translateY(-2px); }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
     </style>
 </head>
 <body>
 
 <div id="game-container">
 
-    <!-- INSTRUCTIONS -->
-    <div id="screen-instructions" class="screen active">
+    <!-- SCREEN 1: INNOVINE LOGO SPLASH -->
+    <div id="screen-logo" class="screen active">
+        <img src="assets/logo.png" alt="Innovine Logo" class="splash-logo" onerror="this.onerror=null; this.src='https://via.placeholder.com/280x100?text=INNOVINE+LOGO';">
+        <p class="timer-text">लोड हो रहा है... (<span id="splash-countdown">5</span>)</p>
+    </div>
+
+    <!-- SCREEN 2: INSTRUCTIONS -->
+    <div id="screen-instructions" class="screen">
         <h1>⚡ Cable Word Repair</h1>
         <p class="subtitle">अध्याय 8 - सच्चा देशप्रेम</p>
         
         <ul class="instructions-list">
-            <li>🧩 <strong>नया गेम मोड:</strong> शब्द-निर्माण (Word Building)!</li>
-            <li>💡 <strong>लक्ष्य:</strong> ऊपर दिए गए संकेत (Hint) को पढ़कर गिरते हुए <strong>अक्षरों (Letters)</strong> को क्रम से बास्केट में पकड़ें और सही शब्द पूरा करें।</li>
-            <li>⌨️ <strong>कंट्रोल:</strong> बास्केट को घुमाने के लिए <strong>Left/Right Arrow keys</strong> या माउस/टच ड्रैग का प्रयोग करें।</li>
-            <li>⚠️ <strong>सावधानी:</strong> केवल वही अक्षर कैच करें जो शब्द के **अगले खाली स्थान** में सही बैठता हो!</li>
+            <li>🧩 <strong>खेल का नियम:</strong> दिए गए संकेत (Hint) को पढ़कर सही उत्तर बनाने वाले अक्षरों को खोजें।</li>
+            <li>🎯 <strong>लक्ष्य:</strong> ऊपर से गिरते अक्षरों (Letters) को **सही क्रम** में कैच करके केबल के खाली स्थानों को भरें!</li>
+            <li>⌨️ <strong>कंट्रोल:</strong> कैचर को चलाने के लिए **Left/Right Arrow keys** या माउस/टच ड्रैग का प्रयोग करें।</li>
+            <li>✅ <strong>सही अक्षर:</strong> +10 अंक | ❌ <strong>गलत अक्षर/क्रम:</strong> -5 अंक</li>
         </ul>
 
-        <button class="btn" onclick="startGame()">केबल रिपेयर शुरू करें 🛠️</button>
+        <button class="btn" onclick="startGame()">केबल रिपेयर शुरू करें 🚀</button>
     </div>
 
-    <!-- GAMEPLAY -->
+    <!-- SCREEN 3: GAMEPLAY -->
     <div id="screen-game" class="screen">
         <div class="hud">
             <div>शब्द: <span id="current-q">1</span>/<span id="total-q">4</span></div>
@@ -244,16 +271,21 @@
             <div id="catcher"></div>
         </div>
 
-        <p style="font-size: 0.8rem; color: #666;">👈 बास्केट चलाने के लिए एरो कीज़ या माउस का प्रयोग करें 👉</p>
+        <p style="font-size: 0.85rem; color: #666; margin-top: 5px;">👈 बास्केट चलाने के लिए एरो कीज़ दबाएं या माउस/टच ड्रैग करें 👉</p>
     </div>
 
-    <!-- END SCREEN -->
+    <!-- SCREEN 4: END SCREEN -->
     <div id="screen-end" class="screen">
         <h1>🎉 केबल रिपेयर सफल!</h1>
         <p class="subtitle">आपने सभी महत्वपूर्ण शब्दों को सफलतापूर्वक जोड़ा!</p>
         
         <div style="font-size: 1.4rem; font-weight: bold; color: #0f2027; margin-bottom: 15px;">
-            अंतिम स्कोर: <span id="final-score">0</span>
+            आपका अंतिम स्कोर: <span id="final-score">0</span>
+        </div>
+
+        <div style="background: #eef2f7; padding: 15px; border-radius: 10px; color: #333; margin-bottom: 25px; line-height: 1.6;">
+            <strong>आज का मुख्य सबक:</strong><br>
+            "राष्ट्रगान का सम्मान करना, सतर्क रहना और दूसरों की जान व सुरक्षा में मदद करना ही सच्चा देशप्रेम है।"
         </div>
 
         <button class="btn" onclick="startGame()">पुनः खेलें 🔄</button>
@@ -262,6 +294,20 @@
 </div>
 
 <script>
+    // 1. Splash Screen Timer (5 Seconds)
+    let logoTimer = 5;
+    const countdownEl = document.getElementById('splash-countdown');
+
+    const splashInterval = setInterval(() => {
+        logoTimer--;
+        if (countdownEl) countdownEl.innerText = logoTimer;
+        
+        if (logoTimer <= 0) {
+            clearInterval(splashInterval);
+            switchScreen('screen-instructions');
+        }
+    }, 1000);
+
     const wordData = [
         { hint: "💡 अमन ने मेले से क्या खरीदा?", targetWord: ["हा", "थी"] },
         { hint: "💡 राष्ट्रगान के समय क्या व्यक्त किया गया?", targetWord: ["स", "म्मा", "न"] },
@@ -312,7 +358,6 @@
         document.getElementById('current-q').innerText = currentLevel + 1;
         document.getElementById('score').innerText = score;
 
-        // Render Empty Slots
         const slotsContainer = document.getElementById('word-slots');
         slotsContainer.innerHTML = '';
         for (let i = 0; i < targetLetters.length; i++) {
@@ -357,14 +402,13 @@
     }
 
     function spawnLetterNode() {
-        // Pool contains required current letter + random distractor letters
         const currentNeededIndex = filledLetters.findIndex(val => val === '');
         if (currentNeededIndex === -1) return;
 
         const correctChar = targetLetters[currentNeededIndex];
         const distractorPool = ["का", "रा", "पा", "ना", "मा", "ली", "जा", "ता"];
         
-        const isCorrectSpawn = Math.random() < 0.6; // 60% chance to drop useful letter
+        const isCorrectSpawn = Math.random() < 0.6;
         const letterText = isCorrectSpawn ? correctChar : distractorPool[Math.floor(Math.random() * distractorPool.length)];
 
         const el = document.createElement('div');
@@ -401,25 +445,21 @@
             item.y += 2.2;
             item.el.style.top = item.y + 'px';
 
-            // Catch Collision with Catcher Wire
             if (item.y >= canvasHeight - 35 && item.y <= canvasHeight - 10) {
                 if (Math.abs(item.x - catcherX) < 12) {
                     
                     const nextNeededIndex = filledLetters.findIndex(val => val === '');
                     
                     if (nextNeededIndex !== -1 && item.text === targetLetters[nextNeededIndex]) {
-                        // Correct letter caught in sequence
                         filledLetters[nextNeededIndex] = item.text;
                         document.getElementById('slot-' + nextNeededIndex).innerText = item.text;
                         score += 10;
                         showFeedback("⚡ कनेक्शन सही! +10", true);
 
-                        // Check if word complete
                         if (filledLetters.findIndex(val => val === '') === -1) {
                             setTimeout(nextLevel, 800);
                         }
                     } else {
-                        // Wrong letter or wrong sequence caught
                         score = Math.max(0, score - 5);
                         showFeedback("❌ गलत अक्षर! -5", false);
                     }
