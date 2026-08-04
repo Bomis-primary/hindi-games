@@ -35,7 +35,7 @@
             transform: translate(-50%, -50%);
             width: 480px;
             background: #ffffff;
-            border: 4px solid #2d8a4e;
+            border: 4px solid #0055ff; /* Blue Border */
             border-radius: 12px;
             padding: 24px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.6);
@@ -44,7 +44,7 @@
         }
         #quiz-modal h3 {
             margin-top: 0;
-            color: #2d8a4e;
+            color: #0055ff; /* Blue Title */
             font-size: 22px;
         }
         #quiz-modal p {
@@ -59,16 +59,16 @@
             padding: 12px;
             margin: 8px 0;
             background-color: #f8f9fa;
-            border: 2px solid #2d8a4e;
+            border: 2px solid #0055ff; /* Blue Button Border */
             border-radius: 8px;
             font-size: 16px;
             font-weight: bold;
-            color: #2d8a4e;
+            color: #0055ff;
             cursor: pointer;
             transition: all 0.2s ease;
         }
         .quiz-btn:hover {
-            background-color: #2d8a4e;
+            background-color: #0055ff;
             color: #ffffff;
         }
 
@@ -93,6 +93,49 @@
             border: 2px solid #f5c6cb;
         }
 
+        /* Game Over Modal Styling */
+        #gameover-modal {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 450px;
+            background: #ffffff;
+            border: 4px solid #d32f2f;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+            text-align: center;
+            z-index: 110;
+        }
+        #gameover-modal h2 {
+            margin-top: 0;
+            color: #d32f2f;
+            font-size: 28px;
+        }
+        #gameover-modal p {
+            font-size: 20px;
+            color: #333;
+            margin: 15px 0 25px 0;
+            font-weight: bold;
+        }
+        .restart-btn {
+            display: inline-block;
+            padding: 12px 25px;
+            background-color: #0055ff;
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        .restart-btn:hover {
+            background-color: #003db3;
+        }
+
         @keyframes fadeIn {
             from { opacity: 0; transform: scale(0.95); }
             to { opacity: 1; transform: scale(1); }
@@ -108,6 +151,13 @@
         <p id="quiz-question">प्रश्न यहाँ दिखाई देगा...</p>
         <div id="quiz-options"></div>
         <div id="quiz-feedback"></div>
+    </div>
+
+    <!-- On-Screen Game Over Modal -->
+    <div id="gameover-modal">
+        <h2>🎮 खेल समाप्त! (Game Over)</h2>
+        <p id="final-score-text">आपका कुल अंक: 0</p>
+        <button id="restart-btn" class="restart-btn">🔄 पुनः प्रयास करें (Try Again)</button>
     </div>
 </div>
 
@@ -162,7 +212,7 @@ class LogoScene extends Phaser.Scene {
             ease: 'Power2'
         });
 
-        // 5-second display time before moving to Instructions
+        // 5-second logo display time
         this.time.delayedCall(5000, () => {
             this.cameras.main.fadeOut(500, 0, 0, 0);
             this.cameras.main.once('camerafadeoutcomplete', () => {
@@ -172,17 +222,17 @@ class LogoScene extends Phaser.Scene {
     }
 }
 
-// --- Scene 2: Instructions Screen ---
+// --- Scene 2: Instructions Screen (Blue Theme Box) ---
 class InstructionScene extends Phaser.Scene {
     constructor() {
         super({ key: 'InstructionScene' });
     }
 
     create() {
-        this.cameras.main.setBackgroundColor('#1e3d2f');
+        this.cameras.main.setBackgroundColor('#1a2634');
 
         this.add.text(400, 70, 'एक अनोखा तरबूज़', {
-            fontSize: '34px', color: '#7CFC00', fontStyle: 'bold'
+            fontSize: '34px', color: '#4da6ff', fontStyle: 'bold'
         }).setOrigin(0.5);
 
         this.add.text(400, 120, 'खेलने के नियम (Rules & Instructions)', {
@@ -196,16 +246,19 @@ class InstructionScene extends Phaser.Scene {
             "4. ✅ सही उत्तर: +20 अंक | ❌ गलत उत्तर: -30 अंक\n\n" +
             "5. 🎯 हर 50 अंक पर नया प्रश्न पूछा जाएगा।";
 
+        // Changed box color to BLUE (#0055ff / dark transparent blue background)
         const bgRect = this.add.graphics();
-        bgRect.fillStyle(0x000000, 0.4);
+        bgRect.fillStyle(0x0a192f, 0.85); // Dark blue box fill
+        bgRect.lineStyle(3, 0x0055ff, 1);  // Blue border
         bgRect.fillRoundedRect(80, 160, 640, 290, 15);
+        bgRect.strokeRoundedRect(80, 160, 640, 290, 15);
 
         this.add.text(110, 185, rulesText, {
             fontSize: '18px', color: '#f0f0f0', lineSpacing: 8
         });
 
         const startBtn = this.add.text(400, 500, '👉 खेल शुरू करें (Start Game)', {
-            fontSize: '22px', color: '#000000', backgroundColor: '#7CFC00', padding: { x: 20, y: 10 }
+            fontSize: '22px', color: '#ffffff', backgroundColor: '#0055ff', padding: { x: 20, y: 10 }
         }).setOrigin(0.5).setInteractive({ useHandCursor: true });
 
         startBtn.on('pointerdown', () => {
@@ -247,9 +300,10 @@ class GameScene extends Phaser.Scene {
         melGfx.strokeCircle(20, 20, 20);
         melGfx.generateTexture('watermelon', 40, 40);
 
+        // Mold Sprite with Blue Outline
         const moldGfx = this.make.graphics({ x: 0, y: 0, add: false });
-        moldGfx.lineStyle(4, 0x00FFFF, 1);
-        moldGfx.fillStyle(0xFFFFFF, 0.3);
+        moldGfx.lineStyle(4, 0x0055FF, 1);
+        moldGfx.fillStyle(0xFFFFFF, 0.4);
         moldGfx.fillRect(0, 0, 80, 80);
         moldGfx.strokeRect(0, 0, 80, 80);
         moldGfx.generateTexture('square_mold', 80, 80);
@@ -291,6 +345,15 @@ class GameScene extends Phaser.Scene {
 
         this.physics.add.overlap(this.player, this.watermelons, this.catchWatermelon, null, this);
         this.physics.add.overlap(this.player, this.obstacles, this.hitObstacle, null, this);
+
+        // Restart button click handler for Game Over modal
+        document.getElementById('restart-btn').onclick = () => {
+            document.getElementById('gameover-modal').style.display = 'none';
+            globalScore = 0;
+            globalLives = 3;
+            this.nextQuizThreshold = 50;
+            this.scene.restart({ triggerFirstQuiz: true });
+        };
 
         // Trigger First Question immediately when starting
         if (this.shouldTriggerFirstQuiz) {
@@ -350,11 +413,20 @@ class GameScene extends Phaser.Scene {
         this.cameras.main.flash(200, 255, 0, 0);
 
         if (globalLives <= 0) {
-            globalScore = 0;
-            globalLives = 3;
-            this.nextQuizThreshold = 50;
-            this.scene.restart({ triggerFirstQuiz: false });
+            this.triggerGameOver();
         }
+    }
+
+    triggerGameOver() {
+        this.physics.pause();
+        this.spawnTimerMelon.paused = true;
+        this.spawnTimerObstacle.paused = true;
+
+        const gameOverModal = document.getElementById('gameover-modal');
+        const finalScoreText = document.getElementById('final-score-text');
+        
+        finalScoreText.innerText = "आपका कुल अंक (Total Score): " + globalScore;
+        gameOverModal.style.display = 'block';
     }
 
     triggerQuiz() {
@@ -380,7 +452,6 @@ class GameScene extends Phaser.Scene {
             btn.innerText = opt;
 
             btn.onclick = () => {
-                // Disable options after selection
                 const allBtns = optionsDiv.querySelectorAll('.quiz-btn');
                 allBtns.forEach(b => b.disabled = true);
 
@@ -398,7 +469,6 @@ class GameScene extends Phaser.Scene {
                 this.scoreText.setText('Score: ' + globalScore);
                 feedbackDiv.style.display = 'block';
 
-                // Display feedback message on screen for 1.5s before resuming
                 setTimeout(() => {
                     modal.style.display = 'none';
                     this.resumeGame();
