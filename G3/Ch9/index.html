@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>सच्चा देशप्रेम - Catch the Correct Word</title>
+    <title>सच्चा देशप्रेम - Catch the Answer</title>
     <style>
         * {
             box-sizing: border-box;
@@ -33,7 +33,7 @@
             padding: 20px;
             text-align: center;
             position: relative;
-            min-height: 520px;
+            min-height: 550px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -98,10 +98,10 @@
             line-height: 1.5;
         }
 
-        /* Screen 3: Game Canvas/Area */
+        /* Game Area */
         #game-canvas {
             width: 100%;
-            height: 380px;
+            height: 400px;
             background: #f4f7f6;
             border: 2px solid #1e3c72;
             border-radius: 12px;
@@ -122,14 +122,28 @@
             color: #1e3c72;
         }
 
-        .falling-word {
+        /* Falling Elements */
+        .falling-question {
+            position: absolute;
+            background: #e74c3c;
+            color: #fff;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            border: 2px solid #c0392b;
+            max-width: 80%;
+        }
+
+        .falling-option {
             position: absolute;
             background: #1e3c72;
             color: #fff;
             padding: 6px 12px;
             border-radius: 15px;
             font-weight: bold;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
 
@@ -138,27 +152,18 @@
             bottom: 5px;
             left: 50%;
             transform: translateX(-50%);
-            width: 100px;
-            height: 25px;
+            width: 110px;
+            height: 28px;
             background: #ff9800;
-            border-radius: 12px 12px 5px 5px;
+            border-radius: 14px 14px 5px 5px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
             color: white;
             font-weight: bold;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.8rem;
-        }
-
-        .prompt-target {
-            background: #e2f0d9;
-            color: #2b542c;
-            padding: 8px;
-            border-radius: 6px;
-            font-weight: bold;
-            margin-bottom: 10px;
-            width: 100%;
+            font-size: 0.85rem;
+            z-index: 10;
         }
 
         /* Controls */
@@ -167,6 +172,23 @@
             color: #666;
             margin-top: 5px;
         }
+
+        /* Feedback Message Overlay */
+        #game-feedback {
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            display: none;
+            z-index: 20;
+        }
+
+        .fb-correct { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .fb-wrong { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
 
         /* Buttons */
         .btn {
@@ -205,13 +227,14 @@
 
     <!-- SCREEN 2: INSTRUCTIONS -->
     <div id="screen-instructions" class="screen">
-        <h1>🧺 Catch the Correct Word</h1>
+        <h1>🧺 Catch the Correct Answer</h1>
         <p class="subtitle">अध्याय 8 - सच्चा देशप्रेम</p>
         
         <ul class="instructions-list">
-            <li>🎯 <strong>लक्ष्य:</strong> ऊपर से गिरते हुए शब्दों में से <strong>पाठ से जुड़े सही शब्दों</strong> को बास्केट में पकड़ें।</li>
-            <li>⌨️ <strong>कंट्रोल:</strong> बास्केट को चलाने के लिए <strong>Left/Right Arrow keys</strong> या टच/माउस का प्रयोग करें।</li>
-            <li>✅ <strong>सही शब्द:</strong> +10 अंक | ❌ <strong>गलत शब्द:</strong> -5 अंक</li>
+            <li>❓ <strong>गेम का नियम:</strong> ऊपर से <strong>लाल रंग में प्रश्न</strong> और <strong>नीले रंग में विकल्प</strong> नीचे गिरेंगे।</li>
+            <li>🎯 <strong>लक्ष्य:</strong> प्रश्न पढ़कर केवल <strong>सही उत्तर वाले विकल्प</strong> को अपनी बास्केट में पकड़ें!</li>
+            <li>⌨️ <strong>कंट्रोल:</strong> बास्केट चलाने के लिए <strong>Left/Right Arrow keys</strong> या माउस/टच का प्रयोग करें।</li>
+            <li>✅ <strong>सही उत्तर:</strong> +10 अंक | ❌ <strong>गलत उत्तर/प्रश्न पकड़ना:</strong> -5 अंक</li>
         </ul>
 
         <button class="btn" onclick="startGame()">गेम शुरू करें 🚀</button>
@@ -220,33 +243,30 @@
     <!-- SCREEN 3: GAME PLAY -->
     <div id="screen-game" class="screen">
         <div class="hud">
-            <div>लक्ष्य: <span id="target-count">0</span>/<span id="total-targets">5</span></div>
+            <div>लेवल: <span id="current-q">1</span>/<span id="total-q">5</span></div>
             <div>अंक: <span id="score">0</span></div>
         </div>
 
-        <div class="prompt-target" id="prompt-target">
-            पाठ से जुड़े सही शब्द को बास्केट में पकड़ें!
-        </div>
-
         <div id="game-canvas">
+            <div id="game-feedback"></div>
             <div id="basket">बास्केट 🧺</div>
         </div>
 
-        <p class="controls-note">👈 बास्केट घुमाने के लिए स्क्रीन पर माउस/टच ड्रैग करें या एरो कीज़ दबाएं 👉</p>
+        <p class="controls-note">👈 बास्केट घुमाने के लिए एरो कीज़ दबाएं या माउस/टच ड्रैग करें 👉</p>
     </div>
 
     <!-- SCREEN 4: END SCREEN -->
     <div id="screen-end" class="screen">
         <h1>🎉 खेल पूर्ण हुआ!</h1>
-        <p class="subtitle">सच्चा देशप्रेम शब्द-पकड़ चुनौती</p>
+        <p class="subtitle">सच्चा देशप्रेम प्रश्न-उत्तर चुनौती</p>
         
         <div style="font-size: 1.4rem; font-weight: bold; color: #1e3c72; margin-bottom: 15px;">
-            आपका अंतिम स्कोर: <span id="final-score">0</span>
+            आपका अंतिम स्कोर: <span id="final-score">0</span> / 50
         </div>
 
         <div style="background: #eef2f7; padding: 15px; border-radius: 10px; color: #333; margin-bottom: 25px; line-height: 1.6;">
-            <strong>आज की सीख:</strong><br>
-            "राष्ट्रगान का सम्मान, दूसरों की मदद और नियमों का पालन ही सच्चा देशप्रेम है।"
+            <strong>आज का मुख्य सबक:</strong><br>
+            "राष्ट्रगान का सम्मान करना, सतर्क रहना और दूसरों की जान व सुरक्षा में मदद करना ही सच्चा देशप्रेम है।"
         </div>
 
         <button class="btn" onclick="startGame()">पुनः खेलें 🔄</button>
@@ -274,47 +294,93 @@
         document.getElementById(screenId).classList.add('active');
     }
 
-    // Game Words Data
-    const correctWords = ["राष्ट्रगान", "सुरक्षा", "हाथी", "गार्ड", "कर्तव्य"];
-    const wrongWords = ["लड़ाई", "आलस्य", "कचरा", "चोरी", "लापरवाही"];
+    // Question & Answer Data
+    const quizData = [
+        {
+            question: "❓ अमन ने मेले से क्या खरीदा?",
+            correct: "नीले रंग का हाथी",
+            wrongs: ["सुंदर कार", "लकड़ी का घोड़ा"]
+        },
+        {
+            question: "❓ राष्ट्रगान शुरू होने पर सबने क्या किया?",
+            correct: "सम्मानपूर्वक खड़े हुए",
+            wrongs: ["भागने लगे", "ताली बजाई"]
+        },
+        {
+            question: "❓ छोटा बच्चा किसके पीछे भाग रहा था?",
+            correct: "रंगीन गेंद",
+            wrongs: ["पतंग", "कुत्ता"]
+        },
+        {
+            question: "❓ बच्चे को बचाने के लिए अमन ने किसे पुकारा?",
+            correct: "गार्ड अंकल",
+            wrongs: ["बस चालक", "पुलिस"]
+        },
+        {
+            question: "❓ गार्ड अंकल के अनुसार सच्चा देशप्रेम क्या है?",
+            correct: "दूसरों की मदद और सुरक्षा",
+            wrongs: ["केवल सीमा पर लड़ना", "चुप रहना"]
+        }
+    ];
 
+    let currentLevel = 0;
     let score = 0;
-    let caughtTargets = 0;
     let basketX = 50; // percentage
-    let fallingWords = [];
+    let fallingElements = [];
     let gameLoopInterval = null;
     let spawnInterval = null;
+    let currentSpawnIndex = 0;
+    let spawnSequence = [];
 
     const gameCanvas = document.getElementById('game-canvas');
     const basket = document.getElementById('basket');
 
     function startGame() {
+        currentLevel = 0;
         score = 0;
-        caughtTargets = 0;
         basketX = 50;
-        fallingWords = [];
-        
-        // Clear canvas words
-        document.querySelectorAll('.falling-word').forEach(e => e.remove());
         
         switchScreen('screen-game');
-        document.getElementById('score').innerText = score;
-        document.getElementById('target-count').innerText = caughtTargets;
-        document.getElementById('total-targets').innerText = correctWords.length;
-
-        updateBasketPos();
-
-        // Controls
+        document.getElementById('total-q').innerText = quizData.length;
+        
+        // Setup Event Listeners
         window.addEventListener('keydown', handleKeyDown);
         gameCanvas.addEventListener('mousemove', handleMouseMove);
         gameCanvas.addEventListener('touchmove', handleTouchMove);
 
-        // Game Loops
+        startLevel();
+    }
+
+    function startLevel() {
+        // Clear old elements
+        document.querySelectorAll('.falling-question, .falling-option').forEach(e => e.remove());
+        fallingElements = [];
+        currentSpawnIndex = 0;
+
+        document.getElementById('current-q').innerText = currentLevel + 1;
+        document.getElementById('score').innerText = score;
+        updateBasketPos();
+
+        // Create spawn sequence for this question level: Question first, then options
+        const lvlData = quizData[currentLevel];
+        spawnSequence = [
+            { text: lvlData.question, type: 'question', isCorrect: false },
+            { text: lvlData.correct, type: 'option', isCorrect: true },
+            { text: lvlData.wrongs[0], type: 'option', isCorrect: false },
+            { text: lvlData.wrongs[1], type: 'option', isCorrect: false }
+        ];
+
+        // Shuffle sequence slightly so answer position varies
+        const qItem = spawnSequence.shift();
+        spawnSequence.sort(() => Math.random() - 0.5);
+        spawnSequence.unshift(qItem); // Ensure Question falls first
+
         if (gameLoopInterval) clearInterval(gameLoopInterval);
         if (spawnInterval) clearInterval(spawnInterval);
 
         gameLoopInterval = setInterval(updateGame, 30);
-        spawnInterval = setInterval(spawnWord, 1800);
+        spawnInterval = setInterval(spawnNextItem, 2000);
+        spawnNextItem(); // Spawn first immediately
     }
 
     function updateBasketPos() {
@@ -342,71 +408,91 @@
         updateBasketPos();
     }
 
-    function spawnWord() {
-        const isCorrect = Math.random() > 0.4;
-        let text = "";
+    function spawnNextItem() {
+        if (currentSpawnIndex >= spawnSequence.length) return;
 
-        if (isCorrect) {
-            text = correctWords[Math.floor(Math.random() * correctWords.length)];
-        } else {
-            text = wrongWords[Math.floor(Math.random() * wrongWords.length)];
-        }
+        const itemData = spawnSequence[currentSpawnIndex];
+        currentSpawnIndex++;
 
-        const wordEl = document.createElement('div');
-        wordEl.className = 'falling-word';
-        wordEl.innerText = text;
+        const el = document.createElement('div');
+        el.className = itemData.type === 'question' ? 'falling-question' : 'falling-option';
+        el.innerText = itemData.text;
 
-        const startX = Math.floor(Math.random() * 75) + 10; // 10% to 85%
-        wordEl.style.left = startX + '%';
-        wordEl.style.top = '0px';
+        const startX = Math.floor(Math.random() * 50) + 20; // 20% to 70%
+        el.style.left = startX + '%';
+        el.style.top = '0px';
 
-        gameCanvas.appendChild(wordEl);
+        gameCanvas.appendChild(el);
 
-        fallingWords.push({
-            el: wordEl,
+        fallingElements.push({
+            el: el,
             x: startX,
             y: 0,
-            text: text,
-            isCorrect: correctWords.includes(text)
+            data: itemData
         });
+    }
+
+    function showFeedback(text, isCorrect) {
+        const fb = document.getElementById('game-feedback');
+        fb.innerText = text;
+        fb.className = isCorrect ? 'fb-correct' : 'fb-wrong';
+        fb.style.display = 'block';
+        setTimeout(() => { fb.style.display = 'none'; }, 1500);
     }
 
     function updateGame() {
         const canvasHeight = gameCanvas.clientHeight;
 
-        for (let i = fallingWords.length - 1; i >= 0; i--) {
-            let item = fallingWords[i];
-            item.y += 3; // speed
+        for (let i = fallingElements.length - 1; i >= 0; i--) {
+            let item = fallingElements[i];
+            item.y += 2.5; // falling speed
             item.el.style.top = item.y + 'px';
 
-            // Catch collision detection
-            if (item.y >= canvasHeight - 40 && item.y <= canvasHeight - 10) {
-                if (Math.abs(item.x - basketX) < 15) {
-                    // Caught!
-                    if (item.isCorrect) {
-                        score += 10;
-                        caughtTargets++;
-                        document.getElementById('target-count').innerText = Math.min(caughtTargets, correctWords.length);
-                    } else {
-                        score = Math.max(0, score - 5);
-                    }
+            // Catch Collision Detection with Basket
+            if (item.y >= canvasHeight - 45 && item.y <= canvasHeight - 10) {
+                if (Math.abs(item.x - basketX) < 18) {
                     
+                    if (item.data.type === 'question') {
+                        // Caught Question (Incorrect)
+                        score = Math.max(0, score - 5);
+                        showFeedback("❌ केवल सही उत्तर कैच करें, प्रश्न नहीं!", false);
+                    } else if (item.data.isCorrect) {
+                        // Caught Correct Option!
+                        score += 10;
+                        showFeedback("✨ शाबाश! सही उत्तर कैच किया!", true);
+                        item.el.remove();
+                        fallingElements.splice(i, 1);
+                        
+                        // Move to next level
+                        nextLevel();
+                        return;
+                    } else {
+                        // Caught Wrong Option
+                        score = Math.max(0, score - 5);
+                        showFeedback("❌ गलत उत्तर!", false);
+                    }
+
                     document.getElementById('score').innerText = score;
                     item.el.remove();
-                    fallingWords.splice(i, 1);
-
-                    if (caughtTargets >= correctWords.length) {
-                        endGame();
-                    }
+                    fallingElements.splice(i, 1);
                     continue;
                 }
             }
 
-            // Missed / Fall out of screen
+            // Remove items when they hit bottom
             if (item.y > canvasHeight) {
                 item.el.remove();
-                fallingWords.splice(i, 1);
+                fallingElements.splice(i, 1);
             }
+        }
+    }
+
+    function nextLevel() {
+        currentLevel++;
+        if (currentLevel < quizData.length) {
+            startLevel();
+        } else {
+            endGame();
         }
     }
 
