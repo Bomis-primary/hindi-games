@@ -50,7 +50,7 @@
         #quiz-modal p {
             font-size: 17px;
             color: #333;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             line-height: 1.4;
         }
         .quiz-btn {
@@ -71,6 +71,32 @@
             background-color: #2d8a4e;
             color: #ffffff;
         }
+
+        /* On-Screen Feedback Message Box */
+        #quiz-feedback {
+            display: none;
+            font-size: 18px;
+            font-weight: bold;
+            padding: 12px;
+            margin-top: 15px;
+            border-radius: 8px;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        .feedback-correct {
+            background-color: #d4edda;
+            color: #155724;
+            border: 2px solid #c3e6cb;
+        }
+        .feedback-wrong {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 2px solid #f5c6cb;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
     </style>
 </head>
 <body>
@@ -81,6 +107,7 @@
         <h3 id="quiz-title">📖 कहानी प्रश्न (Story Quiz)</h3>
         <p id="quiz-question">प्रश्न यहाँ दिखाई देगा...</p>
         <div id="quiz-options"></div>
+        <div id="quiz-feedback"></div>
     </div>
 </div>
 
@@ -184,7 +211,6 @@ class InstructionScene extends Phaser.Scene {
         startBtn.on('pointerdown', () => {
             globalScore = 0;
             globalLives = 3;
-            // Transition to Game Scene and trigger the first question immediately
             this.scene.start('GameScene', { triggerFirstQuiz: true });
         });
     }
@@ -266,7 +292,7 @@ class GameScene extends Phaser.Scene {
         this.physics.add.overlap(this.player, this.watermelons, this.catchWatermelon, null, this);
         this.physics.add.overlap(this.player, this.obstacles, this.hitObstacle, null, this);
 
-        // Trigger First Question right away if flagged from Instructions
+        // Trigger First Question immediately when starting
         if (this.shouldTriggerFirstQuiz) {
             this.shouldTriggerFirstQuiz = false;
             this.time.delayedCall(300, () => {
@@ -307,10 +333,10 @@ class GameScene extends Phaser.Scene {
 
     catchWatermelon(player, melon) {
         melon.destroy();
-        globalScore += 10; // +10 points per caught watermelon
+        globalScore += 10;
         this.scoreText.setText('Score: ' + globalScore);
 
-        // Checkpoint: Quiz every 50 points
+        // Trigger Quiz every 50 points
         if (globalScore >= this.nextQuizThreshold) {
             this.nextQuizThreshold += 50;
             this.triggerQuiz();
@@ -324,7 +350,6 @@ class GameScene extends Phaser.Scene {
         this.cameras.main.flash(200, 255, 0, 0);
 
         if (globalLives <= 0) {
-            alert("Game Over! आपका कुल अंक (Total Score): " + globalScore);
             globalScore = 0;
             globalLives = 3;
             this.nextQuizThreshold = 50;
@@ -343,27 +368,43 @@ class GameScene extends Phaser.Scene {
         const modal = document.getElementById('quiz-modal');
         const qText = document.getElementById('quiz-question');
         const optionsDiv = document.getElementById('quiz-options');
+        const feedbackDiv = document.getElementById('quiz-feedback');
 
         qText.innerText = currentData.question;
         optionsDiv.innerHTML = '';
+        feedbackDiv.style.display = 'none';
 
         currentData.options.forEach((opt, idx) => {
             const btn = document.createElement('button');
             btn.className = 'quiz-btn';
             btn.innerText = opt;
+
             btn.onclick = () => {
+                // Disable options after selection
+                const allBtns = optionsDiv.querySelectorAll('.quiz-btn');
+                allBtns.forEach(b => b.disabled = true);
+
                 if (idx === currentData.correct) {
-                    globalScore += 20; // +20 Points for Correct Answer
-                    alert("✅ सही उत्तर! (+20 अंक जुड़े)");
+                    globalScore += 20;
+                    feedbackDiv.className = 'feedback-correct';
+                    feedbackDiv.innerText = "✅ सही उत्तर! (+20 बोनस अंक)";
                 } else {
-                    globalScore -= 30; // -30 Points for Wrong Answer
-                    if (globalScore < 0) globalScore = 0; // Prevent negative score display formatting glitch if desired
-                    alert("❌ गलत उत्तर! (-30 अंक कटे)");
+                    globalScore -= 30;
+                    if (globalScore < 0) globalScore = 0;
+                    feedbackDiv.className = 'feedback-wrong';
+                    feedbackDiv.innerText = "❌ गलत उत्तर! (-30 अंक)";
                 }
+
                 this.scoreText.setText('Score: ' + globalScore);
-                modal.style.display = 'none';
-                this.resumeGame();
+                feedbackDiv.style.display = 'block';
+
+                // Display feedback message on screen for 1.5s before resuming
+                setTimeout(() => {
+                    modal.style.display = 'none';
+                    this.resumeGame();
+                }, 1500);
             };
+
             optionsDiv.appendChild(btn);
         });
 
