@@ -1,1 +1,380 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>बचपन के खेल - वर्गीकरण खेल (Sort & Classify)</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
 
+        body {
+            background: linear-gradient(135deg, #e0f2fe 0%, #fef3c7 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            color: #1e3a8a;
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: #4b5563;
+            font-size: 1rem;
+        }
+
+        .stats-board {
+            display: flex;
+            gap: 20px;
+            background: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin-bottom: 25px;
+            font-weight: bold;
+            color: #1f2937;
+        }
+
+        .score-val {
+            color: #2563eb;
+        }
+
+        .game-container {
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .items-pool {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            padding: 20px;
+            border-radius: 20px;
+            min-height: 120px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            align-items: center;
+            border: 2px dashed #93c5fd;
+        }
+
+        .game-card {
+            background: white;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1e293b;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+            border: 2px solid #e2e8f0;
+        }
+
+        .game-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+        }
+
+        .game-card.selected {
+            border-color: #2563eb;
+            background: #eff6ff;
+            transform: scale(1.05);
+        }
+
+        .categories-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .category-bin {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            min-height: 250px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border: 3px solid transparent;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .bin-outdoor { border-color: #f59e0b; }
+        .bin-indoor { border-color: #10b981; }
+
+        .category-bin h2 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .bin-outdoor h2 { color: #d97706; }
+        .bin-indoor h2 { color: #059669; }
+
+        .bin-items {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .bin-items .game-card {
+            cursor: default;
+            text-align: center;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .modal-content h2 {
+            color: #1e3a8a;
+            margin-bottom: 10px;
+        }
+
+        .btn-restart {
+            margin-top: 20px;
+            padding: 12px 24px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-restart:hover {
+            background: #1d4ed8;
+        }
+
+        @media (max-width: 600px) {
+            .categories-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>🎯 बचपन के खेल: वर्गीकरण</h1>
+        <p>खेल पर क्लिक करें, फिर सही श्रेणी (इनडोर या आउटडोर) का चयन करें!</p>
+    </div>
+
+    <div class="stats-board">
+        <div>स्कोर: <span id="score" class="score-val">0</span> / 10</div>
+    </div>
+
+    <div class="game-container">
+        <!-- Unsorted Items Pool -->
+        <div class="items-pool" id="itemsPool"></div>
+
+        <!-- Category Bins -->
+        <div class="categories-container">
+            <div class="category-bin bin-outdoor" onclick="classifySelected('outdoor')">
+                <h2>☀️ आउटडोर (मैदानी खेल)</h2>
+                <div class="bin-items" id="outdoorBin"></div>
+            </div>
+
+            <div class="category-bin bin-indoor" onclick="classifySelected('indoor')">
+                <h2>🏠 इनडोर (घर के अंदर)</h2>
+                <div class="bin-items" id="indoorBin"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Victory Modal -->
+    <div class="modal" id="winModal">
+        <div class="modal-content">
+            <h2>🎉 शाबाश!</h2>
+            <p>आपने सभी खेलों को सही श्रेणी में छाँट लिया है!</p>
+            <button class="btn-restart" onclick="restartGame()">पुनः खेलें</button>
+        </div>
+    </div>
+
+    <script>
+        // Web Audio API Sound Generator
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playSound(type) {
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            const now = audioCtx.currentTime;
+
+            if (type === 'select') {
+                osc.frequency.setValueAtTime(400, now);
+                gain.gain.setValueAtTime(0.1, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+                osc.start(now);
+                osc.stop(now + 0.1);
+            } else if (type === 'correct') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(523.25, now); // C5
+                osc.frequency.setValueAtTime(659.25, now + 0.1); // E5
+                gain.gain.setValueAtTime(0.15, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                osc.start(now);
+                osc.stop(now + 0.3);
+            } else if (type === 'wrong') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(180, now);
+                osc.frequency.setValueAtTime(130, now + 0.15);
+                gain.gain.setValueAtTime(0.15, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                osc.start(now);
+                osc.stop(now + 0.3);
+            } else if (type === 'win') {
+                const notes = [523.25, 659.25, 783.99, 1046.50];
+                notes.forEach((freq, index) => {
+                    const oscW = audioCtx.createOscillator();
+                    const gainW = audioCtx.createGain();
+                    oscW.connect(gainW);
+                    gainW.connect(audioCtx.destination);
+                    oscW.frequency.setValueAtTime(freq, now + index * 0.12);
+                    gainW.gain.setValueAtTime(0.15, now + index * 0.12);
+                    gainW.gain.exponentialRampToValueAtTime(0.01, now + index * 0.12 + 0.2);
+                    oscW.start(now + index * 0.12);
+                    oscW.stop(now + index * 0.12 + 0.2);
+                });
+            }
+        }
+
+        // Game Data based on Chapter 14
+        const gameItemsData = [
+            { id: 1, name: '🏏 क्रिकेट', category: 'outdoor' },
+            { id: 2, name: '🎲 लूडो', category: 'indoor' },
+            { id: 3, name: '⚽ फुटबॉल', category: 'outdoor' },
+            { id: 4, name: '🪵 गिल्ली-डंडा', category: 'outdoor' },
+            { id: 5, name: '🎯 कांचा-गोली', category: 'outdoor' },
+            { id: 6, name: '🤼 कबड्डी', category: 'outdoor' },
+            { id: 7, name: '🙈 छुपम-छुपाई', category: 'outdoor' },
+            { id: 8, name: '♟️ शतरंज', category: 'indoor' },
+            { id: 9, name: '🪢 रस्सी-खींच', category: 'outdoor' },
+            { id: 10, name: '🌀 लट्टू', category: 'outdoor' }
+        ];
+
+        let selectedItem = null;
+        let score = 0;
+
+        function initGame() {
+            score = 0;
+            selectedItem = null;
+            document.getElementById('score').innerText = score;
+            document.getElementById('outdoorBin').innerHTML = '';
+            document.getElementById('indoorBin').innerHTML = '';
+            document.getElementById('winModal').style.display = 'none';
+
+            // Shuffle Items
+            const shuffled = [...gameItemsData].sort(() => Math.random() - 0.5);
+            const pool = document.getElementById('itemsPool');
+            pool.innerHTML = '';
+
+            shuffled.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'game-card';
+                card.innerText = item.name;
+                card.dataset.id = item.id;
+                card.onclick = (e) => {
+                    e.stopPropagation();
+                    selectCard(card, item);
+                };
+                pool.appendChild(card);
+            });
+        }
+
+        function selectCard(cardElement, itemData) {
+            playSound('select');
+            document.querySelectorAll('.game-card').forEach(c => c.classList.remove('selected'));
+            cardElement.classList.add('selected');
+            selectedItem = { element: cardElement, data: itemData };
+        }
+
+        function classifySelected(targetCategory) {
+            if (!selectedItem) return;
+
+            if (selectedItem.data.category === targetCategory) {
+                // Correct Choice
+                playSound('correct');
+                const targetBin = targetCategory === 'outdoor' ? 
+                    document.getElementById('outdoorBin') : document.getElementById('indoorBin');
+                
+                selectedItem.element.classList.remove('selected');
+                selectedItem.element.onclick = null; // Disable further clicking
+                targetBin.appendChild(selectedItem.element);
+
+                score++;
+                document.getElementById('score').innerText = score;
+                selectedItem = null;
+
+                if (score === gameItemsData.length) {
+                    setTimeout(() => {
+                        playSound('win');
+                        document.getElementById('winModal').style.display = 'flex';
+                    }, 400);
+                }
+            } else {
+                // Wrong Choice
+                playSound('wrong');
+                selectedItem.element.style.borderColor = '#ef4444';
+                setTimeout(() => {
+                    if (selectedItem && selectedItem.element) {
+                        selectedItem.element.style.borderColor = '#2563eb';
+                    }
+                }, 500);
+            }
+        }
+
+        function restartGame() {
+            initGame();
+        }
+
+        // Start Game on Load
+        window.onload = initGame;
+    </script>
+</body>
+</html>
