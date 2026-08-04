@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>टाइम ट्रैवल: AI क्विज़ चैलेंज</title>
+    <title>टाइम ट्रैवल: AI टेक कलेक्टर</title>
     <style>
         * {
             box-sizing: border-box;
@@ -26,7 +26,7 @@
         .screen {
             display: none;
             width: 100%;
-            max-width: 650px;
+            max-width: 800px;
             flex-direction: column;
             align-items: center;
             text-align: center;
@@ -109,86 +109,93 @@
             transform: translateY(-2px);
         }
 
-        /* SCREEN 3: Quiz Game Screen */
-        .game-header {
-            width: 100%;
-            margin-bottom: 20px;
-        }
-
-        .game-title {
+        /* SCREEN 3: Tech Collector Game Screen */
+        .game-header h2 {
             color: #38bdf8;
-            font-size: 1.5rem;
-            margin-bottom: 10px;
+            font-size: 1.8rem;
+            margin-bottom: 8px;
         }
 
-        .progress-bar-container {
-            width: 100%;
-            height: 10px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 10px;
-            overflow: hidden;
-            margin-bottom: 15px;
-        }
-
-        .progress-bar-fill {
-            height: 100%;
-            width: 0%;
-            background: #38bdf8;
-            transition: width 0.3s ease;
-        }
-
-        .question-box {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            padding: 25px;
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            width: 100%;
+        .game-subtitle {
+            color: #cbd5e1;
+            font-size: 0.95rem;
             margin-bottom: 20px;
         }
 
-        .question-box h3 {
-            font-size: 1.25rem;
-            color: #f8fafc;
-            line-height: 1.5;
+        /* Time Capsules (Drop Zones) */
+        .capsules-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            width: 100%;
+            margin-bottom: 25px;
         }
 
-        .options-container {
+        .time-capsule {
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px dashed #38bdf8;
+            border-radius: 18px;
+            padding: 15px;
+            min-height: 140px;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .time-capsule.hovered {
+            background: rgba(56, 189, 248, 0.2);
+            border-style: solid;
+        }
+
+        .capsule-title {
+            font-weight: bold;
+            color: #facc15;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        /* Tech Items Pool */
+        .items-pool {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 18px;
+            padding: 15px;
             width: 100%;
+            min-height: 100px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .option-btn {
-            background: rgba(255, 255, 255, 0.95);
-            color: #0f172a;
-            padding: 14px 20px;
-            border-radius: 14px;
-            border: 2px solid transparent;
-            font-size: 1rem;
-            font-weight: 600;
-            text-align: left;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .option-btn:hover {
+        .tech-card {
             background: #ffffff;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3);
+            color: #0f172a;
+            padding: 10px 16px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: grab;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            user-select: none;
+            transition: transform 0.2s;
         }
 
-        .option-btn.correct {
-            background: #10b981 !important;
-            color: white !important;
-            border-color: #059669 !important;
+        .tech-card:active {
+            cursor: grabbing;
         }
 
-        .option-btn.wrong {
-            background: #ef4444 !important;
-            color: white !important;
-            border-color: #dc2626 !important;
+        .tech-card.dragging {
+            opacity: 0.5;
+        }
+
+        .feedback-msg {
+            margin-top: 15px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            min-height: 25px;
         }
 
         /* SCREEN 4: End Screen */
@@ -209,13 +216,6 @@
             margin-bottom: 12px;
         }
 
-        .score-display {
-            font-size: 1.5rem;
-            color: #facc15;
-            font-weight: bold;
-            margin: 15px 0;
-        }
-
         .end-card p {
             color: #e2e8f0;
             font-size: 1.05rem;
@@ -223,7 +223,6 @@
             line-height: 1.5;
         }
 
-        /* Animations */
         @keyframes fadeInScale {
             0% { opacity: 0; transform: scale(0.85); }
             100% { opacity: 1; transform: scale(1); }
@@ -235,52 +234,61 @@
     <!-- SCREEN 1: ONLY Innovine Logo (5 Seconds Auto Transition) -->
     <div id="screen1" class="screen active">
         <div class="logo-only-container">
-            <img src="assets/logo.png" alt="Innovine Logo" class="brand-logo-img">
+            <img src="https://innovine.in/images/logo.png" alt="Innovine Logo" class="brand-logo-img">
         </div>
     </div>
 
     <!-- SCREEN 2: Instructions Screen -->
     <div id="screen2" class="screen">
         <div class="card-box">
-            <h2>📜 खेल के नियम</h2>
+            <h2>📜 टाइम यात्रा के नियम</h2>
             <div class="instructions-list">
-                <p>1. आपको एआई और तकनीक के विकास से जुड़े बहुविकल्पीय प्रश्न मिलेंगे।</p>
-                <p>2. सही उत्तर चुनकर अगले प्रश्न पर बढ़ें।</p>
-                <p>3. हर बार रीस्टार्ट करने पर आपको प्रश्नों का नया सेट मिलेगा!</p>
+                <p>1. स्क्रीन पर एआई की अलग-अलग खोजें और तकनीक कार्ड्स के रूप में मिलेंगी।</p>
+                <p>2. प्रत्येक टेक कार्ड को उसके सही <b>Time Capsule (समय काल)</b> में ड्रैग करके ड्रॉप करें।</p>
+                <p>3. सभी कार्ड्स सही कैप्सूल में रखने पर ही टाइम ट्रैवल पूरा होगा!</p>
             </div>
-            <button class="btn-primary" onclick="goToScreen(3); startGame();">गेम शुरू करें 🚀</button>
+            <button class="btn-primary" onclick="goToScreen(3); startGame();">यात्रा शुरू करें 🚀</button>
         </div>
     </div>
 
-    <!-- SCREEN 3: Quiz Game Screen -->
+    <!-- SCREEN 3: Tech Collector Game Screen -->
     <div id="screen3" class="screen">
         <div class="game-header">
-            <h2 class="game-title">⏳ टाइम ट्रैवल: AI क्विज़</h2>
-            <div class="progress-bar-container">
-                <div id="progress-fill" class="progress-bar-fill"></div>
+            <h2>🛸 टाइम कैप्सूल: टेक कलेक्टर</h2>
+            <p class="game-subtitle">नीचे दिए गए कार्ड्स को सही समय काल (Time Capsule) में रखें:</p>
+        </div>
+
+        <!-- Time Capsules -->
+        <div class="capsules-container" id="capsules-container">
+            <div class="time-capsule" data-era="past">
+                <div class="capsule-title">📜 अतीत (शुरुआती दौर)</div>
             </div>
-            <p id="question-count" style="color: #cbd5e1; font-size: 0.9rem; text-align: right;"></p>
+            <div class="time-capsule" data-era="present">
+                <div class="capsule-title">⚡ वर्तमान (आज का समय)</div>
+            </div>
+            <div class="time-capsule" data-era="future">
+                <div class="capsule-title">🚀 भविष्य (आने वाला समय)</div>
+            </div>
         </div>
 
-        <div class="question-box">
-            <h3 id="question-text">प्रश्न लोड हो रहा है...</h3>
-        </div>
+        <!-- Cards Pool -->
+        <div class="items-pool" id="items-pool"></div>
 
-        <div class="options-container" id="options-container"></div>
+        <div id="feedback" class="feedback-msg"></div>
+        <button class="btn-primary" style="margin-top: 15px;" onclick="checkAnswers()">जाँच करें ✔️</button>
     </div>
 
     <!-- SCREEN 4: End Screen -->
     <div id="screen4" class="screen">
         <div class="end-card">
-            <h2>🎉 टाइम ट्रैवल पूरा हुआ!</h2>
-            <div class="score-display" id="final-score">आपका स्कोर: 0 / 5</div>
-            <p id="final-message">उत्कृष्ट प्रदर्शन! आप एआई के इतिहास को अच्छी तरह समझते हैं।</p>
-            <button class="btn-primary" onclick="restartGame()">नए प्रश्नों के साथ पुनः खेलें 🔄</button>
+            <h2>🎉 टाइम मास्टर!</h2>
+            <p>आपने एआई के अतीत, वर्तमान और भविष्य की सभी तकनीकों को उनके सही समय कैप्सूल में रख दिया है!</p>
+            <button class="btn-primary" onclick="restartGame()">नया चैलेंज खेलें 🔄</button>
         </div>
     </div>
 
     <script>
-        // Sound System (Web Audio API)
+        // Sound System
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
         function playSound(type) {
@@ -291,7 +299,13 @@
             gain.connect(audioCtx.destination);
             const now = audioCtx.currentTime;
 
-            if (type === 'correct') {
+            if (type === 'drag') {
+                osc.frequency.setValueAtTime(300, now);
+                gain.gain.setValueAtTime(0.05, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+                osc.start(now);
+                osc.stop(now + 0.05);
+            } else if (type === 'correct') {
                 osc.type = 'sine';
                 osc.frequency.setValueAtTime(523.25, now);
                 osc.frequency.setValueAtTime(659.25, now + 0.1);
@@ -301,8 +315,8 @@
                 osc.stop(now + 0.3);
             } else if (type === 'wrong') {
                 osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(200, now);
-                osc.frequency.setValueAtTime(140, now + 0.15);
+                osc.frequency.setValueAtTime(180, now);
+                osc.frequency.setValueAtTime(130, now + 0.15);
                 gain.gain.setValueAtTime(0.15, now);
                 gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
                 osc.start(now);
@@ -323,141 +337,137 @@
             }
         }
 
-        // Question Pool from 'AI Ka Kamaal' & Tech Timeline
-        const masterQuestionsPool = [
-            {
-                question: "1. 'कृत्रिम बुद्धिमत्ता' (एआई) शब्द सबसे पहले किस वैज्ञानिक ने दिया था?",
-                options: ["जॉन मैकार्थी", "अल्बर्ट आइंस्टीन", "चार्ल्स बैबेज", "आइजैक न्यूटन"],
-                answer: 0
-            },
-            {
-                question: "2. एआई नई-नई बातें किस प्रकार सीखती है?",
-                options: ["किताबें लिखकर", "ढेरों डेटा पढ़कर", "अनुमान लगाकर", "दूसरों से पूछकर"],
-                answer: 1
-            },
-            {
-                question: "3. फरवरी 2026 में एआई पर एक बड़ा अंतरराष्ट्रीय सम्मेलन कहाँ आयोजित हुआ था?",
-                options: ["लंदन", "टोक्यो", "नई दिल्ली", "न्यू यॉर्क"],
-                answer: 2
-            },
-            {
-                question: "4. अस्पतालों में एआई डॉक्टरों की मदद किस काम में करता है?",
-                options: ["दवाइयाँ बनाने में", "एक्स-रे पढ़ने और बीमारियाँ पहचानने में", "खाना बनाने में", "सफाई करने में"],
-                answer: 1
-            },
-            {
-                question: "5. कविता में एआई को क्या कहा गया है?",
-                options: ["हमारा दुश्मन", "हमारा साथी और उज्ज्वल कल का राही", "एक साधारण खिलौना", "केवल एक मशीन"],
-                answer: 1
-            },
-            {
-                question: "6. जॉन मैकार्थी ने एआई को क्या कहा था?",
-                options: ["रोबोट बनाने का खेल", "समझदार मशीनें बनाने का विज्ञान", "कंप्यूटर प्रोग्रामिंग", "भविष्य की गणित"],
-                answer: 1
-            },
-            {
-                question: "7. कारों में एआई तकनीक चालक को क्या समझने में मदद करती है?",
-                options: ["सड़क, संकेत और ट्रैफिक", "गाड़ी की गति बदलना", "संगीत बजाना", "कार की धुलाई करना"],
-                answer: 0
-            },
-            {
-                question: "8. रमेश और उसके दोस्तों ने मिलकर क्या आविष्कार किया था?",
-                options: ["एक कंप्यूटर", "एक छोटा-सा रोबोट", "एक नया टीवी", "एक खिलौना गाड़ी"],
-                answer: 1
-            }
+        // Master Items Pool from 'AI Ka Kamaal'
+        const masterItemsPool = [
+            { text: "जॉन मैकार्थी द्वारा AI नाम देना", era: "past" },
+            { text: "पहला कंप्यूटर आविष्कार", era: "past" },
+            { text: "अस्पतालों में AI एक्स-रे", era: "present" },
+            { text: "स्मार्टफोन में AI वॉयस असिस्टेंट", era: "present" },
+            { text: "अंतरराष्ट्रीय AI सम्मेलन 2026", era: "present" },
+            { text: "पूरी तरह से स्वचालित AI शहर", era: "future" },
+            { text: "सोचने वाले रोबोटिक शिक्षक", era: "future" },
+            { text: "अंतरिक्ष में AI खोजी रोबोट", era: "future" }
         ];
 
-        let currentQuestions = [];
-        let currentQuestionIndex = 0;
-        let score = 0;
+        let draggedCard = null;
 
         function goToScreen(screenNumber) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById(`screen${screenNumber}`).classList.add('active');
         }
 
-        // Screen 1 Auto-Transition (Exactly 5 Seconds)
+        // Screen 1: Exactly 5 Seconds
         window.onload = () => {
             setTimeout(() => {
                 goToScreen(2);
             }, 5000);
         };
 
-        // Start Game with Random 5 Questions
         function startGame() {
-            score = 0;
-            currentQuestionIndex = 0;
-            
-            // Randomly select 5 questions from the master pool
-            const shuffled = [...masterQuestionsPool].sort(() => Math.random() - 0.5);
-            currentQuestions = shuffled.slice(0, 5);
+            document.getElementById('feedback').innerText = '';
+            const itemsPool = document.getElementById('items-pool');
+            itemsPool.innerHTML = '';
 
-            loadQuestion();
+            // Reset capsules
+            document.querySelectorAll('.time-capsule').forEach(capsule => {
+                const title = capsule.querySelector('.capsule-title');
+                capsule.innerHTML = '';
+                capsule.appendChild(title);
+            });
+
+            // Randomly pick 6 cards
+            const shuffled = [...masterItemsPool].sort(() => Math.random() - 0.5).slice(0, 6);
+
+            shuffled.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'tech-card';
+                card.draggable = true;
+                card.innerText = item.text;
+                card.setAttribute('data-era', item.era);
+
+                card.addEventListener('dragstart', (e) => {
+                    draggedCard = card;
+                    card.classList.add('dragging');
+                    playSound('drag');
+                });
+
+                card.addEventListener('dragend', () => {
+                    card.classList.remove('dragging');
+                });
+
+                itemsPool.appendChild(card);
+            });
+
+            setupDropZones();
         }
 
-        function loadQuestion() {
-            const q = currentQuestions[currentQuestionIndex];
-            document.getElementById('question-text').innerText = q.question;
-            document.getElementById('question-count').innerText = `प्रश्न ${currentQuestionIndex + 1} / ${currentQuestions.length}`;
-            
-            // Update Progress Bar
-            const progressPercent = ((currentQuestionIndex) / currentQuestions.length) * 100;
-            document.getElementById('progress-fill').style.width = `${progressPercent}%`;
+        function setupDropZones() {
+            const zones = document.querySelectorAll('.time-capsule, .items-pool');
 
-            const optionsContainer = document.getElementById('options-container');
-            optionsContainer.innerHTML = '';
+            zones.forEach(zone => {
+                zone.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    if (zone.classList.contains('time-capsule')) {
+                        zone.classList.add('hovered');
+                    }
+                });
 
-            q.options.forEach((option, index) => {
-                const btn = document.createElement('button');
-                btn.className = 'option-btn';
-                btn.innerText = option;
-                btn.onclick = () => selectOption(index, btn);
-                optionsContainer.appendChild(btn);
+                zone.addEventListener('dragleave', () => {
+                    zone.classList.remove('hovered');
+                });
+
+                zone.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    zone.classList.remove('hovered');
+                    if (draggedCard) {
+                        zone.appendChild(draggedCard);
+                        playSound('drag');
+                    }
+                });
             });
         }
 
-        function selectOption(selectedIndex, btnElement) {
-            const q = currentQuestions[currentQuestionIndex];
-            const allBtns = document.querySelectorAll('.option-btn');
-            
-            // Disable all buttons after selection
-            allBtns.forEach(btn => btn.style.pointerEvents = 'none');
+        function checkAnswers() {
+            const capsules = document.querySelectorAll('.time-capsule');
+            const itemsPool = document.getElementById('items-pool');
+            const feedback = document.getElementById('feedback');
 
-            if (selectedIndex === q.answer) {
-                btnElement.classList.add('correct');
-                playSound('correct');
-                score++;
-            } else {
-                btnElement.classList.add('wrong');
-                allBtns[q.answer].classList.add('correct');
+            if (itemsPool.children.length > 0) {
+                feedback.style.color = '#facc15';
+                feedback.innerText = '⚠️ कृपया सभी टेक कार्ड्स को कैप्सूल में रखें!';
                 playSound('wrong');
+                return;
             }
 
-            setTimeout(() => {
-                currentQuestionIndex++;
-                if (currentQuestionIndex < currentQuestions.length) {
-                    loadQuestion();
-                } else {
-                    showEndScreen();
-                }
-            }, 1200);
-        }
+            let isAllCorrect = true;
 
-        function showEndScreen() {
-            document.getElementById('progress-fill').style.width = '100%';
-            document.getElementById('final-score').innerText = `आपका स्कोर: ${score} / ${currentQuestions.length}`;
-            
-            const msgElement = document.getElementById('final-message');
-            if (score === currentQuestions.length) {
-                msgElement.innerText = "🏆 शानदार! आपने सभी प्रश्नों के सही उत्तर दिए!";
-            } else if (score >= 3) {
-                msgElement.innerText = "👍 बहुत बढ़िया प्रयास! आपका एआई का ज्ञान अच्छा है।";
+            capsules.forEach(capsule => {
+                const targetEra = capsule.getAttribute('data-era');
+                const cards = capsule.querySelectorAll('.tech-card');
+
+                cards.forEach(card => {
+                    if (card.getAttribute('data-era') !== targetEra) {
+                        isAllCorrect = false;
+                        card.style.border = '2px solid #ef4444';
+                    } else {
+                        card.style.border = '2px solid #10b981';
+                    }
+                });
+            });
+
+            if (isAllCorrect) {
+                playSound('correct');
+                feedback.style.color = '#34d399';
+                feedback.innerText = '✨ शानदार! सभी कार्ड्स सही कैप्सूल में हैं!';
+                setTimeout(() => {
+                    playSound('win');
+                    goToScreen(4);
+                }, 1200);
             } else {
-                msgElement.innerText = "📖 थोड़ा और पढ़ें और फिर से प्रयास करें!";
+                playSound('wrong');
+                feedback.style.color = '#f87171';
+                feedback.innerText = '❌ कुछ कार्ड गलत कैप्सूल में हैं! (लाल बॉर्डर वाले कार्ड्स सुधारें)';
             }
-
-            playSound('win');
-            goToScreen(4);
         }
 
         function restartGame() {
