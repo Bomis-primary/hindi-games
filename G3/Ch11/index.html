@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Escape Room Game</title>
+    <title>Chapter Escape Room Game</title>
     <style>
         * {
             box-sizing: border-box;
@@ -39,7 +39,6 @@
             height: 100%;
         }
 
-        /* Screen overlays for UI controls */
         .ui-layer {
             position: absolute;
             top: 0;
@@ -73,22 +72,17 @@
         .btn:hover {
             background: linear-gradient(135deg, #ff6b6b, #e74c3c);
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(231, 76, 60, 0.6);
         }
 
-        .btn:active {
-            transform: translateY(1px);
-        }
-
-        /* Keypad Modal Overlay for Screen 3 */
-        #keypad-modal {
+        /* Question Overlay Modal */
+        .modal {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             background: #1a1a24;
             border: 2px solid #444;
-            padding: 20px;
+            padding: 24px;
             border-radius: 12px;
             display: none;
             flex-direction: column;
@@ -96,8 +90,49 @@
             box-shadow: 0 0 25px rgba(0, 0, 0, 0.9);
             pointer-events: auto;
             z-index: 10;
+            width: 480px;
+            text-align: center;
         }
 
+        .modal-title {
+            color: #e74c3c;
+            font-size: 1.4rem;
+            margin-bottom: 12px;
+            font-weight: bold;
+        }
+
+        .modal-text {
+            color: #eee;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+
+        .option-btn {
+            padding: 10px 15px;
+            background: #2a2a38;
+            color: #fff;
+            border: 1px solid #444;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            text-align: left;
+            transition: background 0.15s;
+        }
+
+        .option-btn:hover {
+            background: #3a3a4d;
+        }
+
+        /* Keypad Styles */
         #keypad-display {
             width: 100%;
             height: 40px;
@@ -130,15 +165,6 @@
             font-size: 1.2rem;
             font-weight: bold;
             cursor: pointer;
-            transition: background 0.1s;
-        }
-
-        .key-btn:hover {
-            background: #3a3a4d;
-        }
-
-        .key-btn:active {
-            background: #555;
         }
 
         .keypad-actions {
@@ -169,8 +195,17 @@
         <!-- UI Layers -->
         <div id="screen-ui" class="ui-layer"></div>
 
-        <!-- Door Lock Keypad Popup -->
-        <div id="keypad-modal">
+        <!-- Chapter Quiz Modal -->
+        <div id="quiz-modal" class="modal">
+            <div id="quiz-title" class="modal-title">CHAPTER QUESTION</div>
+            <div id="quiz-text" class="modal-text">Question text goes here?</div>
+            <div id="quiz-options" class="options-grid"></div>
+            <button class="action-btn btn-close" onclick="closeQuiz()">Close / Give Up</button>
+        </div>
+
+        <!-- Door Lock Keypad Modal -->
+        <div id="keypad-modal" class="modal">
+            <div class="modal-title">EXIT DOOR KEYPAD</div>
             <div id="keypad-display">----</div>
             <div class="keypad-grid">
                 <button class="key-btn" onclick="pressKey('1')">1</button>
@@ -195,36 +230,59 @@
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
         const uiLayer = document.getElementById('screen-ui');
+        const quizModal = document.getElementById('quiz-modal');
         const keypadModal = document.getElementById('keypad-modal');
         const keypadDisplay = document.getElementById('keypad-display');
 
-        // Asset Loader
+        // Logo Asset
         const logoImg = new Image();
         logoImg.src = 'assets/logo.png';
         let logoLoaded = false;
         logoImg.onload = () => { logoLoaded = true; };
 
-        // Game State Engine
-        const SCREENS = {
-            START: 1,
-            INSTRUCTIONS: 2,
-            GAME: 3,
-            END: 4
-        };
+        // Game Screens
+        const SCREENS = { START: 1, INSTRUCTIONS: 2, GAME: 3, END: 4 };
         let currentScreen = SCREENS.START;
 
-        // Gameplay State Variables
+        // --- CHAPTER QUESTIONS CONFIGURATION ---
+        // You can customize your chapter questions and answer codes here!
+        const chapterQuestions = {
+            painting: {
+                title: "Chapter 1: History Clue",
+                question: "In what year did the Apollo 11 moon landing take place?",
+                options: ["1965", "1969", "1972", "1980"],
+                correctIndex: 1,
+                rewardMessage: "Correct! You unlocked a clue digit: '19__'."
+            },
+            desk: {
+                title: "Chapter 2: Desk Riddle",
+                question: "Which data structure uses LIFO (Last In, First Out)?",
+                options: ["Queue", "Array", "Stack", "Tree"],
+                correctIndex: 2,
+                rewardMessage: "Correct! You searched the desk and found the Safe Key!"
+            },
+            safe: {
+                title: "Chapter 3: Safe Puzzle",
+                question: "What is the square root of 64 multiplied by 10?",
+                options: ["640", "80", "160", "400"],
+                correctIndex: 1,
+                rewardMessage: "Correct! The safe opens! The final code digits are '..84'."
+            }
+        };
+
+        // State Tracking
         let gameState = {
             hasKey: false,
+            paintingSolved: false,
+            deskSolved: false,
             safeUnlocked: false,
             doorUnlocked: false,
             codeEntered: "",
-            message: "Click items to inspect the room.",
-            timeRemaining: 180, // 3 Minutes timer
+            message: "Click items to inspect the room and solve chapter questions.",
+            timeRemaining: 180,
             timerInterval: null
         };
 
-        // Interactive Objects in Room (Screen 3)
         const interactiveObjects = [
             { id: 'painting', x: 120, y: 120, w: 140, h: 100 },
             { id: 'desk', x: 300, y: 380, w: 200, h: 120 },
@@ -235,22 +293,19 @@
         // --- SCREEN MANAGERS ---
         function setScreen(screen) {
             currentScreen = screen;
-            uiLayer.innerHTML = ''; // Clear UI buttons
-            keypadModal.style.display = 'none';
+            uiLayer.innerHTML = '';
+            closeQuiz();
+            closeKeypad();
 
-            if (screen === SCREENS.START) {
-                renderStartUI();
-            } else if (screen === SCREENS.INSTRUCTIONS) {
-                renderInstructionsUI();
-            } else if (screen === SCREENS.GAME) {
-                initGame();
-            } else if (screen === SCREENS.END) {
+            if (screen === SCREENS.START) renderStartUI();
+            else if (screen === SCREENS.INSTRUCTIONS) renderInstructionsUI();
+            else if (screen === SCREENS.GAME) initGame();
+            else if (screen === SCREENS.END) {
                 clearInterval(gameState.timerInterval);
                 renderEndUI();
             }
         }
 
-        // --- UI RENDERERS ---
         function renderStartUI() {
             const btn = document.createElement('button');
             btn.className = 'btn';
@@ -281,10 +336,12 @@
         // --- GAME LOGIC ---
         function initGame() {
             gameState.hasKey = false;
+            gameState.paintingSolved = false;
+            gameState.deskSolved = false;
             gameState.safeUnlocked = false;
             gameState.doorUnlocked = false;
             gameState.codeEntered = "";
-            gameState.message = "Find the clues and unlock the exit door!";
+            gameState.message = "Answer chapter questions hidden around the room to escape!";
             gameState.timeRemaining = 180;
 
             if (gameState.timerInterval) clearInterval(gameState.timerInterval);
@@ -292,7 +349,6 @@
                 gameState.timeRemaining--;
                 if (gameState.timeRemaining <= 0) {
                     clearInterval(gameState.timerInterval);
-                    gameState.message = "Time ran out!";
                     setScreen(SCREENS.END);
                 }
             }, 1000);
@@ -301,7 +357,6 @@
         function handleRoomClick(x, y) {
             if (currentScreen !== SCREENS.GAME) return;
 
-            // Check interactables
             for (let obj of interactiveObjects) {
                 if (x >= obj.x && x <= obj.x + obj.w && y >= obj.y && y <= obj.y + obj.h) {
                     interact(obj.id);
@@ -312,31 +367,73 @@
 
         function interact(objectId) {
             if (objectId === 'painting') {
-                gameState.message = "You look behind the painting and see numbers scratched in: '1984'.";
-            } else if (objectId === 'desk') {
-                if (!gameState.hasKey) {
-                    gameState.hasKey = true;
-                    gameState.message = "You searched the desk drawers and found a Small Silver Key!";
+                if (gameState.paintingSolved) {
+                    gameState.message = "Painting solved: The first two digits are '19'.";
                 } else {
-                    gameState.message = "Just an empty desk with old paperwork.";
+                    openQuiz('painting');
+                }
+            } else if (objectId === 'desk') {
+                if (gameState.deskSolved) {
+                    gameState.message = "Desk solved: You already have the Safe Key!";
+                } else {
+                    openQuiz('desk');
                 }
             } else if (objectId === 'safe') {
                 if (!gameState.hasKey) {
-                    gameState.message = "The safe is locked. It requires a physical key.";
+                    gameState.message = "The safe requires a key! Answer the Desk question first.";
+                } else if (gameState.safeUnlocked) {
+                    gameState.message = "Safe solved: The complete door passcode is '1984'.";
                 } else {
-                    gameState.safeUnlocked = true;
-                    gameState.message = "You used the key! Inside the safe, you find a note: 'Door Code = 1984'.";
+                    openQuiz('safe');
                 }
             } else if (objectId === 'door') {
-                if (!gameState.safeUnlocked) {
-                    gameState.message = "The door is secured with a digital keypad. Find the pass code first.";
+                if (!gameState.safeUnlocked || !gameState.paintingSolved) {
+                    gameState.message = "The door is locked! Solve all chapter questions to get the code.";
                 } else {
                     openKeypad();
                 }
             }
         }
 
-        // --- KEYPAD CONTROL ---
+        // --- QUIZ SYSTEM ---
+        function openQuiz(id) {
+            const q = chapterQuestions[id];
+            document.getElementById('quiz-title').innerText = q.title;
+            document.getElementById('quiz-text').innerText = q.question;
+            
+            const optionsContainer = document.getElementById('quiz-options');
+            optionsContainer.innerHTML = '';
+
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerText = `${String.fromCharCode(65 + idx)}. ${opt}`;
+                btn.onclick = () => handleAnswer(id, idx);
+                optionsContainer.appendChild(btn);
+            });
+
+            quizModal.style.display = 'flex';
+        }
+
+        function closeQuiz() {
+            quizModal.style.display = 'none';
+        }
+
+        function handleAnswer(objectId, selectedIdx) {
+            const q = chapterQuestions[objectId];
+            closeQuiz();
+
+            if (selectedIdx === q.correctIndex) {
+                gameState.message = q.rewardMessage;
+                if (objectId === 'painting') gameState.paintingSolved = true;
+                if (objectId === 'desk') { gameState.deskSolved = true; gameState.hasKey = true; }
+                if (objectId === 'safe') gameState.safeUnlocked = true;
+            } else {
+                gameState.message = "Incorrect answer! Try inspecting the object again.";
+            }
+        }
+
+        // --- KEYPAD SYSTEM ---
         function openKeypad() {
             gameState.codeEntered = "";
             updateKeypadDisplay();
@@ -375,7 +472,7 @@
             }
         }
 
-        // --- DRAWING / RENDERING ROUTINES ---
+        // --- RENDER ENGINE ---
         function draw() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -397,16 +494,13 @@
             requestAnimationFrame(draw);
         }
 
-        // Screen 1: Logo & Title Screen
         function drawStartScreen() {
-            // Background Gradient
             let bgGrad = ctx.createRadialGradient(400, 300, 50, 400, 300, 400);
             bgGrad.addColorStop(0, '#1f1f2e');
             bgGrad.addColorStop(1, '#08080c');
             ctx.fillStyle = bgGrad;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // Render Logo Image or Fallback Visual
             if (logoLoaded) {
                 ctx.drawImage(logoImg, 320, 80, 160, 160);
             } else {
@@ -419,30 +513,26 @@
                 ctx.fillText('assets/logo.png', 400, 155);
             }
 
-            // Title Text
             ctx.fillStyle = '#ffffff';
             ctx.font = '700 42px sans-serif';
             ctx.textAlign = 'center';
-            ctx.fillText("ESCAPE ROOM", 400, 300);
+            ctx.fillText("CHAPTER ESCAPE ROOM", 400, 300);
 
             ctx.fillStyle = '#8888aa';
             ctx.font = '18px sans-serif';
-            ctx.fillText("Can you solve the mystery and break out?", 400, 335);
+            ctx.fillText("Answer the chapter questions to make your exit!", 400, 335);
         }
 
-        // Screen 2: Instructions Screen
         function drawInstructionsScreen() {
             ctx.fillStyle = '#141419';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // Panel
             ctx.fillStyle = '#1f1f2a';
             ctx.strokeStyle = '#333344';
             ctx.lineWidth = 2;
             ctx.fillRect(100, 60, 600, 480);
             ctx.strokeRect(100, 60, 600, 480);
 
-            // Text
             ctx.fillStyle = '#e74c3c';
             ctx.font = 'bold 32px sans-serif';
             ctx.textAlign = 'center';
@@ -453,11 +543,11 @@
             ctx.textAlign = 'left';
 
             const instructions = [
-                "• Search the room by clicking on various objects.",
-                "• Find hidden tools and clues to bypass security locks.",
-                "• Collect key items needed to obtain the main passcode.",
-                "• Type the correct code into the exit door keypad.",
-                "• You have 3 minutes before time runs out!"
+                "• Search the room by clicking on highlighted objects.",
+                "• Answer multiple-choice questions from your chapters.",
+                "• Correct answers unlock items and portions of the exit code.",
+                "• Enter the full 4-digit passcode at the exit door.",
+                "• Escape before the 3-minute timer runs out!"
             ];
 
             instructions.forEach((line, index) => {
@@ -465,23 +555,15 @@
             });
         }
 
-        // Screen 3: Main Escape Room Screen
         function drawGameScreen() {
-            // Room Background
-            ctx.fillStyle = '#2c2c38'; // Back wall
+            ctx.fillStyle = '#2c2c38';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            ctx.fillStyle = '#1e1e26'; // Floor
+            ctx.fillStyle = '#1e1e26';
             ctx.fillRect(0, 460, canvas.width, 140);
-            ctx.beginPath();
-            ctx.moveTo(0, 460);
-            ctx.lineTo(800, 460);
-            ctx.strokeStyle = '#111';
-            ctx.lineWidth = 3;
-            ctx.stroke();
 
-            // 1. Painting (Clue Object)
-            ctx.fillStyle = '#8e44ad';
+            // 1. Painting (Chapter 1)
+            ctx.fillStyle = gameState.paintingSolved ? '#27ae60' : '#8e44ad';
             ctx.fillRect(120, 120, 140, 100);
             ctx.strokeStyle = '#f39c12';
             ctx.lineWidth = 6;
@@ -489,82 +571,61 @@
             ctx.fillStyle = '#fff';
             ctx.font = '14px sans-serif';
             ctx.textAlign = 'center';
-            ctx.fillText("Painting", 190, 175);
+            ctx.fillText("Ch. 1 (Painting)", 190, 175);
 
-            // 2. Desk (Key Location)
-            ctx.fillStyle = '#d35400';
-            ctx.fillRect(300, 380, 200, 80); // Top desk
-            ctx.fillRect(320, 460, 30, 60);  // Leg
-            ctx.fillRect(450, 460, 30, 60);  // Leg
-            ctx.fillStyle = '#a04000';
-            ctx.fillRect(310, 400, 180, 50); // Drawers
+            // 2. Desk (Chapter 2)
+            ctx.fillStyle = gameState.deskSolved ? '#27ae60' : '#d35400';
+            ctx.fillRect(300, 380, 200, 80);
+            ctx.fillRect(320, 460, 30, 60);
+            ctx.fillRect(450, 460, 30, 60);
             ctx.fillStyle = '#fff';
             ctx.font = '14px sans-serif';
-            ctx.fillText("Desk", 400, 430);
+            ctx.fillText("Ch. 2 (Desk)", 400, 430);
 
-            // 3. Safe
-            ctx.fillStyle = '#7f8c8d';
+            // 3. Safe (Chapter 3)
+            ctx.fillStyle = gameState.safeUnlocked ? '#27ae60' : '#7f8c8d';
             ctx.fillRect(550, 280, 80, 90);
             ctx.fillStyle = '#34495e';
             ctx.fillRect(560, 290, 60, 70);
-            ctx.fillStyle = gameState.safeUnlocked ? '#2ecc71' : '#e74c3c';
-            ctx.beginPath();
-            ctx.arc(600, 325, 8, 0, Math.PI * 2);
-            ctx.fill();
             ctx.fillStyle = '#fff';
             ctx.font = '12px sans-serif';
-            ctx.fillText("Safe", 590, 355);
+            ctx.fillText("Ch. 3 (Safe)", 590, 355);
 
             // 4. Exit Door
             ctx.fillStyle = '#34495e';
             ctx.fillRect(680, 150, 100, 310);
-            ctx.strokeStyle = '#2c3e50';
-            ctx.lineWidth = 4;
-            ctx.strokeRect(680, 150, 100, 310);
-            // Door handle
             ctx.fillStyle = '#f1c40f';
             ctx.beginPath();
             ctx.arc(700, 310, 6, 0, Math.PI * 2);
             ctx.fill();
-            // Keypad graphic
-            ctx.fillStyle = '#000';
-            ctx.fillRect(690, 230, 20, 30);
-            ctx.fillStyle = '#00ff00';
-            ctx.fillRect(695, 235, 10, 8);
 
-            // HUD / UI Overlay inside Canvas
-            // Top Status Bar
+            // Status Bar
             ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
             ctx.fillRect(0, 0, canvas.width, 50);
 
-            // Inventory Status
             ctx.fillStyle = '#fff';
             ctx.font = '16px sans-serif';
             ctx.textAlign = 'left';
-            ctx.fillText(`Inventory: ${gameState.hasKey ? '🔑 Silver Key' : 'Empty'}`, 20, 30);
+            ctx.fillText(`Key: ${gameState.hasKey ? '🔑 Safe Key' : 'Missing'}`, 20, 30);
 
-            // Timer Display
             let mins = Math.floor(gameState.timeRemaining / 60);
             let secs = gameState.timeRemaining % 60;
-            let timeStr = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
             ctx.textAlign = 'right';
             ctx.fillStyle = gameState.timeRemaining < 30 ? '#ff4d4d' : '#00ffcc';
-            ctx.fillText(`Time Left: ${timeStr}`, 780, 30);
+            ctx.fillText(`Time Left: ${mins}:${secs < 10 ? '0' : ''}${secs}`, 780, 30);
 
-            // Bottom Message Banner
+            // Message Display
             ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
             ctx.fillRect(0, 540, canvas.width, 60);
             ctx.fillStyle = '#ffeb3b';
-            ctx.font = '16px sans-serif';
+            ctx.font = '15px sans-serif';
             ctx.textAlign = 'center';
             ctx.fillText(gameState.message, 400, 575);
         }
 
-        // Screen 4: Game Over / Victory Screen
         function drawEndScreen() {
             ctx.fillStyle = '#0f0f15';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-
             ctx.textAlign = 'center';
 
             if (gameState.doorUnlocked) {
@@ -574,7 +635,7 @@
 
                 ctx.fillStyle = '#ffffff';
                 ctx.font = '20px sans-serif';
-                ctx.fillText(`Great job! You unlocked the door with time to spare.`, 400, 280);
+                ctx.fillText("You answered the chapter questions and broke out!", 400, 280);
             } else {
                 ctx.fillStyle = '#e74c3c';
                 ctx.font = 'bold 46px sans-serif';
@@ -582,11 +643,11 @@
 
                 ctx.fillStyle = '#ffffff';
                 ctx.font = '20px sans-serif';
-                ctx.fillText("You trapped yourself! Better luck next time.", 400, 280);
+                ctx.fillText("You ran out of time!", 400, 280);
             }
         }
 
-        // --- INPUT EVENT LISTENERS ---
+        // Input Listener
         canvas.addEventListener('click', (e) => {
             const rect = canvas.getBoundingClientRect();
             const mouseX = (e.clientX - rect.left) * (canvas.width / rect.width);
