@@ -279,6 +279,15 @@
 </div>
 
 <script>
+    // Audio Setup
+    const soundCorrect = new Audio('assets/correct.mp3');
+    const soundWrong = new Audio('assets/wrong.mp3');
+
+    function playAudio(audioObj) {
+        audioObj.currentTime = 0;
+        audioObj.play().catch(e => console.log("Audio playback error: ", e));
+    }
+
     // 1. Splash Screen Timer (5 Seconds)
     let logoTimer = 5;
     const countdownEl = document.getElementById('splash-countdown');
@@ -463,9 +472,11 @@
                     
                     if (item.data.type === 'question') {
                         score = Math.max(0, score - 5);
+                        playAudio(soundWrong);
                         showFeedback("❌ केवल सही उत्तर कैच करें!", false);
                     } else if (item.data.isCorrect) {
                         score += 10;
+                        playAudio(soundCorrect);
                         showFeedback("✨ शाबाश! सही उत्तर!", true);
                         item.el.remove();
                         fallingElements.splice(i, 1);
@@ -474,6 +485,7 @@
                         return;
                     } else {
                         score = Math.max(0, score - 5);
+                        playAudio(soundWrong);
                         showFeedback("❌ गलत उत्तर!", false);
                     }
 
