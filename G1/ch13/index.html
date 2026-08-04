@@ -377,7 +377,7 @@
         <!-- SCREEN 2: TITLE SCREEN (NO LOGO) -->
         <div id="titleScreen" class="screen" style="display: none;">
             <h1 class="main-title">🔴 बिंदी कहाँ लगेगी? ✨</h1>
-            <p class="subtitle">अं (ं) की मात्रा का मज़ेदार खेल!</p>
+            <p class="subtitle">अं (ं) की मात्रा का मज़ेदार खेल!</p>
             <button class="action-btn" onclick="goToInstructions()">शुरू करें ▶</button>
         </div>
 
@@ -420,7 +420,7 @@
 
         <div class="magic-board" id="magicBoard">
             <!-- SIMPLIFIED QUESTION PROMPT -->
-            <div class="prompt-text">सही अक्षर पर बिंदी लगाओ</div>
+            <div class="prompt-text">सही अक्षर पर बिंदी लगाओ।</div>
             <div class="word-container" id="wordBox"></div>
             <!-- COMPLETED WORD DISPLAY -->
             <div class="full-word-display" id="fullWordDisplay"></div>
@@ -537,7 +537,7 @@
     }
 
     function updateScoreBoard() {
-        document.getElementById('progressText').innerText = `सवाल: ${toHindiNum(currentIdx + 1)}/১০`;
+        document.getElementById('progressText').innerText = `सवाल: ${toHindiNum(currentIdx + 1)}/१०`;
         document.getElementById('scoreText').innerText = `⭐ अंक: ${toHindiNum(score)}`;
     }
 
