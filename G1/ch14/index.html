@@ -2,103 +2,146 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>मात्रा मैच मास्टर - Hindi Matra Match</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>जादुई दरवाज़ा - चंद्रबिंदु और विसर्ग सीखें</title>
     <style>
         :root {
-            --primary: #FF6B6B;
-            --secondary: #4ECDC4;
-            --accent: #FFE66D;
-            --dark: #2C3E50;
-            --light: #F7F9FC;
-            --card-size: min(12vw, 52px);
-            --grid-gap: 6px;
+            --bg-color: #f0fdf4;
+            --primary-color: #8b5cf6;
+            --secondary-color: #ec4899;
+            --accent-color: #f59e0b;
         }
 
         * {
             box-sizing: border-box;
+            margin: 0;
+            padding: 0;
             user-select: none;
             -webkit-user-select: none;
             touch-action: manipulation;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
+            font-family: 'Comic Sans MS', 'Chalkboard SE', 'Segoe UI', Tahoma, sans-serif;
         }
 
         body {
-            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            background: linear-gradient(135deg, #a7f3d0 0%, #fbcfe8 50%, #fed7aa 100%);
             min-height: 100vh;
             display: flex;
-            flex-direction: column;
-            align-items: center;
             justify-content: center;
+            align-items: center;
             overflow: hidden;
         }
 
-        .screen {
-            display: none;
+        #app-container {
             width: 100%;
-            max-width: 500px;
+            max-width: 600px;
             height: 100vh;
-            max-height: 850px;
-            background: rgba(255, 255, 255, 0.92);
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            max-height: 900px;
+            background: rgba(255, 255, 255, 0.95);
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        @media (min-height: 600px) and (min-width: 600px) {
+            #app-container {
+                height: 95vh;
+                border-radius: 24px;
+                border: 4px solid #ffffff;
+            }
+        }
+
+        .screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
             flex-direction: column;
             align-items: center;
             justify-content: space-between;
-            padding: 15px;
-            position: relative;
-            backdrop-filter: blur(5px);
+            padding: 20px;
+            z-index: 10;
         }
 
-        .active {
-            display: flex;
+        .active-screen {
+            display: flex !important;
         }
 
-        h1 {
-            color: #d63031;
-            font-size: 2rem;
+        /* Splash Screen */
+        #splash-screen {
+            background: #ffffff;
+            justify-content: center;
+            z-index: 100;
+        }
+
+        #splash-screen img {
+            max-width: 80%;
+            max-height: 40vh;
+            object-fit: contain;
+            animation: pulse 2s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* Start / Instruction Screen */
+        #start-screen {
+            justify-content: space-around;
             text-align: center;
+            background: linear-gradient(180deg, #e0f2fe 0%, #fef3c7 100%);
+        }
+
+        .game-title {
+            font-size: clamp(1.8rem, 5vw, 2.5rem);
+            color: #d97706;
+            text-shadow: 2px 2px 0px #ffffff, 4px 4px 0px #fef08a;
             margin-top: 10px;
-            text-shadow: 2px 2px 0px #ffeaa7;
+        }
+
+        .instruction-card {
+            background: #ffffff;
+            border: 3px dashed #f59e0b;
+            border-radius: 20px;
+            padding: 20px;
+            width: 90%;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.08);
+            font-size: clamp(1rem, 3.5vw, 1.25rem);
+            color: #334155;
+            line-height: 1.6;
+            text-align: left;
+        }
+
+        .instruction-card h3 {
+            color: #ec4899;
+            margin-bottom: 10px;
+            font-size: 1.3em;
+            text-align: center;
         }
 
         .btn {
-            background: linear-gradient(to bottom, #ff7675, #d63031);
+            background: linear-gradient(to bottom, #10b981, #059669);
             color: white;
             border: none;
-            padding: 12px 28px;
-            font-size: 1.2rem;
+            padding: 14px 40px;
+            font-size: clamp(1.2rem, 4vw, 1.6rem);
             font-weight: bold;
             border-radius: 50px;
-            box-shadow: 0 5px 0 #b22222, 0 8px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 6px 0 #047857, 0 10px 15px rgba(0,0,0,0.15);
             cursor: pointer;
-            transition: all 0.1s;
-            margin: 10px 0;
+            transition: all 0.1s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .btn:active {
             transform: translateY(4px);
-            box-shadow: 0 1px 0 #b22222, 0 3px 5px rgba(0,0,0,0.2);
-        }
-
-        /* Home Screen */
-        #homeScreen {
-            justify-content: center;
-            gap: 20px;
-            text-align: center;
-        }
-
-        .instructions {
-            background: #fff;
-            padding: 15px;
-            border-radius: 12px;
-            border: 2px dashed #ff7675;
-            text-align: left;
-            font-size: 0.95rem;
-            color: #333;
-            line-height: 1.4;
+            box-shadow: 0 2px 0 #047857, 0 4px 6px rgba(0,0,0,0.1);
         }
 
         /* Game Header */
@@ -107,729 +150,519 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: #ffeaa7;
-            padding: 8px 15px;
-            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px 16px;
+            border-radius: 16px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            font-size: clamp(0.9rem, 3.5vw, 1.1rem);
             font-weight: bold;
-            color: #d63031;
-            font-size: 1.1rem;
+            color: #1e293b;
         }
 
-        /* Grid Container */
-        .board-container {
-            position: relative;
-            width: 100%;
+        .lives-container {
             display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-grow: 1;
-        }
-
-        #grid {
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: var(--grid-gap);
-            background: #fab1a0;
-            padding: 8px;
-            border-radius: 15px;
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
-        }
-
-        .tile {
-            width: var(--card-size);
-            height: var(--card-size);
-            background: white;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: calc(var(--card-size) * 0.5);
-            font-weight: bold;
-            box-shadow: 0 4px 0 #dfe6e9;
-            cursor: pointer;
-            transition: transform 0.2s, background-color 0.2s;
-            position: relative;
-        }
-
-        .tile.selected {
-            border: 3px solid #0984e3;
-            transform: scale(0.95);
-            background: #74b9ff;
-            color: white;
-        }
-
-        .tile.matched {
-            animation: pop 0.3s ease-out;
-        }
-
-        @keyframes pop {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.2); }
-            100% { transform: scale(0); }
-        }
-
-        /* Modal / Tracing Overlay */
-        .modal-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            border-radius: 20px;
-            z-index: 60;
-            padding: 15px;
-        }
-
-        .modal-content {
-            background: white;
-            width: 100%;
-            max-width: 360px;
-            border-radius: 15px;
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-        }
-
-        .question-box {
+            gap: 4px;
             font-size: 1.3rem;
-            color: #2d3436;
-            margin-bottom: 10px;
+        }
+
+        .score-box {
+            background: #fef08a;
+            padding: 4px 12px;
+            border-radius: 20px;
+            color: #b45309;
+            border: 2px solid #f59e0b;
+        }
+
+        /* Word Container & Matra Display */
+        .word-card-container {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            margin: 10px 0;
+        }
+
+        .word-card {
+            background: #ffffff;
+            border: 4px solid #8b5cf6;
+            border-radius: 24px;
+            padding: 20px 30px;
+            font-size: clamp(2.2rem, 8vw, 3.2rem);
+            font-weight: bold;
+            color: #4c1d95;
+            box-shadow: 0 10px 20px rgba(139, 92, 246, 0.2);
             text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        /* Sahi uttar dikhane par styling */
+        .word-card-correct {
+            background: #dcfce7 !important;
+            border-color: #22c55e !important;
+            color: #15803d !important;
+            transform: scale(1.1);
+            box-shadow: 0 12px 25px rgba(34, 197, 94, 0.3) !important;
+        }
+
+        .matra-top-slot {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        .matra-blank-top {
+            font-size: 1.2rem;
+            color: #f59e0b;
+            border: 2px dashed #f59e0b;
+            border-radius: 6px;
+            padding: 0 4px;
+            height: 24px;
+            line-height: 20px;
+            margin-bottom: -4px;
+            background: #fffbeb;
+        }
+
+        .matra-blank-side {
+            font-size: 1.8rem;
+            color: #f59e0b;
+            border: 2px dashed #f59e0b;
+            border-radius: 6px;
+            padding: 0 6px;
+            margin-left: 4px;
+            background: #fffbeb;
+        }
+
+        .hint-text {
+            margin-top: 15px;
+            font-size: clamp(0.9rem, 3vw, 1.1rem);
+            color: #d97706;
+            background: #fffbeb;
+            padding: 6px 14px;
+            border-radius: 12px;
+            border: 1px dashed #f59e0b;
+            display: none;
+        }
+
+        /* Doors Container */
+        .doors-container {
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-end;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .door-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .door {
+            width: 100%;
+            max-width: 170px;
+            height: clamp(150px, 28vh, 220px);
+            border-radius: 80px 80px 10px 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            position: relative;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.15);
+            transition: transform 0.2s ease, filter 0.2s ease;
+            border: 4px solid #ffffff;
+        }
+
+        .door-chandr {
+            background: linear-gradient(180deg, #06b6d4 0%, #0891b2 100%);
+        }
+
+        .door-visarg {
+            background: linear-gradient(180deg, #10b981 0%, #059669 100%);
+        }
+
+        .door-symbol {
+            font-size: clamp(2.5rem, 8vw, 3.5rem);
+            font-weight: bold;
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .door-label {
+            font-size: clamp(0.9rem, 3vw, 1.1rem);
+            font-weight: bold;
+            background: rgba(255,255,255,0.25);
+            padding: 4px 10px;
+            border-radius: 12px;
+        }
+
+        .door-handle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            width: 14px;
+            height: 14px;
+            background: #fef08a;
+            border-radius: 50%;
+            border: 2px solid #b45309;
+        }
+
+        /* Controls */
+        .controls {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 5px;
+        }
+
+        .btn-hint {
+            background: #f59e0b;
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            font-size: 0.95rem;
+            border-radius: 20px;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #d97706;
             font-weight: bold;
         }
 
-        .question-box span {
-            color: #d63031;
-            font-size: 1.6rem;
-            border-bottom: 2px dashed #d63031;
-        }
-
-        .canvas-container {
-            touch-action: none; /* Mobile tracing fix */
-            position: relative;
-            width: min(320px, 100%);
-            height: 240px;
-            background: #f8f9fa;
-            border: 2px dashed #00b894;
-            border-radius: 10px;
-            margin-bottom: 10px;
-        }
-
-        canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border-radius: 8px;
-        }
-
-        .modal-btns {
-            display: flex;
-            gap: 10px;
-            width: 100%;
-        }
-
-        .modal-btns .btn {
-            flex: 1;
-            padding: 8px 0;
-            font-size: 1rem;
-        }
-
-        .btn-clear {
-            background: linear-gradient(to bottom, #fdcb6e, #e17055);
-            box-shadow: 0 4px 0 #d63031;
-        }
-
-        /* End Screen Overlay Fix */
-        #endOverlay {
-            z-index: 200 !important;
-        }
-
-        #endOverlay h2 {
-            font-size: 2.2rem;
-            color: #6c5ce7;
-            margin-bottom: 10px;
-        }
-
-        .score-card {
-            background: #ffeaa7;
-            padding: 15px 30px;
-            border-radius: 10px;
-            font-size: 1.2rem;
-            margin: 15px 0;
-            color: #2d3436;
+        /* Result Screen */
+        .result-card {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 25px;
+            width: 90%;
             text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .result-title {
+            font-size: clamp(1.8rem, 6vw, 2.4rem);
+            color: #ec4899;
+        }
+
+        .final-score {
+            font-size: clamp(1.2rem, 4vw, 1.5rem);
+            color: #334155;
+            background: #fef3c7;
+            padding: 10px 20px;
+            border-radius: 16px;
+            width: 100%;
+        }
+
+        /* Animations */
+        .door-correct { animation: openDoor 0.6s ease forwards; }
+        .door-wrong { animation: shake 0.4s ease forwards; }
+
+        @keyframes openDoor {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1) rotate(3deg); filter: brightness(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-8px); }
+            40%, 80% { transform: translateX(8px); }
         }
     </style>
 </head>
 <body>
 
-    <!-- Home Screen -->
-    <div id="homeScreen" class="screen active">
-        <h1>मात्रा मैच मास्टर</h1>
-        <div class="instructions">
-            <h3>कैसे खेलें:</h3>
-            <p>1. बोर्ड पर एक जैसी <b>3 या अधिक मात्राओं</b> की लाइन (Match-3) बनाएं।</p>
-            <p>2. मैच बनते ही एक <b>मात्रा ट्रेसिंग (Tracing)</b> का सवाल आएगा।</p>
-            <p>3. स्क्रीन पर दिखाई गई मात्रा को अपनी उंगली से सही ट्रेस करें।</p>
-            <p>4. <b>10 सवाल</b> सही हल करके गेम जीतें!</p>
-        </div>
-        <button class="btn" onclick="startGame()">खेल शुरू करें</button>
-    </div>
-
-    <!-- Main Game Screen -->
-    <div id="gameScreen" class="screen">
-        <div class="game-header">
-            <div>स्कोर: <span id="scoreText">0</span></div>
-            <div>सवाल: <span id="solvedText">0</span>/10</div>
+    <div id="app-container">
+        
+        <!-- Splash Screen -->
+        <div id="splash-screen" class="screen active-screen">
+            <img src="assets/innovine-logo.png" alt="Innovine Logo" id="logo-img">
         </div>
 
-        <div class="board-container">
-            <div id="grid"></div>
+        <!-- Start Screen -->
+        <div id="start-screen" class="screen">
+            <h1 class="game-title">🔑 जादुई दरवाज़ा</h1>
+            
+            <div class="instruction-card">
+                <h3>कैसे खेलें?</h3>
+                <p>1. स्क्रीन पर दिए गए शब्द को ध्यान से पढ़ें।</p>
+                <p>2. पहचानें कि शब्द में <b>चंद्रबिंदु (ँ)</b> आएगा या <b>विसर्ग (ः)</b>।</p>
+                <p>3. सही जादुई दरवाज़े पर टैप करके ताला खोलें।</p>
+                <p>4. हर सही उत्तर के <b>10 अंक</b> हैं।</p>
+            </div>
+
+            <button class="btn" onclick="startGame()">
+                <span>खेलो</span> ▶
+            </button>
         </div>
 
-        <!-- Tracing Modal -->
-        <div id="tracingModal" class="modal-overlay">
-            <div class="modal-content">
-                <div class="question-box">
-                    शब्द: <span id="targetWord">---</span><br>
-                    <small style="font-size:0.9rem; font-weight:normal; color:#636e72;">
-                        खाली स्थान की मात्रा (<b id="targetMatraText" style="color:#e17055;"></b>) ट्रेस करें:
-                    </small>
+        <!-- Game Screen -->
+        <div id="game-screen" class="screen">
+            <div class="game-header">
+                <div>सवाल: <span id="q-count">1</span>/10</div>
+                <div class="score-box">अंक: <span id="score-val">0</span></div>
+                <div class="lives-container" id="lives-box">❤️ ❤️ ❤️</div>
+            </div>
+
+            <div class="word-card-container">
+                <div class="word-card" id="target-word">---</div>
+                <div class="hint-text" id="hint-box">💡 संकेत: ...</div>
+            </div>
+
+            <div class="controls">
+                <button class="btn-hint" onclick="showHint()">💡 संकेत (Hint)</button>
+            </div>
+
+            <div class="doors-container">
+                <div class="door-wrapper" onclick="checkAnswer('ँ')">
+                    <div class="door door-chandr" id="door-chandr">
+                        <div class="door-handle"></div>
+                        <div class="door-symbol">ँ</div>
+                        <div class="door-label">चंद्रबिंदु</div>
+                    </div>
                 </div>
-                
-                <div class="canvas-container">
-                    <!-- Target/Guide Canvas -->
-                    <canvas id="templateCanvas" width="320" height="240"></canvas>
-                    <!-- User Drawing Canvas -->
-                    <canvas id="drawCanvas" width="320" height="240"></canvas>
-                </div>
 
-                <div class="modal-btns">
-                    <button class="btn btn-clear" onclick="clearTracing()">साफ़ करें</button>
-                    <button class="btn" onclick="submitTracingAnswer()">जाँचें</button>
+                <div class="door-wrapper" onclick="checkAnswer('ः')">
+                    <div class="door door-visarg" id="door-visarg">
+                        <div class="door-handle"></div>
+                        <div class="door-symbol">ः</div>
+                        <div class="door-label">विसर्ग</div>
+                    </div>
                 </div>
             </div>
         </div>
+
+        <!-- Result Screen -->
+        <div id="result-screen" class="screen" style="justify-content: center;">
+            <div class="result-card">
+                <h2 class="result-title" id="result-title">शाबाश! 🎉</h2>
+                <div class="final-score" id="final-score-text">
+                    आपका कुल स्कोर: <b>100 / 100</b>
+                </div>
+                <button class="btn" onclick="restartGame()">
+                    🔄 फिर से खेलें
+                </button>
+            </div>
+        </div>
+
     </div>
 
-    <!-- End Game Screen -->
-    <div id="endOverlay" class="modal-overlay">
-        <div class="modal-content" style="text-align: center;">
-            <h2 id="endTitle">शाबाश! 🎉</h2>
-            <div class="score-card">
-                कुल स्कोर: <b id="finalScore">0</b><br>
-                सफलतापूर्वक हल किए गए सवाल: <b>10/10</b>
-            </div>
-            <button class="btn" onclick="restartGame()">दोबारा खेलें</button>
-        </div>
-    </div>
+    <!-- Audio Elements -->
+    <audio id="audio-correct" src="assets/correct.mp3" preload="auto"></audio>
+    <audio id="audio-wrong" src="assets/wrong.mp3" preload="auto"></audio>
+    <audio id="audio-win" src="assets/freesound_community-claps-44774.mp3" preload="auto"></audio>
 
     <script>
-        // --- Game Content Data ---
-        const MATRAS = ['ँ', 'ः'];
-
-        const QUESTIONS_DATABASE = [
-            // चंद्रबिंदु (ँ) के सवाल
-            { word: "आ_ख", missingMatra: "ँ", fullWord: "आँख" },
-            { word: "चा_द", missingMatra: "ँ", fullWord: "चाँद" },
-            { word: "गा_व", missingMatra: "ँ", fullWord: "गाँव" },
-            { word: "दा_त", missingMatra: "ँ", fullWord: "दाँत" },
-            { word: "पा_व", missingMatra: "ँ", fullWord: "पाँव" },
-            { word: "कु_आ", missingMatra: "ँ", fullWord: "कुँआ" },
-            { word: "ऊ_ट", missingMatra: "ँ", fullWord: "ऊँट" },
-            { word: "सा_प", missingMatra: "ँ", fullWord: "साँप" },
-            { word: "मू_छ", missingMatra: "ँ", fullWord: "मूँछ" },
-            { word: "बा_स", missingMatra: "ँ", fullWord: "बाँस" },
-            // विसर्ग (ः) के सवाल
-            { word: "पुन_", missingMatra: "ः", fullWord: "पुनः" },
-            { word: "अत_", missingMatra: "ः", fullWord: "अतः" },
-            { word: "नम_", missingMatra: "ः", fullWord: "नमः" },
-            { word: "मूलत_", missingMatra: "ः", fullWord: "मूलतः" },
-            { word: "फलत_", missingMatra: "ः", fullWord: "फलतः" },
-            { word: "दु_ख", missingMatra: "ः", fullWord: "दुःख" },
-            { word: "प्राय_", missingMatra: "ः", fullWord: "प्रायः" },
-            { word: "स्वत_", missingMatra: "ः", fullWord: "स्वतः" },
-            { word: "अंत_", missingMatra: "ः", fullWord: "अंतः" },
-            { word: "क्रमश_", missingMatra: "ः", fullWord: "क्रमशः" }
+        const QUESTIONS = [
+            { 
+                displayHTML: '<span>चा</span><span class="matra-top-slot"><span class="matra-blank-top">?</span><span>ा</span></span><span>द</span>', 
+                type: "ँ", 
+                fullWord: "चाँद", 
+                hint: "रात में आसमान में चमकता है।" 
+            },
+            { 
+                displayHTML: '<span>प्रात</span><span class="matra-blank-side">?</span>', 
+                type: "ः", 
+                fullWord: "प्रातः", 
+                hint: "सुबह का समय।" 
+            },
+            { 
+                displayHTML: '<span>दा</span><span class="matra-top-slot"><span class="matra-blank-top">?</span><span>ा</span></span><span>त</span>', 
+                type: "ँ", 
+                fullWord: "दाँत", 
+                hint: "खाना चबाने में मदद करते हैं।" 
+            },
+            { 
+                displayHTML: '<span>पुन</span><span class="matra-blank-side">?</span>', 
+                type: "ः", 
+                fullWord: "पुनः", 
+                hint: "इसका मतलब 'दोबारा' होता है।" 
+            },
+            { 
+                displayHTML: '<span>आ</span><span class="matra-top-slot"><span class="matra-blank-top">?</span><span>ा</span></span><span>ख</span>', 
+                type: "ँ", 
+                fullWord: "आँख", 
+                hint: "हम इससे देखते हैं।" 
+            },
+            { 
+                displayHTML: '<span>नम</span><span class="matra-blank-side">?</span>', 
+                type: "ः", 
+                fullWord: "नमः", 
+                hint: "नमस्ते या प्रणाम करना।" 
+            },
+            { 
+                displayHTML: '<span>मा</span><span class="matra-top-slot"><span class="matra-blank-top">?</span><span>ा</span></span>', 
+                type: "ँ", 
+                fullWord: "माँ", 
+                hint: "हमारी सबसे प्यारी जननी।" 
+            },
+            { 
+                displayHTML: '<span>अत</span><span class="matra-blank-side">?</span>', 
+                type: "ः", 
+                fullWord: "अतः", 
+                hint: "इसलिए या इस कारण।" 
+            },
+            { 
+                displayHTML: '<span>धुआ</span><span class="matra-top-slot"><span class="matra-blank-top">?</span><span>ा</span></span>', 
+                type: "ँ", 
+                fullWord: "धुआँ", 
+                hint: "आग जलने पर निकलता है।" 
+            },
+            { 
+                displayHTML: '<span>छ</span><span class="matra-blank-side">?</span>', 
+                type: "ः", 
+                fullWord: "छः", 
+                hint: "संख्या 6 (Six)।" 
+            }
         ];
 
-        // --- Grid Config ---
-        const GRID_SIZE = 6;
-        let board = [];
-        let selectedTileIndex = null;
+        let currentQuestionIndex = 0;
         let score = 0;
-        let questionsSolved = 0;
+        let lives = 3;
         let isProcessing = false;
 
-        // --- Tracing & Questions Control ---
-        let activeQuestions = [];
-        let currentQuestion = null;
+        function playAudio(id) {
+            const audio = document.getElementById(id);
+            if (audio) {
+                audio.currentTime = 0;
+                audio.play().catch(() => {});
+            }
+        }
 
-        // Canvas Contexts
-        let dCanvas, dCtx, tCanvas, tCtx;
-        let isDrawing = false;
-        let userStrokePixels = new Set();
-        let targetPixelPositions = [];
-        let targetToleranceMask = null;
-        let accidentalMatchDepth = 0;
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                showScreen('start-screen');
+            }, 5000);
+        });
 
-        window.onload = () => {
-            dCanvas = document.getElementById('drawCanvas');
-            dCtx = dCanvas.getContext('2d');
-            tCanvas = document.getElementById('templateCanvas');
-            tCtx = tCanvas.getContext('2d');
-
-            setupCanvasEvents();
-        };
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
+            document.getElementById(screenId).classList.add('active-screen');
+        }
 
         function startGame() {
-            document.getElementById('homeScreen').classList.remove('active');
-            document.getElementById('gameScreen').classList.add('active');
-            document.getElementById('endOverlay').style.display = 'none';
-
+            currentQuestionIndex = 0;
             score = 0;
-            questionsSolved = 0;
-            updateStatsUI();
+            lives = 3;
+            isProcessing = false;
+            
+            QUESTIONS.sort(() => Math.random() - 0.5);
 
-            // Shuffle and pick 10 questions
-            activeQuestions = [...QUESTIONS_DATABASE].sort(() => Math.random() - 0.5);
-
-            initBoard();
+            updateHeaderUI();
+            loadQuestion();
+            showScreen('game-screen');
         }
 
         function restartGame() {
             startGame();
         }
 
-        function updateStatsUI() {
-            document.getElementById('scoreText').innerText = score;
-            document.getElementById('solvedText').innerText = questionsSolved;
+        function updateHeaderUI() {
+            document.getElementById('q-count').innerText = currentQuestionIndex + 1;
+            document.getElementById('score-val').innerText = score;
+            
+            let hearts = '';
+            for (let i = 0; i < lives; i++) hearts += '❤️ ';
+            for (let i = lives; i < 3; i++) hearts += '🖤 ';
+            document.getElementById('lives-box').innerText = hearts.trim();
         }
 
-        // --- Board Initialization ---
-        function initBoard() {
-            const gridEl = document.getElementById('grid');
-            gridEl.innerHTML = '';
-            board = [];
-
-            for (let i = 0; i < GRID_SIZE * GRID_SIZE; i++) {
-                let randomMatra = MATRAS[Math.floor(Math.random() * MATRAS.length)];
-                board.push(randomMatra);
-
-                const tile = document.createElement('div');
-                tile.className = 'tile';
-                tile.dataset.index = i;
-                tile.innerText = randomMatra;
-                tile.addEventListener('click', () => onTileClick(i));
-                gridEl.appendChild(tile);
-            }
-
-            // Remove starting matches safely
-            removeAccidentalMatches(() => {
-                isProcessing = false;
-            });
-        }
-
-        function renderBoard() {
-            const tiles = document.querySelectorAll('.tile');
-            board.forEach((val, idx) => {
-                tiles[idx].innerText = val;
-                tiles[idx].classList.remove('selected');
-            });
-        }
-
-        // Safe match removal to avoid infinite loops
-        function removeAccidentalMatches(done) {
-            const accidental = findMatchedIndices();
-            if (accidental.size === 0 || accidentalMatchDepth > 5) {
-                accidentalMatchDepth = 0;
-                done();
+        function loadQuestion() {
+            if (currentQuestionIndex >= 10 || currentQuestionIndex >= QUESTIONS.length) {
+                endGame();
                 return;
             }
 
-            accidentalMatchDepth++;
-            accidental.forEach(index => replaceWithSafeCandy(index));
-            renderBoard();
-            setTimeout(() => removeAccidentalMatches(done), 50);
+            const q = QUESTIONS[currentQuestionIndex];
+            const wordCard = document.getElementById('target-word');
+            
+            // Card style reset
+            wordCard.className = 'word-card';
+            wordCard.innerHTML = q.displayHTML;
+            
+            const hintBox = document.getElementById('hint-box');
+            hintBox.style.display = 'none';
+            hintBox.innerText = `💡 संकेत: ${q.hint}`;
+
+            document.getElementById('door-chandr').className = 'door door-chandr';
+            document.getElementById('door-visarg').className = 'door door-visarg';
+
+            updateHeaderUI();
+            isProcessing = false;
         }
 
-        function replaceWithSafeCandy(index) {
-            const candidates = [...MATRAS].sort(() => Math.random() - 0.5);
-            const chosenType = candidates.find(type => !wouldCreateMatch(index, String(type))) ?? candidates[0];
-            board[index] = chosenType;
+        function showHint() {
+            document.getElementById('hint-box').style.display = 'block';
         }
 
-        function wouldCreateMatch(index, testType) {
-            const row = Math.floor(index / GRID_SIZE);
-            const col = index % GRID_SIZE;
-
-            // Check Horizontal
-            let hCount = 1;
-            if (col > 0 && board[index - 1] === testType) hCount++;
-            if (col > 1 && board[index - 2] === testType && board[index - 1] === testType) hCount++;
-            if (col < GRID_SIZE - 1 && board[index + 1] === testType) hCount++;
-            if (col < GRID_SIZE - 2 && board[index + 2] === testType && board[index + 1] === testType) hCount++;
-            if (hCount >= 3) return true;
-
-            // Check Vertical
-            let vCount = 1;
-            if (row > 0 && board[index - GRID_SIZE] === testType) vCount++;
-            if (row > 1 && board[index - 2 * GRID_SIZE] === testType && board[index - GRID_SIZE] === testType) vCount++;
-            if (row < GRID_SIZE - 1 && board[index + GRID_SIZE] === testType) vCount++;
-            if (row < GRID_SIZE - 2 && board[index + 2 * GRID_SIZE] === testType && board[index + GRID_SIZE] === testType) vCount++;
-            if (vCount >= 3) return true;
-
-            return false;
-        }
-
-        // --- Interaction Logic ---
-        function onTileClick(index) {
+        function checkAnswer(selectedMatra) {
             if (isProcessing) return;
-
-            if (selectedTileIndex === null) {
-                selectedTileIndex = index;
-                highlightSelectedTile();
-            } else if (selectedTileIndex === index) {
-                selectedTileIndex = null;
-                renderBoard();
-            } else {
-                if (isAdjacent(selectedTileIndex, index)) {
-                    swapTiles(selectedTileIndex, index, () => {
-                        const matched = findMatchedIndices();
-                        if (matched.size > 0) {
-                            handleMatches(matched);
-                        } else {
-                            // Revert swap if no match
-                            swapTiles(selectedTileIndex, index, () => {
-                                selectedTileIndex = null;
-                                isProcessing = false;
-                                renderBoard();
-                            });
-                        }
-                    });
-                } else {
-                    selectedTileIndex = index;
-                    highlightSelectedTile();
-                }
-            }
-        }
-
-        function highlightSelectedTile() {
-            renderBoard();
-            if (selectedTileIndex !== null) {
-                const tiles = document.querySelectorAll('.tile');
-                tiles[selectedTileIndex].classList.add('selected');
-            }
-        }
-
-        function isAdjacent(idx1, idx2) {
-            const r1 = Math.floor(idx1 / GRID_SIZE), c1 = idx1 % GRID_SIZE;
-            const r2 = Math.floor(idx2 / GRID_SIZE), c2 = idx2 % GRID_SIZE;
-            return (Math.abs(r1 - r2) + Math.abs(c1 - c2)) === 1;
-        }
-
-        function swapTiles(idx1, idx2, callback) {
             isProcessing = true;
-            let temp = board[idx1];
-            board[idx1] = board[idx2];
-            board[idx2] = temp;
-            renderBoard();
-            setTimeout(callback, 200);
-        }
 
-        // --- Match Finding Logic ---
-        function findMatchedIndices() {
-            let matched = new Set();
+            const q = QUESTIONS[currentQuestionIndex];
+            const targetDoor = selectedMatra === 'ँ' ? 
+                document.getElementById('door-chandr') : document.getElementById('door-visarg');
+            const wordCard = document.getElementById('target-word');
 
-            // Horizontal check
-            for (let r = 0; r < GRID_SIZE; r++) {
-                for (let c = 0; c < GRID_SIZE - 2; c++) {
-                    let idx = r * GRID_SIZE + c;
-                    let val = board[idx];
-                    if (val && val === board[idx + 1] && val === board[idx + 2]) {
-                        matched.add(idx);
-                        matched.add(idx + 1);
-                        matched.add(idx + 2);
-                    }
-                }
-            }
+            if (selectedMatra === q.type) {
+                playAudio('audio-correct');
+                targetDoor.classList.add('door-correct');
+                
+                // Sahi uttar display karna aur card ko highlight karna
+                wordCard.innerHTML = `<span>${q.fullWord}</span>`;
+                wordCard.classList.add('word-card-correct');
+                
+                score += 10;
+                updateHeaderUI();
 
-            // Vertical check
-            for (let c = 0; c < GRID_SIZE; c++) {
-                for (let r = 0; r < GRID_SIZE - 2; r++) {
-                    let idx = r * GRID_SIZE + c;
-                    let val = board[idx];
-                    if (val && val === board[(r + 1) * GRID_SIZE + c] && val === board[(r + 2) * GRID_SIZE + c]) {
-                        matched.add(idx);
-                        matched.add((r + 1) * GRID_SIZE + c);
-                        matched.add((r + 2) * GRID_SIZE + c);
-                    }
-                }
-            }
+                // 1.5 second tak sahi uttar dikhega phir agla sawal aayega
+                setTimeout(() => {
+                    currentQuestionIndex++;
+                    loadQuestion();
+                }, 1500);
 
-            return matched;
-        }
-
-        function handleMatches(matchedSet) {
-            score += matchedSet.size * 10;
-            updateStatsUI();
-
-            const tiles = document.querySelectorAll('.tile');
-            matchedSet.forEach(idx => {
-                tiles[idx].classList.add('matched');
-            });
-
-            setTimeout(() => {
-                dropTiles(matchedSet);
-            }, 300);
-        }
-
-        function dropTiles(matchedSet) {
-            matchedSet.forEach(idx => {
-                board[idx] = null;
-            });
-
-            for (let c = 0; c < GRID_SIZE; c++) {
-                let emptySlots = 0;
-                for (let r = GRID_SIZE - 1; r >= 0; r--) {
-                    let idx = r * GRID_SIZE + c;
-                    if (board[idx] === null) {
-                        emptySlots++;
-                    } else if (emptySlots > 0) {
-                        board[(r + emptySlots) * GRID_SIZE + c] = board[idx];
-                        board[idx] = null;
-                    }
-                }
-                for (let r = 0; r < emptySlots; r++) {
-                    let randomMatra = MATRAS[Math.floor(Math.random() * MATRAS.length)];
-                    board[r * GRID_SIZE + c] = randomMatra;
-                }
-            }
-
-            renderBoard();
-            selectedTileIndex = null;
-
-            // Trigger Tracing Question Modal after match
-            setTimeout(() => {
-                triggerTracingModal();
-            }, 200);
-        }
-
-        // --- Tracing & Modal Logic ---
-        function triggerTracingModal() {
-            // Safety check to prevent Index-Out-Of-Bounds error
-            if (questionsSolved >= 10 || questionsSolved >= activeQuestions.length) {
-                showEndGame(true);
-                return;
-            }
-
-            currentQuestion = activeQuestions[questionsSolved];
-
-            document.getElementById('targetWord').innerText = currentQuestion.word;
-            document.getElementById('targetMatraText').innerText = currentQuestion.missingMatra;
-
-            clearTracing();
-            renderGuideTemplate(currentQuestion.missingMatra);
-
-            document.getElementById('tracingModal').style.display = 'flex';
-        }
-
-        function setupCanvasEvents() {
-            const getPos = (e) => {
-                const rect = dCanvas.getBoundingClientRect();
-                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-                return {
-                    x: Math.round((clientX - rect.left) * (dCanvas.width / rect.width)),
-                    y: Math.round((clientY - rect.top) * (dCanvas.height / rect.height))
-                };
-            };
-
-            const startDraw = (e) => {
-                e.preventDefault();
-                isDrawing = true;
-                const pos = getPos(e);
-                dCtx.beginPath();
-                dCtx.moveTo(pos.x, pos.y);
-                recordStrokePixel(pos.x, pos.y);
-            };
-
-            const draw = (e) => {
-                if (!isDrawing) return;
-                e.preventDefault();
-                const pos = getPos(e);
-
-                dCtx.strokeStyle = '#0984e3';
-                dCtx.lineWidth = 14;
-                dCtx.lineCap = 'round';
-                dCtx.lineJoin = 'round';
-
-                dCtx.lineTo(pos.x, pos.y);
-                dCtx.stroke();
-
-                recordStrokePixel(pos.x, pos.y);
-            };
-
-            const stopDraw = () => {
-                isDrawing = false;
-            };
-
-            dCanvas.addEventListener('mousedown', startDraw);
-            dCanvas.addEventListener('mousemove', draw);
-            window.addEventListener('mouseup', stopDraw);
-
-            dCanvas.addEventListener('touchstart', startDraw, { passive: false });
-            dCanvas.addEventListener('touchmove', draw, { passive: false });
-            window.addEventListener('touchend', stopDraw);
-        }
-
-        function recordStrokePixel(x, y) {
-            for (let dx = -6; dx <= 6; dx += 3) {
-                for (let dy = -6; dy <= 6; dy += 3) {
-                    let px = x + dx;
-                    let py = y + dy;
-                    if (px >= 0 && px < dCanvas.width && py >= 0 && py < dCanvas.height) {
-                        userStrokePixels.add(`${px},${py}`);
-                    }
-                }
-            }
-        }
-
-        function clearTracing() {
-            dCtx.clearRect(0, 0, dCanvas.width, dCanvas.height);
-            userStrokePixels.clear();
-        }
-
-        // Fixed Guide Template Rendering (Chandrabindu & Visarga Fix)
-        function renderGuideTemplate(matra) {
-            tCtx.clearRect(0, 0, tCanvas.width, tCanvas.height);
-
-            const guideCanvas = document.createElement('canvas');
-            guideCanvas.width = tCanvas.width;
-            guideCanvas.height = tCanvas.height;
-            const guideCtx = guideCanvas.getContext('2d');
-
-            const cx = guideCanvas.width / 2;
-            guideCtx.strokeStyle = '#000000';
-            guideCtx.fillStyle = '#000000';
-            guideCtx.lineWidth = 16;
-            guideCtx.lineCap = 'round';
-            guideCtx.lineJoin = 'round';
-
-            if (matra === 'ँ') {
-                // 1. अर्धचंद्र (Crescent Moon)
-                guideCtx.beginPath();
-                guideCtx.arc(cx, 130, 45, Math.PI * 0.15, Math.PI * 0.85, false);
-                guideCtx.stroke();
-
-                // 2. बिन्दु (Dot)
-                guideCtx.beginPath();
-                guideCtx.arc(cx, 75, 9, 0, Math.PI * 2);
-                guideCtx.fill();
             } else {
-                // विसर्ग (ः)
-                guideCtx.beginPath();
-                guideCtx.arc(cx, 75, 14, 0, Math.PI * 2);
-                guideCtx.fill();
+                playAudio('audio-wrong');
+                targetDoor.classList.add('door-wrong');
+                lives--;
+                updateHeaderUI();
 
-                guideCtx.beginPath();
-                guideCtx.arc(cx, 150, 14, 0, Math.PI * 2);
-                guideCtx.fill();
-            }
-
-            const guideData = guideCtx.getImageData(0, 0, guideCanvas.width, guideCanvas.height);
-            targetPixelPositions = [];
-            targetToleranceMask = new Uint8Array(tCanvas.width * tCanvas.height);
-
-            for (let y = 0; y < tCanvas.height; y += 3) {
-                for (let x = 0; x < tCanvas.width; x += 3) {
-                    const alpha = guideData.data[(y * tCanvas.width + x) * 4 + 3];
-                    if (alpha > 30) {
-                        targetPixelPositions.push({ x, y });
-
-                        for (let dy = -16; dy <= 16; dy++) {
-                            for (let dx = -16; dx <= 16; dx++) {
-                                if (dx * dx + dy * dy > 256) continue;
-                                const nx = x + dx;
-                                const ny = y + dy;
-                                if (nx >= 0 && nx < tCanvas.width && ny >= 0 && ny < tCanvas.height) {
-                                    targetToleranceMask[ny * tCanvas.width + nx] = 1;
-                                }
-                            }
-                        }
+                setTimeout(() => {
+                    if (lives <= 0) {
+                        endGame();
+                    } else {
+                        targetDoor.classList.remove('door-wrong');
+                        isProcessing = false;
                     }
-                }
+                }, 800);
             }
-
-            tCtx.save();
-            tCtx.globalAlpha = 0.25;
-            tCtx.drawImage(guideCanvas, 0, 0);
-            tCtx.restore();
         }
 
-        function calculateAccuracy() {
-            if (targetPixelPositions.length === 0 || userStrokePixels.size === 0) {
-                return { coverage: 0, precision: 0 };
-            }
+        function endGame() {
+            showScreen('result-screen');
+            const resultTitle = document.getElementById('result-title');
+            const finalScoreText = document.getElementById('final-score-text');
 
-            let coveredTargets = 0;
-            targetPixelPositions.forEach(pt => {
-                if (userStrokePixels.has(`${pt.x},${pt.y}`)) {
-                    coveredTargets++;
-                }
-            });
-            const coverage = coveredTargets / targetPixelPositions.length;
-
-            let validUserPixels = 0;
-            userStrokePixels.forEach(key => {
-                const [x, y] = key.split(',').map(Number);
-                if (targetToleranceMask[y * tCanvas.width + x] === 1) {
-                    validUserPixels++;
-                }
-            });
-            const precision = validUserPixels / userStrokePixels.size;
-
-            return { coverage, precision };
-        }
-
-        function submitTracingAnswer() {
-            const tracingResult = calculateAccuracy();
-
-            // Easy threshold for kids
-            const isAccurate = tracingResult.coverage >= 0.28 && tracingResult.precision >= 0.45;
-
-            if (isAccurate) {
-                alert(`शाबाश! सही उत्तर: ${currentQuestion.fullWord}`);
-                questionsSolved++;
-                score += 50;
-                updateStatsUI();
-
-                document.getElementById('tracingModal').style.display = 'none';
-
-                if (questionsSolved >= 10) {
-                    showEndGame(true);
-                } else {
-                    isProcessing = false;
-                }
+            if (score >= 70) {
+                playAudio('audio-win');
+                resultTitle.innerText = "शाबाश! आपने कर दिखाया! 🎉";
             } else {
-                alert("थोड़ा और ध्यान से ट्रेस करें! दोबारा प्रयास करें।");
-                clearTracing();
+                resultTitle.innerText = "अच्छा प्रयास! फिर से कोशिश करें! 💪";
             }
-        }
 
-        function showEndGame(isWin) {
-            document.getElementById('tracingModal').style.display = 'none';
-            document.getElementById('finalScore').innerText = score;
-            document.getElementById('endOverlay').style.display = 'flex';
+            finalScoreText.innerHTML = `आपका कुल स्कोर: <b>${score} / 100</b><br><small style="font-size: 0.9rem; color: #64748b;">हल किए गए प्रश्न: ${currentQuestionIndex}/10</small>`;
         }
     </script>
 </body>
