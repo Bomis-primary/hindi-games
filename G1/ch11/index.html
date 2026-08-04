@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ओ' स्वर और मात्रा का मज़ेदार खेल</title>
-    <!-- Canvas Confetti Library for Celebrations -->
+    <!-- Canvas Confetti Library -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     
     <style>
@@ -34,17 +34,19 @@
             height: 100vh;
             background-color: #ffffff;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             z-index: 99999;
-            transition: opacity 1s ease-out;
+            transition: opacity 0.8s ease-out;
         }
 
         #splash-screen img {
-            max-width: 320px;
-            width: 80%;
+            max-width: 300px;
+            width: 75%;
             height: auto;
             animation: pulse 2s infinite;
+            margin-bottom: 20px;
         }
 
         @keyframes pulse {
@@ -68,7 +70,7 @@
         }
 
         .header-logo {
-            max-width: 140px;
+            max-width: 130px;
             height: auto;
             margin-bottom: 10px;
         }
@@ -126,7 +128,7 @@
         #catch-area {
             position: relative;
             width: 100%;
-            height: 380px;
+            height: 400px;
             background: linear-gradient(180deg, #e0f2fe 0%, #bae6fd 100%);
             border: 3px solid #0284c7;
             border-radius: 16px;
@@ -139,12 +141,12 @@
             background: #ffffff;
             border: 2px solid #0284c7;
             color: #0369a1;
-            padding: 8px 16px;
+            padding: 10px 20px;
             border-radius: 20px;
             font-weight: bold;
-            font-size: 20px;
+            font-size: 22px;
             cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
             transition: transform 0.1s;
         }
 
@@ -269,18 +271,15 @@
 </head>
 <body>
 
-    <!-- Audio Assets -->
-    <audio id="sound-correct" src="assets/correct.mp3" preload="auto"></audio>
-    <audio id="sound-wrong" src="assets/wrong.mp3" preload="auto"></audio>
-
-    <!-- 10 SECONDS SPLASH SCREEN (Only Logo) -->
+    <!-- SPLASH SCREEN -->
     <div id="splash-screen">
-        <img src="assets/innovine-logo.png" alt="Innovine Logo">
+        <img src="assets/innovine-logo.png" alt="Innovine Logo" onerror="this.src='https://via.placeholder.com/250x100?text=Innovine+Logo'">
+        <button id="start-btn" class="btn-action" style="display:none;" onclick="startGame()">खेल शुरू करें (Start Game)</button>
     </div>
 
     <!-- MAIN GAME CONTAINER -->
     <div id="game-container">
-        <img src="assets/innovine-logo.png" alt="Innovine Logo" class="header-logo">
+        <img src="assets/innovine-logo.png" alt="Innovine Logo" class="header-logo" onerror="this.style.display='none'">
         <h1 class="game-title">'ओ' ( ो ) की मात्रा का खेल</h1>
         
         <div class="score-bar">
@@ -369,21 +368,65 @@
     </div>
 
     <script>
-        // Sound & Score State
-        const soundCorrect = document.getElementById('sound-correct');
-        const soundWrong = document.getElementById('sound-wrong');
-        let globalScore = 0;
-        let currentLevel = 1;
+        /* ---------------- WEB AUDIO SYNTHESIZER (Guaranteed Sound) ---------------- */
+        let audioCtx;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
 
         function playCorrectSound() {
-            soundCorrect.currentTime = 0;
-            soundCorrect.play().catch(e=>console.log(e));
+            initAudio();
+            if (!audioCtx) return;
+            const now = audioCtx.currentTime;
+            
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(523.25, now); // C5
+            osc.frequency.exponentialRampToValueAtTime(880, now + 0.3); // A5
+
+            gain.gain.setValueAtTime(0.3, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            osc.start(now);
+            osc.stop(now + 0.3);
         }
 
         function playWrongSound() {
-            soundWrong.currentTime = 0;
-            soundWrong.play().catch(e=>console.log(e));
+            initAudio();
+            if (!audioCtx) return;
+            const now = audioCtx.currentTime;
+
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(180, now);
+            osc.frequency.exponentialRampToValueAtTime(110, now + 0.3);
+
+            gain.gain.setValueAtTime(0.3, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            osc.start(now);
+            osc.stop(now + 0.3);
         }
+
+        /* ---------------- SCORE & LEVEL STATE ---------------- */
+        let globalScore = 0;
+        let currentLevel = 1;
 
         function updateScore(pts) {
             globalScore += pts;
@@ -392,25 +435,38 @@
 
         /* ---------------- 1. 10 SECONDS SPLASH SCREEN ---------------- */
         window.addEventListener('DOMContentLoaded', () => {
+            // Show Start button after 10 seconds (or auto start if user clicks)
             setTimeout(() => {
-                const splash = document.getElementById('splash-screen');
-                splash.style.opacity = '0';
-                setTimeout(() => {
-                    splash.style.display = 'none';
-                    document.getElementById('game-container').style.display = 'block';
-                    startLevel1();
-                }, 1000);
-            }, 10000); // Exactly 10 Seconds
+                document.getElementById('start-btn').style.display = 'inline-block';
+            }, 10000);
         });
 
-        /* ---------------- LEVEL 1: CATCH GAME LOGIC (UPDATED: SLOW SPEED & 2 WORDS) ---------------- */
+        function startGame() {
+            initAudio();
+            const splash = document.getElementById('splash-screen');
+            splash.style.opacity = '0';
+            setTimeout(() => {
+                splash.style.display = 'none';
+                document.getElementById('game-container').style.display = 'block';
+                startLevel1();
+            }, 800);
+        }
+
+        // Allow clicking anywhere on splash after 10 sec to start
+        document.getElementById('splash-screen').addEventListener('click', () => {
+            if (document.getElementById('start-btn').style.display !== 'none') {
+                startGame();
+            }
+        });
+
+        /* ---------------- LEVEL 1: CATCH GAME LOGIC (ULTRA SLOW SPEED) ---------------- */
         let catchInterval;
         let caughtCount = 0;
         const validOWords = ["मोर", "तोता", "ढोल", "गोभी", "समोसा", "बोतल", "सोना", "टोपी", "कोयल", "लोटा"];
         const wrongWords = ["कमल", "नहर", "आम", "किताब", "मछली", "चिड़िया", "घर", "गाजर"];
 
-        function createFallingWord(catchArea) {
-            const isCorrect = Math.random() > 0.3;
+        function createFallingWord(catchArea, xOffset) {
+            const isCorrect = Math.random() > 0.35;
             const wordList = isCorrect ? validOWords : wrongWords;
             const wordText = wordList[Math.floor(Math.random() * wordList.length)];
 
@@ -418,25 +474,30 @@
             wordElem.className = 'falling-word';
             wordElem.innerText = wordText;
             
-            // Random horizontal positioning to avoid overlap
-            wordElem.style.left = Math.random() * (catchArea.clientWidth - 110) + 'px';
+            // Positioning across 2 halves of the screen
+            const halfWidth = (catchArea.clientWidth / 2) - 120;
+            const leftPos = xOffset === 1 
+                ? Math.random() * halfWidth 
+                : (catchArea.clientWidth / 2) + Math.random() * halfWidth;
+
+            wordElem.style.left = Math.max(10, leftPos) + 'px';
             wordElem.style.top = '0px';
 
             let posY = 0;
-            // Slow speed setting (0.8 to 1.2 px per tick)
-            const fallSpeed = 0.8 + Math.random() * 0.4;
+            // VERY SLOW FALL SPEED (0.4 px per frame)
+            const fallSpeed = 0.4;
 
             const fallTimer = setInterval(() => {
                 posY += fallSpeed;
                 wordElem.style.top = posY + 'px';
 
-                if (posY > catchArea.clientHeight - 40) {
+                if (posY > catchArea.clientHeight - 45) {
                     clearInterval(fallTimer);
                     if (catchArea.contains(wordElem)) {
                         catchArea.removeChild(wordElem);
                     }
                 }
-            }, 20);
+            }, 16); // 60 FPS Smooth Animation
 
             wordElem.onclick = () => {
                 clearInterval(fallTimer);
@@ -459,7 +520,7 @@
         function startLevel1() {
             const catchArea = document.getElementById('catch-area');
             
-            // Spawn 2 words at a time every 2.5 seconds
+            // Spawn 2 words at a time every 3.5 seconds
             catchInterval = setInterval(() => {
                 if (caughtCount >= 8) {
                     clearInterval(catchInterval);
@@ -467,13 +528,15 @@
                     return;
                 }
 
-                // Spawning 2 words per batch
-                createFallingWord(catchArea);
+                // Word 1 on Left Side
+                createFallingWord(catchArea, 1);
+                
+                // Word 2 on Right Side
                 setTimeout(() => {
-                    createFallingWord(catchArea);
-                }, 200); 
+                    createFallingWord(catchArea, 2);
+                }, 300);
 
-            }, 2500);
+            }, 3500);
         }
 
         function goToLevel2() {
@@ -525,6 +588,7 @@
 
         function spinWheel() {
             if (isSpinning) return;
+            initAudio();
             isSpinning = true;
 
             document.getElementById('wheel-question-box').style.display = 'none';
@@ -593,13 +657,12 @@
             const ctx = canvas.getContext('2d');
             let drawing = false;
 
-            // Draw dotted 'ो'
             ctx.font = 'bold 70px Arial';
             ctx.fillStyle = '#fed7aa';
             ctx.textAlign = 'center';
             ctx.fillText('ो', canvas.width / 2, 85);
 
-            function startDraw(e) { drawing = true; draw(e); }
+            function startDraw(e) { initAudio(); drawing = true; draw(e); }
             function endDraw() { drawing = false; ctx.beginPath(); }
             function draw(e) {
                 if (!drawing) return;
@@ -654,7 +717,6 @@
             document.getElementById('scoreboard').classList.add('active-level');
             document.getElementById('final-score-text').innerText = globalScore;
 
-            // Confetti Explosion
             if (typeof confetti === 'function') {
                 confetti({
                     particleCount: 150,
