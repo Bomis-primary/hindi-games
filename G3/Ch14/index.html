@@ -2,7 +2,7 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>बचपन के खेल - वर्गीकरण खेल</title>
     <style>
         * {
@@ -10,6 +10,9 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -18,7 +21,8 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            padding: 12px;
+            touch-action: manipulation;
         }
 
         /* Screen Management */
@@ -48,11 +52,11 @@
             flex-direction: column;
             align-items: center;
             gap: 20px;
+            width: 100%;
         }
 
-        /* Image Logo Styling */
         .brand-logo-img {
-            max-width: 250px;
+            max-width: 80%;
             height: auto;
             object-fit: contain;
             filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.15));
@@ -60,7 +64,8 @@
 
         .splash-timer {
             margin-top: 15px;
-            width: 180px;
+            width: 60%;
+            max-width: 180px;
             height: 6px;
             background: #cbd5e1;
             border-radius: 10px;
@@ -77,8 +82,8 @@
         /* SCREEN 2: Instructions Screen */
         .card-box {
             background: white;
-            padding: 35px;
-            border-radius: 24px;
+            padding: 24px 18px;
+            border-radius: 20px;
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
             max-width: 500px;
             width: 100%;
@@ -87,125 +92,133 @@
         .card-box h2 {
             color: #1e3a8a;
             margin-bottom: 15px;
-            font-size: 1.8rem;
+            font-size: 1.5rem;
         }
 
         .instructions-list {
             text-align: left;
-            margin: 20px 0;
+            margin: 15px 0;
             display: flex;
             flex-direction: column;
             gap: 12px;
             color: #374151;
-            font-size: 1.05rem;
+            font-size: 0.95rem;
+            line-height: 1.5;
         }
 
         .btn-primary {
-            padding: 14px 32px;
+            padding: 14px 28px;
             background: #2563eb;
             color: white;
             border: none;
             border-radius: 12px;
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.2s ease;
             box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);
+            width: 100%;
+            max-width: 280px;
         }
 
-        .btn-primary:hover {
-            background: #1d4ed8;
-            transform: translateY(-2px);
+        .btn-primary:active {
+            transform: scale(0.98);
         }
 
         /* SCREEN 3: Game Screen */
         .game-header {
-            margin-bottom: 20px;
+            margin-bottom: 12px;
         }
 
         .game-header h1 {
             color: #1e3a8a;
-            font-size: 1.8rem;
+            font-size: 1.4rem;
         }
 
         .stats-board {
             background: white;
-            padding: 10px 24px;
+            padding: 8px 20px;
             border-radius: 50px;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            margin: 15px 0;
+            margin: 10px 0 15px 0;
             font-weight: bold;
             color: #1f2937;
+            font-size: 0.95rem;
         }
 
         .score-val { color: #2563eb; }
 
         .items-pool {
-            background: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(8px);
-            padding: 20px;
-            border-radius: 20px;
-            min-height: 110px;
+            padding: 14px;
+            border-radius: 18px;
+            min-height: 100px;
             width: 100%;
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 8px;
             justify-content: center;
             align-items: center;
             border: 2px dashed #93c5fd;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .game-card {
             background: white;
-            padding: 10px 18px;
+            padding: 10px 14px;
             border-radius: 12px;
-            font-size: 1rem;
+            font-size: 0.9rem;
             font-weight: 600;
             color: #1e293b;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            box-shadow: 0 3px 5px rgba(0,0,0,0.05);
             cursor: pointer;
-            transition: all 0.2s ease;
-            user-select: none;
+            transition: transform 0.15s ease, background 0.2s ease, border-color 0.2s ease;
             border: 2px solid #e2e8f0;
         }
 
-        .game-card:hover {
-            transform: translateY(-2px);
+        .game-card:active {
+            transform: scale(0.96);
         }
 
         .game-card.selected {
             border-color: #2563eb;
             background: #eff6ff;
-            transform: scale(1.05);
+            transform: scale(1.04);
+            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2);
         }
 
         .categories-container {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 20px;
+            gap: 12px;
             width: 100%;
         }
 
         .category-bin {
             background: white;
-            border-radius: 20px;
-            padding: 15px;
-            min-height: 220px;
+            border-radius: 18px;
+            padding: 12px;
+            min-height: 200px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 8px 15px -3px rgba(0, 0, 0, 0.08);
             border: 3px solid transparent;
             cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .category-bin:active {
+            background: #f8fafc;
         }
 
         .bin-outdoor { border-color: #f59e0b; }
         .bin-indoor { border-color: #10b981; }
 
         .category-bin h2 {
-            font-size: 1.1rem;
-            margin-bottom: 12px;
+            font-size: 0.95rem;
+            margin-bottom: 10px;
         }
 
         .bin-outdoor h2 { color: #d97706; }
@@ -226,8 +239,8 @@
         /* SCREEN 4: End Screen */
         .end-card {
             background: white;
-            padding: 40px;
-            border-radius: 24px;
+            padding: 30px 20px;
+            border-radius: 20px;
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
             max-width: 450px;
             width: 100%;
@@ -235,14 +248,14 @@
 
         .end-card h2 {
             color: #1e3a8a;
-            font-size: 2rem;
+            font-size: 1.6rem;
             margin-bottom: 10px;
         }
 
         .end-card p {
             color: #4b5563;
-            font-size: 1.1rem;
-            margin-bottom: 25px;
+            font-size: 1rem;
+            margin-bottom: 20px;
         }
 
         /* Animations */
@@ -256,10 +269,16 @@
             100% { width: 100%; }
         }
 
-        @media (max-width: 600px) {
-            .categories-container {
-                grid-template-columns: 1fr;
-            }
+        @media (min-width: 600px) {
+            .card-box { padding: 35px; }
+            .card-box h2 { font-size: 1.8rem; }
+            .instructions-list { font-size: 1.05rem; }
+            .game-header h1 { font-size: 1.8rem; }
+            .stats-board { font-size: 1.1rem; }
+            .game-card { font-size: 1rem; padding: 10px 18px; }
+            .category-bin h2 { font-size: 1.1rem; }
+            .categories-container { gap: 20px; }
+            .btn-primary { width: auto; }
         }
     </style>
 </head>
@@ -268,7 +287,6 @@
     <!-- SCREEN 1: Innovine Splash Screen (5 Seconds) -->
     <div id="screen1" class="screen active">
         <div class="logo-container">
-            <!-- Asset Logo Image -->
             <img src="assets/logo.png" alt="Innovine Logo" class="brand-logo-img">
             <div class="splash-timer">
                 <div class="splash-progress"></div>
@@ -326,22 +344,17 @@
     </div>
 
     <script>
-        // --- Audio Assets Configuration ---
         const audioFiles = {
             correct: new Audio('assets/correct.mp3'),
             wrong: new Audio('assets/wrong.mp3')
         };
 
-        // Fallback Web Audio API System (In case MP3 files are missing or blocked)
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
         function playSound(type) {
-            // Play MP3 if defined
             if (audioFiles[type]) {
                 audioFiles[type].currentTime = 0;
-                audioFiles[type].play().catch(() => {
-                    playSynthSound(type); // Fallback to synthetic sound if MP3 fails
-                });
+                audioFiles[type].play().catch(() => playSynthSound(type));
             } else {
                 playSynthSound(type);
             }
@@ -395,7 +408,6 @@
             }
         }
 
-        // Master Question Bank
         const masterItemsBank = [
             { id: 1, name: '🏏 क्रिकेट', category: 'outdoor' },
             { id: 2, name: '🎲 लूडो', category: 'indoor' },
@@ -419,20 +431,17 @@
         let score = 0;
         const ITEMS_PER_ROUND = 8;
 
-        // Navigation Controller
         function goToScreen(screenNumber) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById(`screen${screenNumber}`).classList.add('active');
         }
 
-        // Screen 1 Timer (Strict 5 Seconds Transition)
         window.onload = () => {
             setTimeout(() => {
                 goToScreen(2);
             }, 5000);
         };
 
-        // Game Initialization Logic
         function startGame() {
             score = 0;
             selectedItem = null;
@@ -441,7 +450,6 @@
             document.getElementById('outdoorBin').innerHTML = '';
             document.getElementById('indoorBin').innerHTML = '';
 
-            // Randomize Questions on Play / Restart
             const shuffledBank = [...masterItemsBank].sort(() => Math.random() - 0.5);
             const currentRoundItems = shuffledBank.slice(0, ITEMS_PER_ROUND);
 
@@ -471,7 +479,6 @@
             if (!selectedItem) return;
 
             if (selectedItem.data.category === targetCategory) {
-                // Correct Match
                 playSound('correct');
                 const targetBin = targetCategory === 'outdoor' ? 
                     document.getElementById('outdoorBin') : document.getElementById('indoorBin');
@@ -484,7 +491,6 @@
                 document.getElementById('score').innerText = score;
                 selectedItem = null;
 
-                // Game Completed Transition to Screen 4
                 if (score === ITEMS_PER_ROUND) {
                     setTimeout(() => {
                         playSound('win');
@@ -492,7 +498,6 @@
                     }, 500);
                 }
             } else {
-                // Wrong Match
                 playSound('wrong');
                 selectedItem.element.style.borderColor = '#ef4444';
                 setTimeout(() => {
