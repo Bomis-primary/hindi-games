@@ -21,14 +21,14 @@
 
         body {
             font-family: 'Fredoka', cursive, sans-serif;
-            background: linear-gradient(135deg, #a8e6cf 0%, #dbede3 30%, #ffd3b6 70%, #ffaaa5 100%);
+            background: linear-gradient(135deg, #ffeaa7 0%, #fff5eb 30%, #ffd3b6 70%, #ffaaa5 100%);
             background-size: 400% 400%;
             animation: gradientBG 15s ease infinite;
             display: flex;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            padding: 12px;
+            padding: 10px;
             overflow: hidden;
         }
 
@@ -40,15 +40,15 @@
 
         .app-container {
             width: 100%;
-            max-width: 420px;
-            height: 94vh;
-            max-height: 800px;
-            background: rgba(255, 255, 255, 0.95);
+            max-width: 430px;
+            height: 95vh;
+            max-height: 820px;
+            background: rgba(255, 255, 255, 0.96);
             backdrop-filter: blur(16px);
             border-radius: 36px;
-            padding: 20px 18px;
+            padding: 16px;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12), 
-                        inset 0 0 0 4px rgba(255, 255, 255, 0.8),
+                        inset 0 0 0 4px rgba(255, 255, 255, 0.9),
                         0 0 0 8px rgba(255, 255, 255, 0.4);
             display: flex;
             flex-direction: column;
@@ -66,12 +66,12 @@
             border-radius: 24px;
             box-shadow: 0 8px 16px rgba(0,0,0,0.04);
             border: 2px solid #fff0f3;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
             flex-shrink: 0;
         }
 
         .hud-badge {
-            font-size: 1.05rem;
+            font-size: 1.1rem;
             font-weight: 700;
             color: #ff4757;
             display: flex;
@@ -82,10 +82,11 @@
         .score-pill {
             background: #fff9db;
             color: #f59e0b;
-            padding: 4px 12px;
-            border-radius: 16px;
+            padding: 6px 14px;
+            border-radius: 20px;
             border: 2px solid #ffe066;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 8px rgba(245, 158, 11, 0.15);
         }
 
         .screen {
@@ -108,10 +109,10 @@
         .screen.active { display: flex; }
 
         .game-title {
-            font-size: 2.3rem;
+            font-size: 2.4rem;
             font-weight: 700;
             color: #ff4757;
-            text-shadow: 2px 3px 0px #ffffff;
+            text-shadow: 2px 3px 0px #ffffff, 4px 5px 0px rgba(0,0,0,0.05);
             margin-bottom: 8px;
         }
 
@@ -125,7 +126,7 @@
             border-radius: 30px;
             box-shadow: 0 6px 0 #ee5253, 0 10px 20px rgba(255, 71, 87, 0.3);
             cursor: pointer;
-            margin-top: 20px;
+            margin-top: 16px;
             transition: all 0.15s ease;
         }
 
@@ -226,13 +227,13 @@
             40%, 80% { transform: translateX(8px); }
         }
 
-        /* Quiz UI with Fruit Images */
+        /* --- 1. QUIZ MODE --- */
         .hint-card {
             background: linear-gradient(135deg, #e3fafc 0%, #c5f6fa 100%);
             border: 3px solid #99e9f2;
             border-radius: 24px;
-            padding: 18px;
-            margin-bottom: 18px;
+            padding: 16px;
+            margin-bottom: 16px;
             font-size: 1.2rem;
             font-weight: 700;
             color: #0c8599;
@@ -250,8 +251,8 @@
         .fruit-opt-btn {
             background: #ffffff;
             border: 3px solid #f1f2f6;
-            border-radius: 22px;
-            padding: 12px 8px;
+            border-radius: 24px;
+            padding: 12px;
             font-size: 1.1rem;
             font-weight: 700;
             color: #2d3436;
@@ -260,53 +261,58 @@
             flex-direction: column;
             align-items: center;
             gap: 8px;
-            box-shadow: 0 6px 12px rgba(0,0,0,0.04);
-            transition: transform 0.1s ease;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.04);
+            transition: all 0.2s ease;
         }
 
-        .fruit-opt-btn:active {
-            transform: scale(0.95);
-        }
+        .fruit-opt-btn:active { transform: scale(0.95); }
 
         .fruit-opt-img {
-            width: 65px;
-            height: 65px;
+            width: 75px;
+            height: 75px;
             object-fit: contain;
-            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+            filter: drop-shadow(0 6px 8px rgba(0,0,0,0.12));
         }
 
-        /* Taste Sorting UI */
+        /* --- 2. TASTE SORTING MODE (BASKET IMPROVEMENTS) --- */
         .sorting-fruits-pool {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: center;
-            margin-bottom: 18px;
-            min-height: 70px;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            justify-items: center;
+            align-items: center;
+            margin-bottom: 14px;
+            min-height: 140px;
+            width: 100%;
         }
 
         .draggable-fruit {
             background: #ffffff;
             border: 3px solid #f1f2f6;
             border-radius: 20px;
-            padding: 6px 12px;
+            padding: 6px;
             cursor: pointer;
-            box-shadow: 0 6px 12px rgba(0,0,0,0.05);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.06);
             display: flex;
             align-items: center;
             justify-content: center;
+            width: 68px;
+            height: 68px;
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .draggable-fruit img {
-            width: 50px;
-            height: 50px;
+            width: 52px;
+            height: 52px;
             object-fit: contain;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
         }
 
         .draggable-fruit.selected {
-            border-color: #ff6b81;
+            border-color: #ff4757;
             background: #fff0f3;
-            transform: scale(1.1) rotate(-4deg);
+            transform: scale(1.18) rotate(-4deg);
+            box-shadow: 0 10px 20px rgba(255, 71, 87, 0.3);
         }
 
         .baskets-container {
@@ -314,37 +320,80 @@
             justify-content: space-between;
             width: 100%;
             gap: 12px;
+            margin-top: auto;
         }
 
+        /* CUTE WOVEN BASKET DESIGN */
         .basket-box {
             width: 48%;
-            background: #ffffff;
-            border: 3px dashed #ffd8a8;
-            border-radius: 24px;
-            padding: 14px 8px;
+            border-radius: 28px;
+            padding: 12px 8px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-height: 170px;
+            min-height: 190px;
             cursor: pointer;
+            position: relative;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.08), inset 0 4px 0 rgba(255,255,255,0.8);
+            transition: transform 0.2s ease;
         }
 
-        .basket-title { font-size: 1.05rem; font-weight: 700; color: #e67e22; margin-bottom: 8px; }
+        .basket-box:active { transform: scale(0.97); }
+
+        #sweetBasket {
+            background: linear-gradient(180deg, #fff3bf 0%, #ffe8cc 100%);
+            border: 4px solid #ffd8a8;
+        }
+
+        #sourBasket {
+            background: linear-gradient(180deg, #e6fcf5 0%, #c3fae8 100%);
+            border: 4px solid #96f2d7;
+        }
+
+        .basket-header {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: rgba(255, 255, 255, 0.85);
+            padding: 6px 12px;
+            border-radius: 16px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+        }
+
+        #sweetBasket .basket-header { color: #d9480f; }
+        #sourBasket .basket-header { color: #0ca678; }
+
+        .basket-illustration {
+            font-size: 2.2rem;
+            margin-bottom: 4px;
+            filter: drop-shadow(0 4px 4px rgba(0,0,0,0.1));
+        }
 
         .basket-items-display {
             display: flex;
             flex-wrap: wrap;
-            gap: 4px;
+            gap: 6px;
             justify-content: center;
+            align-items: center;
+            width: 100%;
         }
 
         .basket-items-display img {
-            width: 32px;
-            height: 32px;
+            width: 38px;
+            height: 38px;
             object-fit: contain;
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        /* Shape Finder UI */
+        @keyframes popIn {
+            0% { transform: scale(0); }
+            100% { transform: scale(1); }
+        }
+
+        /* --- 3. SHAPE MODE --- */
         .shape-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -356,29 +405,32 @@
         .shape-item {
             background: #ffffff;
             border: 3px solid #f1f2f6;
-            border-radius: 22px;
+            border-radius: 24px;
             padding: 10px 6px;
             display: flex;
             flex-direction: column;
             align-items: center;
             font-weight: 700;
             cursor: pointer;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.04);
         }
 
         .shape-item img {
-            width: 55px;
-            height: 55px;
+            width: 65px;
+            height: 65px;
             object-fit: contain;
             margin-bottom: 4px;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
         }
 
         .shape-item.selected {
             border-color: #2ed573;
             background: #e6fffa;
             transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(46, 213, 115, 0.2);
         }
 
-        .shape-item .name { font-size: 0.9rem; color: #636e72; }
+        .shape-item .name { font-size: 0.95rem; color: #2d3436; margin-top: 2px; }
 
         .win-card {
             background: #ffffff;
@@ -413,7 +465,7 @@
         <div class="screen" id="titleScreen">
             <h1 class="game-title">रंग-बिरंगे फल 🍎✨</h1>
             <p style="color: #636e72; font-weight: 600; font-size: 1.1rem; margin-top: 6px;">
-                फलों की दुनिया में आपका स्वागत है!
+                फलों की मजेदार दुनिया में आपका स्वागत है!
             </p>
             <button class="cute-btn" onclick="goToInstructions()">आगे बढ़ें ➡️</button>
         </div>
@@ -429,12 +481,12 @@
 
             <div class="rule-card">
                 <span style="font-size: 1.8rem;">🧺</span>
-                <span>फलों को देखकर ध्यान से सही जगह चुनें।</span>
+                <span>फलों को देखकर ध्यान से सही टोकरी में डालें।</span>
             </div>
 
             <div class="rule-card">
                 <span style="font-size: 1.8rem;">🎉</span>
-                <span>सारे सवाल हल करके विजेता बनें!</span>
+                <span>सारे लेवल पार करके स्टार विजेता बनें!</span>
             </div>
 
             <button class="cute-btn" onclick="goToModeSelection()">खेल शुरू करें 🎮</button>
@@ -478,15 +530,21 @@
         </div>
 
         <div class="screen" id="sortScreen">
-            <p style="font-weight: 700; color: #2d3436; margin-bottom: 12px;">फल चुनकर सही टोकरी पर टैप करें:</p>
+            <p style="font-weight: 700; color: #2d3436; margin-bottom: 10px; font-size: 1.05rem;">
+                👇 फल पर टैप करें, फिर सही टोकरी चुनें:
+            </p>
             <div class="sorting-fruits-pool" id="fruitPool"></div>
+            
             <div class="baskets-container">
                 <div class="basket-box" id="sweetBasket" onclick="placeInBasket('मीठा')">
-                    <div class="basket-title">🥭 मीठा (Sweet)</div>
+                    <div class="basket-header">🥭 मीठा (Sweet)</div>
+                    <div class="basket-illustration">🧺</div>
                     <div class="basket-items-display" id="sweetBasketItems"></div>
                 </div>
+                
                 <div class="basket-box" id="sourBasket" onclick="placeInBasket('खट्टा')">
-                    <div class="basket-title">🍋 खट्टा (Sour)</div>
+                    <div class="basket-header">🍋 खट्टा (Sour)</div>
+                    <div class="basket-illustration">🧺</div>
                     <div class="basket-items-display" id="sourBasketItems"></div>
                 </div>
             </div>
