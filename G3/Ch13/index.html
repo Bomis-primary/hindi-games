@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>हिम्मत की दौड़ - Sequence Builder</title>
+    <title>हिम्मत की दौड़ - Dynamic Sequence Builder</title>
     <style>
         * {
             box-sizing: border-box;
@@ -231,13 +231,6 @@
             0% { width: 0%; }
             100% { width: 100%; }
         }
-
-        @media (max-width: 600px) {
-            .draggable-item {
-                padding: 10px 14px;
-                font-size: 0.9rem;
-            }
-        }
     </style>
 </head>
 <body>
@@ -257,19 +250,19 @@
         <div class="card-box">
             <h2>📜 खेल के नियम</h2>
             <div class="instructions-list">
-                <p>1. डेरेक रेडमंड की कहानी की सभी घटनाओं को सही क्रम (Sequence) में जमाएँ।</p>
-                <p>2. वाक्यों को ऊपर या नीचे ड्रैग करके सही कालक्रम अनुसार व्यवस्थित करें।</p>
-                <p>3. व्यवस्थित करने के बाद <b>'जाँच करें'</b> बटन दबाएँ!</p>
+                <p>1. कहानी की अलग-अलग घटनाओं को उनके सही समय (Chronology) के अनुसार लगाएँ।</p>
+                <p>2. कार्ड्स को ड्रैग करके सही क्रम में व्यवस्थित करें।</p>
+                <p>3. हर बार नए सवाल मिलेंगे! जाँच करने के लिए <b>'जाँच करें'</b> दबाएँ।</p>
             </div>
             <button class="btn-primary" onclick="goToScreen(3); startGame();">गेम शुरू करें 🚀</button>
         </div>
     </div>
 
-    <!-- SCREEN 3: Sequence Builder Game Screen -->
+    <!-- SCREEN 3: Game Screen -->
     <div id="screen3" class="screen">
         <div class="game-header">
             <h1>🏃‍♂️ हिम्मत की दौड़: Sequence Builder</h1>
-            <p class="game-subtitle">घटनाओं को उनके सही क्रम में व्यवस्थित करें:</p>
+            <p class="game-subtitle">नीचे दी गई घटनाओं को सही क्रम में व्यवस्थित करें:</p>
         </div>
 
         <ul class="list-container" id="draggable-list"></ul>
@@ -283,20 +276,18 @@
     <!-- SCREEN 4: End Screen -->
     <div id="screen4" class="screen">
         <div class="end-card">
-            <h2>🎉 अद्भुत! बेहतरीन काम!</h2>
-            <p>आपने डेरेक रेडमंड की हिम्मत और संघर्ष की पूरी कहानी को एकदम सही क्रम में व्यवस्थित कर दिया है!</p>
-            <button class="btn-primary" onclick="restartGame()">पुनः खेलें 🔄</button>
+            <h2>🎉 उत्कृष्ट प्रयास!</h2>
+            <p>आपने इस राउंड की सभी घटनाओं को एकदम सही क्रम में लगा दिया है!</p>
+            <button class="btn-primary" onclick="restartGame()">नए प्रश्नों के साथ पुनः खेलें 🔄</button>
         </div>
     </div>
 
     <script>
-        // Sound System (Web Audio API)
+        // Sound Effects (Web Audio API)
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
         function playSound(type) {
-            if (audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
+            if (audioCtx.state === 'suspended') audioCtx.resume();
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
             osc.connect(gain);
@@ -341,17 +332,22 @@
             }
         }
 
-        // Story Correct Sequence (Chapter 13 - Derek Redmond)
-        const correctSequence = [
-            "डेरेक ने मात्र सात साल की उम्र में स्थानीय क्लब से अभ्यास शुरू किया।",
-            "1985 और 1987 में उन्होंने 400 मीटर दौड़ में नए राष्ट्रीय रिकॉर्ड बनाए।",
-            "1992 में स्पेन के बार्सिलोना ओलंपिक खेलों के लिए उनका चयन हुआ।",
-            "दौड़ते-दौड़ते 250 मीटर पर पैर की हैमस्ट्रिंग में चोट लगने से वे गिर गए।",
-            "दर्द के बावजूद वे हार न मानते हुए लंगड़ाते हुए आगे बढ़ने लगे।",
-            "उनके पिता जिम रेडमंड सुरक्षाकर्मियों को पार कर मैदान में पहुँचे।",
-            "पिता और पुत्र ने मिलकर फिनिश लाइन पार की और दर्शकों ने तालियाँ बजाईं।"
+        // Master Question Bank (Order preserved for chronological comparison)
+        const masterEventsPool = [
+            { id: 1, text: "3 सितंबर 1965 को इंग्लैंड में डेरेक रेडमंड का जन्म हुआ।" },
+            { id: 2, text: "7 साल की उम्र में डेरेक ने स्थानीय एथलेटिक्स क्लब से अभ्यास शुरू किया।" },
+            { id: 3, text: "1985 में उन्होंने 44.82 सेकंड का ब्रिटिश राष्ट्रीय रिकॉर्ड बनाया।" },
+            { id: 4, text: "1986 में स्टटगार्ट यूरोपीय चैंपियनशिप में उन्होंने स्वर्ण पदक जीता।" },
+            { id: 5, text: "1991 में टोक्यो विश्व चैंपियनशिप में फिर से स्वर्ण पदक अपने नाम किया।" },
+            { id: 6, text: "1992 में स्पेन के बार्सिलोना शहर में ओलंपिक के लिए चुने गए।" },
+            { id: 7, text: "दौड़ते समय 250 मीटर पर डेरेक के पैर की हैमस्ट्रिंग में चोट लग गई।" },
+            { id: 8, text: "दर्द से कराहते हुए भी डेरेक खड़े हुए और लंगड़ाते हुए आगे बढ़ने लगे।" },
+            { id: 9, text: "सुरक्षाकर्मियों की परवाह न करते हुए उनके पिता जिम रेडमंड मैदान में आए।" },
+            { id: 10, text: "पिता और पुत्र ने एक-दूसरे का सहारा लेकर फिनिश लाइन पार की।" },
+            { id: 11, text: "पूरे स्टेडियम के 65,000 दर्शकों ने खड़े होकर उनके लिए तालियाँ बजाईं।" }
         ];
 
+        let currentRoundEvents = [];
         let listItems = [];
         let dragStartIndex;
 
@@ -361,34 +357,39 @@
             document.getElementById(`screen${screenNumber}`).classList.add('active');
         }
 
-        // Auto Transition: Screen 1 to Screen 2 (5 Seconds)
+        // Screen 1 Timer (5 Seconds Auto Transition)
         window.onload = () => {
             setTimeout(() => {
                 goToScreen(2);
             }, 5000);
         };
 
-        // Game Initialization
+        // Start Game with Random Subset of Events
         function startGame() {
             document.getElementById('feedback').innerText = '';
             const draggableList = document.getElementById('draggable-list');
             draggableList.innerHTML = '';
             listItems = [];
 
-            // Shuffle sequence
-            const shuffledEvents = [...correctSequence]
-                .map(value => ({ value, sort: Math.random() }))
-                .sort((a, b) => a.sort - b.sort)
-                .map(item => item.value);
+            // 1. Pick 5 random items from master pool
+            const shuffledPool = [...masterEventsPool].sort(() => Math.random() - 0.5);
+            const selectedSet = shuffledPool.slice(0, 5);
 
-            shuffledEvents.forEach((text, index) => {
+            // 2. Sort selected set chronologically as the correct answer key
+            currentRoundEvents = [...selectedSet].sort((a, b) => a.id - b.id);
+
+            // 3. Shuffle selected set for user display
+            const displaySet = [...currentRoundEvents].sort(() => Math.random() - 0.5);
+
+            displaySet.forEach((item, index) => {
                 const listItem = document.createElement('li');
                 listItem.setAttribute('data-index', index);
+                listItem.setAttribute('data-id', item.id);
 
                 listItem.innerHTML = `
                     <div class="draggable-item" draggable="true">
                         <span class="item-number">${index + 1}</span>
-                        <span class="item-text">${text}</span>
+                        <span class="item-text">${item.text}</span>
                     </div>
                 `;
 
@@ -423,7 +424,12 @@
             listItems[fromIndex].appendChild(itemTwo);
             listItems[toIndex].appendChild(itemOne);
 
-            // Update item number badges
+            // Swap data-id attributes for proper tracking
+            const idOne = listItems[fromIndex].getAttribute('data-id');
+            const idTwo = listItems[toIndex].getAttribute('data-id');
+            listItems[fromIndex].setAttribute('data-id', idTwo);
+            listItems[toIndex].setAttribute('data-id', idOne);
+
             updateItemNumbers();
         }
 
@@ -451,15 +457,16 @@
             });
         }
 
-        // Sequence Validation Logic
+        // Sequence Validation
         function checkSequence() {
             let isCorrect = true;
 
             listItems.forEach((listItem, index) => {
-                const itemText = listItem.querySelector('.item-text').innerText.trim();
+                const currentId = parseInt(listItem.getAttribute('data-id'));
+                const correctId = currentRoundEvents[index].id;
                 const card = listItem.querySelector('.draggable-item');
 
-                if (itemText !== correctSequence[index]) {
+                if (currentId !== correctId) {
                     card.style.borderColor = '#ef4444';
                     card.style.background = '#fef2f2';
                     isCorrect = false;
@@ -481,7 +488,7 @@
             } else {
                 playSound('wrong');
                 feedback.style.color = '#dc2626';
-                feedback.innerText = '❌ कुछ घटनाएँ सही स्थान पर नहीं हैं। पुनः प्रयास करें!';
+                feedback.innerText = '❌ क्रम सही नहीं है। पुनः प्रयास करें!';
             }
         }
 
