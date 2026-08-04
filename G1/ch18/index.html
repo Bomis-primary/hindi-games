@@ -429,7 +429,7 @@
 
         .shape-item {
             background: #ffffff;
-            border: 3.5px solid #f1f2f6;
+            border: 4px solid #f1f2f6;
             border-radius: 24px;
             padding: 10px 6px;
             display: flex;
@@ -438,7 +438,7 @@
             font-weight: 700;
             cursor: pointer;
             box-shadow: 0 6px 12px rgba(0,0,0,0.04);
-            transition: border-color 0.15s ease, background-color 0.15s ease, transform 0.1s ease;
+            transition: all 0.2s ease;
             position: relative;
             z-index: 1;
         }
@@ -461,24 +461,24 @@
 
         .shape-item .name { font-size: 0.95rem; color: #2d3436; margin-top: 2px; }
 
-        /* GLOW ANIMATION */
+        /* GLOW HINT KEYFRAMES & CLASS */
         .shape-item.glow-hint {
             border-color: #fcc419 !important;
-            background: #fff9db !important;
-            animation: tempGlow 1s infinite alternate;
+            background-color: #fff9db !important;
+            animation: pulseGlow 0.8s infinite alternate !important;
         }
 
-        @keyframes tempGlow {
-            0% { box-shadow: 0 0 6px #ffe066, inset 0 0 4px #ffe066; }
-            100% { box-shadow: 0 0 18px #fcc419, inset 0 0 8px #fcc419; }
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 4px #fcc419; }
+            100% { box-shadow: 0 0 16px #fcc419, 0 0 24px #ffd43b; }
         }
 
-        /* STRICT OVERRIDE FOR SELECTION (Works even if glow-hint is active) */
+        /* HIGH PRIORITY OVERRIDE FOR SELECTION STATE */
         .shape-item.selected,
         .shape-item.glow-hint.selected {
             border-color: #2ed573 !important;
-            background: #e6fffa !important;
-            box-shadow: 0 0 14px rgba(46, 213, 115, 0.9) !important;
+            background-color: #e6fffa !important;
+            box-shadow: 0 0 12px rgba(46, 213, 115, 0.8) !important;
             animation: none !important;
         }
 
@@ -813,11 +813,9 @@
             item.dataset.isRound = f.isRound;
             item.innerHTML = `<img src="${f.img}" alt="${f.name}"><span class="name">${f.name}</span>`;
             
-            // DIRECT TOGGLE FIX
-            item.addEventListener('click', function(e) {
-                e.stopPropagation();
+            item.onclick = function() {
                 this.classList.toggle('selected');
-            });
+            };
 
             grid.appendChild(item);
         });
