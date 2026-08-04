@@ -34,6 +34,9 @@
       min-height: 100%;
       margin: 0;
       overflow: hidden;
+      overscroll-behavior: none;
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
     }
 
     body {
@@ -43,13 +46,22 @@
       touch-action: manipulation;
     }
 
-    button { font: inherit; }
+    button {
+      font: inherit;
+      touch-action: manipulation;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    img, svg {
+      max-width: 100%;
+    }
 
     .app {
       position: relative;
       width: 100%;
       height: 100vh;
-      height: 100dvh;
+      height: var(--app-height, 100vh);
       min-height: 100%;
       overflow: hidden;
       background:
@@ -72,14 +84,12 @@
     #logo-screen {
       z-index: 30;
       background: #ffffff;
-      flex-direction: column;
-      gap: 20px;
     }
 
     #logo-screen img {
       display: block;
-      width: min(65vw, 320px);
-      max-height: 40vh;
+      width: min(62vw, 310px);
+      max-height: 42vh;
       object-fit: contain;
     }
 
@@ -127,9 +137,11 @@
     .panel {
       position: relative;
       z-index: 2;
+      width: 92vw;
+      max-width: 760px;
       width: min(92vw, 760px);
       max-height: 94vh;
-      max-height: 94dvh;
+      max-height: calc(var(--app-height, 100vh) * 0.94);
       padding: clamp(20px, 4vw, 40px);
       overflow: auto;
       border: 1px solid rgba(255, 255, 255, 0.8);
@@ -258,6 +270,7 @@
       flex: 0 0 auto;
       display: grid;
       grid-template-columns: minmax(0, 1fr) auto auto auto;
+      grid-template-areas: "level score timer sound";
       align-items: center;
       gap: 10px;
       min-height: 76px;
@@ -266,7 +279,10 @@
       background: rgba(255, 255, 255, 0.97);
     }
 
-    .level-info { min-width: 0; }
+    .level-info { min-width: 0; grid-area: level; }
+    .score-box { grid-area: score; }
+    .timer-box { grid-area: timer; }
+    .sound-btn { grid-area: sound; }
 
     .level-name {
       display: block;
@@ -342,7 +358,9 @@
       justify-content: center;
       min-height: 0;
       padding: clamp(12px, 2.8vw, 26px);
-      overflow: auto;
+      overflow-y: auto;
+      overflow-x: hidden;
+      overscroll-behavior: contain;
       -webkit-overflow-scrolling: touch;
     }
 
@@ -395,6 +413,15 @@
       font-size: clamp(2rem, 7vw, 3rem);
       font-weight: 1000;
       line-height: 1.1;
+    }
+
+    .micro-instruction {
+      margin: 0 auto 12px;
+      color: var(--muted);
+      font-size: 0.94rem;
+      line-height: 1.38;
+      font-weight: 750;
+      text-align: center;
     }
 
     .piece-tray {
@@ -589,6 +616,16 @@
       width: 92px;
       height: 92px;
       display: block;
+    }
+
+    .picture-clue img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      max-width: 112px;
+      max-height: 112px;
+      object-fit: contain;
+      border-radius: 18px;
     }
 
     .build-game {
@@ -807,16 +844,110 @@
       .picture-clue { width: 110px; height: 110px; font-size: 3.5rem; }
       .picture-clue svg { width: 78px; height: 78px; }
     }
+
+
+    @media (max-width: 480px) {
+      .topbar {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+        grid-template-areas:
+          "level level sound"
+          "score timer timer";
+        row-gap: 7px;
+        min-height: 104px;
+      }
+
+      .score-box,
+      .timer-box {
+        width: 100%;
+        min-width: 0;
+      }
+
+      .game-main {
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+
+      .ambient.a7,
+      .ambient.a8 {
+        display: none;
+      }
+    }
+
+    @media (max-width: 390px) {
+      .score-label, .timer-label { display: none; }
+      .level-name { font-size: 0.93rem; }
+      .letter-piece { min-width: 64px; min-height: 61px; padding: 8px 12px; }
+      .basket-label { font-size: 0.92rem; }
+      .basket-drop { min-height: 160px; }
+      .basket-emoji { height: 72px; font-size: 3rem; }
+      .basket-badge { min-width: 56px; min-height: 34px; font-size: 0.96rem; }
+      .picture-clue { width: 98px; height: 98px; font-size: 3rem; }
+      .picture-clue svg { width: 70px; height: 70px; }
+    }
+
+    @media (max-height: 610px) and (orientation: landscape) {
+      .panel { max-height: 96vh; padding: 14px 22px; }
+      .title-badge { min-width: 52px; min-height: 52px; margin-bottom: 6px; font-size: 2rem; box-shadow: 0 5px 0 #e7a536; }
+      h1 { margin-bottom: 5px; font-size: 1.75rem; }
+      .intro-copy { margin-bottom: 8px; font-size: 0.94rem; }
+      .rules { margin: 8px 0 12px; }
+      .topbar { min-height: 58px; padding-top: 7px; padding-bottom: 7px; }
+      .game-main { justify-content: flex-start; padding: 8px 18px; }
+      .prompt-card { margin-bottom: 8px; padding: 9px 15px; }
+      .prompt-label { margin-bottom: 3px; }
+      .question-text { font-size: 1.13rem; }
+      .word-display, .word-card { min-height: 52px; margin-bottom: 8px; padding: 6px 18px; font-size: 1.75rem; box-shadow: 0 4px 0 #ead19b; }
+      .piece-tray { gap: 8px; }
+      .letter-piece { min-width: 62px; min-height: 48px; padding: 5px 11px; font-size: 1.35rem; box-shadow: 0 4px 0 #d6dbe6; }
+      .baskets-row { width: min(100%, 570px); }
+      .basket-drop { min-height: 140px; }
+      .basket-emoji { height: 62px; font-size: 2.8rem; margin-bottom: 5px; }
+      .basket-badge { min-height: 30px; }
+      .picture-card { margin-bottom: 8px; padding: 10px; }
+      .picture-label { margin-bottom: 5px; }
+      .picture-clue { width: 88px; height: 88px; font-size: 2.7rem; box-shadow: 0 4px 0 #ead19b; }
+      .picture-clue svg { width: 62px; height: 62px; }
+      .build-slots { min-height: 51px; margin-bottom: 8px; }
+      .build-slot, .build-tile { min-width: 58px; min-height: 45px; padding: 5px 10px; font-size: 1.25rem; }
+      .build-tray { margin-bottom: 8px; }
+      .small-btn { min-height: 39px; padding: 6px 13px; }
+      .feedback-line { min-height: 38px; margin-top: 6px; padding: 6px 10px; font-size: 0.88rem; }
+    }
+
+
+    @media (orientation: landscape) and (max-height: 480px) {
+      .topbar {
+        min-height: 54px;
+        grid-template-columns: minmax(0, 1fr) auto auto auto;
+        grid-template-areas: "level score timer sound";
+        row-gap: 0;
+      }
+
+      .game-main {
+        padding-top: 6px;
+        padding-bottom: 8px;
+      }
+
+      .prompt-card {
+        margin-bottom: 6px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
   </style>
 </head>
 <body>
   <main class="app" id="app">
-    <!-- Logo Screen (Displays for 10 seconds) -->
     <section class="screen active" id="logo-screen" aria-label="Innovine logo">
       <img src="assets/innovine-logo.png" alt="Innovine Logo" draggable="false">
     </section>
 
-    <!-- Ambient Floating Stars -->
     <div class="ambient-layer" aria-hidden="true">
       <span class="ambient star a1">★</span>
       <span class="ambient ribbon a2"></span>
@@ -828,24 +959,30 @@
       <span class="ambient ribbon a8"></span>
     </div>
 
-    <!-- Intro / Start Screen -->
     <section class="screen" id="intro-screen">
       <div class="panel">
         <div class="title-badge" aria-hidden="true">अ</div>
         <h1>स्वर अ की खोज</h1>
-        <p class="intro-copy">
-          तीन खेल पूरे कीजिए। पहले शब्द में स्वर पहचानिए, फिर शब्दों को टोकरी में छाँटिए और अंत में चित्र देखकर शब्द बनाइए।
-        </p>
-        <div class="rules" aria-label="खेल के नियम">
-          <div class="rule">स्तर 1<br>सही स्वर चुनें</div>
-          <div class="rule">स्तर 2<br>सही टोकरी में रखें</div>
-          <div class="rule">स्तर 3<br>चित्र देखकर शब्द बनाएँ</div>
-        </div>
-        <button class="primary-btn" id="start-btn" type="button">खेल शुरू करें</button>
+        <p class="intro-copy">स्वर अ को पहचानने और शब्दों में प्रयोग करने के लिए तैयार हो जाइए।</p>
+        <button class="primary-btn" id="start-btn" type="button">शुरू करें</button>
       </div>
     </section>
 
-    <!-- Game Screen -->
+    <section class="screen" id="how-to-screen">
+      <div class="panel">
+        <div class="title-badge" aria-hidden="true">🎮</div>
+        <h1>कैसे खेलें?</h1>
+        <p class="intro-copy">हर स्तर में दिए गए निर्देश ध्यान से पढ़ें और गतिविधि पूरी करें।</p>
+        <div class="rules" aria-label="खेल खेलने के निर्देश">
+          <div class="rule">स्तर 1<br>सही स्वर चुनें</div>
+          <div class="rule">स्तर 2<br>शब्द को सही टोकरी में रखें</div>
+          <div class="rule">स्तर 3<br>चित्र देखकर शब्द बनाएँ</div>
+        </div>
+        <p class="intro-copy">हर प्रश्न के लिए 60 सेकंड मिलेंगे। पहली गलती के बाद एक और अवसर मिलेगा।</p>
+        <button class="primary-btn" id="play-btn" type="button">खेलें</button>
+      </div>
+    </section>
+
     <section class="screen" id="game-screen">
       <div class="game-shell">
         <header class="topbar">
@@ -878,7 +1015,6 @@
       </div>
     </section>
 
-    <!-- Result Screen -->
     <section class="screen" id="result-screen">
       <div class="panel">
         <div class="title-badge" aria-hidden="true">★</div>
@@ -890,7 +1026,6 @@
       </div>
     </section>
 
-    <!-- Overlays -->
     <div class="feedback-pop" id="feedback-pop" aria-hidden="true"></div>
     <div class="confetti-layer" id="confetti-layer" aria-hidden="true"></div>
 
@@ -902,7 +1037,6 @@
       </div>
     </div>
 
-    <!-- Audio Elements bound directly to assets/ -->
     <audio id="audio-correct" src="assets/correct.mp3" preload="auto"></audio>
     <audio id="audio-wrong" src="assets/wrong.mp3" preload="auto"></audio>
     <audio id="audio-clap" src="assets/clap.mp3" preload="auto"></audio>
@@ -913,6 +1047,17 @@
   <script>
     (function () {
       "use strict";
+
+      function setAppHeight() {
+        var height = window.innerHeight || document.documentElement.clientHeight || 600;
+        document.documentElement.style.setProperty('--app-height', height + 'px');
+      }
+
+      setAppHeight();
+      window.addEventListener('resize', setAppHeight, { passive: true });
+      window.addEventListener('orientationchange', function () {
+        window.setTimeout(setAppHeight, 120);
+      });
 
       var QUESTION_TIME = 60;
       var POINTS_FIRST_TRY = 10;
@@ -978,559 +1123,953 @@
           icon: "🧺",
           intro: "शब्द कार्ड को अ की टोकरी या दूसरी टोकरी में सही जगह रखिए।",
           questions: [
-            { id: "sort-1", word: "अंगूर", group: "a", explanation: "अंगूर अ से शुरू होता है।" },
+            { id: "sort-1", word: "अनाज", group: "a", explanation: "अनाज अ से शुरू होता है।" },
             { id: "sort-2", word: "किताब", group: "other", explanation: "किताब क से शुरू होती है, अ से नहीं।" },
             { id: "sort-3", word: "अमन", group: "a", explanation: "अमन अ से शुरू होता है।" },
             { id: "sort-4", word: "पतंग", group: "other", explanation: "पतंग प से शुरू होती है, अ से नहीं।" },
             { id: "sort-5", word: "अकबर", group: "a", explanation: "अकबर अ से शुरू होता है।" },
             { id: "sort-6", word: "गमला", group: "other", explanation: "गमला ग से शुरू होता है, अ से नहीं।" },
             { id: "sort-7", word: "अजब", group: "a", explanation: "अजब अ से शुरू होता है।" },
-            { id: "sort-8", word: "कमल", group: "other", explanation: "कमल क से शुरू होता है, अ से नहीं।" },
-            { id: "sort-9", word: "असर", group: "a", explanation: "असर अ से शुरू होता है।" },
-            { id: "sort-10", word: "सूरज", group: "other", explanation: "सूरज स से शुरू होता है, अ से नहीं।" }
+            { id: "sort-8", word: "मटर", group: "other", explanation: "मटर म से शुरू होता है, अ से नहीं।" },
+            { id: "sort-9", word: "अनिल", group: "a", explanation: "अनिल अ से शुरू होता है।" },
+            { id: "sort-10", word: "कमल", group: "other", explanation: "कमल क से शुरू होता है, अ से नहीं।" }
           ]
         },
         {
           type: "build",
-          name: "स्तर 3: चित्र और शब्द",
+          name: "स्तर 3: अंतिम चुनौती",
           label: "शब्द बनाओ",
-          icon: "🧩",
-          intro: "चित्र देखिए और सही अक्षरों को चुनकर शब्द पूरा कीजिए।",
+          icon: "🏆",
+          intro: "चित्र देखकर टुकड़ों को सही क्रम में लगाकर शब्द बनाइए।",
           questions: [
-            { id: "build-1", word: "अनार", pictureKey: "anar", tiles: ["अ", "ना", "र", "म", "क"], target: ["अ", "ना", "र"], explanation: "चित्र देखकर सही शब्द अनार बनता है।" },
-            { id: "build-2", word: "अखरोट", pictureKey: "akhrot", tiles: ["अ", "ख", "रो", "ट", "ल"], target: ["अ", "ख", "रो", "ट"], explanation: "चित्र देखकर सही शब्द अखरोट बनता है।" },
-            { id: "build-3", word: "अचार", pictureKey: "achar", tiles: ["अ", "चा", "र", "प", "ग"], target: ["अ", "चा", "र"], explanation: "चित्र देखकर सही शब्द अचार बनता है।" },
-            { id: "build-4", word: "अमरूद", pictureKey: "amrud", tiles: ["अ", "म", "रू", "द", "न"], target: ["अ", "म", "रू", "द"], explanation: "चित्र देखकर सही शब्द अमरूद बनता है।" },
-            { id: "build-5", word: "अलमारी", pictureKey: "almari", tiles: ["अ", "ल", "मा", "री", "स"], target: ["अ", "ल", "मा", "री"], explanation: "चित्र देखकर सही शब्द अलमारी बनता है।" },
-            { id: "build-6", word: "अमरूद", pictureKey: "amrud", tiles: ["अ", "म", "रू", "द", "त"], target: ["अ", "म", "रू", "द"], explanation: "चित्र देखकर सही शब्द अमरूद बनता है।" },
-            { id: "build-7", word: "अचार", pictureKey: "achar", tiles: ["अ", "चा", "र", "श", "भ"], target: ["अ", "चा", "र"], explanation: "चित्र देखकर सही शब्द अचार बनता है।" },
-            { id: "build-8", word: "अनार", pictureKey: "anar", tiles: ["अ", "ना", "र", "ज", "ब"], target: ["अ", "ना", "र"], explanation: "चित्र देखकर सही शब्द अनार बनता है।" },
-            { id: "build-9", word: "अखरोट", pictureKey: "akhrot", tiles: ["अ", "ख", "रो", "ट", "द"], target: ["अ", "ख", "रो", "ट"], explanation: "चित्र देखकर सही शब्द अखरोट बनता है।" },
-            { id: "build-10", word: "अलमारी", pictureKey: "almari", tiles: ["अ", "ल", "मा", "री", "ह"], target: ["अ", "ल", "मा", "री"], explanation: "चित्र देखकर सही शब्द अलमारी बनता है।" }
+            { id: "build-1", word: "अनार", picture: "assets/anar.png", pieces: ["अ", "ना", "र"], explanation: "सही क्रम है: अ + ना + र = अनार।" },
+            { id: "build-2", word: "अनानास", picture: "🍍", pieces: ["अ", "ना", "ना", "स"], explanation: "सही क्रम है: अ + ना + ना + स = अनानास।" },
+            { id: "build-3", word: "अदरक", picture: "🫚", pieces: ["अ", "द", "र", "क"], explanation: "सही क्रम है: अ + द + र + क = अदरक।" },
+            { id: "build-4", word: "अखबार", picture: "📰", pieces: ["अ", "ख", "बा", "र"], explanation: "सही क्रम है: अ + ख + बा + र = अखबार।" },
+            { id: "build-5", word: "अजगर", picture: "🐍", pieces: ["अ", "ज", "ग", "र"], explanation: "सही क्रम है: अ + ज + ग + र = अजगर।" },
+            { id: "build-6", word: "अमरूद", picture: "assets/amrud.png", pieces: ["अ", "म", "रू", "द"], explanation: "सही क्रम है: अ + म + रू + द = अमरूद।" },
+            { id: "build-7", word: "अचार", picture: "achar", pieces: ["अ", "चा", "र"], explanation: "सही क्रम है: अ + चा + र = अचार।" },
+            { id: "build-8", word: "अलमारी", picture: "almari", pieces: ["अ", "ल", "मा", "री"], explanation: "सही क्रम है: अ + ल + मा + री = अलमारी।" },
+            { id: "build-9", word: "अखरोट", picture: "assets/akhrot.png", pieces: ["अ", "ख", "रो", "ट"], explanation: "सही क्रम है: अ + ख + रो + ट = अखरोट।" },
+            { id: "build-10", word: "अचकन", picture: "🧥", pieces: ["अ", "च", "क", "न"], explanation: "सही क्रम है: अ + च + क + न = अचकन।" }
           ]
         }
       ];
 
-      var state = {
-        levelIndex: 0,
-        questionIndex: 0,
-        totalIndex: 0,
-        score: 0,
-        soundOn: true,
-        timerId: null,
-        timeLeft: QUESTION_TIME,
-        attemptCount: 0,
-        buildSlots: [],
-        dragData: null
-      };
+      var logoScreen = document.getElementById("logo-screen");
+      var introScreen = document.getElementById("intro-screen");
+      var howToScreen = document.getElementById("how-to-screen");
+      var gameScreen = document.getElementById("game-screen");
+      var resultScreen = document.getElementById("result-screen");
+      var startBtn = document.getElementById("start-btn");
+      var playBtn = document.getElementById("play-btn");
+      var playAgainBtn = document.getElementById("play-again-btn");
+      var soundBtn = document.getElementById("sound-btn");
+      var levelName = document.getElementById("level-name");
+      var challengeCount = document.getElementById("challenge-count");
+      var scoreValue = document.getElementById("score-value");
+      var timerValue = document.getElementById("timer-value");
+      var timerBox = document.getElementById("timer-box");
+      var progressFill = document.getElementById("progress-fill");
+      var promptLabel = document.getElementById("prompt-label");
+      var questionText = document.getElementById("question-text");
+      var taskArea = document.getElementById("task-area");
+      var feedbackLine = document.getElementById("feedback-line");
+      var feedbackPop = document.getElementById("feedback-pop");
+      var confettiLayer = document.getElementById("confetti-layer");
+      var levelOverlay = document.getElementById("level-overlay");
+      var levelIcon = document.getElementById("level-icon");
+      var overlayTitle = document.getElementById("overlay-title");
+      var overlayCopy = document.getElementById("overlay-copy");
+      var finalScore = document.getElementById("final-score");
+      var resultTitle = document.getElementById("result-title");
+      var resultStars = document.getElementById("result-stars");
+      var resultSummary = document.getElementById("result-summary");
+      var liveRegion = document.getElementById("live-region");
 
-      var dom = {
-        logoScreen: document.getElementById("logo-screen"),
-        introScreen: document.getElementById("intro-screen"),
-        gameScreen: document.getElementById("game-screen"),
-        resultScreen: document.getElementById("result-screen"),
-        startBtn: document.getElementById("start-btn"),
-        playAgainBtn: document.getElementById("play-again-btn"),
-        soundBtn: document.getElementById("sound-btn"),
-        levelName: document.getElementById("level-name"),
-        challengeCount: document.getElementById("challenge-count"),
-        scoreValue: document.getElementById("score-value"),
-        timerValue: document.getElementById("timer-value"),
-        timerBox: document.getElementById("timer-box"),
-        progressFill: document.getElementById("progress-fill"),
-        promptLabel: document.getElementById("prompt-label"),
-        questionText: document.getElementById("question-text"),
-        taskArea: document.getElementById("task-area"),
-        feedbackLine: document.getElementById("feedback-line"),
-        feedbackPop: document.getElementById("feedback-pop"),
-        confettiLayer: document.getElementById("confetti-layer"),
-        levelOverlay: document.getElementById("level-overlay"),
-        overlayTitle: document.getElementById("overlay-title"),
-        overlayCopy: document.getElementById("overlay-copy"),
-        levelIcon: document.getElementById("level-icon"),
-        finalScore: document.getElementById("final-score"),
-        resultStars: document.getElementById("result-stars"),
-        resultTitle: document.getElementById("result-title"),
-        resultSummary: document.getElementById("result-summary"),
-        audioCorrect: document.getElementById("audio-correct"),
-        audioWrong: document.getElementById("audio-wrong"),
-        audioClap: document.getElementById("audio-clap"),
-        liveRegion: document.getElementById("live-region")
-      };
+      var audioCorrect = document.getElementById("audio-correct");
+      var audioWrong = document.getElementById("audio-wrong");
+      var audioClap = document.getElementById("audio-clap");
 
-      function initApp() {
-        // Keeps the logo screen active for 10000ms (10 seconds)
-        setTimeout(function () {
-          showScreen(dom.introScreen);
-        }, 10000);
+      var gameLevels = [];
+      var currentLevelIndex = 0;
+      var currentQuestionIndex = 0;
+      var score = 0;
+      var successfulTasks = 0;
+      var attempts = 0;
+      var timeLeft = QUESTION_TIME;
+      var timerId = null;
+      var acceptingAnswer = false;
+      var questionResolved = false;
+      var soundEnabled = true;
+      var currentCleanup = null;
+      var buildState = null;
 
-        dom.startBtn.addEventListener("click", startGame);
-        dom.playAgainBtn.addEventListener("click", startGame);
-        dom.soundBtn.addEventListener("click", toggleSound);
-      }
-
-      function showScreen(screenEl) {
-        var screens = [dom.logoScreen, dom.introScreen, dom.gameScreen, dom.resultScreen];
-        screens.forEach(function (s) {
-          s.classList.remove("active");
-        });
-        screenEl.classList.add("active");
-      }
-
-      function toggleSound() {
-        state.soundOn = !state.soundOn;
-        dom.soundBtn.textContent = state.soundOn ? "🔊" : "🔇";
-        dom.soundBtn.title = state.soundOn ? "ध्वनि बंद करें" : "ध्वनि चालू करें";
-        dom.soundBtn.setAttribute("aria-label", dom.soundBtn.title);
-      }
-
-      function playAudio(audioEl) {
-        if (!state.soundOn || !audioEl) return;
-        try {
-          audioEl.currentTime = 0;
-          audioEl.play().catch(function () {});
-        } catch (e) {}
-      }
-
-      function speak(text) {
-        var announce = dom.liveRegion;
-        if (announce) announce.textContent = text;
-      }
-
-      function startGame() {
-        state.levelIndex = 0;
-        state.questionIndex = 0;
-        state.totalIndex = 0;
-        state.score = 0;
-        dom.scoreValue.textContent = "0";
-        showScreen(dom.gameScreen);
-        showLevelIntro(0);
-      }
-
-      function showLevelIntro(levelIdx) {
-        stopTimer();
-        var level = levels[levelIdx];
-        dom.levelIcon.textContent = level.icon;
-        dom.overlayTitle.textContent = level.name;
-        dom.overlayCopy.textContent = level.intro;
-        dom.levelOverlay.classList.add("show");
-
-        setTimeout(function () {
-          dom.levelOverlay.classList.remove("show");
-          loadQuestion();
-        }, 2200);
-      }
-
-      function loadQuestion() {
-        state.attemptCount = 0;
-        state.buildSlots = [];
-
-        var currentLevel = levels[state.levelIndex];
-        var q = currentLevel.questions[state.questionIndex];
-
-        dom.levelName.textContent = currentLevel.name;
-        dom.challengeCount.textContent = "चुनौती " + (state.questionIndex + 1) + "/" + QUESTIONS_PER_LEVEL;
-        dom.promptLabel.textContent = currentLevel.label;
-        dom.progressFill.style.width = ((state.totalIndex / TOTAL_QUESTIONS) * 100) + "%";
-
-        setFeedback("", "");
-        dom.taskArea.innerHTML = "";
-
-        if (currentLevel.type === "find") {
-          renderFindQuestion(q);
-        } else if (currentLevel.type === "sort") {
-          renderSortQuestion(q);
-        } else if (currentLevel.type === "build") {
-          renderBuildQuestion(q);
+      function showScreen(screen) {
+        var screens = document.querySelectorAll('.screen');
+        var i;
+        for (i = 0; i < screens.length; i += 1) {
+          screens[i].classList.remove('active');
         }
-
-        resetTimer();
+        screen.classList.add('active');
       }
 
-      function resetTimer() {
-        stopTimer();
-        state.timeLeft = QUESTION_TIME;
-        updateTimerDisplay();
-        state.timerId = setInterval(function () {
-          state.timeLeft--;
-          updateTimerDisplay();
-          if (state.timeLeft <= 0) {
-            stopTimer();
-            handleTimeout();
+      function shuffle(array) {
+        var copy = array.slice();
+        var i;
+        for (i = copy.length - 1; i > 0; i -= 1) {
+          var j = Math.floor(Math.random() * (i + 1));
+          var temporary = copy[i];
+          copy[i] = copy[j];
+          copy[j] = temporary;
+        }
+        return copy;
+      }
+
+      function buildPlaythrough() {
+        var i;
+        gameLevels = [];
+        for (i = 0; i < levels.length; i += 1) {
+          gameLevels.push({
+            type: levels[i].type,
+            name: levels[i].name,
+            label: levels[i].label,
+            icon: levels[i].icon,
+            intro: levels[i].intro,
+            questions: levels[i].type === 'build' ? levels[i].questions.slice() : shuffle(levels[i].questions)
+          });
+        }
+      }
+
+      function setHighlightedA(element, text) {
+        var characters = String(text).split('');
+        var i;
+        element.textContent = '';
+        for (i = 0; i < characters.length; i += 1) {
+          if (characters[i] === 'अ') {
+            var span = document.createElement('span');
+            span.className = 'swar-a';
+            span.textContent = characters[i];
+            element.appendChild(span);
+          } else {
+            element.appendChild(document.createTextNode(characters[i]));
           }
+        }
+      }
+
+      function makePlainWord(text, className, tagName) {
+        var element = document.createElement(tagName || 'div');
+        element.className = className;
+        element.textContent = text;
+        return element;
+      }
+
+      function unlockAudio() {
+        var audioList = [audioCorrect, audioWrong, audioClap];
+        var i;
+        for (i = 0; i < audioList.length; i += 1) {
+          try {
+            audioList[i].volume = 0;
+            var promise = audioList[i].play();
+            if (promise && typeof promise.then === 'function') {
+              (function (audioElement, playPromise) {
+                playPromise.then(function () {
+                  audioElement.pause();
+                  audioElement.currentTime = 0;
+                  audioElement.volume = 1;
+                }).catch(function () {
+                  audioElement.volume = 1;
+                });
+              }(audioList[i], promise));
+            } else {
+              audioList[i].pause();
+              audioList[i].currentTime = 0;
+              audioList[i].volume = 1;
+            }
+          } catch (error) {
+            audioList[i].volume = 1;
+          }
+        }
+      }
+
+      function playAudio(audioElement) {
+        if (!soundEnabled || !audioElement) { return; }
+        try {
+          audioElement.currentTime = 0;
+          var playPromise = audioElement.play();
+          if (playPromise && typeof playPromise.catch === 'function') {
+            playPromise.catch(function () {});
+          }
+        } catch (error) {}
+      }
+
+      function playCorrectFeedback() {
+        playAudio(audioCorrect);
+        playAudio(audioClap);
+      }
+
+      function clearTimer() {
+        if (timerId !== null) {
+          window.clearInterval(timerId);
+          timerId = null;
+        }
+      }
+
+      function startTimer() {
+        clearTimer();
+        timeLeft = QUESTION_TIME;
+        timerValue.textContent = String(timeLeft);
+        timerBox.classList.remove('low');
+
+        timerId = window.setInterval(function () {
+          timeLeft -= 1;
+          if (timeLeft < 0) { timeLeft = 0; }
+          timerValue.textContent = String(timeLeft);
+          if (timeLeft <= 10) { timerBox.classList.add('low'); }
+          if (timeLeft === 0) { handleTimeout(); }
         }, 1000);
       }
 
-      function stopTimer() {
-        if (state.timerId) {
-          clearInterval(state.timerId);
-          state.timerId = null;
+      function showPop(type) {
+        feedbackPop.className = 'feedback-pop show ' + (type === 'correct' ? 'correct-pop' : 'wrong-pop');
+        feedbackPop.textContent = type === 'correct' ? '✓' : '×';
+        window.setTimeout(function () {
+          feedbackPop.className = 'feedback-pop';
+          feedbackPop.textContent = '';
+        }, type === 'correct' ? 850 : 650);
+      }
+
+      function createStarConfetti() {
+        var symbols = ['★', '✦', '★', '✧'];
+        var colours = ['#ffd166', '#6558e8', '#2eaf68', '#ff8fab', '#4aa8ff'];
+        var i;
+        confettiLayer.innerHTML = '';
+        for (i = 0; i < 18; i += 1) {
+          var star = document.createElement('span');
+          var angle = (Math.PI * 2 * i) / 18;
+          var distance = 95 + Math.random() * 150;
+          var tx = Math.cos(angle) * distance;
+          var ty = Math.sin(angle) * distance;
+          star.className = 'confetti-star';
+          star.textContent = symbols[i % symbols.length];
+          star.style.color = colours[i % colours.length];
+          star.style.setProperty('--tx', tx.toFixed(0) + 'px');
+          star.style.setProperty('--ty', ty.toFixed(0) + 'px');
+          star.style.animationDelay = (Math.random() * 90).toFixed(0) + 'ms';
+          confettiLayer.appendChild(star);
+        }
+        window.setTimeout(function () { confettiLayer.innerHTML = ''; }, 1100);
+      }
+
+      function setFeedback(message, type) {
+        feedbackLine.className = 'feedback-line';
+        if (type) { feedbackLine.classList.add(type); }
+        feedbackLine.textContent = message;
+        liveRegion.textContent = message;
+      }
+
+      function getCurrentLevel() { return gameLevels[currentLevelIndex]; }
+      function getCurrentQuestion() { return getCurrentLevel().questions[currentQuestionIndex]; }
+
+      function getPrompt(level) {
+        if (level.type === 'find') {
+          return 'दिए गए शब्द के टुकड़ों में सही स्वर अ खोजिए।';
+        }
+        if (level.type === 'sort') {
+          return 'शब्द को सही टोकरी में रखिए। अ से शुरू होने वाला शब्द अ की टोकरी में जाएगा।';
+        }
+        return 'टुकड़ों को सही क्रम में लगाकर दिए गए चित्र का नाम बनाइए।';
+      }
+
+      function cleanupCurrentTask() {
+        if (typeof currentCleanup === 'function') { currentCleanup(); }
+        currentCleanup = null;
+        buildState = null;
+      }
+
+      function renderQuestion() {
+        var level = getCurrentLevel();
+        var question = getCurrentQuestion();
+        var completed = currentLevelIndex * QUESTIONS_PER_LEVEL + currentQuestionIndex;
+
+        cleanupCurrentTask();
+        attempts = 0;
+        acceptingAnswer = true;
+        questionResolved = false;
+        levelName.textContent = level.name;
+        challengeCount.textContent = 'चुनौती ' + (currentQuestionIndex + 1) + '/' + QUESTIONS_PER_LEVEL;
+        scoreValue.textContent = String(score);
+        promptLabel.textContent = level.label;
+        setHighlightedA(questionText, getPrompt(level));
+        progressFill.style.width = ((completed / TOTAL_QUESTIONS) * 100).toFixed(2) + '%';
+        taskArea.innerHTML = '';
+        setFeedback('खेल पूरा कीजिए।', '');
+
+        if (level.type === 'find') {
+          renderFindTask(question);
+        } else if (level.type === 'sort') {
+          renderSortTask(question);
+        } else {
+          renderBuildTask(question);
+        }
+
+        startTimer();
+      }
+
+      function resolveCorrect(onVisualSuccess) {
+        if (questionResolved) { return; }
+        questionResolved = true;
+        acceptingAnswer = false;
+        clearTimer();
+
+        if (typeof onVisualSuccess === 'function') { onVisualSuccess(); }
+
+        successfulTasks += 1;
+        if (attempts === 0) {
+          score += POINTS_FIRST_TRY;
+          setFeedback('बहुत अच्छा! पहली कोशिश में सही। +10 अंक', 'good');
+        } else {
+          score += POINTS_SECOND_TRY;
+          setFeedback('सही! दूसरी कोशिश में +5 अंक', 'good');
+        }
+        scoreValue.textContent = String(score);
+        playCorrectFeedback();
+        showPop('correct');
+        createStarConfetti();
+        window.setTimeout(goToNextQuestion, 1250);
+      }
+
+      function registerWrong(onFirstRetry, onReveal) {
+        if (questionResolved || !acceptingAnswer) { return; }
+        acceptingAnswer = false;
+        attempts += 1;
+        playAudio(audioWrong);
+        showPop('wrong');
+
+        if (attempts === 1) {
+          setFeedback('अभी सही नहीं। एक बार फिर कोशिश करें।', 'bad');
+          if (typeof onFirstRetry === 'function') { onFirstRetry(); }
+          window.setTimeout(function () {
+            if (!questionResolved && timeLeft > 0) { acceptingAnswer = true; }
+          }, 650);
+        } else {
+          questionResolved = true;
+          clearTimer();
+          if (typeof onReveal === 'function') { onReveal(); }
+          setFeedback('सही उत्तर दिखाया गया है। ' + getCurrentQuestion().explanation, 'info');
+          window.setTimeout(goToNextQuestion, 2700);
         }
       }
 
-      function updateTimerDisplay() {
-        dom.timerValue.textContent = state.timeLeft;
-        if (state.timeLeft <= 10) {
-          dom.timerBox.classList.add("low");
+      function renderFindTask(question) {
+        var word = makePlainWord(question.word, 'word-display');
+        var instruction = document.createElement('p');
+        var tray = document.createElement('div');
+        var items = shuffle(question.pieces.map(function (piece, index) {
+          return { text: piece, key: question.id + '-piece-' + index };
+        }));
+        var buttons = [];
+        var i;
+
+        instruction.className = 'micro-instruction';
+        instruction.textContent = 'सही टुकड़े पर टैप करें।';
+        tray.className = 'piece-tray';
+
+        taskArea.appendChild(word);
+        taskArea.appendChild(instruction);
+        taskArea.appendChild(tray);
+
+        for (i = 0; i < items.length; i += 1) {
+          (function (item) {
+            var button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'letter-piece';
+            button.textContent = item.text;
+            button.setAttribute('data-piece', item.text);
+            button.addEventListener('click', function () {
+              if (!acceptingAnswer || questionResolved) { return; }
+              if (item.text === 'अ') {
+                resolveCorrect(function () {
+                  button.classList.add('correct');
+                  disableButtons(buttons);
+                });
+              } else {
+                button.classList.add('wrong');
+                button.disabled = true;
+                registerWrong(function () {}, function () {
+                  disableButtons(buttons);
+                  highlightFindAnswer(buttons);
+                });
+              }
+            });
+            buttons.push(button);
+            tray.appendChild(button);
+          }(items[i]));
+        }
+
+        currentCleanup = function () { disableButtons(buttons); };
+      }
+
+      function disableButtons(buttons) {
+        var i;
+        for (i = 0; i < buttons.length; i += 1) { buttons[i].disabled = true; }
+      }
+
+      function highlightFindAnswer(buttons) {
+        var i;
+        for (i = 0; i < buttons.length; i += 1) {
+          if (buttons[i].getAttribute('data-piece') === 'अ') {
+            buttons[i].classList.add('correct');
+          }
+        }
+      }
+
+      function renderSortTask(question) {
+        var wrapper = document.createElement('div');
+        var card = makePlainWord(question.word, 'word-card');
+        var instruction = document.createElement('p');
+        var basketsRow = document.createElement('div');
+        var aBasket = createBasket('a', 'अ की टोकरी', 'अ');
+        var otherBasket = createBasket('other', 'दूसरी टोकरी', 'अन्य');
+        var dragState = { active: false, moved: false, startX: 0, startY: 0 };
+
+        wrapper.className = 'sort-game';
+        instruction.className = 'micro-instruction';
+        instruction.textContent = 'शब्द कार्ड को खींचें या सही टोकरी पर टैप करें।';
+        basketsRow.className = 'baskets-row';
+        card.setAttribute('role', 'button');
+        card.setAttribute('tabindex', '0');
+        card.setAttribute('aria-label', question.word + ' शब्द कार्ड');
+
+        basketsRow.appendChild(aBasket);
+        basketsRow.appendChild(otherBasket);
+        wrapper.appendChild(card);
+        wrapper.appendChild(instruction);
+        wrapper.appendChild(basketsRow);
+        taskArea.appendChild(wrapper);
+
+        function chooseBasket(group, basket) {
+          if (!acceptingAnswer || questionResolved) { return; }
+          if (group === question.group) {
+            resolveCorrect(function () {
+              basket.classList.add('correct-target');
+              animateCardToBasket(card, basket);
+              aBasket.disabled = true;
+              otherBasket.disabled = true;
+            });
+          } else {
+            basket.classList.add('wrong-target');
+            resetCardPosition(card);
+            registerWrong(function () {
+              window.setTimeout(function () { basket.classList.remove('wrong-target'); }, 470);
+            }, function () {
+              aBasket.disabled = true;
+              otherBasket.disabled = true;
+              var correctBasket = question.group === 'a' ? aBasket : otherBasket;
+              correctBasket.classList.add('correct-target');
+              animateCardToBasket(card, correctBasket);
+            });
+          }
+        }
+
+        aBasket.addEventListener('click', function () { chooseBasket('a', aBasket); });
+        otherBasket.addEventListener('click', function () { chooseBasket('other', otherBasket); });
+
+        function pointerDown(event) {
+          if (!acceptingAnswer || questionResolved) { return; }
+          dragState.active = true;
+          dragState.moved = false;
+          dragState.startX = event.clientX;
+          dragState.startY = event.clientY;
+          card.classList.add('dragging');
+          if (card.setPointerCapture) {
+            try { card.setPointerCapture(event.pointerId); } catch (error) {}
+          }
+        }
+
+        function pointerMove(event) {
+          if (!dragState.active || !acceptingAnswer || questionResolved) { return; }
+          var dx = event.clientX - dragState.startX;
+          var dy = event.clientY - dragState.startY;
+          if (Math.abs(dx) + Math.abs(dy) > 8) { dragState.moved = true; }
+          card.style.transform = 'translate(' + dx + 'px,' + dy + 'px)';
+          markDragTarget(event.clientX, event.clientY, aBasket, otherBasket);
+        }
+
+        function pointerUp(event) {
+          if (!dragState.active) { return; }
+          dragState.active = false;
+          card.classList.remove('dragging');
+          aBasket.classList.remove('drag-over');
+          otherBasket.classList.remove('drag-over');
+
+          var target = basketAtPoint(event.clientX, event.clientY, aBasket, otherBasket);
+          if (dragState.moved && target) {
+            chooseBasket(target.getAttribute('data-group'), target);
+          } else {
+            resetCardPosition(card);
+          }
+        }
+
+        var supportsPointer = typeof window.PointerEvent !== 'undefined';
+        var touchMoveOptions = { passive: false };
+
+        function touchStart(event) {
+          if (!event.touches || !event.touches[0]) { return; }
+          pointerDown({
+            clientX: event.touches[0].clientX,
+            clientY: event.touches[0].clientY,
+            pointerId: 0
+          });
+        }
+
+        function touchMove(event) {
+          if (!dragState.active || !event.touches || !event.touches[0]) { return; }
+          event.preventDefault();
+          pointerMove({
+            clientX: event.touches[0].clientX,
+            clientY: event.touches[0].clientY
+          });
+        }
+
+        function touchEnd(event) {
+          var touch = event.changedTouches && event.changedTouches[0];
+          if (!touch) { resetCardPosition(card); dragState.active = false; return; }
+          pointerUp({ clientX: touch.clientX, clientY: touch.clientY });
+        }
+
+        function mouseDown(event) {
+          if (event.button !== 0) { return; }
+          pointerDown(event);
+          document.addEventListener('mousemove', pointerMove);
+          document.addEventListener('mouseup', mouseUp);
+        }
+
+        function mouseUp(event) {
+          document.removeEventListener('mousemove', pointerMove);
+          document.removeEventListener('mouseup', mouseUp);
+          pointerUp(event);
+        }
+
+        if (supportsPointer) {
+          card.addEventListener('pointerdown', pointerDown);
+          card.addEventListener('pointermove', pointerMove);
+          card.addEventListener('pointerup', pointerUp);
+          card.addEventListener('pointercancel', pointerUp);
         } else {
-          dom.timerBox.classList.remove("low");
+          card.addEventListener('touchstart', touchStart, false);
+          card.addEventListener('touchmove', touchMove, touchMoveOptions);
+          card.addEventListener('touchend', touchEnd, false);
+          card.addEventListener('touchcancel', touchEnd, false);
+          card.addEventListener('mousedown', mouseDown);
+        }
+
+        card.addEventListener('keydown', function (event) {
+          if (event.key === 'ArrowLeft') {
+            chooseBasket('a', aBasket);
+          } else if (event.key === 'ArrowRight') {
+            chooseBasket('other', otherBasket);
+          }
+        });
+
+        currentCleanup = function () {
+          aBasket.disabled = true;
+          otherBasket.disabled = true;
+          if (supportsPointer) {
+            card.removeEventListener('pointerdown', pointerDown);
+            card.removeEventListener('pointermove', pointerMove);
+            card.removeEventListener('pointerup', pointerUp);
+            card.removeEventListener('pointercancel', pointerUp);
+          } else {
+            card.removeEventListener('touchstart', touchStart, false);
+            card.removeEventListener('touchmove', touchMove, touchMoveOptions);
+            card.removeEventListener('touchend', touchEnd, false);
+            card.removeEventListener('touchcancel', touchEnd, false);
+            card.removeEventListener('mousedown', mouseDown);
+            document.removeEventListener('mousemove', pointerMove);
+            document.removeEventListener('mouseup', mouseUp);
+          }
+        };
+      }
+
+      function createBasket(group, labelText, badgeText) {
+        var button = document.createElement('button');
+        var label = document.createElement('span');
+        var emoji = document.createElement('span');
+        var badge = document.createElement('span');
+
+        button.type = 'button';
+        button.className = 'basket-drop';
+        button.setAttribute('data-group', group);
+        button.setAttribute('aria-label', labelText);
+
+        label.className = 'basket-label';
+        label.textContent = labelText;
+        emoji.className = 'basket-emoji';
+        emoji.textContent = '🧺';
+        badge.className = 'basket-badge';
+        badge.textContent = badgeText;
+
+        button.appendChild(label);
+        button.appendChild(emoji);
+        button.appendChild(badge);
+        return button;
+      }
+
+      function basketAtPoint(x, y, firstBasket, secondBasket) {
+        var baskets = [firstBasket, secondBasket];
+        var i;
+        for (i = 0; i < baskets.length; i += 1) {
+          var rect = baskets[i].getBoundingClientRect();
+          if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) { return baskets[i]; }
+        }
+        return null;
+      }
+
+      function markDragTarget(x, y, firstBasket, secondBasket) {
+        var target = basketAtPoint(x, y, firstBasket, secondBasket);
+        firstBasket.classList.toggle('drag-over', target === firstBasket);
+        secondBasket.classList.toggle('drag-over', target === secondBasket);
+      }
+
+      function resetCardPosition(card) {
+        card.style.transition = 'transform 0.25s ease, opacity 0.25s ease';
+        card.style.transform = 'translate(0,0) scale(1)';
+        card.style.opacity = '1';
+        window.setTimeout(function () { card.style.transition = ''; }, 280);
+      }
+
+      function animateCardToBasket(card, basket) {
+        var cardRect = card.getBoundingClientRect();
+        var basketRect = basket.getBoundingClientRect();
+        var dx = basketRect.left + basketRect.width / 2 - (cardRect.left + cardRect.width / 2);
+        var dy = basketRect.top + basketRect.height * 0.55 - (cardRect.top + cardRect.height / 2);
+        card.style.transition = 'transform 0.55s ease, opacity 0.55s ease';
+        card.style.transform = 'translate(' + dx.toFixed(0) + 'px,' + dy.toFixed(0) + 'px) scale(0.48)';
+        card.style.opacity = '0.2';
+      }
+
+      function renderBuildTask(question) {
+        var wrapper = document.createElement('div');
+        var pictureCard = document.createElement('div');
+        var pictureLabel = document.createElement('p');
+        var pictureClue = document.createElement('div');
+        var instruction = document.createElement('p');
+        var slots = document.createElement('div');
+        var tray = document.createElement('div');
+        var actions = document.createElement('div');
+        var undoButton = document.createElement('button');
+        var resetButton = document.createElement('button');
+        var shuffledPieces = shuffle(question.pieces.map(function (piece, index) {
+          return { text: piece, originalIndex: index };
+        }));
+        var tileButtons = {};
+        var i;
+
+        wrapper.className = 'build-game';
+        pictureCard.className = 'picture-card';
+        pictureLabel.className = 'picture-label';
+        pictureLabel.textContent = 'चित्र देखिए';
+        pictureClue.className = 'picture-clue';
+        if (typeof question.picture === 'string' && question.picture.indexOf('assets/') === 0) {
+          var clueImage = document.createElement('img');
+          clueImage.src = question.picture;
+          clueImage.alt = question.word + ' का चित्र';
+          clueImage.draggable = false;
+          clueImage.addEventListener('error', function () {
+            pictureClue.textContent = 'चित्र उपलब्ध नहीं है';
+          });
+          pictureClue.appendChild(clueImage);
+        } else if (typeof question.picture === 'string' && question.picture.charAt(0) === '<') {
+          pictureClue.innerHTML = question.picture;
+        } else if (typeof question.picture === 'string' && question.picture.length > 2 && /[a-z]/i.test(question.picture)) {
+          pictureClue.innerHTML = getPictureMarkup(question.picture);
+          if (!pictureClue.innerHTML) { pictureClue.textContent = question.picture; }
+        } else {
+          pictureClue.textContent = question.picture;
+        }
+        pictureClue.setAttribute('aria-label', 'चित्र संकेत');
+        instruction.className = 'micro-instruction';
+        instruction.textContent = 'एक-एक टुकड़ा चुनिए। चुने गए टुकड़े ऊपर जुड़ते जाएँगे।';
+        slots.className = 'build-slots';
+        tray.className = 'build-tray';
+        actions.className = 'build-actions';
+        undoButton.type = 'button';
+        undoButton.className = 'small-btn';
+        undoButton.textContent = 'पिछला हटाएँ';
+        resetButton.type = 'button';
+        resetButton.className = 'small-btn';
+        resetButton.textContent = 'फिर से सजाएँ';
+
+        pictureCard.appendChild(pictureLabel);
+        pictureCard.appendChild(pictureClue);
+        wrapper.appendChild(pictureCard);
+        wrapper.appendChild(instruction);
+        wrapper.appendChild(slots);
+        wrapper.appendChild(tray);
+        actions.appendChild(undoButton);
+        actions.appendChild(resetButton);
+        wrapper.appendChild(actions);
+        taskArea.appendChild(wrapper);
+
+        buildState = {
+          question: question,
+          sequence: [],
+          slots: slots,
+          tray: tray,
+          tileButtons: tileButtons,
+          undoButton: undoButton,
+          resetButton: resetButton
+        };
+
+        for (i = 0; i < question.pieces.length; i += 1) {
+          var emptySlot = document.createElement('span');
+          emptySlot.className = 'build-slot';
+          emptySlot.setAttribute('aria-hidden', 'true');
+          slots.appendChild(emptySlot);
+        }
+
+        for (i = 0; i < shuffledPieces.length; i += 1) {
+          (function (pieceInfo) {
+            var tile = document.createElement('button');
+            tile.type = 'button';
+            tile.className = 'build-tile';
+            tile.textContent = pieceInfo.text;
+            tile.setAttribute('data-index', String(pieceInfo.originalIndex));
+            tile.addEventListener('click', function () {
+              if (!acceptingAnswer || questionResolved || tile.disabled) { return; }
+              tile.disabled = true;
+              buildState.sequence.push(pieceInfo.originalIndex);
+              refreshBuildSlots(false);
+              if (buildState.sequence.length === question.pieces.length) { checkBuiltWord(); }
+            });
+            tileButtons[pieceInfo.originalIndex] = tile;
+            tray.appendChild(tile);
+          }(shuffledPieces[i]));
+        }
+
+        undoButton.addEventListener('click', function () {
+          if (!acceptingAnswer || questionResolved || buildState.sequence.length === 0) { return; }
+          var lastIndex = buildState.sequence.pop();
+          tileButtons[lastIndex].disabled = false;
+          refreshBuildSlots(false);
+        });
+
+        resetButton.addEventListener('click', function () {
+          if (!acceptingAnswer || questionResolved) { return; }
+          resetBuildSelection();
+        });
+
+        currentCleanup = function () {
+          undoButton.disabled = true;
+          resetButton.disabled = true;
+          disableBuildTiles();
+        };
+      }
+
+      function refreshBuildSlots(markCorrect) {
+        if (!buildState) { return; }
+        var slotElements = buildState.slots.children;
+        var question = buildState.question;
+        var i;
+        for (i = 0; i < slotElements.length; i += 1) {
+          slotElements[i].className = 'build-slot';
+          slotElements[i].textContent = '';
+          if (i < buildState.sequence.length) {
+            var pieceText = question.pieces[buildState.sequence[i]];
+            slotElements[i].classList.add('filled');
+            slotElements[i].textContent = pieceText;
+          }
+          if (markCorrect && i < buildState.sequence.length) {
+            slotElements[i].classList.add('correct');
+          }
+        }
+      }
+
+      function checkBuiltWord() {
+        if (!buildState || !acceptingAnswer || questionResolved) { return; }
+        var question = buildState.question;
+        var builtWord = buildState.sequence.map(function (index) { return question.pieces[index]; }).join('');
+
+        if (builtWord === question.word) {
+          resolveCorrect(function () {
+            refreshBuildSlots(true);
+            disableBuildTiles();
+            buildState.undoButton.disabled = true;
+            buildState.resetButton.disabled = true;
+          });
+        } else {
+          var slots = buildState.slots.children;
+          var i;
+          for (i = 0; i < slots.length; i += 1) { slots[i].classList.add('wrong'); }
+          registerWrong(function () {
+            window.setTimeout(function () { resetBuildSelection(); }, 470);
+          }, function () {
+            showCorrectBuildAnswer();
+          });
+        }
+      }
+
+      function resetBuildSelection() {
+        if (!buildState) { return; }
+        var key;
+        buildState.sequence = [];
+        for (key in buildState.tileButtons) {
+          if (Object.prototype.hasOwnProperty.call(buildState.tileButtons, key)) {
+            buildState.tileButtons[key].disabled = false;
+          }
+        }
+        refreshBuildSlots(false);
+      }
+
+      function disableBuildTiles() {
+        if (!buildState) { return; }
+        var key;
+        for (key in buildState.tileButtons) {
+          if (Object.prototype.hasOwnProperty.call(buildState.tileButtons, key)) {
+            buildState.tileButtons[key].disabled = true;
+          }
+        }
+      }
+
+      function showCorrectBuildAnswer() {
+        if (!buildState) { return; }
+        var i;
+        buildState.sequence = [];
+        for (i = 0; i < buildState.question.pieces.length; i += 1) { buildState.sequence.push(i); }
+        refreshBuildSlots(true);
+        disableBuildTiles();
+        buildState.undoButton.disabled = true;
+        buildState.resetButton.disabled = true;
+      }
+
+      function revealCurrentAnswer() {
+        var level = getCurrentLevel();
+        var question = getCurrentQuestion();
+
+        if (level.type === 'find') {
+          var findButtons = taskArea.querySelectorAll('.letter-piece');
+          var i;
+          for (i = 0; i < findButtons.length; i += 1) {
+            findButtons[i].disabled = true;
+            if (findButtons[i].getAttribute('data-piece') === 'अ') {
+              findButtons[i].classList.add('correct');
+            }
+          }
+        } else if (level.type === 'sort') {
+          var baskets = taskArea.querySelectorAll('.basket-drop');
+          var correctBasket = taskArea.querySelector('.basket-drop[data-group="' + question.group + '"]');
+          var card = taskArea.querySelector('.word-card');
+          var j;
+          for (j = 0; j < baskets.length; j += 1) { baskets[j].disabled = true; }
+          if (correctBasket) {
+            correctBasket.classList.add('correct-target');
+            if (card) { animateCardToBasket(card, correctBasket); }
+          }
+        } else {
+          showCorrectBuildAnswer();
         }
       }
 
       function handleTimeout() {
-        var currentLevel = levels[state.levelIndex];
-        var q = currentLevel.questions[state.questionIndex];
-        playAudio(dom.audioWrong);
-        showFeedbackPop(false);
-        setFeedback("समय समाप्त! सही उत्तर: " + (q.word || q.target.join("")), "bad");
-        speak("समय समाप्त!");
-
-        setTimeout(function () {
-          advanceQuestion();
-        }, 2000);
+        if (questionResolved) { return; }
+        questionResolved = true;
+        acceptingAnswer = false;
+        clearTimer();
+        revealCurrentAnswer();
+        playAudio(audioWrong);
+        showPop('wrong');
+        setFeedback('समय पूरा। ' + getCurrentQuestion().explanation, 'info');
+        window.setTimeout(goToNextQuestion, 2800);
       }
 
-      function renderFindQuestion(q) {
-        dom.questionText.innerHTML = 'इस शब्द में <span class="swar-a">स्वर "अ"</span> कहाँ है? टैप करें:';
-
-        var wrap = document.createElement("div");
-        var wordBox = document.createElement("div");
-        wordBox.className = "word-display";
-        wordBox.textContent = q.word;
-
-        var tray = document.createElement("div");
-        tray.className = "piece-tray";
-
-        q.pieces.forEach(function (p) {
-          var btn = document.createElement("button");
-          btn.type = "button";
-          btn.className = "letter-piece";
-          btn.textContent = p;
-          btn.addEventListener("click", function () {
-            checkFindAnswer(p, btn, q);
-          });
-          tray.appendChild(btn);
-        });
-
-        wrap.appendChild(wordBox);
-        wrap.appendChild(tray);
-        dom.taskArea.appendChild(wrap);
+      function showLevelOverlay(level, callback) {
+        levelIcon.textContent = level.icon;
+        overlayTitle.textContent = level.name;
+        overlayCopy.textContent = level.intro;
+        levelOverlay.classList.add('show');
+        levelOverlay.setAttribute('aria-hidden', 'false');
+        window.setTimeout(function () {
+          levelOverlay.classList.remove('show');
+          levelOverlay.setAttribute('aria-hidden', 'true');
+          callback();
+        }, 1650);
       }
 
-      function checkFindAnswer(piece, btn, q) {
-        if (piece === "अ") {
-          btn.classList.add("correct");
-          handleSuccess(q.explanation);
+      function goToNextQuestion() {
+        cleanupCurrentTask();
+        currentQuestionIndex += 1;
+        if (currentQuestionIndex < getCurrentLevel().questions.length) {
+          renderQuestion();
+          return;
+        }
+
+        currentLevelIndex += 1;
+        currentQuestionIndex = 0;
+
+        if (currentLevelIndex < gameLevels.length) {
+          showLevelOverlay(getCurrentLevel(), renderQuestion);
         } else {
-          btn.classList.add("wrong");
-          handleFailure("फिर से कोशिश करें! यह स्वर 'अ' नहीं है।");
+          finishGame();
         }
       }
 
-      function renderSortQuestion(q) {
-        dom.questionText.innerHTML = 'क्या यह शब्द <span class="swar-a">"अ"</span> से शुरू होता है? सही टोकरी में रखें:';
-
-        var wrap = document.createElement("div");
-        wrap.className = "sort-game";
-
-        var wordCard = document.createElement("div");
-        wordCard.className = "word-card";
-        wordCard.textContent = q.word;
-        wordCard.draggable = true;
-
-        var basketsRow = document.createElement("div");
-        basketsRow.className = "baskets-row";
-
-        var basketA = createBasket("a", "स्वर अ वाली टोकरी", "🧺", "अ");
-        var basketOther = createBasket("other", "अन्य अक्षर", "🧺", "अन्य");
-
-        basketsRow.appendChild(basketA);
-        basketsRow.appendChild(basketOther);
-
-        wrap.appendChild(wordCard);
-        wrap.appendChild(basketsRow);
-        dom.taskArea.appendChild(wrap);
-
-        setupDragAndDrop(wordCard, [basketA, basketOther], q);
-      }
-
-      function createBasket(groupKey, title, emoji, badge) {
-        var b = document.createElement("div");
-        b.className = "basket-drop";
-        b.dataset.group = groupKey;
-        b.innerHTML = '<span class="basket-label">' + title + '</span>' +
-                      '<div class="basket-emoji">' + emoji + '</div>' +
-                      '<span class="basket-badge">' + badge + '</span>';
-        return b;
-      }
-
-      function setupDragAndDrop(card, baskets, q) {
-        card.addEventListener("dragstart", function (e) {
-          e.dataTransfer.setData("text/plain", q.group);
-          card.classList.add("dragging");
-        });
-
-        card.addEventListener("dragend", function () {
-          card.classList.remove("dragging");
-        });
-
-        baskets.forEach(function (b) {
-          b.addEventListener("dragover", function (e) {
-            e.preventDefault();
-            b.classList.add("drag-over");
-          });
-
-          b.addEventListener("dragleave", function () {
-            b.classList.remove("drag-over");
-          });
-
-          b.addEventListener("drop", function (e) {
-            e.preventDefault();
-            b.classList.remove("drag-over");
-            checkSortAnswer(b.dataset.group, b, q);
-          });
-
-          b.addEventListener("click", function () {
-            checkSortAnswer(b.dataset.group, b, q);
-          });
-        });
-      }
-
-      function checkSortAnswer(selectedGroup, basketEl, q) {
-        if (selectedGroup === q.group) {
-          basketEl.classList.add("correct-target");
-          handleSuccess(q.explanation);
-        } else {
-          basketEl.classList.add("wrong-target");
-          setTimeout(function () {
-            basketEl.classList.remove("wrong-target");
-          }, 400);
-          handleFailure("गलत टोकरी! फिर से ध्यान से सोचिए।");
-        }
-      }
-
-      function renderBuildQuestion(q) {
-        dom.questionText.textContent = "चित्र पहचानकर अक्षर जोड़िए और शब्द बनाइए:";
-
-        var wrap = document.createElement("div");
-        wrap.className = "build-game";
-
-        var picCard = document.createElement("div");
-        picCard.className = "picture-card";
-        picCard.innerHTML = '<span class="picture-label">चित्र सुराग</span>' +
-                            '<div class="picture-clue">' + getPictureMarkup(q.pictureKey) + '</div>';
-
-        var slotsContainer = document.createElement("div");
-        slotsContainer.className = "build-slots";
-
-        for (var i = 0; i < q.target.length; i++) {
-          var slot = document.createElement("div");
-          slot.className = "build-slot";
-          slot.dataset.index = i;
-          slotsContainer.appendChild(slot);
-        }
-
-        var tray = document.createElement("div");
-        tray.className = "build-tray";
-
-        q.tiles.forEach(function (tileText, idx) {
-          var btn = document.createElement("button");
-          btn.type = "button";
-          btn.className = "build-tile";
-          btn.textContent = tileText;
-          btn.dataset.tileIndex = idx;
-          btn.addEventListener("click", function () {
-            addTileToBuild(tileText, btn, q);
-          });
-          tray.appendChild(btn);
-        });
-
-        var actions = document.createElement("div");
-        actions.className = "build-actions";
-
-        var clearBtn = document.createElement("button");
-        clearBtn.type = "button";
-        clearBtn.className = "small-btn";
-        clearBtn.textContent = "मिटाएँ";
-        clearBtn.addEventListener("click", function () {
-          resetBuildSlots(q);
-        });
-
-        actions.appendChild(clearBtn);
-
-        wrap.appendChild(picCard);
-        wrap.appendChild(slotsContainer);
-        wrap.appendChild(tray);
-        wrap.appendChild(actions);
-
-        dom.taskArea.appendChild(wrap);
-      }
-
-      function addTileToBuild(tileText, tileBtn, q) {
-        if (state.buildSlots.length >= q.target.length) return;
-
-        state.buildSlots.push({ text: tileText, btnEl: tileBtn });
-        tileBtn.disabled = true;
-
-        updateBuildSlotsUI();
-
-        if (state.buildSlots.length === q.target.length) {
-          checkBuildAnswer(q);
-        }
-      }
-
-      function resetBuildSlots(q) {
-        state.buildSlots.forEach(function (item) {
-          if (item.btnEl) item.btnEl.disabled = false;
-        });
-        state.buildSlots = [];
-        updateBuildSlotsUI();
-        setFeedback("", "");
-      }
-
-      function updateBuildSlotsUI() {
-        var slots = dom.taskArea.querySelectorAll(".build-slot");
-        slots.forEach(function (slot, idx) {
-          if (state.buildSlots[idx]) {
-            slot.textContent = state.buildSlots[idx].text;
-            slot.classList.add("filled");
-          } else {
-            slot.textContent = "";
-            slot.classList.remove("filled", "wrong", "correct");
-          }
-        });
-      }
-
-      function checkBuildAnswer(q) {
-        var userWord = state.buildSlots.map(function (s) { return s.text; }).join("");
-        var targetWord = q.target.join("");
-
-        var slots = dom.taskArea.querySelectorAll(".build-slot");
-
-        if (userWord === targetWord) {
-          slots.forEach(function (s) { s.classList.add("correct"); });
-          handleSuccess(q.explanation);
-        } else {
-          slots.forEach(function (s) { s.classList.add("wrong"); });
-          handleFailure("शब्द सही नहीं बना। मिटाएँ दबाकर फिर से कोशिश करें!");
-        }
-      }
-
-      function handleSuccess(explanation) {
-        stopTimer();
-        state.attemptCount++;
-
-        var points = (state.attemptCount === 1) ? POINTS_FIRST_TRY : POINTS_SECOND_TRY;
-        state.score += points;
-        dom.scoreValue.textContent = state.score;
-
-        playAudio(dom.audioCorrect);
-        triggerConfetti();
-        showFeedbackPop(true);
-
-        setFeedback("शाबाश! सही उत्तर! (+ " + points + " अंक) " + (explanation || ""), "good");
-        speak("शाबाश! सही उत्तर!");
-
-        setTimeout(function () {
-          advanceQuestion();
-        }, 1800);
-      }
-
-      function handleFailure(msg) {
-        state.attemptCount++;
-        playAudio(dom.audioWrong);
-        showFeedbackPop(false);
-        setFeedback(msg, "bad");
-        speak("गलत उत्तर! फिर कोशिश करें।");
-      }
-
-      function advanceQuestion() {
-        state.questionIndex++;
-        state.totalIndex++;
-
-        if (state.questionIndex >= QUESTIONS_PER_LEVEL) {
-          state.levelIndex++;
-          state.questionIndex = 0;
-
-          if (state.levelIndex >= levels.length) {
-            finishGame();
-          } else {
-            showLevelIntro(state.levelIndex);
-          }
-        } else {
-          loadQuestion();
-        }
+      function startGame() {
+        unlockAudio();
+        clearTimer();
+        cleanupCurrentTask();
+        buildPlaythrough();
+        currentLevelIndex = 0;
+        currentQuestionIndex = 0;
+        score = 0;
+        successfulTasks = 0;
+        scoreValue.textContent = '0';
+        progressFill.style.width = '0%';
+        feedbackPop.className = 'feedback-pop';
+        confettiLayer.innerHTML = '';
+        showScreen(gameScreen);
+        showLevelOverlay(getCurrentLevel(), renderQuestion);
       }
 
       function finishGame() {
-        stopTimer();
-        playAudio(dom.audioClap);
+        clearTimer();
+        cleanupCurrentTask();
+        progressFill.style.width = '100%';
+        finalScore.textContent = String(score);
 
-        dom.finalScore.textContent = state.score;
-
-        var stars = "★☆☆";
-        var title = "अच्छा प्रयास!";
-        var summary = "आपने स्वर 'अ' का अच्छा अभ्यास किया। थोड़ा और प्रयास करके आप full marks ला सकते हैं!";
-
-        if (state.score >= 250) {
-          stars = "★★★";
-          title = "अद्भुत! आप स्वर अ के विजेता हैं!";
-          summary = "शानदार प्रदर्शन! आपने सभी चुनौतियों को बहुत ही बेहतरीन तरीके से पूरा किया।";
-        } else if (state.score >= 180) {
-          stars = "★★☆";
-          title = "बहुत बढ़िया!";
-          summary = "आपने स्वर 'अ' को अच्छे से पहचान लिया है। बहुत अच्छा खेल!";
+        if (score >= 240) {
+          resultTitle.textContent = 'शानदार काम!';
+          resultStars.textContent = '★★★';
+        } else if (score >= 150) {
+          resultTitle.textContent = 'बहुत अच्छा!';
+          resultStars.textContent = '★★☆';
+        } else {
+          resultTitle.textContent = 'अच्छा प्रयास!';
+          resultStars.textContent = '★☆☆';
         }
 
-        dom.resultStars.textContent = stars;
-        dom.resultTitle.textContent = title;
-        dom.resultSummary.textContent = summary;
-
-        showScreen(dom.resultScreen);
+        resultSummary.textContent = 'आपने 30 में से ' + successfulTasks + ' चुनौतियाँ स्वयं पूरी कीं। आपने स्वर अ पहचानना, शब्द छाँटना और चित्र देखकर शब्द बनाना सीखा।';
+        showScreen(resultScreen);
+        playAudio(audioClap);
+        createStarConfetti();
       }
 
-      function setFeedback(msg, type) {
-        dom.feedbackLine.textContent = msg;
-        dom.feedbackLine.className = "feedback-line " + (type || "");
+      function toggleSound() {
+        soundEnabled = !soundEnabled;
+        soundBtn.textContent = soundEnabled ? '🔊' : '🔇';
+        soundBtn.setAttribute('aria-label', soundEnabled ? 'ध्वनि बंद करें' : 'ध्वनि चालू करें');
+        soundBtn.setAttribute('title', soundEnabled ? 'ध्वनि बंद करें' : 'ध्वनि चालू करें');
       }
 
-      function showFeedbackPop(isCorrect) {
-        dom.feedbackPop.textContent = isCorrect ? "✓" : "✗";
-        dom.feedbackPop.className = "feedback-pop show " + (isCorrect ? "correct-pop" : "wrong-pop");
+      startBtn.addEventListener('click', function () { showScreen(howToScreen); });
+      playBtn.addEventListener('click', startGame);
+      playAgainBtn.addEventListener('click', startGame);
+      soundBtn.addEventListener('click', toggleSound);
 
-        setTimeout(function () {
-          dom.feedbackPop.className = "feedback-pop";
-        }, 600);
-      }
-
-      function triggerConfetti() {
-        dom.confettiLayer.innerHTML = "";
-        var colors = ["#ffd166", "#ef6c00", "#6558e8", "#2eaf68", "#dc5151"];
-
-        for (var i = 0; i < 18; i++) {
-          var star = document.createElement("span");
-          star.className = "confetti-star";
-          star.textContent = "★";
-          star.style.color = colors[Math.floor(Math.random() * colors.length)];
-
-          var angle = Math.random() * Math.PI * 2;
-          var dist = 80 + Math.random() * 140;
-          var tx = Math.cos(angle) * dist + "px";
-          var ty = Math.sin(angle) * dist + "px";
-
-          star.style.setProperty("--tx", tx);
-          star.style.setProperty("--ty", ty);
-
-          dom.confettiLayer.appendChild(star);
-        }
-
-        setTimeout(function () {
-          dom.confettiLayer.innerHTML = "";
-        }, 950);
-      }
-
-      window.addEventListener("DOMContentLoaded", initApp);
-    })();
+      window.setTimeout(function () {
+        showScreen(introScreen);
+      }, 5000);
+    }());
   </script>
 </body>
 </html>
