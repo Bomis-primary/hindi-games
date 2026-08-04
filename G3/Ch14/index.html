@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>बचपन के खेल - वर्गीकरण खेल (Sort & Classify)</title>
+    <title>बचपन के खेल - वर्गीकरण खेल</title>
     <style>
         * {
             box-sizing: border-box;
@@ -16,70 +16,165 @@
             background: linear-gradient(135deg, #e0f2fe 0%, #fef3c7 100%);
             min-height: 100vh;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
             padding: 20px;
         }
 
-        .header {
+        /* Screen Management */
+        .screen {
+            display: none;
+            width: 100%;
+            max-width: 800px;
+            flex-direction: column;
+            align-items: center;
             text-align: center;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        /* SCREEN 1: Innovine Splash Screen */
+        #screen1 {
+            height: 80vh;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .logo-container {
+            animation: fadeInScale 1.5s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            border-radius: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 3rem;
+            font-weight: bold;
+            box-shadow: 0 20px 25px -5px rgba(37, 99, 235, 0.4);
+            transform: rotate(-5deg);
+        }
+
+        .logo-text {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #1e3a8a;
+            letter-spacing: 2px;
+        }
+
+        .splash-timer {
+            margin-top: 20px;
+            width: 150px;
+            height: 6px;
+            background: #cbd5e1;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .splash-progress {
+            width: 0%;
+            height: 100%;
+            background: #2563eb;
+            animation: loadProgress 5s linear forwards;
+        }
+
+        /* SCREEN 2: Instructions Screen */
+        .card-box {
+            background: white;
+            padding: 35px;
+            border-radius: 24px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .card-box h2 {
+            color: #1e3a8a;
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+        }
+
+        .instructions-list {
+            text-align: left;
+            margin: 20px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            color: #374151;
+            font-size: 1.05rem;
+        }
+
+        .btn-primary {
+            padding: 14px 32px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);
+        }
+
+        .btn-primary:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+        }
+
+        /* SCREEN 3: Game Screen */
+        .game-header {
             margin-bottom: 20px;
         }
 
-        .header h1 {
+        .game-header h1 {
             color: #1e3a8a;
-            font-size: 2rem;
-            margin-bottom: 8px;
-        }
-
-        .header p {
-            color: #4b5563;
-            font-size: 1rem;
+            font-size: 1.8rem;
         }
 
         .stats-board {
-            display: flex;
-            gap: 20px;
             background: white;
-            padding: 12px 24px;
+            padding: 10px 24px;
             border-radius: 50px;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            margin-bottom: 25px;
+            margin: 15px 0;
             font-weight: bold;
             color: #1f2937;
         }
 
-        .score-val {
-            color: #2563eb;
-        }
-
-        .game-container {
-            width: 100%;
-            max-width: 800px;
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
-        }
+        .score-val { color: #2563eb; }
 
         .items-pool {
             background: rgba(255, 255, 255, 0.8);
             backdrop-filter: blur(8px);
             padding: 20px;
             border-radius: 20px;
-            min-height: 120px;
+            min-height: 110px;
+            width: 100%;
             display: flex;
             flex-wrap: wrap;
-            gap: 12px;
+            gap: 10px;
             justify-content: center;
             align-items: center;
             border: 2px dashed #93c5fd;
+            margin-bottom: 20px;
         }
 
         .game-card {
             background: white;
-            padding: 12px 20px;
+            padding: 10px 18px;
             border-radius: 12px;
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 600;
             color: #1e293b;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
@@ -90,8 +185,7 @@
         }
 
         .game-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
         }
 
         .game-card.selected {
@@ -104,19 +198,19 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 20px;
+            width: 100%;
         }
 
         .category-bin {
             background: white;
             border-radius: 20px;
-            padding: 20px;
-            min-height: 250px;
+            padding: 15px;
+            min-height: 220px;
             display: flex;
             flex-direction: column;
             align-items: center;
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
             border: 3px solid transparent;
-            transition: all 0.3s ease;
             cursor: pointer;
         }
 
@@ -124,11 +218,8 @@
         .bin-indoor { border-color: #10b981; }
 
         .category-bin h2 {
-            font-size: 1.3rem;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            font-size: 1.1rem;
+            margin-bottom: 12px;
         }
 
         .bin-outdoor h2 { color: #d97706; }
@@ -138,7 +229,7 @@
             width: 100%;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
         }
 
         .bin-items .game-card {
@@ -146,44 +237,37 @@
             text-align: center;
         }
 
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5);
-            justify-content: center;
-            align-items: center;
-            z-index: 100;
-        }
-
-        .modal-content {
+        /* SCREEN 4: End Screen */
+        .end-card {
             background: white;
-            padding: 30px;
-            border-radius: 20px;
-            text-align: center;
-            max-width: 400px;
-            width: 90%;
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            max-width: 450px;
+            width: 100%;
         }
 
-        .modal-content h2 {
+        .end-card h2 {
             color: #1e3a8a;
+            font-size: 2rem;
             margin-bottom: 10px;
         }
 
-        .btn-restart {
-            margin-top: 20px;
-            padding: 12px 24px;
-            background: #2563eb;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
+        .end-card p {
+            color: #4b5563;
+            font-size: 1.1rem;
+            margin-bottom: 25px;
         }
 
-        .btn-restart:hover {
-            background: #1d4ed8;
+        /* Animations */
+        @keyframes fadeInScale {
+            0% { opacity: 0; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes loadProgress {
+            0% { width: 0%; }
+            100% { width: 100%; }
         }
 
         @media (max-width: 600px) {
@@ -195,16 +279,42 @@
 </head>
 <body>
 
-    <div class="header">
-        <h1>🎯 बचपन के खेल: वर्गीकरण</h1>
-        <p>खेल पर क्लिक करें, फिर सही श्रेणी (इनडोर या आउटडोर) का चयन करें!</p>
+    <!-- SCREEN 1: Innovine Splash Screen (5 Seconds) -->
+    <div id="screen1" class="screen active">
+        <div class="logo-container">
+            <!-- Asset Logo Placeholder / Styling -->
+            <div class="logo-icon">I</div>
+            <div class="logo-text">INNOVINE</div>
+            <p style="color: #64748b; font-weight: 500;">Learning Solutions</p>
+            <div class="splash-timer">
+                <div class="splash-progress"></div>
+            </div>
+        </div>
     </div>
 
-    <div class="stats-board">
-        <div>स्कोर: <span id="score" class="score-val">0</span> / <span id="total-score">8</span></div>
+    <!-- SCREEN 2: Instructions Screen -->
+    <div id="screen2" class="screen">
+        <div class="card-box">
+            <h2>📜 खेल के नियम</h2>
+            <div class="instructions-list">
+                <p>1. स्क्रीन पर दिए गए खेलों में से किसी एक पर क्लिक करें।</p>
+                <p>2. इसके बाद उसे <b>आउटडोर</b> या <b>इनडोर</b> बॉक्स में सही श्रेणी चुनें।</p>
+                <p>3. सभी खेलों को सही छाँटकर गेम पूरा करें!</p>
+            </div>
+            <button class="btn-primary" onclick="goToScreen(3); startGame();">गेम शुरू करें 🚀</button>
+        </div>
     </div>
 
-    <div class="game-container">
+    <!-- SCREEN 3: Game Screen -->
+    <div id="screen3" class="screen">
+        <div class="game-header">
+            <h1>🎯 बचपन के खेल: वर्गीकरण</h1>
+        </div>
+
+        <div class="stats-board">
+            स्कोर: <span id="score" class="score-val">0</span> / <span id="total-score">8</span>
+        </div>
+
         <!-- Unsorted Items Pool -->
         <div class="items-pool" id="itemsPool"></div>
 
@@ -222,17 +332,17 @@
         </div>
     </div>
 
-    <!-- Victory Modal -->
-    <div class="modal" id="winModal">
-        <div class="modal-content">
+    <!-- SCREEN 4: End Screen -->
+    <div id="screen4" class="screen">
+        <div class="end-card">
             <h2>🎉 शानदार खेल!</h2>
-            <p>आपने सभी नए खेलों को बिल्कुल सही छाँट लिया है!</p>
-            <button class="btn-restart" onclick="restartGame()">नए खेलों के साथ पुनः खेलें 🔄</button>
+            <p>आपने सभी खेलों को सफलतापूर्वक छाँट लिया है!</p>
+            <button class="btn-primary" onclick="restartGame()">पुनः खेलें (नए खेल) 🔄</button>
         </div>
     </div>
 
     <script>
-        // Web Audio API Sound Generator
+        // Web Audio API Sound System
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
         function playSound(type) {
@@ -284,7 +394,7 @@
             }
         }
 
-        // Master Question Bank (16 Items)
+        // Master Question Bank
         const masterItemsBank = [
             { id: 1, name: '🏏 क्रिकेट', category: 'outdoor' },
             { id: 2, name: '🎲 लूडो', category: 'indoor' },
@@ -304,23 +414,35 @@
             { id: 16, name: '👁️ आँख-मिचौली', category: 'outdoor' }
         ];
 
-        let currentRoundItems = [];
         let selectedItem = null;
         let score = 0;
-        const ITEMS_PER_ROUND = 8; // Number of cards per round
+        const ITEMS_PER_ROUND = 8;
 
-        function initGame() {
+        // Navigation Controller
+        function goToScreen(screenNumber) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(`screen${screenNumber}`).classList.add('active');
+        }
+
+        // Screen 1 Timer (5 Seconds Auto Transition to Screen 2)
+        window.onload = () => {
+            setTimeout(() => {
+                goToScreen(2);
+            }, 5000);
+        };
+
+        // Game Initialization Logic
+        function startGame() {
             score = 0;
             selectedItem = null;
             document.getElementById('score').innerText = score;
             document.getElementById('total-score').innerText = ITEMS_PER_ROUND;
             document.getElementById('outdoorBin').innerHTML = '';
             document.getElementById('indoorBin').innerHTML = '';
-            document.getElementById('winModal').style.display = 'none';
 
-            // Randomly select items from Master Bank for fresh gameplay
+            // Randomize Questions on Play / Restart
             const shuffledBank = [...masterItemsBank].sort(() => Math.random() - 0.5);
-            currentRoundItems = shuffledBank.slice(0, ITEMS_PER_ROUND);
+            const currentRoundItems = shuffledBank.slice(0, ITEMS_PER_ROUND);
 
             const pool = document.getElementById('itemsPool');
             pool.innerHTML = '';
@@ -329,7 +451,6 @@
                 const card = document.createElement('div');
                 card.className = 'game-card';
                 card.innerText = item.name;
-                card.dataset.id = item.id;
                 card.onclick = (e) => {
                     e.stopPropagation();
                     selectCard(card, item);
@@ -349,27 +470,28 @@
             if (!selectedItem) return;
 
             if (selectedItem.data.category === targetCategory) {
-                // Correct Choice
+                // Correct Match
                 playSound('correct');
                 const targetBin = targetCategory === 'outdoor' ? 
                     document.getElementById('outdoorBin') : document.getElementById('indoorBin');
                 
                 selectedItem.element.classList.remove('selected');
-                selectedItem.element.onclick = null; // Disable clicking after move
+                selectedItem.element.onclick = null;
                 targetBin.appendChild(selectedItem.element);
 
                 score++;
                 document.getElementById('score').innerText = score;
                 selectedItem = null;
 
+                // Game Completed Transition to Screen 4
                 if (score === ITEMS_PER_ROUND) {
                     setTimeout(() => {
                         playSound('win');
-                        document.getElementById('winModal').style.display = 'flex';
-                    }, 400);
+                        goToScreen(4);
+                    }, 500);
                 }
             } else {
-                // Wrong Choice
+                // Wrong Match
                 playSound('wrong');
                 selectedItem.element.style.borderColor = '#ef4444';
                 setTimeout(() => {
@@ -381,11 +503,9 @@
         }
 
         function restartGame() {
-            initGame();
+            goToScreen(3);
+            startGame();
         }
-
-        // Start Game on Load
-        window.onload = initGame;
     </script>
 </body>
 </html>
