@@ -198,6 +198,13 @@
 </div>
 
 <script>
+// --- Sound Player Helper ---
+function playSound(soundKey, scene) {
+    if (scene && scene.sound && scene.sound.get(soundKey)) {
+        scene.sound.play(soundKey);
+    }
+}
+
 // --- 10 Chapter Questions Data ---
 const chapterQuestions = [
     {
@@ -347,6 +354,10 @@ class GameScene extends Phaser.Scene {
     }
 
     preload() {
+        // Load Audio Assets
+        this.load.audio('correct_snd', 'assets/correct.mp3');
+        this.load.audio('wrong_snd', 'assets/wrong.mp3');
+
         this.createPlaceholderGraphics();
     }
 
@@ -461,6 +472,7 @@ class GameScene extends Phaser.Scene {
 
     catchWatermelon(player, melon) {
         melon.destroy();
+        playSound('correct_snd', this);
         globalScore += 10;
         this.scoreText.setText('Score: ' + globalScore + ' / 300');
 
@@ -479,6 +491,7 @@ class GameScene extends Phaser.Scene {
 
     hitObstacle(player, obstacle) {
         obstacle.destroy();
+        playSound('wrong_snd', this);
         globalLives -= 1;
         this.livesText.setText('Lives: ❤️ ' + globalLives);
         this.cameras.main.flash(200, 255, 0, 0);
@@ -489,6 +502,7 @@ class GameScene extends Phaser.Scene {
     }
 
     triggerGameOver() {
+        playSound('wrong_snd', this);
         this.physics.pause();
         this.spawnTimerMelon.paused = true;
         this.spawnTimerObstacle.paused = true;
@@ -501,6 +515,7 @@ class GameScene extends Phaser.Scene {
     }
 
     triggerWin() {
+        playSound('correct_snd', this);
         this.physics.pause();
         this.spawnTimerMelon.paused = true;
         this.spawnTimerObstacle.paused = true;
@@ -539,10 +554,12 @@ class GameScene extends Phaser.Scene {
                 allBtns.forEach(b => b.disabled = true);
 
                 if (idx === currentData.correct) {
+                    playSound('correct_snd', this);
                     globalScore += 20;
                     feedbackDiv.className = 'feedback-correct';
                     feedbackDiv.innerText = "✅ सही उत्तर! (+20 बोनस अंक)";
                 } else {
+                    playSound('wrong_snd', this);
                     globalScore -= 30;
                     if (globalScore < 0) globalScore = 0;
                     feedbackDiv.className = 'feedback-wrong';
