@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>इन्नोवाइन - कलाम की यात्रा (Innovine)</title>
+    <title>सच्चा देशप्रेम - शैक्षिक खेल</title>
     <style>
         * {
             box-sizing: border-box;
@@ -14,8 +14,8 @@
         }
 
         body {
-            background: #0f172a;
-            color: #f8fafc;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: #ffffff;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -25,47 +25,18 @@
 
         #game-container {
             width: 100%;
-            max-width: 750px;
-            background: #1e293b;
-            border-radius: 16px;
-            border: 2px solid #38bdf8;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+            max-width: 700px;
+            background: #ffffff;
+            color: #333333;
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
             padding: 30px;
             text-align: center;
             position: relative;
-            overflow: hidden;
-            min-height: 420px;
+            min-height: 450px;
             display: flex;
             justify-content: center;
             align-items: center;
-        }
-
-        /* Branding Logo - ONLY ON SCREEN 1 */
-        .brand-logo-splash {
-            max-width: 260px;
-            height: auto;
-            margin-bottom: 25px;
-            animation: pulse 1.5s infinite alternate;
-        }
-
-        .timer-text {
-            color: #38bdf8;
-            font-size: 1rem;
-            margin-top: 15px;
-            font-weight: bold;
-        }
-
-        h1 {
-            color: #38bdf8;
-            font-size: 2rem;
-            margin-bottom: 12px;
-            text-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
-        }
-
-        p.subtitle {
-            color: #94a3b8;
-            font-size: 1.05rem;
-            margin-bottom: 20px;
         }
 
         /* Screen Management */
@@ -81,76 +52,97 @@
             display: flex;
         }
 
-        /* Instructions List */
-        .instructions-box {
-            background: #0f172a;
-            border-radius: 10px;
-            padding: 20px;
+        /* Screen 1: Logo Splash */
+        .splash-logo {
+            max-width: 280px;
+            height: auto;
+            margin-bottom: 20px;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        .timer-text {
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 15px;
+        }
+
+        /* Titles and Text */
+        h1 {
+            color: #1e3c72;
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+
+        p.subtitle {
+            color: #666;
+            font-size: 1.1rem;
+            margin-bottom: 25px;
+        }
+
+        /* Instructions */
+        .instructions-list {
+            background: #f0f4f8;
+            border-radius: 12px;
+            padding: 20px 30px;
             text-align: left;
             margin-bottom: 25px;
-            border: 1px solid #334155;
             width: 100%;
         }
 
-        .instructions-box li {
+        .instructions-list li {
             font-size: 1.05rem;
             margin-bottom: 12px;
-            list-style: none;
-            color: #cbd5e1;
+            color: #444;
             line-height: 1.5;
         }
 
-        /* Progress Bar */
-        .progress-container {
-            width: 100%;
-            background: #334155;
-            height: 12px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            overflow: hidden;
-        }
-
-        .progress-bar {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(90deg, #38bdf8, #818cf8);
-            transition: width 0.4s ease;
-        }
-
-        /* Stats HUD */
+        /* Game HUD */
         .hud {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            background: #0f172a;
+            width: 100%;
+            background: #eef2f7;
             padding: 12px 20px;
             border-radius: 10px;
             margin-bottom: 20px;
             font-weight: bold;
-            color: #fbbf24;
-            width: 100%;
+            color: #1e3c72;
         }
 
-        /* Question Area */
+        .progress-bar-bg {
+            width: 100%;
+            background: #e0e0e0;
+            height: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: #ff9800;
+            transition: width 0.3s ease;
+        }
+
+        /* Question and Options */
         .question-box {
             font-size: 1.25rem;
+            font-weight: bold;
+            color: #2c3e50;
             margin-bottom: 20px;
-            min-height: 60px;
+            min-height: 50px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #f1f5f9;
-            line-height: 1.5;
-            width: 100%;
         }
 
-        /* Options Grid */
         .options-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 20px;
+            gap: 12px;
             width: 100%;
+            margin-bottom: 20px;
         }
 
         @media (max-width: 500px) {
@@ -159,65 +151,65 @@
             }
         }
 
-        .option-btn {
-            background: #334155;
-            color: #fff;
-            border: 2px solid transparent;
+        .opt-btn {
+            background: #f8f9fa;
+            border: 2px solid #dcdfe6;
+            border-radius: 10px;
             padding: 14px;
             font-size: 1rem;
-            border-radius: 10px;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.2s;
             text-align: left;
-            line-height: 1.4;
+            color: #333;
         }
 
-        .option-btn:hover {
-            background: #475569;
-            border-color: #38bdf8;
-            transform: translateY(-2px);
+        .opt-btn:hover {
+            background: #eef5ff;
+            border-color: #1e3c72;
         }
 
-        .option-btn.correct {
-            background: #166534 !important;
-            border-color: #22c55e !important;
+        .opt-btn.correct {
+            background: #d4edda !important;
+            border-color: #28a745 !important;
+            color: #155724;
         }
 
-        .option-btn.wrong {
-            background: #991b1b !important;
-            border-color: #ef4444 !important;
+        .opt-btn.wrong {
+            background: #f8d7da !important;
+            border-color: #dc3545 !important;
+            color: #721c24;
         }
 
         /* Feedback Box */
         .feedback {
-            width: 100%;
-            min-height: 50px;
-            font-size: 1rem;
-            margin-bottom: 20px;
-            padding: 12px;
+            min-height: 40px;
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+            padding: 10px;
             border-radius: 8px;
             display: none;
-            line-height: 1.5;
+            width: 100%;
+            text-align: left;
         }
 
         .feedback.show {
             display: block;
         }
 
-        .feedback.correct-text {
-            background: rgba(34, 197, 94, 0.15);
-            color: #4ade80;
+        .feedback.correct-bg {
+            background: #e2f0d9;
+            color: #2b542c;
         }
 
-        .feedback.wrong-text {
-            background: rgba(239, 68, 68, 0.15);
-            color: #f87171;
+        .feedback.wrong-bg {
+            background: #f2dede;
+            color: #a94442;
         }
 
-        /* Controls */
+        /* Buttons */
         .btn {
-            background: #38bdf8;
-            color: #0f172a;
+            background: #ff9800;
+            color: #ffffff;
             border: none;
             padding: 12px 30px;
             font-size: 1.1rem;
@@ -225,32 +217,21 @@
             border-radius: 25px;
             cursor: pointer;
             transition: transform 0.2s, background 0.2s;
-            margin: 5px;
+            box-shadow: 0 4px 10px rgba(255, 152, 0, 0.3);
         }
 
         .btn:hover {
-            background: #7dd3fc;
-            transform: scale(1.05);
+            background: #e68a00;
+            transform: translateY(-2px);
         }
 
         .hidden {
             display: none !important;
         }
 
-        .rocket-launch {
-            font-size: 3rem;
-            margin: 15px 0;
-            animation: bounce 1s infinite alternate;
-        }
-
-        @keyframes bounce {
-            from { transform: translateY(0); }
-            to { transform: translateY(-10px); }
-        }
-
-        @keyframes pulse {
-            from { transform: scale(1); }
-            to { transform: scale(1.05); }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
         }
     </style>
 </head>
@@ -258,41 +239,38 @@
 
 <div id="game-container">
 
-    <!-- SCREEN 1: LOGO ONLY (5 SECONDS) -->
-    <div id="logo-screen" class="screen active">
-        <img src="assets/logo.png" alt="Innovine Logo" class="brand-logo-splash" onerror="this.onerror=null; this.src='https://via.placeholder.com/220x80?text=INNOVINE';">
-        <p class="timer-text">लोड हो रहा है... (<span id="splash-timer">5</span>)</p>
+    <!-- SCREEN 1: INNOVINE LOGO ONLY -->
+    <div id="screen-logo" class="screen active">
+        <img src="assets/logo.png" alt="Innovine Logo" class="splash-logo" onerror="this.onerror=null; this.src='https://via.placeholder.com/280x100?text=INNOVINE+LOGO';">
+        <p class="timer-text">लोड हो रहा है... (<span id="splash-countdown">5</span>)</p>
     </div>
 
-    <!-- SCREEN 2: INSTRUCTIONS SCREEN -->
-    <div id="instruction-screen" class="screen">
-        <h1>🚀 कलाम की यात्रा</h1>
-        <p class="subtitle">खेल के नियम और निर्देश</p>
+    <!-- SCREEN 2: INSTRUCTIONS -->
+    <div id="screen-instructions" class="screen">
+        <h1>🇮🇳 सच्चा देशप्रेम</h1>
+        <p class="subtitle">अध्याय 8 - पाठ पर आधारित क्विज़ खेल</p>
         
-        <ul class="instructions-box">
-            <li>📌 <strong>लक्ष्य:</strong> 15 प्रश्नों के पूल में से चुने गए <strong>10 प्रश्नों</strong> का सही उत्तर देना।</li>
-            <li>🎯 <strong>अंक प्रणाली:</strong> प्रत्येक सही उत्तर पर आपको <strong>10 अंक</strong> मिलेंगे (कुल अंक: 100)।</li>
-            <li>💡 <strong>व्याख्या:</strong> प्रत्येक उत्तर के बाद आपको सही जवाब की स्पष्ट व्याख्या मिलेगी।</li>
-            <li>🚀 <strong>मिशन:</strong> अधिकतम अंक प्राप्त कर अध्याय की संपूर्ण पुनरावृत्ति करें!</li>
+        <ul class="instructions-list">
+            <li>📌 <strong>लक्ष्य:</strong> अध्याय 'सच्चा देशप्रेम' के प्रश्नों के सही उत्तर दें।</li>
+            <li>🎯 <strong>अंक:</strong> प्रत्येक सही उत्तर पर आपको <strong>10 अंक</strong> मिलेंगे।</li>
+            <li>💡 <strong>सीख:</strong> सही उत्तर चुनने पर आपको पाठ से जुड़ा मुख्य सबक भी जानने को मिलेगा।</li>
         </ul>
 
-        <div>
-            <button class="btn" onclick="startGame()">खेल शुरू करें 🚀</button>
-        </div>
+        <button class="btn" onclick="startGame()">खेल शुरू करें 🚀</button>
     </div>
 
-    <!-- SCREEN 3: GAME PLAY SCREEN -->
-    <div id="game-screen" class="screen">
+    <!-- SCREEN 3: GAME PLAY -->
+    <div id="screen-game" class="screen">
         <div class="hud">
-            <div>प्रश्न: <span id="current-q">1</span>/<span id="total-q">10</span></div>
+            <div>प्रश्न: <span id="current-q">1</span>/<span id="total-q">5</span></div>
             <div>अंक: <span id="score">0</span></div>
         </div>
 
-        <div class="progress-container">
-            <div id="progress-bar" class="progress-bar"></div>
+        <div class="progress-bar-bg">
+            <div id="progress-bar" class="progress-bar-fill"></div>
         </div>
 
-        <div id="question" class="question-box">प्रश्न यहाँ दिखाई देगा...</div>
+        <div id="question" class="question-box">प्रश्न लोड हो रहा है...</div>
 
         <div id="options" class="options-grid"></div>
 
@@ -302,206 +280,146 @@
     </div>
 
     <!-- SCREEN 4: END SCREEN -->
-    <div id="end-screen" class="screen">
-        <h1>मिशन पूरा हुआ! 🌟</h1>
-        <div class="rocket-launch">🚀</div>
+    <div id="screen-end" class="screen">
+        <h1>🎉 खेल पूर्ण हुआ!</h1>
         <p class="subtitle">अध्याय पुनरावृत्ति परिणाम</p>
-        <p id="final-stats" style="font-size: 1.3rem; margin-bottom: 15px; color: #fbbf24; font-weight: bold;"></p>
-        <p id="revision-msg" style="margin-bottom: 25px; color: #cbd5e1; line-height: 1.6; max-width: 600px;"></p>
         
-        <div>
-            <button class="btn" onclick="startGame()">पुनः खेलें 🔄</button>
+        <div style="font-size: 1.4rem; font-weight: bold; color: #1e3c72; margin-bottom: 15px;">
+            आपका अंतिम स्कोर: <span id="final-score">0</span> / 50
         </div>
+
+        <div id="lesson-box" style="background: #eef2f7; padding: 15px; border-radius: 10px; color: #333; margin-bottom: 25px; line-height: 1.6;">
+            <strong>आज का मुख्य सबक:</strong><br>
+            "सच्चा देशप्रेम केवल सीमाओं पर लड़ने में नहीं, बल्कि नियमों का पालन करने, दूसरों की मदद करने और सतर्क रहकर अपने कर्तव्यों को निभाने में है।"
+        </div>
+
+        <button class="btn" onclick="startGame()">पुनः खेलें 🔄</button>
     </div>
 
 </div>
 
 <script>
-    // 5-Second Timer for Screen 1 (Logo Screen)
-    let timeLeft = 5;
-    const timerElement = document.getElementById('splash-timer');
+    // 1. Splash Screen Timer (5 Seconds)
+    let logoTimer = 5;
+    const countdownEl = document.getElementById('splash-countdown');
 
     const splashInterval = setInterval(() => {
-        timeLeft--;
-        if (timerElement) {
-            timerElement.innerText = timeLeft;
-        }
-        if (timeLeft <= 0) {
+        logoTimer--;
+        if (countdownEl) countdownEl.innerText = logoTimer;
+        
+        if (logoTimer <= 0) {
             clearInterval(splashInterval);
-            showScreen('instruction-screen');
+            switchScreen('screen-instructions');
         }
     }, 1000);
 
-    // Screen Management
-    function showScreen(screenId) {
-        document.querySelectorAll('.screen').forEach(screen => {
-            screen.classList.remove('active');
-        });
+    // Screen Switcher Helper
+    function switchScreen(screenId) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.getElementById(screenId).classList.add('active');
     }
 
-    // Full Pool of 15 Questions
-    const questionPool = [
+    // Questions based on Chapter 8: "सच्चा देशप्रेम"
+    const questions = [
         {
-            question: "डॉ. ए.पी.जे. अब्दुल कलाम का जन्म कहाँ हुआ था?",
-            options: ["रामेश्वरम, तमिलनाडु", "तिरुवनंतपुरम, केरल", "बेंगलुरु, कर्नाटक", "हैदराबाद, तेलंगाना"],
+            question: "अमन ने मेले की दुकान से कौन-सा खिलौना खरीदा?",
+            options: ["नीले रंग का हाथी", "सुंदर कार", "रंग-बिरंगी गुड़िया", "लकड़ी का घोड़ा"],
             correct: 0,
-            explanation: "डॉ. कलाम का जन्म 15 अक्टूबर 1931 को तमिलनाडु के प्रसिद्ध द्वीप शहर रामेश्वरम में हुआ था।"
+            explanation: "अमन ने मेले की एक दुकान से नीले रंग का सुंदर छोटा हाथी खरीदा था।"
         },
         {
-            question: "बचपन में अपने परिवार की आर्थिक मदद के लिए कलाम क्या काम करते थे?",
-            options: ["मंदिर में फूल बेचते थे", "इमली के बीज इकट्ठा करते थे और अखबार बांटते थे", "मछली फार्म में काम करते थे", "साइकिल की मरम्मत करते थे"],
-            correct: 1,
-            explanation: "कलाम इमली के बीज इकट्ठा कर बेचते थे तथा चचेरे भाई शमसुद्दीन की मदद के लिए अखबार बांटते थे।"
-        },
-        {
-            question: "इसरो (ISRO) में डॉ. कलाम ने किस प्रमुख उपग्रह प्रक्षेपण यान का नेतृत्व किया?",
-            options: ["चंद्रयान-1", "मंगलयान", "एस.एल.वी.-3 (SLV-3)", "इनसैट-1ए"],
+            question: "रास्ते में राष्ट्रगान 'जन-गण-मन' शुरू होते ही लोगों ने क्या किया?",
+            options: ["ताली बजाने लगे", "अपने-अपने घर भाग गए", "सम्मानपूर्वक वहीं खड़े हो गए", "गीत गाने लगे"],
             correct: 2,
-            explanation: "डॉ. कलाम भारत के पहले स्वदेशी उपग्रह प्रक्षेपण यान (SLV-3) के प्रोजेक्ट डायरेक्टर थे।"
+            explanation: "राष्ट्रगान की धुन सुनते ही अमन, उसके मम्मी-पापा और सड़क पर चल रहे सभी लोग सम्मानपूर्वक खड़े हो गए।"
         },
         {
-            question: "डॉ. कलाम को 'मिसाइल मैन ऑफ इंडिया' क्यों कहा जाता है?",
-            options: ["उन्होंने तोपखाने की खोज की", "अग्नि और पृथ्वी मिसाइलों का सफल विकास किया", "वे वायुसेना के पायलट थे", "उन्होंने परमाणु पनडुब्बी बनाई"],
+            question: "सड़क की ओर भागता छोटा बच्चा किस चीज़ के पीछे दौड़ रहा था?",
+            options: ["गुब्बारे के पीछे", "रंगीन गेंद के पीछे", "एक कुत्ते के पीछे", "अपनी पतंग के पीछे"],
             correct: 1,
-            explanation: "उन्होंने भारत के एकीकृत निर्देशित मिसाइल विकास कार्यक्रम का सफल नेतृत्व किया।"
+            explanation: "वह छोटा बच्चा एक रंगीन गेंद के पीछे भागते-भागते सड़क पर पहुँचने वाला था।"
         },
         {
-            question: "डॉ. अब्दुल कलाम भारत के कौन-से नंबर के राष्ट्रपति बने?",
-            options: ["9वें", "10वें", "11वें", "12वें"],
-            correct: 2,
-            explanation: "डॉ. कलाम वर्ष 2002 से 2007 तक भारत के 11वें राष्ट्रपति रहे।"
-        },
-        {
-            question: "डॉ. कलाम का पूरा नाम क्या था?",
-            options: ["अब्दुल पाकिर जैनुलआब्दीन कलाम", "अवुल पाकिर जैनुलआब्दीन अब्दुल कलाम", "अहमद पाकिर जैनुल कलाम", "अबुल कलाम आजाद"],
+            question: "बच्चे को सड़क दुर्घटना से बचाने के लिए अमन ने क्या समझदारी दिखाई?",
+            options: [
+                "खुद राष्ट्रगान छोड़कर भागा",
+                "गार्ड को आवाज़ देकर सतर्क किया",
+                "बस चालक को रुकने का इशारा किया",
+                "चुपचाप खड़ा रहा"
+            ],
             correct: 1,
-            explanation: "उनका पूर्ण नाम 'अवुल पाकिर जैनुलआब्दीन अब्दुल कलाम' था।"
+            explanation: "अमन ने अपनी जगह पर खड़े रहकर गार्ड को आवाज़ दी- 'गार्ड अंकल... बच्चा सड़क की ओर जा रहा है!'"
         },
         {
-            question: "कलाम जी के पिता जी का क्या नाम था?",
-            options: ["जैनुलआब्दीन", "शमसुद्दीन", "जलालुद्दीन", "अहमद हुसैन"],
-            correct: 0,
-            explanation: "उनके पिता का नाम जैनुलआब्दीन था, जो बहुत ही उदार और सरल विचार वाले व्यक्ति थे।"
-        },
-        {
-            question: "अब्दुल कलाम की माता जी का क्या नाम था?",
-            options: ["आशियम्मा", "फातिमा", "रेशमा", "ज़ोहरा"],
-            correct: 0,
-            explanation: "उनकी माता जी का नाम आशियम्मा था, जो एक अत्यंत दयालु और गृहिणी महिला थीं।"
-        },
-        {
-            question: "डॉ. कलाम को भारत का सर्वोच्च नागरिक सम्मान 'भारत रत्न' किस वर्ष दिया गया?",
-            options: ["1990", "1997", "2001", "2005"],
+            question: "गार्ड अंकल के अनुसार दूसरों की सुरक्षा और मदद करना क्या है?",
+            options: ["केवल एक खेल", "सच्चा देशप्रेम और राष्ट्र की सेवा", "एक सामान्य बात", "कानून का उल्लंघन"],
             correct: 1,
-            explanation: "डॉ. कलाम को देश सेवा और विज्ञान के क्षेत्र में अतुलनीय योगदान के लिए 1997 में 'भारत रत्न' से सम्मानित किया गया।"
-        },
-        {
-            question: "डॉ. कलाम को किस नाम से जनता के बीच प्रियता मिली?",
-            options: ["जनता के राष्ट्रपति (People's President)", "राष्ट्रपिता", "लौह पुरुष", "युग पुरुष"],
-            correct: 0,
-            explanation: "अपने सादगी और छात्रों से लगाव के कारण उन्हें 'जनता के राष्ट्रपति' (People's President) कहा जाता है।"
-        },
-        {
-            question: "डॉ. कलाम की प्रसिद्ध आत्मकथा (Autobiography) का क्या नाम है?",
-            options: ["माई एक्सपेरिमेंट्स विद ट्रुथ", "विंग्स ऑफ फायर (Wings of Fire)", "इग्नाइटेड माइंड्स", "द डिस्कवरी ऑफ इंडिया"],
-            correct: 1,
-            explanation: "'विंग्स ऑफ फायर' (अग्नि की उड़ान) डॉ. एपीजे अब्दुल कलाम की प्रसिद्ध आत्मकथा है।"
-        },
-        {
-            question: "बचपन में कलाम के सबसे करीबी मित्र कौन थे, जो मंदिर के मुख्य पुजारी के बेटे थे?",
-            options: ["रामानंद शास्त्री", "अराविंदन", "शिवप्रकाशन", "शमसुद्दीन"],
-            correct: 0,
-            explanation: "रामानंद शास्त्री, रामेश्वरम मंदिर के मुख्य पुजारी पक्षी लक्ष्मण शास्त्री के पुत्र थे और कलाम के परम मित्र थे।"
-        },
-        {
-            question: "डॉ. कलाम ने स्नातक (Graduation) की शिक्षा किस विषय में पूरी की?",
-            options: ["कंप्यूटर साइंस", "भौतिक विज्ञान (Physics)", "रसायन विज्ञान", "गणित"],
-            correct: 1,
-            explanation: "उन्होंने सेंट जोसेफ कॉलेज, तिरुचिरापल्ली से 1954 में भौतिक विज्ञान (Physics) में स्नातक किया।"
-        },
-        {
-            question: "डॉ. कलाम ने एयरोस्पेस इंजीनियरिंग की पढ़ाई कहाँ से की?",
-            options: ["IIT मद्रास", "एम.आई.टी. (MIT - मद्रास इंस्टीट्यूट ऑफ टेक्नोलॉजी)", "IIT दिल्ली", "IISc बेंगलुरु"],
-            correct: 1,
-            explanation: "उन्होंने मद्रास इंस्टीट्यूट ऑफ टेक्नोलॉजी (MIT) से एयरोस्पेस इंजीनियरिंग की डिग्री हासिल की।"
-        },
-        {
-            question: "डॉ. कलाम का निधन किस स्थान पर छात्रों को संबोधित करते समय हुआ?",
-            options: ["शिलॉन्ग (IIM Shillong)", "दिल्ली", "बेंगलुरु", "गुवाहाटी"],
-            correct: 0,
-            explanation: "27 जुलाई 2015 को IIM शिलॉन्ग में व्याख्यान देते समय डॉ. कलाम का निधन हुआ।"
+            explanation: "गार्ड अंकल ने समझाया कि दूसरों की जान बचाना, मदद करना और कर्तव्य निभाना भी सच्चा देशप्रेम है।"
         }
     ];
 
-    let currentGameQuestions = [];
-    let currentQuestionIndex = 0;
+    let currentQIndex = 0;
     let score = 0;
-    let selectedOption = false;
-
-    // Helper Function: Pick 10 Random Questions from 15
-    function selectRandomQuestions() {
-        const shuffled = [...questionPool].sort(() => 0.5 - Math.random());
-        return shuffled.slice(0, 10);
-    }
+    let optionSelected = false;
 
     function startGame() {
-        currentGameQuestions = selectRandomQuestions();
-        currentQuestionIndex = 0;
+        currentQIndex = 0;
         score = 0;
-        showScreen('game-screen');
-        document.getElementById('total-q').innerText = currentGameQuestions.length;
+        switchScreen('screen-game');
+        document.getElementById('total-q').innerText = questions.length;
         loadQuestion();
     }
 
     function loadQuestion() {
-        selectedOption = false;
-        const qData = currentGameQuestions[currentQuestionIndex];
-        
-        document.getElementById('current-q').innerText = currentQuestionIndex + 1;
+        optionSelected = false;
+        const qData = questions[currentQIndex];
+
+        document.getElementById('current-q').innerText = currentQIndex + 1;
         document.getElementById('score').innerText = score;
-        const progressPercent = ((currentQuestionIndex) / currentGameQuestions.length) * 100;
+        
+        // Update Progress Bar
+        const progressPercent = (currentQIndex / questions.length) * 100;
         document.getElementById('progress-bar').style.width = progressPercent + '%';
 
         document.getElementById('question').innerText = qData.question;
-        
+
+        // Reset Feedback and Next Button
         const feedbackEl = document.getElementById('feedback');
         feedbackEl.className = 'feedback';
         feedbackEl.innerText = '';
         document.getElementById('next-btn').classList.add('hidden');
 
+        // Render Options
         const optionsContainer = document.getElementById('options');
         optionsContainer.innerHTML = '';
 
-        const optionPrefixes = ['क', 'ख', 'ग', 'घ'];
-
-        qData.options.forEach((optText, idx) => {
+        qData.options.forEach((optText, index) => {
             const btn = document.createElement('button');
-            btn.className = 'option-btn';
-            btn.innerText = `(${optionPrefixes[idx]}) ${optText}`;
-            btn.onclick = () => selectOption(idx, btn);
+            btn.className = 'opt-btn';
+            btn.innerText = optText;
+            btn.onclick = () => handleOptionClick(index, btn);
             optionsContainer.appendChild(btn);
         });
     }
 
-    function selectOption(index, button) {
-        if (selectedOption) return;
-        selectedOption = true;
+    function handleOptionClick(selectedIndex, button) {
+        if (optionSelected) return;
+        optionSelected = true;
 
-        const qData = currentGameQuestions[currentQuestionIndex];
-        const allButtons = document.querySelectorAll('.option-btn');
+        const qData = questions[currentQIndex];
+        const allButtons = document.querySelectorAll('.opt-btn');
         const feedbackEl = document.getElementById('feedback');
 
-        if (index === qData.correct) {
+        if (selectedIndex === qData.correct) {
             score += 10;
             button.classList.add('correct');
             feedbackEl.innerText = "✨ सही उत्तर! " + qData.explanation;
-            feedbackEl.classList.add('show', 'correct-text');
+            feedbackEl.classList.add('show', 'correct-bg');
         } else {
             button.classList.add('wrong');
             allButtons[qData.correct].classList.add('correct');
-            feedbackEl.innerText = "❌ गलत उत्तर। सही उत्तर है: " + qData.explanation;
-            feedbackEl.classList.add('show', 'wrong-text');
+            feedbackEl.innerText = "❌ गलत उत्तर! सही उत्तर है: " + qData.options[qData.correct] + ". " + qData.explanation;
+            feedbackEl.classList.add('show', 'wrong-bg');
         }
 
         document.getElementById('score').innerText = score;
@@ -509,8 +427,8 @@
     }
 
     function nextQuestion() {
-        currentQuestionIndex++;
-        if (currentQuestionIndex < currentGameQuestions.length) {
+        currentQIndex++;
+        if (currentQIndex < questions.length) {
             loadQuestion();
         } else {
             showEndScreen();
@@ -519,18 +437,8 @@
 
     function showEndScreen() {
         document.getElementById('progress-bar').style.width = '100%';
-        showScreen('end-screen');
-
-        document.getElementById('final-stats').innerText = `आपका अंतिम स्कोर: ${score} / ${currentGameQuestions.length * 10}`;
-        
-        const msgEl = document.getElementById('revision-msg');
-        if (score === 100) {
-            msgEl.innerText = "🌟 उत्कृष्ट! आपको इस अध्याय की पूर्ण और सटीक जानकारी है!";
-        } else if (score >= 70) {
-            msgEl.innerText = "👍 बहुत बढ़िया! आपकी पाठ पर अच्छी पकड़ है।";
-        } else {
-            msgEl.innerText = "📚 अच्छा प्रयास! पाठ को एक बार फिर ध्यान से पढ़ें और पुनः प्रयास करें।";
-        }
+        switchScreen('screen-end');
+        document.getElementById('final-score').innerText = score;
     }
 </script>
 
