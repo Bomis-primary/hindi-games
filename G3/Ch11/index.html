@@ -1,323 +1,405 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>एक अनोखा तरबूज़ - The Square Watermelon Game</title>
+    <title>MindSpark - Understanding Test Game</title>
     <style>
-        body {
+        * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            background-color: #2c3e50;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            color: #f8fafc;
             display: flex;
-            flex-direction: column;
-            align-items: center;
             justify-content: center;
+            align-items: center;
             min-height: 100vh;
-            color: #ffef;
+            padding: 20px;
         }
 
-        h1 {
-            margin: 10px 0 5px 0;
-            color: #2ecc71;
-            text-shadow: 2px 2px #27ae60;
-        }
-
-        p {
-            margin: 0 0 15px 0;
-            font-size: 14px;
-            color: #ecf0f1;
-        }
-
-        #game-container {
+        .card {
+            background: rgba(30, 41, 59, 0.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            width: 100%;
+            max-width: 600px;
+            padding: 30px;
+            text-align: center;
             position: relative;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
-            border-radius: 10px;
             overflow: hidden;
         }
 
-        canvas {
-            background: #87CEEB;
+        /* --- INNOVATIVE LOGO ANIMATION --- */
+        .logo-container {
+            position: relative;
+            width: 90px;
+            height: 90px;
+            margin: 0 auto 15px auto;
+        }
+
+        .logo-ring {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 4px solid transparent;
+            border-top-color: #38bdf8;
+            border-bottom-color: #818cf8;
+            border-radius: 50%;
+            animation: spin 3s linear infinite;
+        }
+
+        .logo-inner {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #f59e0b, #ef4444);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 30px;
+            box-shadow: 0 0 20px rgba(245, 158, 11, 0.5);
+            animation: pulse 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); }
+            100% { transform: scale(1.05); }
+        }
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+            background: linear-gradient(to right, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p.subtitle {
+            font-size: 14px;
+            color: #94a3b8;
+            margin-bottom: 25px;
+        }
+
+        /* --- UI SCREENS & BUTTONS --- */
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
             display: block;
         }
 
-        #ui-overlay {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            right: 10px;
-            display: flex;
-            justify-content: space-between;
-            font-size: 18px;
+        .btn {
+            background: linear-gradient(135deg, #38bdf8, #3b82f6);
+            color: #fff;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 25px;
+            font-size: 16px;
             font-weight: bold;
-            color: #2c3e50;
-            background: rgba(255, 255, 255, 0.8);
-            padding: 8px 15px;
-            border-radius: 20px;
-            pointer-events: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3);
+            margin-top: 15px;
         }
 
-        #fact-box {
-            position: absolute;
-            bottom: 10px;
-            left: 10px;
-            right: 10px;
-            background: rgba(0, 0, 0, 0.75);
-            color: #f1c40f;
-            padding: 10px;
-            border-radius: 8px;
-            text-align: center;
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(56, 189, 248, 0.5);
+        }
+
+        /* --- GAMEPLAY COMPONENTS --- */
+        .instructions-list {
+            text-align: left;
+            background: #0f172a;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border-left: 4px solid #38bdf8;
+        }
+
+        .instructions-list li {
+            margin-bottom: 10px;
+            font-size: 15px;
+            line-height: 1.4;
+            color: #cbd5e1;
+        }
+
+        .timer-bar {
+            width: 100%;
+            height: 8px;
+            background: #334155;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .timer-progress {
+            height: 100%;
+            width: 100%;
+            background: #22c55e;
+            transition: width 0.1s linear;
+        }
+
+        .passage-box {
+            background: #0f172a;
+            padding: 15px;
+            border-radius: 10px;
+            color: #e2e8f0;
+            font-size: 15px;
+            line-height: 1.5;
+            margin-bottom: 20px;
+            text-align: left;
+            border: 1px solid #334155;
+        }
+
+        .question-text {
+            font-size: 18px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .options-grid {
+            display: grid;
+            gap: 10px;
+        }
+
+        .option-btn {
+            background: #334155;
+            color: #f8fafc;
+            border: 2px solid transparent;
+            padding: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: left;
             font-size: 14px;
-            pointer-events: none;
+            transition: all 0.2s;
         }
 
-        .controls-hint {
-            margin-top: 10px;
-            font-size: 13px;
-            color: #bdc3c7;
+        .option-btn:hover {
+            background: #475569;
+            border-color: #38bdf8;
+        }
+
+        /* --- END SCREEN --- */
+        .score-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #38bdf8 0%, #1e293b 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px auto;
+            font-size: 32px;
+            font-weight: bold;
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.4);
+        }
+
+        .feedback-text {
+            font-size: 16px;
+            color: #cbd5e1;
+            margin-bottom: 20px;
         }
     </style>
 </head>
 <body>
 
-    <h1>एक अनोखा तरबूज़ 🍉📦</h1>
-    <p>गोलू की मदद करें: गोल तरबूज़ पकड़ें और उन्हें चौकोर साँचे में डालें!</p>
-
-    <div id="game-container">
-        <div id="ui-overlay">
-            <div id="score">स्कोर (Score): 0</div>
-            <div id="target">लक्ष्य (Goal): 5 चौकोर तरबूज़</div>
+    <div class="card">
+        <!-- INNOVATIVE ANIMATED LOGO -->
+        <div class="logo-container">
+            <div class="logo-ring"></div>
+            <div class="logo-inner">🧠</div>
         </div>
-        <canvas id="gameCanvas" width="600" height="400"></canvas>
-        <div id="fact-box">ज्ञान: तरबूज़ में लगभग 92% पानी होता है!</div>
-    </div>
+        <h1>MindSpark</h1>
+        <p class="subtitle">The Ultimate Comprehension & Understanding Challenge</p>
 
-    <div class="controls-hint">
-        🎮 **कंट्रोल (Controls):** ⬅️ ➡️ बायाँ / दायाँ तीर (Left / Right Arrow) या A/D की-बोर्ड बटन दबाएँ।
+        <!-- INSTRUCTION SCREEN -->
+        <div id="instruction-screen" class="screen active">
+            <div class="instructions-list">
+                <ol type="1">
+                    <li>📖 <strong>Read Carefully:</strong> You will get short factual scenarios.</li>
+                    <li>💡 <strong>Analyze, Don't Guess:</strong> Questions test <em>deep understanding</em>, logic, and inference—not just memory.</li>
+                    <li>⏱️ <strong>Beat the Clock:</strong> You have 20 seconds per scenario.</li>
+                    <li>🎯 <strong>Score High:</strong> Earn maximum points by choosing the most precise conclusion!</li>
+                </ol>
+            </div>
+            <button class="btn" onclick="startGame()">Start Challenge</button>
+        </div>
+
+        <!-- GAMEPLAY SCREEN -->
+        <div id="game-screen" class="screen">
+            <div class="timer-bar">
+                <div id="timer" class="timer-progress"></div>
+            </div>
+            <div id="passage" class="passage-box">Loading scenario...</div>
+            <div id="question" class="question-text">Loading question...</div>
+            <div id="options" class="options-grid"></div>
+        </div>
+
+        <!-- END SCREEN -->
+        <div id="end-screen" class="screen">
+            <h2>Challenge Complete!</h2>
+            <div class="score-circle">
+                <span id="final-score">0/3</span>
+            </div>
+            <p id="feedback" class="feedback-text">Evaluating your understanding...</p>
+            <button class="btn" onclick="restartGame()">Try Again</button>
+        </div>
     </div>
 
     <script>
-        const canvas = document.getElementById("gameCanvas");
-        const ctx = canvas.getContext("2d");
-
-        const scoreEl = document.getElementById("score");
-        const factBox = document.getElementById("fact-box");
-
-        // Game State
-        let score = 0;
-        let gameOver = false;
-
-        // Facts from Chapter 11
-        const facts = [
-            "ज्ञान: तरबूज़ में लगभग 92% पानी होता है! 💦",
-            "ज्ञान: इसके लाल भाग में 'लाइकोपीन' नाम का तत्व होता है! 🔴",
-            "ज्ञान: जापान के किसान पारदर्शी साँचे (Moulds) का प्रयोग करते हैं! 📦",
-            "ज्ञान: तरबूज़ का हरा छिलका अचार और मुरब्बा बनाने में काम आता है! 🥒",
-            "ज्ञान: चौकोर तरबूज़ को आसानी से सजाकर रखा जा सकता है! ✨",
-            "ज्ञान: तरबूज़, ककड़ी और कद्दू एक ही बेल-परिवार के सदस्य हैं! 🌿"
+        // --- GAME DATA ---
+        const gameData = [
+            {
+                passage: "A company noticed that remote employees worked 10% more hours but took 20% fewer vacation days. However, after one year, overall creative innovation dropped significantly.",
+                question: "What is the most accurate understanding of this situation?",
+                options: [
+                    "Remote work directly decreases employee intelligence.",
+                    "Overworking without adequate rest leads to burnout, reducing creative capacity.",
+                    "Employees were taking hidden vacations while remaining logged in.",
+                    "The company should immediately force everyone back to the office."
+                ],
+                correct: 1
+            },
+            {
+                passage: "An ecosystem had a declining plant population. Scientists introduced a new species of beetle that eats weeds. Within six months, both the weeds and the local plant population shrank drastically.",
+                question: "What can be inferred about the introduced beetle?",
+                options: [
+                    "The beetle only eats dead plant matter.",
+                    "The beetle thrives in cold weather conditions.",
+                    "The beetle consumes both target weeds and essential local plants.",
+                    "The plant population shrank because of unexpected rainstorms."
+                ],
+                correct: 2
+            },
+            {
+                passage: "Solar panels produce peak energy during midday. However, electricity demand peaks in the evening when people return home. Without grid batteries, excess midday energy goes unused.",
+                question: "What primary challenge does this scenario highlight?",
+                options: [
+                    "Solar panels are ineffective sources of renewable energy.",
+                    "The core issue is a mismatch between energy generation timing and usage timing.",
+                    "Electricity should be made free during the evening.",
+                    "Batteries completely eliminate the need for solar power."
+                ],
+                correct: 1
+            }
         ];
 
-        // Player (Golu)
-        const player = {
-            x: canvas.width / 2 - 30,
-            y: canvas.height - 70,
-            width: 60,
-            height: 60,
-            speed: 7,
-            dx: 0,
-            hasWatermelon: false,
-            type: null // 'round' or 'square'
-        };
+        let currentQuestion = 0;
+        let score = 0;
+        let timerInterval = null;
+        let timeLeft = 20;
 
-        // Mold Target (Left side)
-        const mold = {
-            x: 20,
-            y: canvas.height - 80,
-            width: 70,
-            height: 70
-        };
+        // --- GAME CONTROLS ---
+        function startGame() {
+            currentQuestion = 0;
+            score = 0;
+            showScreen('game-screen');
+            loadQuestion();
+        }
 
-        // Falling Watermelons
-        let watermelons = [];
-        let spawnTimer = 0;
+        function loadQuestion() {
+            if (currentQuestion >= gameData.length) {
+                endGame();
+                return;
+            }
 
-        // Key Handlers
-        const keys = {};
+            const data = gameData[currentQuestion];
+            document.getElementById('passage').innerText = data.passage;
+            document.getElementById('question').innerText = data.question;
 
-        document.addEventListener("keydown", (e) => {
-            keys[e.key] = true;
-        });
+            const optionsContainer = document.getElementById('options');
+            optionsContainer.innerHTML = '';
 
-        document.addEventListener("keyup", (e) => {
-            keys[e.key] = false;
-        });
-
-        function spawnWatermelon() {
-            const x = Math.random() * (canvas.width - 120) + 100;
-            watermelons.push({
-                x: x,
-                y: -30,
-                radius: 20,
-                speed: 2 + Math.random() * 2
+            data.options.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerText = opt;
+                btn.onclick = () => selectOption(index);
+                optionsContainer.appendChild(btn);
             });
+
+            startTimer();
         }
 
-        function update() {
-            if (gameOver) return;
+        function startTimer() {
+            clearInterval(timerInterval);
+            timeLeft = 20;
+            const timerEl = document.getElementById('timer');
+            timerEl.style.width = '100%';
+            timerEl.style.backgroundColor = '#22c55e';
 
-            // Player Movement
-            if (keys["ArrowLeft"] || keys["a"] || keys["A"]) {
-                player.x -= player.speed;
-            }
-            if (keys["ArrowRight"] || keys["d"] || keys["D"]) {
-                player.x += player.speed;
-            }
+            timerInterval = setInterval(() => {
+                timeLeft -= 0.1;
+                const percentage = (timeLeft / 20) * 100;
+                timerEl.style.width = `${percentage}%`;
 
-            // Boundary Checks
-            if (player.x < 0) player.x = 0;
-            if (player.x + player.width > canvas.width) player.x = canvas.width - player.width;
-
-            // Spawn Watermelons
-            spawnTimer++;
-            if (spawnTimer > 100 && watermelons.length < 3) {
-                spawnWatermelon();
-                spawnTimer = 0;
-            }
-
-            // Update Watermelons
-            for (let i = watermelons.length - 1; i >= 0; i--) {
-                let w = watermelons[i];
-                w.y += w.speed;
-
-                // Catch Watermelon
-                if (
-                    !player.hasWatermelon &&
-                    w.y + w.radius >= player.y &&
-                    w.x >= player.x &&
-                    w.x <= player.x + player.width
-                ) {
-                    player.hasWatermelon = true;
-                    player.type = 'round';
-                    watermelons.splice(i, 1);
-                    factBox.innerText = "शाबाश! अब इसे बाएँ (Left) तरफ वाले साँचे (Mold) में ले जाएँ!";
-                    continue;
+                if (timeLeft <= 5) {
+                    timerEl.style.backgroundColor = '#ef4444';
                 }
 
-                // Missed Watermelon
-                if (w.y - w.radius > canvas.height) {
-                    watermelons.splice(i, 1);
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    nextQuestion();
                 }
+            }, 100);
+        }
+
+        function selectOption(selectedIndex) {
+            clearInterval(timerInterval);
+            if (selectedIndex === gameData[currentQuestion].correct) {
+                score++;
             }
-
-            // Deliver to Mold
-            if (player.hasWatermelon && player.type === 'round') {
-                if (player.x <= mold.x + mold.width) {
-                    // Transformed into Square!
-                    score += 1;
-                    scoreEl.innerText = `स्कोर (Score): ${score}`;
-                    player.hasWatermelon = false;
-                    player.type = null;
-
-                    // Update Random Fact
-                    const randomFact = facts[Math.floor(Math.random() * facts.length)];
-                    factBox.innerText = `🎉 चौकोर तरबूज़ तैयार! ${randomFact}`;
-                }
-            }
+            nextQuestion();
         }
 
-        function drawBackground() {
-            // Kitchen Floor
-            ctx.fillStyle = "#e0e0e0";
-            ctx.fillRect(0, canvas.height - 30, canvas.width, 30);
-
-            // Wall
-            ctx.fillStyle = "#fff8dc";
-            ctx.fillRect(0, 0, canvas.width, canvas.height - 30);
-
-            // Kitchen Table / Shelf
-            ctx.fillStyle = "#8b4513";
-            ctx.fillRect(0, canvas.height - 35, canvas.width, 5);
+        function nextQuestion() {
+            currentQuestion++;
+            loadQuestion();
         }
 
-        function drawMold() {
-            // Glass Mold Container
-            ctx.strokeStyle = "#2980b9";
-            ctx.lineWidth = 4;
-            ctx.fillStyle = "rgba(173, 216, 230, 0.4)";
-            ctx.fillRect(mold.x, mold.y, mold.width, mold.height);
-            ctx.strokeRect(mold.x, mold.y, mold.width, mold.height);
+        function endGame() {
+            clearInterval(timerInterval);
+            showScreen('end-screen');
 
-            // Label
-            ctx.fillStyle = "#2c3e50";
-            ctx.font = "12px Arial";
-            ctx.fillText("साँचा (Mold)", mold.x + 5, mold.y - 8);
-        }
-
-        function drawWatermelons() {
-            watermelons.forEach(w => {
-                // Round Watermelon
-                ctx.beginPath();
-                ctx.arc(w.x, w.y, w.radius, 0, Math.PI * 2);
-                ctx.fillStyle = "#27ae60";
-                ctx.fill();
-                ctx.lineWidth = 2;
-                ctx.strokeStyle = "#1e8449";
-                ctx.stroke();
-
-                // Stripes
-                ctx.beginPath();
-                ctx.moveTo(w.x - 10, w.y - 10);
-                ctx.lineTo(w.x + 10, w.y + 10);
-                ctx.strokeStyle = "#145a32";
-                ctx.lineWidth = 3;
-                ctx.stroke();
-            });
-        }
-
-        function drawPlayer() {
-            // Character Golu (Simplified Art)
-            ctx.fillStyle = "#e74c3c"; // Shirt
-            ctx.fillRect(player.x + 15, player.y + 20, 30, 30);
-
-            ctx.fillStyle = "#f1c40f"; // Head
-            ctx.beginPath();
-            ctx.arc(player.x + 30, player.y + 12, 15, 0, Math.PI * 2);
-            ctx.fill();
-
-            // Eyes
-            ctx.fillStyle = "#000";
-            ctx.fillRect(player.x + 23, player.y + 8, 3, 3);
-            ctx.fillRect(player.x + 34, player.y + 8, 3, 3);
-
-            // Hands holding item
-            if (player.hasWatermelon) {
-                // Draw Round Watermelon in hands
-                ctx.beginPath();
-                ctx.arc(player.x + 30, player.y + 35, 14, 0, Math.PI * 2);
-                ctx.fillStyle = "#27ae60";
-                ctx.fill();
-                ctx.strokeStyle = "#145a32";
-                ctx.stroke();
+            document.getElementById('final-score').innerText = `${score}/${gameData.length}`;
+            
+            const feedbackEl = document.getElementById('feedback');
+            if (score === gameData.length) {
+                feedbackEl.innerText = "🌟 Exceptional Understanding! You analyzed all scenarios perfectly.";
+            } else if (score >= 1) {
+                feedbackEl.innerText = "👍 Good effort! You caught some details, but missed a few deeper inferences.";
+            } else {
+                feedbackEl.innerText = "💡 Keep practicing! Focus on reading between the lines.";
             }
         }
 
-        function draw() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            drawBackground();
-            drawMold();
-            drawWatermelons();
-            drawPlayer();
+        function restartGame() {
+            showScreen('instruction-screen');
         }
 
-        function gameLoop() {
-            update();
-            draw();
-            requestAnimationFrame(gameLoop);
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
         }
-
-        gameLoop();
     </script>
 </body>
 </html>
