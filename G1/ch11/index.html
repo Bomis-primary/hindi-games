@@ -22,7 +22,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 15px;
+            padding: 10px;
         }
 
         /* SPLASH SCREEN */
@@ -75,6 +75,7 @@
             color: #c2410c;
             font-size: 16px;
             margin-bottom: 15px;
+            gap: 5px;
         }
 
         .chances-text {
@@ -101,8 +102,8 @@
 
         .btn-action:active { transform: scale(0.96); }
 
-        /* MAGIC BOX CONTAINER (LEVEL 1) */
-        .magic-box-container {
+        /* MAGIC CARD CONTAINER */
+        .magic-card-container {
             margin: 20px 0;
             display: flex;
             flex-direction: column;
@@ -110,21 +111,24 @@
             justify-content: center;
         }
 
-        .magic-box {
-            font-size: 80px;
+        .magic-card {
+            width: 130px;
+            height: 170px;
+            background: linear-gradient(135deg, #ea580c, #f97316);
+            color: #ffffff;
+            border-radius: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 55px;
+            box-shadow: 0 8px 20px rgba(234, 88, 12, 0.3);
             cursor: pointer;
-            transition: transform 0.3s ease;
-            filter: drop-shadow(0px 8px 10px rgba(0,0,0,0.15));
+            transition: transform 0.6s ease;
+            transform-style: preserve-3d;
         }
 
-        .magic-box.open {
-            animation: bounceBox 0.6s ease;
-        }
-
-        @keyframes bounceBox {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.2) rotate(10deg); }
-            100% { transform: scale(1); }
+        .magic-card.flip {
+            transform: rotateY(180deg);
         }
 
         /* QUESTION CARDS */
@@ -156,6 +160,7 @@
             padding: 10px 25px;
             border-radius: 16px;
             border: 2px dashed #ea580c;
+            word-break: break-word;
         }
 
         /* OPTIONS */
@@ -178,6 +183,7 @@
             cursor: pointer;
             box-shadow: 0 4px 10px rgba(0,0,0,0.08);
             touch-action: manipulation;
+            min-width: 70px;
         }
 
         .option-btn:active {
@@ -198,6 +204,52 @@
             margin: 15px 0;
             font-weight: 800;
         }
+
+        /* MOBILE RESPONSIVE STYLES */
+        @media (max-width: 480px) {
+            #game-container {
+                padding: 15px 12px;
+                border-radius: 18px;
+            }
+
+            .game-title {
+                font-size: 20px;
+            }
+
+            .score-bar {
+                font-size: 13px;
+                padding: 8px 10px;
+            }
+
+            .word-display {
+                font-size: 28px;
+                padding: 8px 16px;
+            }
+
+            .option-btn {
+                font-size: 18px;
+                padding: 8px 16px;
+                flex: 1 1 calc(50% - 12px);
+                max-width: 150px;
+            }
+
+            .btn-action {
+                font-size: 16px;
+                padding: 10px 20px;
+                width: 100%;
+            }
+
+            .q-img {
+                max-width: 120px;
+                max-height: 120px;
+            }
+
+            .magic-card {
+                width: 110px;
+                height: 150px;
+                font-size: 45px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -210,23 +262,23 @@
 
     <!-- 2. MAIN GAME CONTAINER -->
     <div id="game-container">
-        <h1 class="game-title" id="level-title">लेवल 1: जादुई पिटारा 🎁</h1>
+        <h1 class="game-title" id="level-title">लेवल 1: जादुई कार्ड 🃏</h1>
         
         <div class="score-bar">
-            <span>स्तर (Level): <span id="lvl-num">1</span>/3</span>
-            <span>प्रश्न (Question): <span id="q-num">1</span>/5</span>
-            <span>अंक (Score): <span id="score-val">0</span></span>
+            <span>स्तर: <span id="lvl-num">1</span>/3</span>
+            <span>प्रश्न: <span id="q-num">1</span>/5</span>
+            <span>अंक: <span id="score-val">0</span></span>
         </div>
 
         <div class="chances-text" id="status-msg"></div>
 
-        <!-- LEVEL 1: MAGIC BOX -->
+        <!-- LEVEL 1: MAGIC CARD -->
         <div id="level1-area">
-            <div class="magic-box-container" id="box-wrapper">
-                <div class="magic-box" id="magic-box-icon">🎁</div>
-                <p style="color:#64748b; font-weight:bold; margin-top:10px;" id="box-instruction">प्रश्‍न निकालने के लिए पिटारे पर क्लिक करें!</p>
+            <div class="magic-card-container" id="card-wrapper">
+                <div class="magic-card" id="magic-card-icon" onclick="revealCard()">❓</div>
+                <p style="color:#64748b; font-weight:bold; margin-top:12px;" id="card-instruction">प्रश्न देखने के लिए कार्ड पर क्लिक करें!</p>
             </div>
-            <button class="btn-action" id="open-box-btn" onclick="openMagicBox()">पिटारा खोलें (Open Box)</button>
+            <button class="btn-action" id="reveal-card-btn" onclick="revealCard()">कार्ड पलटें (Flip Card)</button>
             
             <div id="l1-question" style="display: none; margin-top: 15px;">
                 <div class="question-card">
@@ -264,29 +316,31 @@
         </div>
     </div>
 
-    <!-- AUDIO ELEMENTS FROM ASSETS FOLDER -->
-    <audio id="snd-clap" src="assets/correct.mp3" preload="auto"></audio>
+    <!-- AUDIO ELEMENTS (USING CORRECT.MP3 FOR CORRECT ANSWERS) -->
+    <audio id="snd-correct" src="assets/correct.mp3" preload="auto"></audio>
     <audio id="snd-wrong" src="assets/wrong.mp3" preload="auto"></audio>
 
     <script>
-        // SOUND FUNCTIONS
-        function playClapSound() {
-            const audio = document.getElementById('snd-clap');
+        // AUDIO PLAYBACK HANDLERS
+        function playCorrectSound() {
+            const audio = document.getElementById('snd-correct');
+            audio.pause();
             audio.currentTime = 0;
-            audio.play().catch(e => console.log('Audio play error:', e));
+            audio.play().catch(e => console.log('Correct Sound Audio Play Error:', e));
         }
 
         function playWrongSound() {
             const audio = document.getElementById('snd-wrong');
+            audio.pause();
             audio.currentTime = 0;
-            audio.play().catch(e => console.log('Audio play error:', e));
+            audio.play().catch(e => console.log('Wrong Sound Audio Play Error:', e));
         }
 
         // GAME STATE VARIABLES
         let currentLevel = 1;
         let currentQIndex = 0;
         let score = 0;
-        let attemptsLeft = 2; // Maximum 2 attempts per question
+        let attemptsLeft = 2;
 
         /* LEVEL DATA */
         const l1Questions = [
@@ -314,6 +368,10 @@
         ];
 
         function startGame() {
+            // Pre-load audio elements
+            document.getElementById('snd-correct').load();
+            document.getElementById('snd-wrong').load();
+
             document.getElementById('splash-screen').style.display = 'none';
             document.getElementById('game-container').style.display = 'block';
             setupLevel();
@@ -335,14 +393,14 @@
             resetStatusMsg();
 
             if (currentLevel === 1) {
-                document.getElementById('level-title').innerText = "लेवल 1: जादुई पिटारा 🎁";
+                document.getElementById('level-title').innerText = "लेवल 1: जादुई कार्ड 🃏";
                 document.getElementById('level1-area').style.display = 'block';
                 document.getElementById('level2-area').style.display = 'none';
                 document.getElementById('level3-area').style.display = 'none';
-                document.getElementById('box-wrapper').style.display = 'flex';
-                document.getElementById('open-box-btn').style.display = 'inline-block';
+                document.getElementById('card-wrapper').style.display = 'flex';
+                document.getElementById('reveal-card-btn').style.display = 'inline-block';
                 document.getElementById('l1-question').style.display = 'none';
-                document.getElementById('magic-box-icon').innerText = '🎁';
+                document.getElementById('magic-card-icon').innerText = '❓';
             } else if (currentLevel === 2) {
                 document.getElementById('level-title').innerText = "लेवल 2: चित्र पहचान कर नाम चुनें 🖼️";
                 document.getElementById('level1-area').style.display = 'none';
@@ -358,23 +416,23 @@
             }
         }
 
-        /* ---------------- LEVEL 1 LOGIC (MAGIC BOX) ---------------- */
-        function openMagicBox() {
-            const box = document.getElementById('magic-box-icon');
-            const btn = document.getElementById('open-box-btn');
+        /* ---------------- LEVEL 1 LOGIC (CARD FLIP) ---------------- */
+        function revealCard() {
+            const card = document.getElementById('magic-card-icon');
+            const btn = document.getElementById('reveal-card-btn');
             
-            box.classList.add('open');
+            card.classList.add('flip');
             btn.disabled = true;
 
             setTimeout(() => {
-                box.innerText = '🎉';
-                document.getElementById('box-wrapper').style.display = 'none';
+                card.innerText = '✨';
+                document.getElementById('card-wrapper').style.display = 'none';
                 btn.style.display = 'none';
                 document.getElementById('l1-question').style.display = 'block';
                 loadL1Question();
                 btn.disabled = false;
-                box.classList.remove('open');
-            }, 600);
+                card.classList.remove('flip');
+            }, 500);
         }
 
         function loadL1Question() {
@@ -428,11 +486,11 @@
             });
         }
 
-        /* ---------------- COMMON 2-CHANCE LOGIC ---------------- */
+        /* ---------------- COMMON 2-CHANCE & SOUND LOGIC ---------------- */
         function handleAnswerAttempt(isCorrect) {
             if (isCorrect) {
-                playClapSound();
-                score += (attemptsLeft === 2) ? 10 : 5; // First try = 10 pts, second try = 5 pts
+                playCorrectSound();
+                score += (attemptsLeft === 2) ? 10 : 5;
                 updateScoreBar();
                 document.getElementById('status-msg').style.color = '#16a34a';
                 document.getElementById('status-msg').innerText = "सही उत्तर! 👏";
@@ -446,7 +504,7 @@
                     document.getElementById('status-msg').innerText = `⚠️ गलत उत्तर! 1 मौका बाकी है।`;
                 } else {
                     document.getElementById('status-msg').style.color = '#dc2626';
-                    document.getElementById('status-msg').innerText = `❌  अगला प्रश्न...`;
+                    document.getElementById('status-msg').innerText = `❌ दोनों मौके समाप्त! अगला प्रश्न...`;
                     setTimeout(nextQuestion, 1200);
                 }
             }
