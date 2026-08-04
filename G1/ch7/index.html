@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>मुन्ना की मेला सैर - उ की मात्रा का खेल</title>
+  <title>उ की मात्रा का खेल</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -384,32 +384,32 @@
         <div class="pair-item" id="pair2-wrap">
           <div class="pair-label">2. सही शब्द चुनिए:</div>
           <div class="choice-grid">
-            <div class="pair-card" id="p2a" onclick="checkSpelling(event, false, 'करसी', 'pair2-wrap', ['p2a','p2b'])">करसी</div>
-            <div class="pair-card" id="p2b" onclick="checkSpelling(event, true, 'कुर्सी', 'pair2-wrap', ['p2a','p2b'])">कुर्सी</div>
+            <div class="pair-card" id="p2a" onclick="checkSpelling(event, true, 'मुकुट', 'pair2-wrap', ['p2a','p2b'])">मुकुट</div>
+            <div class="pair-card" id="p2b" onclick="checkSpelling(event, false, 'मकुट', 'pair2-wrap', ['p2a','p2b'])">मकुट</div>
           </div>
         </div>
 
         <div class="pair-item" id="pair3-wrap">
           <div class="pair-label">3. सही शब्द चुनिए:</div>
           <div class="choice-grid">
-            <div class="pair-card" id="p3a" onclick="checkSpelling(event, true, 'मुकुट', 'pair3-wrap', ['p3a','p3b'])">मुकुट</div>
-            <div class="pair-card" id="p3b" onclick="checkSpelling(event, false, 'मकुट', 'pair3-wrap', ['p3a','p3b'])">मकुट</div>
+            <div class="pair-card" id="p3a" onclick="checkSpelling(event, true, 'पुस्तक', 'pair3-wrap', ['p3a','p3b'])">पुस्तक</div>
+            <div class="pair-card" id="p3b" onclick="checkSpelling(event, false, 'पसतक', 'pair3-wrap', ['p3a','p3b'])">पसतक</div>
           </div>
         </div>
 
         <div class="pair-item" id="pair4-wrap">
           <div class="pair-label">4. सही शब्द चुनिए:</div>
           <div class="choice-grid">
-            <div class="pair-card" id="p4a" onclick="checkSpelling(event, false, 'चहिया', 'pair4-wrap', ['p4a','p4b'])">चहिया</div>
-            <div class="pair-card" id="p4b" onclick="checkSpelling(event, true, 'चुहिया', 'pair4-wrap', ['p4a','p4b'])">चुहिया</div>
+            <div class="pair-card" id="p4a" onclick="checkSpelling(event, true, 'गुरु', 'pair4-wrap', ['p4a','p4b'])">गुरु</div>
+            <div class="pair-card" id="p4b" onclick="checkSpelling(event, false, 'गरु', 'pair4-wrap', ['p4a','p4b'])">गरु</div>
           </div>
         </div>
 
         <div class="pair-item" id="pair5-wrap">
           <div class="pair-label">5. सही शब्द चुनिए:</div>
           <div class="choice-grid">
-            <div class="pair-card" id="p5a" onclick="checkSpelling(event, true, 'पुस्तक', 'pair5-wrap', ['p5a','p5b'])">पुस्तक</div>
-            <div class="pair-card" id="p5b" onclick="checkSpelling(event, false, 'पसतक', 'pair5-wrap', ['p5a','p5b'])">पसतक</div>
+            <div class="pair-card" id="p5a" onclick="checkSpelling(event, true, 'खुश', 'pair5-wrap', ['p5a','p5b'])">खुश</div>
+            <div class="pair-card" id="p5b" onclick="checkSpelling(event, false, 'खश', 'pair5-wrap', ['p5a','p5b'])">खश</div>
           </div>
         </div>
       </div>
@@ -481,7 +481,6 @@
         selectedCard.classList.add('disabled');
         selectedCard.style.borderColor = '#10b981';
         selectedCard.style.background = '#ecfdf5';
-        alert('बहुत बढ़िया! "' + wordText + '" में उ की ध्वनि है।');
       } else {
         safePlay(wrongSnd);
         selectedCard.style.borderColor = '#ef4444';
@@ -502,7 +501,6 @@
           document.getElementById('round-2').classList.add('active');
           currentRound = 2;
           updateProgress();
-          alert('शाबाश! अब दूसरा दौर खेलिए और सही वर्तनी चुनिए।');
         }, 300);
       }
     }
@@ -524,7 +522,6 @@
         });
         chosen.style.borderColor = '#10b981';
         chosen.style.background = '#ecfdf5';
-        alert('सही जवाब! "' + wordText + '" की वर्तनी सही है।');
       } else {
         safePlay(wrongSnd);
         chosen.style.borderColor = '#ef4444';
