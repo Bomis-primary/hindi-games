@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>सच्चा देशप्रेम - Catch the Answer</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            user-select: none;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 10px;
+        }
+
+        #game-container {
+            width: 100%;
+            max-width: 700px;
+            background: #ffffff;
+            color: #333;
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            min-height: 550px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* Screen Management */
+        .screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        /* Screen 1: Logo Splash */
+        .splash-logo {
+            max-width: 280px;
+            height: auto;
+            margin-bottom: 20px;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        .timer-text {
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 15px;
+        }
+
+        /* Titles and Text */
+        h1 {
+            color: #1e3c72;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        p.subtitle {
+            color: #666;
+            font-size: 1rem;
+            margin-bottom: 20px;
+        }
+
+        /* Instructions */
+        .instructions-list {
+            background: #f0f4f8;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: left;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .instructions-list li {
+            font-size: 1rem;
+            margin-bottom: 10px;
+            color: #444;
+            line-height: 1.5;
+        }
+
+        /* Game Area */
+        #game-canvas {
+            width: 100%;
+            height: 400px;
+            background: #f4f7f6;
+            border: 2px solid #1e3c72;
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .hud {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            background: #eef2f7;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #1e3c72;
+        }
+
+        /* Falling Elements */
+        .falling-question {
+            position: absolute;
+            background: #e74c3c;
+            color: #fff;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            border: 2px solid #c0392b;
+            max-width: 80%;
+        }
+
+        .falling-option {
+            position: absolute;
+            background: #1e3c72;
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        #basket {
+            position: absolute;
+            bottom: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 110px;
+            height: 28px;
+            background: #ff9800;
+            border-radius: 14px 14px 5px 5px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            color: white;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            z-index: 10;
+        }
+
+        /* Controls */
+        .controls-note {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        /* Feedback Message Overlay */
+        #game-feedback {
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            display: none;
+            z-index: 20;
+        }
+
+        .fb-correct { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .fb-wrong { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+
+        /* Buttons */
+        .btn {
+            background: #ff9800;
+            color: #ffffff;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.2s;
+            box-shadow: 0 4px 10px rgba(255, 152, 0, 0.3);
+        }
+
+        .btn:hover {
+            background: #e68a00;
+            transform: translateY(-2px);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+<div id="game-container">
+
+    <!-- SCREEN 1: LOGO SPLASH -->
+    <div id="screen-logo" class="screen active">
+        <img src="assets/logo.png" alt="Innovine Logo" class="splash-logo" onerror="this.onerror=null; this.src='https://via.placeholder.com/280x100?text=INNOVINE+LOGO';">
+        <p class="timer-text">लोड हो रहा है... (<span id="splash-countdown">5</span>)</p>
+    </div>
+
+    <!-- SCREEN 2: INSTRUCTIONS -->
+    <div id="screen-instructions" class="screen">
+        <h1>🧺 Catch the Correct Answer</h1>
+        <p class="subtitle">अध्याय 8 - सच्चा देशप्रेम</p>
+        
+        <ul class="instructions-list">
+            <li>❓ <strong>गेम का नियम:</strong> ऊपर से <strong>लाल रंग में प्रश्न</strong> और <strong>नीले रंग में विकल्प</strong> नीचे गिरेंगे।</li>
+            <li>🎯 <strong>लक्ष्य:</strong> प्रश्न पढ़कर केवल <strong>सही उत्तर वाले विकल्प</strong> को अपनी बास्केट में पकड़ें!</li>
+            <li>⌨️ <strong>कंट्रोल:</strong> बास्केट चलाने के लिए <strong>Left/Right Arrow keys</strong> या माउस/टच का प्रयोग करें।</li>
+            <li>✅ <strong>सही उत्तर:</strong> +10 अंक | ❌ <strong>गलत उत्तर/प्रश्न पकड़ना:</strong> -5 अंक</li>
+        </ul>
+
+        <button class="btn" onclick="startGame()">गेम शुरू करें 🚀</button>
+    </div>
+
+    <!-- SCREEN 3: GAME PLAY -->
+    <div id="screen-game" class="screen">
+        <div class="hud">
+            <div>लेवल: <span id="current-q">1</span>/<span id="total-q">5</span></div>
+            <div>अंक: <span id="score">0</span></div>
+        </div>
+
+        <div id="game-canvas">
+            <div id="game-feedback"></div>
+            <div id="basket">बास्केट 🧺</div>
+        </div>
+
+        <p class="controls-note">👈 बास्केट घुमाने के लिए एरो कीज़ दबाएं या माउस/टच ड्रैग करें 👉</p>
+    </div>
+
+    <!-- SCREEN 4: END SCREEN -->
+    <div id="screen-end" class="screen">
+        <h1>🎉 खेल पूर्ण हुआ!</h1>
+        <p class="subtitle">सच्चा देशप्रेम प्रश्न-उत्तर चुनौती</p>
+        
+        <div style="font-size: 1.4rem; font-weight: bold; color: #1e3c72; margin-bottom: 15px;">
+            आपका अंतिम स्कोर: <span id="final-score">0</span> / 50
+        </div>
+
+        <div style="background: #eef2f7; padding: 15px; border-radius: 10px; color: #333; margin-bottom: 25px; line-height: 1.6;">
+            <strong>आज का मुख्य सबक:</strong><br>
+            "राष्ट्रगान का सम्मान करना, सतर्क रहना और दूसरों की जान व सुरक्षा में मदद करना ही सच्चा देशप्रेम है।"
+        </div>
+
+        <button class="btn" onclick="startGame()">पुनः खेलें 🔄</button>
+    </div>
+
+</div>
+
+<script>
+    // 1. Splash Screen Timer (5 Seconds)
+    let logoTimer = 5;
+    const countdownEl = document.getElementById('splash-countdown');
+
+    const splashInterval = setInterval(() => {
+        logoTimer--;
+        if (countdownEl) countdownEl.innerText = logoTimer;
+        
+        if (logoTimer <= 0) {
+            clearInterval(splashInterval);
+            switchScreen('screen-instructions');
+        }
+    }, 1000);
+
+    function switchScreen(screenId) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(screenId).classList.add('active');
+    }
+
+    // Question & Answer Data
+    const quizData = [
+        {
+            question: "❓ अमन ने मेले से क्या खरीदा?",
+            correct: "नीले रंग का हाथी",
+            wrongs: ["सुंदर कार", "लकड़ी का घोड़ा"]
+        },
+        {
+            question: "❓ राष्ट्रगान शुरू होने पर सबने क्या किया?",
+            correct: "सम्मानपूर्वक खड़े हुए",
+            wrongs: ["भागने लगे", "ताली बजाई"]
+        },
+        {
+            question: "❓ छोटा बच्चा किसके पीछे भाग रहा था?",
+            correct: "रंगीन गेंद",
+            wrongs: ["पतंग", "कुत्ता"]
+        },
+        {
+            question: "❓ बच्चे को बचाने के लिए अमन ने किसे पुकारा?",
+            correct: "गार्ड अंकल",
+            wrongs: ["बस चालक", "पुलिस"]
+        },
+        {
+            question: "❓ गार्ड अंकल के अनुसार सच्चा देशप्रेम क्या है?",
+            correct: "दूसरों की मदद और सुरक्षा",
+            wrongs: ["केवल सीमा पर लड़ना", "चुप रहना"]
+        }
+    ];
+
+    let currentLevel = 0;
+    let score = 0;
+    let basketX = 50; // percentage
+    let fallingElements = [];
+    let gameLoopInterval = null;
+    let spawnInterval = null;
+    let currentSpawnIndex = 0;
+    let spawnSequence = [];
+
+    const gameCanvas = document.getElementById('game-canvas');
+    const basket = document.getElementById('basket');
+
+    function startGame() {
+        currentLevel = 0;
+        score = 0;
+        basketX = 50;
+        
+        switchScreen('screen-game');
+        document.getElementById('total-q').innerText = quizData.length;
+        
+        // Setup Event Listeners
+        window.addEventListener('keydown', handleKeyDown);
+        gameCanvas.addEventListener('mousemove', handleMouseMove);
+        gameCanvas.addEventListener('touchmove', handleTouchMove);
+
+        startLevel();
+    }
+
+    function startLevel() {
+        // Clear old elements
+        document.querySelectorAll('.falling-question, .falling-option').forEach(e => e.remove());
+        fallingElements = [];
+        currentSpawnIndex = 0;
+
+        document.getElementById('current-q').innerText = currentLevel + 1;
+        document.getElementById('score').innerText = score;
+        updateBasketPos();
+
+        // Create spawn sequence for this question level: Question first, then options
+        const lvlData = quizData[currentLevel];
+        spawnSequence = [
+            { text: lvlData.question, type: 'question', isCorrect: false },
+            { text: lvlData.correct, type: 'option', isCorrect: true },
+            { text: lvlData.wrongs[0], type: 'option', isCorrect: false },
+            { text: lvlData.wrongs[1], type: 'option', isCorrect: false }
+        ];
+
+        // Shuffle sequence slightly so answer position varies
+        const qItem = spawnSequence.shift();
+        spawnSequence.sort(() => Math.random() - 0.5);
+        spawnSequence.unshift(qItem); // Ensure Question falls first
+
+        if (gameLoopInterval) clearInterval(gameLoopInterval);
+        if (spawnInterval) clearInterval(spawnInterval);
+
+        gameLoopInterval = setInterval(updateGame, 30);
+        spawnInterval = setInterval(spawnNextItem, 2000);
+        spawnNextItem(); // Spawn first immediately
+    }
+
+    function updateBasketPos() {
+        basket.style.left = basketX + '%';
+    }
+
+    function handleKeyDown(e) {
+        if (e.key === 'ArrowLeft' && basketX > 10) basketX -= 8;
+        if (e.key === 'ArrowRight' && basketX < 90) basketX += 8;
+        updateBasketPos();
+    }
+
+    function handleMouseMove(e) {
+        const rect = gameCanvas.getBoundingClientRect();
+        let relX = ((e.clientX - rect.left) / rect.width) * 100;
+        basketX = Math.max(10, Math.min(90, relX));
+        updateBasketPos();
+    }
+
+    function handleTouchMove(e) {
+        if (!e.touches[0]) return;
+        const rect = gameCanvas.getBoundingClientRect();
+        let relX = ((e.touches[0].clientX - rect.left) / rect.width) * 100;
+        basketX = Math.max(10, Math.min(90, relX));
+        updateBasketPos();
+    }
+
+    function spawnNextItem() {
+        if (currentSpawnIndex >= spawnSequence.length) return;
+
+        const itemData = spawnSequence[currentSpawnIndex];
+        currentSpawnIndex++;
+
+        const el = document.createElement('div');
+        el.className = itemData.type === 'question' ? 'falling-question' : 'falling-option';
+        el.innerText = itemData.text;
+
+        const startX = Math.floor(Math.random() * 50) + 20; // 20% to 70%
+        el.style.left = startX + '%';
+        el.style.top = '0px';
+
+        gameCanvas.appendChild(el);
+
+        fallingElements.push({
+            el: el,
+            x: startX,
+            y: 0,
+            data: itemData
+        });
+    }
+
+    function showFeedback(text, isCorrect) {
+        const fb = document.getElementById('game-feedback');
+        fb.innerText = text;
+        fb.className = isCorrect ? 'fb-correct' : 'fb-wrong';
+        fb.style.display = 'block';
+        setTimeout(() => { fb.style.display = 'none'; }, 1500);
+    }
+
+    function updateGame() {
+        const canvasHeight = gameCanvas.clientHeight;
+
+        for (let i = fallingElements.length - 1; i >= 0; i--) {
+            let item = fallingElements[i];
+            item.y += 2.5; // falling speed
+            item.el.style.top = item.y + 'px';
+
+            // Catch Collision Detection with Basket
+            if (item.y >= canvasHeight - 45 && item.y <= canvasHeight - 10) {
+                if (Math.abs(item.x - basketX) < 18) {
+                    
+                    if (item.data.type === 'question') {
+                        // Caught Question (Incorrect)
+                        score = Math.max(0, score - 5);
+                        showFeedback("❌ केवल सही उत्तर कैच करें, प्रश्न नहीं!", false);
+                    } else if (item.data.isCorrect) {
+                        // Caught Correct Option!
+                        score += 10;
+                        showFeedback("✨ शाबाश! सही उत्तर कैच किया!", true);
+                        item.el.remove();
+                        fallingElements.splice(i, 1);
+                        
+                        // Move to next level
+                        nextLevel();
+                        return;
+                    } else {
+                        // Caught Wrong Option
+                        score = Math.max(0, score - 5);
+                        showFeedback("❌ गलत उत्तर!", false);
+                    }
+
+                    document.getElementById('score').innerText = score;
+                    item.el.remove();
+                    fallingElements.splice(i, 1);
+                    continue;
+                }
+            }
+
+            // Remove items when they hit bottom
+            if (item.y > canvasHeight) {
+                item.el.remove();
+                fallingElements.splice(i, 1);
+            }
+        }
+    }
+
+    function nextLevel() {
+        currentLevel++;
+        if (currentLevel < quizData.length) {
+            startLevel();
+        } else {
+            endGame();
+        }
+    }
+
+    function endGame() {
+        clearInterval(gameLoopInterval);
+        clearInterval(spawnInterval);
+        window.removeEventListener('keydown', handleKeyDown);
+
+        switchScreen('screen-end');
+        document.getElementById('final-score').innerText = score;
+    }
+</script>
+
+</body>
+</html>
