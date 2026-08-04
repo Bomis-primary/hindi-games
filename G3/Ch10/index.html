@@ -25,12 +25,17 @@
       width: 90%;
       max-width: 700px;
       background: #ffffff;
-      padding: 30px;
+      padding: 35px;
       border-radius: 20px;
       box-shadow: 0 10px 25px rgba(0,0,0,0.15);
       text-align: center;
       position: relative;
       overflow: hidden;
+      min-height: 440px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
     }
 
     /* Screen States */
@@ -39,30 +44,52 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      min-height: 380px;
+      width: 100%;
     }
 
     .active {
       display: flex;
     }
 
-    /* Intro Screen */
-    .logo {
-      max-width: 180px;
-      height: auto;
-      margin-bottom: 20px;
+    /* 1. Intro Screen (ONLY LOGO) */
+    #intro-screen {
+      cursor: pointer;
     }
 
+    .only-logo {
+      max-width: 260px;
+      width: 80%;
+      height: auto;
+      transition: transform 0.3s ease;
+    }
+
+    .only-logo:hover {
+      transform: scale(1.05);
+    }
+
+    .click-hint {
+      margin-top: 15px;
+      font-size: 0.9rem;
+      color: #8d99ae;
+    }
+
+    /* Titles & Common Styles */
     h1 {
       color: #e76f51;
       margin-bottom: 15px;
       font-size: 2rem;
     }
 
+    h2 {
+      color: #2a9d8f;
+      margin-bottom: 15px;
+      font-size: 1.3rem;
+    }
+
     p {
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       color: #4a5568;
-      line-height: 1.5;
+      line-height: 1.6;
       margin-bottom: 15px;
     }
 
@@ -85,20 +112,28 @@
 
     /* Instructions Screen */
     .timer-circle {
-      width: 60px;
-      height: 60px;
+      width: 65px;
+      height: 65px;
       border-radius: 50%;
       background: #e76f51;
       color: white;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.8rem;
+      font-size: 2rem;
       font-weight: bold;
-      margin-top: 20px;
+      margin-top: 15px;
+      box-shadow: 0 4px 10px rgba(231, 111, 81, 0.4);
     }
 
     /* Game Screen */
+    .progress-bar {
+      font-weight: bold;
+      color: #e76f51;
+      margin-bottom: 10px;
+      font-size: 1.1rem;
+    }
+
     .game-story {
       background: #f8f9fa;
       padding: 15px;
@@ -106,14 +141,16 @@
       border-radius: 5px;
       margin-bottom: 20px;
       text-align: left;
+      width: 100%;
     }
 
+    /* Courtiers Grid (Question 1) */
     .courtiers-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(130px, 11fr));
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
       gap: 15px;
       width: 100%;
-      margin-top: 15px;
+      margin-top: 10px;
     }
 
     .courtier-card {
@@ -135,15 +172,37 @@
 
     .hand-icon {
       font-size: 2.5rem;
+      margin-top: 8px;
+    }
+
+    .black-hands { color: #2b2d42; }
+    .clean-hands { color: #ffb703; }
+
+    /* Multiple Choice Options */
+    .options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 100%;
       margin-top: 10px;
     }
 
-    .black-hands {
-      color: #2b2d42; /* Dark/Black hands */
+    .option-btn {
+      background: #edf2f4;
+      border: 2px solid #d8e2dc;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-size: 1rem;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      color: #2b2d42;
     }
 
-    .clean-hands {
-      color: #ffb703; /* Clean hands */
+    .option-btn:hover {
+      background: #2a9d8f;
+      color: white;
+      border-color: #2a9d8f;
     }
 
     /* Results */
@@ -156,33 +215,30 @@
 <body>
 
   <div class="container">
-    <!-- 1. Intro Screen -->
-    <div id="intro-screen" class="screen active">
-      <img src="assets/logo.png" alt="Innovine Logo" class="logo" onerror="this.style.display='none'">
-      <h1>तेनालीराम की चतुराई</h1>
-      <p>विजयनगर साम्राज्य के राजकोष में चोरी हो गई है!</p>
-      <button class="btn" onclick="startInstructions()">खेल शुरू करें</button>
+    <!-- 1. Intro Screen (ONLY LOGO) -->
+    <div id="intro-screen" class="screen active" onclick="goToInstructions()">
+      <img src="assets/logo.png" alt="Innovine Logo" class="only-logo" onerror="this.src='https://via.placeholder.com/250x100?text=Innovine+Logo'">
+      <div class="click-hint">(आगे बढ़ने के लिए कहीं भी क्लिक करें)</div>
     </div>
 
-    <!-- 2. Instructions Screen (5 Seconds Timer) -->
+    <!-- 2. Instructions Screen (5-Second Countdown) -->
     <div id="instruction-screen" class="screen">
-      <h1>निर्देश (Instructions)</h1>
-      <p>तेनालीराम ने चोर को पकड़ने के लिए एक मिट्टी की मूर्ति पर <strong>काले रंग (काजल)</strong> की परत लगाई है।</p>
-      <p>जिसने मूर्ति को छुआ, उसके हाथ <strong>काले</strong> हो गए। लेकिन असली चोर डर के मारे मूर्ति को नहीं छुएगा और उसके हाथ <strong>साफ</strong> रहेंगे!</p>
-      <p><strong>लक्ष्य:</strong> साफ हाथ वाले दरबारी (चोर) की पहचान करें!</p>
+      <h1>तेनालीराम की चतुराई</h1>
+      <p>विजयनगर साम्राज्य के राजकोष से चोरी हो गई है! तेनालीराम ने चोर को पकड़ने के लिए एक <strong>काली मूर्ति</strong> पर काजल लगाया है।</p>
+      <p>जिसने मूर्ति को छुआ, उसके हाथ <strong>काले</strong> हो गए। लेकिन असली चोर डर के मारे मूर्ति को नहीं छुएगा!</p>
+      <p><strong>लक्ष्य:</strong> सभी 5 प्रश्नों के सही उत्तर देकर तेनालीराम की मदद करें।</p>
       <div class="timer-circle" id="timer">5</div>
     </div>
 
-    <!-- 3. Gameplay Screen -->
+    <!-- 3. Game Screen -->
     <div id="game-screen" class="screen">
-      <div class="game-story">
-        <p><strong>दृश्य:</strong> सभी दरबारी एक-एक करके मूर्ति को छूकर बाहर आ रहे हैं। तेनालीराम ध्यान से सभी के हाथों को देख रहे हैं...</p>
-      </div>
-      <h3>असली चोर कौन है? सही दरबारी पर क्लिक करें:</h3>
+      <div class="progress-bar" id="question-progress">प्रश्न 1 / 5</div>
+      <h2 id="question-title"></h2>
       
-      <div class="courtiers-grid" id="courtiers-container">
-        <!-- Generated dynamically via JS -->
-      </div>
+      <div class="game-story" id="question-desc"></div>
+
+      <!-- Container for dynamic content -->
+      <div id="quiz-content" style="width: 100%;"></div>
     </div>
 
     <!-- 4. End Game Screen -->
@@ -190,80 +246,193 @@
       <div id="result-icon" class="result-icon"></div>
       <h1 id="result-title"></h1>
       <p id="result-desc"></p>
-      <button class="btn" onclick="resetGame()">फिर से खेलें</button>
+      <button class="btn" onclick="restartGame()">फिर से खेलें</button>
     </div>
   </div>
 
   <script>
+    let currentQuestion = 0;
+    let score = 0;
     let timerInterval;
+
+    // Transition from Intro to Instructions
+    function goToInstructions() {
+      showScreen('instruction-screen');
+      startInstructionsTimer();
+    }
+
+    // Auto-transition from intro after 2.5 seconds
+    setTimeout(() => {
+      if (document.getElementById('intro-screen').classList.contains('active')) {
+        goToInstructions();
+      }
+    }, 2500);
 
     function showScreen(screenId) {
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
       document.getElementById(screenId).classList.add('active');
     }
 
-    function startInstructions() {
-      showScreen('instruction-screen');
+    function startInstructionsTimer() {
       let timeLeft = 5;
       const timerElement = document.getElementById('timer');
       timerElement.textContent = timeLeft;
 
+      clearInterval(timerInterval);
       timerInterval = setInterval(() => {
         timeLeft--;
         timerElement.textContent = timeLeft;
         if (timeLeft <= 0) {
           clearInterval(timerInterval);
-          setupGame();
+          startQuiz();
         }
       }, 1000);
     }
 
-    function setupGame() {
+    // 5 Scenarios & Questions Data
+    const questions = [
+      {
+        type: 'courtiers',
+        title: 'परिदृश्य 1: असली चोर की पहचान करें!',
+        desc: 'सभी दरबारी एक-एक करके अंधेरे कमरे में जाकर मूर्ति को छूकर बाहर आ रहे हैं। तेनालीराम ध्यान से सभी के हाथों को देख रहे हैं। चोर कौन है?',
+        thiefIndex: Math.floor(Math.random() * 4) // Dynamic placement
+      },
+      {
+        type: 'mcq',
+        title: 'परिदृश्य 2: चोर के हाथ साफ क्यों रह गए?',
+        desc: 'चोर ने कमरे में जाकर मूर्ति को क्यों नहीं छुआ?',
+        options: [
+          { text: 'क्योंकि चोर को डर था कि चमत्कारिक मूर्ति उसका राज खोल देगी।', correct: true },
+          { text: 'क्योंकि चोर ने हाथ में दस्ताने पहन रखे थे।', correct: false },
+          { text: 'क्योंकि चोर ने पानी से हाथ धो लिए थे।', correct: false },
+          { text: 'क्योंकि मूर्ति बहुत ऊंची थी।', correct: false }
+        ]
+      },
+      {
+        type: 'mcq',
+        title: 'परिदृश्य 3: तेनालीराम का विचार',
+        desc: 'तेनालीराम ने चोर को पकड़ने के लिए किस चीज़ का सहारा लिया?',
+        options: [
+          { text: 'चोर के मन में छुपे डर और मनोविज्ञान का', correct: true },
+          { text: 'जादू और तंत्र-मंत्र का', correct: false },
+          { text: 'सैनिकों के बल और हथियारों का', correct: false },
+          { text: 'केवल किस्मत का', correct: false }
+        ]
+      },
+      {
+        type: 'mcq',
+        title: 'परिदृश्य 4: काली मूर्ति और काजल',
+        desc: 'तेनालीराम ने अंधेरे कमरे में रखी मूर्ति पर क्या लगाया था?',
+        options: [
+          { text: 'काजल / काली राख', correct: true },
+          { text: 'सुगंधित इत्र', correct: false },
+          { text: 'लाल रंग', correct: false },
+          { text: 'शहद', correct: false }
+        ]
+      },
+      {
+        type: 'mcq',
+        title: 'परिदृश्य 5: कहानी से सीख',
+        desc: 'तेनालीराम की इस चतुराई से हमें क्या सीख मिलती है?',
+        options: [
+          { text: 'चोर की दाढ़ी में तिनका (अपराधी अपने डर से खुद ही पहचान में आ जाता है)', correct: true },
+          { text: 'अंधेरे कमरे में कभी नहीं जाना चाहिए', correct: false },
+          { text: 'हमेशा मूर्तियों की पूजा करनी चाहिए', correct: false },
+          { text: 'चोरी करने के बाद भाग जाना चाहिए', correct: false }
+        ]
+      }
+    ];
+
+    function startQuiz() {
+      currentQuestion = 0;
+      score = 0;
       showScreen('game-screen');
-      const container = document.getElementById('courtiers-container');
-      container.innerHTML = '';
+      loadQuestion();
+    }
 
-      // Generate random positioning for the thief (1 out of 4)
-      const thiefIndex = Math.floor(Math.random() * 4);
+    function loadQuestion() {
+      const q = questions[currentQuestion];
+      document.getElementById('question-progress').textContent = `प्रश्न ${currentQuestion + 1} / ${questions.length}`;
+      document.getElementById('question-title').textContent = q.title;
+      document.getElementById('question-desc').textContent = q.desc;
 
-      for (let i = 0; i < 4; i++) {
-        const isThief = i === thiefIndex;
-        const card = document.createElement('div');
-        card.className = 'courtier-card';
-        
-        card.innerHTML = `
-          <strong>दरबारी ${i + 1}</strong>
-          <div class="hand-icon ${isThief ? 'clean-hands' : 'black-hands'}">
-            🖐️
-          </div>
-          <small>${isThief ? '(हाथ साफ हैं)' : '(हाथ काले हैं)'}</small>
-        `;
+      const quizContent = document.getElementById('quiz-content');
+      quizContent.innerHTML = '';
 
-        card.onclick = () => handleChoice(isThief);
-        container.appendChild(card);
+      if (q.type === 'courtiers') {
+        const grid = document.createElement('div');
+        grid.className = 'courtiers-grid';
+
+        for (let i = 0; i < 4; i++) {
+          const isThief = i === q.thiefIndex;
+          const card = document.createElement('div');
+          card.className = 'courtier-card';
+          card.innerHTML = `
+            <strong>दरबारी ${i + 1}</strong>
+            <div class="hand-icon ${isThief ? 'clean-hands' : 'black-hands'}">🖐️</div>
+            <small>${isThief ? '(हाथ साफ हैं)' : '(हाथ काले हैं)'}</small>
+          `;
+          card.onclick = () => handleAnswer(isThief);
+          grid.appendChild(card);
+        }
+        quizContent.appendChild(grid);
+
+      } else if (q.type === 'mcq') {
+        const optionsList = document.createElement('div');
+        optionsList.className = 'options-list';
+
+        q.options.forEach(option => {
+          const btn = document.createElement('button');
+          btn.className = 'option-btn';
+          btn.textContent = option.text;
+          btn.onclick = () => handleAnswer(option.correct);
+          optionsList.appendChild(btn);
+        });
+        quizContent.appendChild(optionsList);
       }
     }
 
-    function handleChoice(isThief) {
+    function handleAnswer(isCorrect) {
+      if (isCorrect) {
+        score++;
+      }
+
+      currentQuestion++;
+      if (currentQuestion < questions.length) {
+        loadQuestion();
+      } else {
+        showEndScreen();
+      }
+    }
+
+    function showEndScreen() {
+      showScreen('end-screen');
+      const icon = document.getElementById('result-icon');
       const title = document.getElementById('result-title');
       const desc = document.getElementById('result-desc');
-      const icon = document.getElementById('result-icon');
 
-      if (isThief) {
-        icon.textContent = '🎉';
-        title.textContent = 'शाबाश! चोर पकड़ा गया!';
-        desc.textContent = 'आप तेनालीराम की तरह बुद्धिमान हैं! चोर ने डर के मारे मूर्ति को नहीं छुआ था, इसलिए उसके हाथ साफ रह गए।';
+      if (score === questions.length) {
+        icon.textContent = '🏆';
+        title.textContent = 'अद्भुत! आप तेनालीराम जितने बुद्धिमान हैं!';
+        desc.textContent = `आपने सभी ${questions.length} में से ${score} प्रश्नों के सही उत्तर दिए! चोर पकड़ा गया और विजयनगर सुरक्षित है।`;
+      } else if (score >= 3) {
+        icon.textContent = '👏';
+        title.textContent = 'शाबाश! बहुत अच्छा प्रयास!';
+        desc.textContent = `आपने ${questions.length} में से ${score} प्रश्नों के सही उत्तर दिए। तेनालीराम आपकी समझदारी से खुश हैं!`;
       } else {
         icon.textContent = '❌';
-        title.textContent = 'ओह नहीं! गलत जवाब!';
-        desc.textContent = 'इस दरबारी ने मूर्ति को छुआ था, इसलिए इसके हाथ काले हैं। यह निर्दोष है! चोर वही था जिसके हाथ साफ थे।';
+        title.textContent = 'ओह नहीं! पुन: प्रयास करें!';
+        desc.textContent = `आपका स्कोर ${questions.length} में से ${score} है। कहानी को दोबारा पढ़ें और फिर से खेलें।`;
       }
-
-      showScreen('end-screen');
     }
 
-    function resetGame() {
+    function restartGame() {
       showScreen('intro-screen');
+      setTimeout(() => {
+        if (document.getElementById('intro-screen').classList.contains('active')) {
+          goToInstructions();
+        }
+      }, 2500);
     }
   </script>
 </body>
