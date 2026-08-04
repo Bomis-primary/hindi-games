@@ -288,10 +288,31 @@
     </div>
 
     <script>
-        // Sound System
+        // --- Sound System (MP3 Files with Fallback Synthesis) ---
+        const sounds = {
+            correct: new Audio('assets/correct.mp3'),
+            wrong: new Audio('assets/wrong.mp3'),
+            drag: new Audio('assets/drag.mp3'),
+            win: new Audio('assets/win.mp3')
+        };
+
+        // Fallback Web Audio API for synthetic sounds if MP3 fails to load
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
         function playSound(type) {
+            // Attempt to play external MP3 sound first
+            if (sounds[type]) {
+                sounds[type].currentTime = 0;
+                sounds[type].play().catch(() => {
+                    // Fallback to Web Audio API synthesis if MP3 file is missing/blocked
+                    playSynthSound(type);
+                });
+            } else {
+                playSynthSound(type);
+            }
+        }
+
+        function playSynthSound(type) {
             if (audioCtx.state === 'suspended') audioCtx.resume();
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
