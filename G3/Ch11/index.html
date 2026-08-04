@@ -1,666 +1,323 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chapter Escape Room Game</title>
+    <title>एक अनोखा तरबूज़ - The Square Watermelon Game</title>
     <style>
-        * {
-            box-sizing: border-box;
+        body {
             margin: 0;
             padding: 0;
-            user-select: none;
-        }
-
-        body {
-            background-color: #121212;
-            color: #ffffff;
+            background-color: #2c3e50;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
+            justify-content: center;
             min-height: 100vh;
-            overflow: hidden;
+            color: #fff;
+        }
+
+        h1 {
+            margin: 10px 0 5px 0;
+            color: #2ecc71;
+            text-shadow: 2px 2px #27ae60;
+        }
+
+        p {
+            margin: 0 0 15px 0;
+            font-size: 14px;
+            color: #ecf0f1;
         }
 
         #game-container {
             position: relative;
-            width: 800px;
-            height: 600px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
-            border-radius: 8px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            border-radius: 10px;
             overflow: hidden;
-            background: #000;
         }
 
         canvas {
+            background: #87CEEB;
             display: block;
-            width: 100%;
-            height: 100%;
         }
 
-        .ui-layer {
+        #ui-overlay {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 10px;
+            left: 10px;
+            right: 10px;
             display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            justify-content: space-between;
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 8px 15px;
+            border-radius: 20px;
             pointer-events: none;
         }
 
-        .btn {
-            pointer-events: auto;
-            padding: 14px 28px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: #fff;
-            background: linear-gradient(135deg, #e74c3c, #c0392b);
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
-            transition: all 0.2s ease;
-            margin-top: 20px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .btn:hover {
-            background: linear-gradient(135deg, #ff6b6b, #e74c3c);
-            transform: translateY(-2px);
-        }
-
-        /* Question Overlay Modal */
-        .modal {
+        #fact-box {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: #1a1a24;
-            border: 2px solid #444;
-            padding: 24px;
-            border-radius: 12px;
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            box-shadow: 0 0 25px rgba(0, 0, 0, 0.9);
-            pointer-events: auto;
-            z-index: 10;
-            width: 480px;
-            text-align: center;
-        }
-
-        .modal-title {
-            color: #e74c3c;
-            font-size: 1.4rem;
-            margin-bottom: 12px;
-            font-weight: bold;
-        }
-
-        .modal-text {
-            color: #eee;
-            font-size: 1.1rem;
-            margin-bottom: 20px;
-            line-height: 1.4;
-        }
-
-        .options-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            width: 100%;
-            margin-bottom: 15px;
-        }
-
-        .option-btn {
-            padding: 10px 15px;
-            background: #2a2a38;
-            color: #fff;
-            border: 1px solid #444;
-            border-radius: 6px;
-            font-size: 1rem;
-            cursor: pointer;
-            text-align: left;
-            transition: background 0.15s;
-        }
-
-        .option-btn:hover {
-            background: #3a3a4d;
-        }
-
-        /* Keypad Styles */
-        #keypad-display {
-            width: 100%;
-            height: 40px;
-            background: #000;
-            color: #00ff66;
-            font-family: monospace;
-            font-size: 1.8rem;
-            text-align: center;
-            line-height: 40px;
-            margin-bottom: 15px;
-            border-radius: 4px;
-            border: 1px solid #333;
-            letter-spacing: 4px;
-        }
-
-        .keypad-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-
-        .key-btn {
-            width: 50px;
-            height: 50px;
-            background: #2a2a38;
-            color: #fff;
-            border: 1px solid #444;
-            border-radius: 6px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .keypad-actions {
-            display: flex;
-            gap: 10px;
-            width: 100%;
-        }
-
-        .action-btn {
-            flex: 1;
+            bottom: 10px;
+            left: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.75);
+            color: #f1c40f;
             padding: 10px;
-            border: none;
-            border-radius: 4px;
-            font-weight: bold;
-            cursor: pointer;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 14px;
+            pointer-events: none;
         }
 
-        .btn-clear { background: #e74c3c; color: white; }
-        .btn-enter { background: #2ecc71; color: white; }
-        .btn-close { background: #7f8c8d; color: white; margin-top: 10px; width: 100%; }
+        .controls-hint {
+            margin-top: 10px;
+            font-size: 13px;
+            color: #bdc3c7;
+        }
     </style>
 </head>
 <body>
 
+    <h1>एक अनोखा तरबूज़ 🍉📦</h1>
+    <p>गोलू की मदद करें: गोल तरबूज़ पकड़ें और उन्हें चौकोर साँचे में डालें!</p>
+
     <div id="game-container">
-        <canvas id="gameCanvas" width="800" height="600"></canvas>
-
-        <!-- UI Layers -->
-        <div id="screen-ui" class="ui-layer"></div>
-
-        <!-- Chapter Quiz Modal -->
-        <div id="quiz-modal" class="modal">
-            <div id="quiz-title" class="modal-title">CHAPTER QUESTION</div>
-            <div id="quiz-text" class="modal-text">Question text goes here?</div>
-            <div id="quiz-options" class="options-grid"></div>
-            <button class="action-btn btn-close" onclick="closeQuiz()">Close / Give Up</button>
+        <div id="ui-overlay">
+            <div id="score">स्कोर (Score): 0</div>
+            <div id="target">लक्ष्य (Goal): 5 चौकोर तरबूज़</div>
         </div>
+        <canvas id="gameCanvas" width="600" height="400"></canvas>
+        <div id="fact-box">ज्ञान: तरबूज़ में लगभग 92% पानी होता है!</div>
+    </div>
 
-        <!-- Door Lock Keypad Modal -->
-        <div id="keypad-modal" class="modal">
-            <div class="modal-title">EXIT DOOR KEYPAD</div>
-            <div id="keypad-display">----</div>
-            <div class="keypad-grid">
-                <button class="key-btn" onclick="pressKey('1')">1</button>
-                <button class="key-btn" onclick="pressKey('2')">2</button>
-                <button class="key-btn" onclick="pressKey('3')">3</button>
-                <button class="key-btn" onclick="pressKey('4')">4</button>
-                <button class="key-btn" onclick="pressKey('5')">5</button>
-                <button class="key-btn" onclick="pressKey('6')">6</button>
-                <button class="key-btn" onclick="pressKey('7')">7</button>
-                <button class="key-btn" onclick="pressKey('8')">8</button>
-                <button class="key-btn" onclick="pressKey('9')">9</button>
-            </div>
-            <div class="keypad-actions">
-                <button class="action-btn btn-clear" onclick="clearKeypad()">C</button>
-                <button class="action-btn btn-enter" onclick="submitCode()">OK</button>
-            </div>
-            <button class="action-btn btn-close" onclick="closeKeypad()">Close</button>
-        </div>
+    <div class="controls-hint">
+        🎮 **कंट्रोल (Controls):** ⬅️ ➡️ बायाँ / दायाँ तीर (Left / Right Arrow) या A/D की-बोर्ड बटन दबाएँ।
     </div>
 
     <script>
-        const canvas = document.getElementById('gameCanvas');
-        const ctx = canvas.getContext('2d');
-        const uiLayer = document.getElementById('screen-ui');
-        const quizModal = document.getElementById('quiz-modal');
-        const keypadModal = document.getElementById('keypad-modal');
-        const keypadDisplay = document.getElementById('keypad-display');
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
 
-        // Logo Asset
-        const logoImg = new Image();
-        logoImg.src = 'assets/logo.png';
-        let logoLoaded = false;
-        logoImg.onload = () => { logoLoaded = true; };
+        const scoreEl = document.getElementById("score");
+        const factBox = document.getElementById("fact-box");
 
-        // Game Screens
-        const SCREENS = { START: 1, INSTRUCTIONS: 2, GAME: 3, END: 4 };
-        let currentScreen = SCREENS.START;
+        // Game State
+        let score = 0;
+        let gameOver = false;
 
-        // --- CHAPTER QUESTIONS CONFIGURATION ---
-        // You can customize your chapter questions and answer codes here!
-        const chapterQuestions = {
-            painting: {
-                title: "Chapter 1: History Clue",
-                question: "In what year did the Apollo 11 moon landing take place?",
-                options: ["1965", "1969", "1972", "1980"],
-                correctIndex: 1,
-                rewardMessage: "Correct! You unlocked a clue digit: '19__'."
-            },
-            desk: {
-                title: "Chapter 2: Desk Riddle",
-                question: "Which data structure uses LIFO (Last In, First Out)?",
-                options: ["Queue", "Array", "Stack", "Tree"],
-                correctIndex: 2,
-                rewardMessage: "Correct! You searched the desk and found the Safe Key!"
-            },
-            safe: {
-                title: "Chapter 3: Safe Puzzle",
-                question: "What is the square root of 64 multiplied by 10?",
-                options: ["640", "80", "160", "400"],
-                correctIndex: 1,
-                rewardMessage: "Correct! The safe opens! The final code digits are '..84'."
-            }
-        };
-
-        // State Tracking
-        let gameState = {
-            hasKey: false,
-            paintingSolved: false,
-            deskSolved: false,
-            safeUnlocked: false,
-            doorUnlocked: false,
-            codeEntered: "",
-            message: "Click items to inspect the room and solve chapter questions.",
-            timeRemaining: 180,
-            timerInterval: null
-        };
-
-        const interactiveObjects = [
-            { id: 'painting', x: 120, y: 120, w: 140, h: 100 },
-            { id: 'desk', x: 300, y: 380, w: 200, h: 120 },
-            { id: 'safe', x: 550, y: 280, w: 80, h: 90 },
-            { id: 'door', x: 680, y: 150, w: 100, h: 320 }
+        // Facts from Chapter 11
+        const facts = [
+            "ज्ञान: तरबूज़ में लगभग 92% पानी होता है! 💦",
+            "ज्ञान: इसके लाल भाग में 'लाइकोपीन' नाम का तत्व होता है! 🔴",
+            "ज्ञान: जापान के किसान पारदर्शी साँचे (Moulds) का प्रयोग करते हैं! 📦",
+            "ज्ञान: तरबूज़ का हरा छिलका अचार और मुरब्बा बनाने में काम आता है! 🥒",
+            "ज्ञान: चौकोर तरबूज़ को आसानी से सजाकर रखा जा सकता है! ✨",
+            "ज्ञान: तरबूज़, ककड़ी और कद्दू एक ही बेल-परिवार के सदस्य हैं! 🌿"
         ];
 
-        // --- SCREEN MANAGERS ---
-        function setScreen(screen) {
-            currentScreen = screen;
-            uiLayer.innerHTML = '';
-            closeQuiz();
-            closeKeypad();
+        // Player (Golu)
+        const player = {
+            x: canvas.width / 2 - 30,
+            y: canvas.height - 70,
+            width: 60,
+            height: 60,
+            speed: 7,
+            dx: 0,
+            hasWatermelon: false,
+            type: null // 'round' or 'square'
+        };
 
-            if (screen === SCREENS.START) renderStartUI();
-            else if (screen === SCREENS.INSTRUCTIONS) renderInstructionsUI();
-            else if (screen === SCREENS.GAME) initGame();
-            else if (screen === SCREENS.END) {
-                clearInterval(gameState.timerInterval);
-                renderEndUI();
-            }
-        }
+        // Mold Target (Left side)
+        const mold = {
+            x: 20,
+            y: canvas.height - 80,
+            width: 70,
+            height: 70
+        };
 
-        function renderStartUI() {
-            const btn = document.createElement('button');
-            btn.className = 'btn';
-            btn.innerText = 'Start Experience';
-            btn.style.marginTop = '220px';
-            btn.onclick = () => setScreen(SCREENS.INSTRUCTIONS);
-            uiLayer.appendChild(btn);
-        }
+        // Falling Watermelons
+        let watermelons = [];
+        let spawnTimer = 0;
 
-        function renderInstructionsUI() {
-            const btn = document.createElement('button');
-            btn.className = 'btn';
-            btn.innerText = 'Begin Escape';
-            btn.style.marginTop = '240px';
-            btn.onclick = () => setScreen(SCREENS.GAME);
-            uiLayer.appendChild(btn);
-        }
+        // Key Handlers
+        const keys = {};
 
-        function renderEndUI() {
-            const btn = document.createElement('button');
-            btn.className = 'btn';
-            btn.innerText = 'Play Again';
-            btn.style.marginTop = '180px';
-            btn.onclick = () => setScreen(SCREENS.START);
-            uiLayer.appendChild(btn);
-        }
+        document.addEventListener("keydown", (e) => {
+            keys[e.key] = true;
+        });
 
-        // --- GAME LOGIC ---
-        function initGame() {
-            gameState.hasKey = false;
-            gameState.paintingSolved = false;
-            gameState.deskSolved = false;
-            gameState.safeUnlocked = false;
-            gameState.doorUnlocked = false;
-            gameState.codeEntered = "";
-            gameState.message = "Answer chapter questions hidden around the room to escape!";
-            gameState.timeRemaining = 180;
+        document.addEventListener("keyup", (e) => {
+            keys[e.key] = false;
+        });
 
-            if (gameState.timerInterval) clearInterval(gameState.timerInterval);
-            gameState.timerInterval = setInterval(() => {
-                gameState.timeRemaining--;
-                if (gameState.timeRemaining <= 0) {
-                    clearInterval(gameState.timerInterval);
-                    setScreen(SCREENS.END);
-                }
-            }, 1000);
-        }
-
-        function handleRoomClick(x, y) {
-            if (currentScreen !== SCREENS.GAME) return;
-
-            for (let obj of interactiveObjects) {
-                if (x >= obj.x && x <= obj.x + obj.w && y >= obj.y && y <= obj.y + obj.h) {
-                    interact(obj.id);
-                    return;
-                }
-            }
-        }
-
-        function interact(objectId) {
-            if (objectId === 'painting') {
-                if (gameState.paintingSolved) {
-                    gameState.message = "Painting solved: The first two digits are '19'.";
-                } else {
-                    openQuiz('painting');
-                }
-            } else if (objectId === 'desk') {
-                if (gameState.deskSolved) {
-                    gameState.message = "Desk solved: You already have the Safe Key!";
-                } else {
-                    openQuiz('desk');
-                }
-            } else if (objectId === 'safe') {
-                if (!gameState.hasKey) {
-                    gameState.message = "The safe requires a key! Answer the Desk question first.";
-                } else if (gameState.safeUnlocked) {
-                    gameState.message = "Safe solved: The complete door passcode is '1984'.";
-                } else {
-                    openQuiz('safe');
-                }
-            } else if (objectId === 'door') {
-                if (!gameState.safeUnlocked || !gameState.paintingSolved) {
-                    gameState.message = "The door is locked! Solve all chapter questions to get the code.";
-                } else {
-                    openKeypad();
-                }
-            }
-        }
-
-        // --- QUIZ SYSTEM ---
-        function openQuiz(id) {
-            const q = chapterQuestions[id];
-            document.getElementById('quiz-title').innerText = q.title;
-            document.getElementById('quiz-text').innerText = q.question;
-            
-            const optionsContainer = document.getElementById('quiz-options');
-            optionsContainer.innerHTML = '';
-
-            q.options.forEach((opt, idx) => {
-                const btn = document.createElement('button');
-                btn.className = 'option-btn';
-                btn.innerText = `${String.fromCharCode(65 + idx)}. ${opt}`;
-                btn.onclick = () => handleAnswer(id, idx);
-                optionsContainer.appendChild(btn);
+        function spawnWatermelon() {
+            const x = Math.random() * (canvas.width - 120) + 100;
+            watermelons.push({
+                x: x,
+                y: -30,
+                radius: 20,
+                speed: 2 + Math.random() * 2
             });
-
-            quizModal.style.display = 'flex';
         }
 
-        function closeQuiz() {
-            quizModal.style.display = 'none';
-        }
+        function update() {
+            if (gameOver) return;
 
-        function handleAnswer(objectId, selectedIdx) {
-            const q = chapterQuestions[objectId];
-            closeQuiz();
+            // Player Movement
+            if (keys["ArrowLeft"] || keys["a"] || keys["A"]) {
+                player.x -= player.speed;
+            }
+            if (keys["ArrowRight"] || keys["d"] || keys["D"]) {
+                player.x += player.speed;
+            }
 
-            if (selectedIdx === q.correctIndex) {
-                gameState.message = q.rewardMessage;
-                if (objectId === 'painting') gameState.paintingSolved = true;
-                if (objectId === 'desk') { gameState.deskSolved = true; gameState.hasKey = true; }
-                if (objectId === 'safe') gameState.safeUnlocked = true;
-            } else {
-                gameState.message = "Incorrect answer! Try inspecting the object again.";
+            // Boundary Checks
+            if (player.x < 0) player.x = 0;
+            if (player.x + player.width > canvas.width) player.x = canvas.width - player.width;
+
+            // Spawn Watermelons
+            spawnTimer++;
+            if (spawnTimer > 100 && watermelons.length < 3) {
+                spawnWatermelon();
+                spawnTimer = 0;
+            }
+
+            // Update Watermelons
+            for (let i = watermelons.length - 1; i >= 0; i--) {
+                let w = watermelons[i];
+                w.y += w.speed;
+
+                // Catch Watermelon
+                if (
+                    !player.hasWatermelon &&
+                    w.y + w.radius >= player.y &&
+                    w.x >= player.x &&
+                    w.x <= player.x + player.width
+                ) {
+                    player.hasWatermelon = true;
+                    player.type = 'round';
+                    watermelons.splice(i, 1);
+                    factBox.innerText = "शाबाश! अब इसे बाएँ (Left) तरफ वाले साँचे (Mold) में ले जाएँ!";
+                    continue;
+                }
+
+                // Missed Watermelon
+                if (w.y - w.radius > canvas.height) {
+                    watermelons.splice(i, 1);
+                }
+            }
+
+            // Deliver to Mold
+            if (player.hasWatermelon && player.type === 'round') {
+                if (player.x <= mold.x + mold.width) {
+                    // Transformed into Square!
+                    score += 1;
+                    scoreEl.innerText = `स्कोर (Score): ${score}`;
+                    player.hasWatermelon = false;
+                    player.type = null;
+
+                    // Update Random Fact
+                    const randomFact = facts[Math.floor(Math.random() * facts.length)];
+                    factBox.innerText = `🎉 चौकोर तरबूज़ तैयार! ${randomFact}`;
+                }
             }
         }
 
-        // --- KEYPAD SYSTEM ---
-        function openKeypad() {
-            gameState.codeEntered = "";
-            updateKeypadDisplay();
-            keypadModal.style.display = 'flex';
+        function drawBackground() {
+            // Kitchen Floor
+            ctx.fillStyle = "#e0e0e0";
+            ctx.fillRect(0, canvas.height - 30, canvas.width, 30);
+
+            // Wall
+            ctx.fillStyle = "#fff8dc";
+            ctx.fillRect(0, 0, canvas.width, canvas.height - 30);
+
+            // Kitchen Table / Shelf
+            ctx.fillStyle = "#8b4513";
+            ctx.fillRect(0, canvas.height - 35, canvas.width, 5);
         }
 
-        function closeKeypad() {
-            keypadModal.style.display = 'none';
+        function drawMold() {
+            // Glass Mold Container
+            ctx.strokeStyle = "#2980b9";
+            ctx.lineWidth = 4;
+            ctx.fillStyle = "rgba(173, 216, 230, 0.4)";
+            ctx.fillRect(mold.x, mold.y, mold.width, mold.height);
+            ctx.strokeRect(mold.x, mold.y, mold.width, mold.height);
+
+            // Label
+            ctx.fillStyle = "#2c3e50";
+            ctx.font = "12px Arial";
+            ctx.fillText("साँचा (Mold)", mold.x + 5, mold.y - 8);
         }
 
-        function pressKey(num) {
-            if (gameState.codeEntered.length < 4) {
-                gameState.codeEntered += num;
-                updateKeypadDisplay();
+        function drawWatermelons() {
+            watermelons.forEach(w => {
+                // Round Watermelon
+                ctx.beginPath();
+                ctx.arc(w.x, w.y, w.radius, 0, Math.PI * 2);
+                ctx.fillStyle = "#27ae60";
+                ctx.fill();
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = "#1e8449";
+                ctx.stroke();
+
+                // Stripes
+                ctx.beginPath();
+                ctx.moveTo(w.x - 10, w.y - 10);
+                ctx.lineTo(w.x + 10, w.y + 10);
+                ctx.strokeStyle = "#145a32";
+                ctx.lineWidth = 3;
+                ctx.stroke();
+            });
+        }
+
+        function drawPlayer() {
+            // Character Golu (Simplified Art)
+            ctx.fillStyle = "#e74c3c"; // Shirt
+            ctx.fillRect(player.x + 15, player.y + 20, 30, 30);
+
+            ctx.fillStyle = "#f1c40f"; // Head
+            ctx.beginPath();
+            ctx.arc(player.x + 30, player.y + 12, 15, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Eyes
+            ctx.fillStyle = "#000";
+            ctx.fillRect(player.x + 23, player.y + 8, 3, 3);
+            ctx.fillRect(player.x + 34, player.y + 8, 3, 3);
+
+            // Hands holding item
+            if (player.hasWatermelon) {
+                // Draw Round Watermelon in hands
+                ctx.beginPath();
+                ctx.arc(player.x + 30, player.y + 35, 14, 0, Math.PI * 2);
+                ctx.fillStyle = "#27ae60";
+                ctx.fill();
+                ctx.strokeStyle = "#145a32";
+                ctx.stroke();
             }
         }
 
-        function clearKeypad() {
-            gameState.codeEntered = "";
-            updateKeypadDisplay();
-        }
-
-        function updateKeypadDisplay() {
-            keypadDisplay.innerText = gameState.codeEntered.padEnd(4, '-');
-        }
-
-        function submitCode() {
-            if (gameState.codeEntered === "1984") {
-                gameState.doorUnlocked = true;
-                closeKeypad();
-                setScreen(SCREENS.END);
-            } else {
-                gameState.message = "Access Denied: Incorrect Code!";
-                gameState.codeEntered = "";
-                updateKeypadDisplay();
-            }
-        }
-
-        // --- RENDER ENGINE ---
         function draw() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            switch (currentScreen) {
-                case SCREENS.START:
-                    drawStartScreen();
-                    break;
-                case SCREENS.INSTRUCTIONS:
-                    drawInstructionsScreen();
-                    break;
-                case SCREENS.GAME:
-                    drawGameScreen();
-                    break;
-                case SCREENS.END:
-                    drawEndScreen();
-                    break;
-            }
-
-            requestAnimationFrame(draw);
+            drawBackground();
+            drawMold();
+            drawWatermelons();
+            drawPlayer();
         }
 
-        function drawStartScreen() {
-            let bgGrad = ctx.createRadialGradient(400, 300, 50, 400, 300, 400);
-            bgGrad.addColorStop(0, '#1f1f2e');
-            bgGrad.addColorStop(1, '#08080c');
-            ctx.fillStyle = bgGrad;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            if (logoLoaded) {
-                ctx.drawImage(logoImg, 320, 80, 160, 160);
-            } else {
-                ctx.strokeStyle = '#e74c3c';
-                ctx.lineWidth = 4;
-                ctx.strokeRect(330, 80, 140, 140);
-                ctx.fillStyle = '#e74c3c';
-                ctx.font = 'bold 16px sans-serif';
-                ctx.textAlign = 'center';
-                ctx.fillText('assets/logo.png', 400, 155);
-            }
-
-            ctx.fillStyle = '#ffffff';
-            ctx.font = '700 42px sans-serif';
-            ctx.textAlign = 'center';
-            ctx.fillText("CHAPTER ESCAPE ROOM", 400, 300);
-
-            ctx.fillStyle = '#8888aa';
-            ctx.font = '18px sans-serif';
-            ctx.fillText("Answer the chapter questions to make your exit!", 400, 335);
+        function gameLoop() {
+            update();
+            draw();
+            requestAnimationFrame(gameLoop);
         }
 
-        function drawInstructionsScreen() {
-            ctx.fillStyle = '#141419';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            ctx.fillStyle = '#1f1f2a';
-            ctx.strokeStyle = '#333344';
-            ctx.lineWidth = 2;
-            ctx.fillRect(100, 60, 600, 480);
-            ctx.strokeRect(100, 60, 600, 480);
-
-            ctx.fillStyle = '#e74c3c';
-            ctx.font = 'bold 32px sans-serif';
-            ctx.textAlign = 'center';
-            ctx.fillText("INSTRUCTIONS", 400, 120);
-
-            ctx.fillStyle = '#dddddd';
-            ctx.font = '18px sans-serif';
-            ctx.textAlign = 'left';
-
-            const instructions = [
-                "• Search the room by clicking on highlighted objects.",
-                "• Answer multiple-choice questions from your chapters.",
-                "• Correct answers unlock items and portions of the exit code.",
-                "• Enter the full 4-digit passcode at the exit door.",
-                "• Escape before the 3-minute timer runs out!"
-            ];
-
-            instructions.forEach((line, index) => {
-                ctx.fillText(line, 140, 190 + (index * 45));
-            });
-        }
-
-        function drawGameScreen() {
-            ctx.fillStyle = '#2c2c38';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            ctx.fillStyle = '#1e1e26';
-            ctx.fillRect(0, 460, canvas.width, 140);
-
-            // 1. Painting (Chapter 1)
-            ctx.fillStyle = gameState.paintingSolved ? '#27ae60' : '#8e44ad';
-            ctx.fillRect(120, 120, 140, 100);
-            ctx.strokeStyle = '#f39c12';
-            ctx.lineWidth = 6;
-            ctx.strokeRect(120, 120, 140, 100);
-            ctx.fillStyle = '#fff';
-            ctx.font = '14px sans-serif';
-            ctx.textAlign = 'center';
-            ctx.fillText("Ch. 1 (Painting)", 190, 175);
-
-            // 2. Desk (Chapter 2)
-            ctx.fillStyle = gameState.deskSolved ? '#27ae60' : '#d35400';
-            ctx.fillRect(300, 380, 200, 80);
-            ctx.fillRect(320, 460, 30, 60);
-            ctx.fillRect(450, 460, 30, 60);
-            ctx.fillStyle = '#fff';
-            ctx.font = '14px sans-serif';
-            ctx.fillText("Ch. 2 (Desk)", 400, 430);
-
-            // 3. Safe (Chapter 3)
-            ctx.fillStyle = gameState.safeUnlocked ? '#27ae60' : '#7f8c8d';
-            ctx.fillRect(550, 280, 80, 90);
-            ctx.fillStyle = '#34495e';
-            ctx.fillRect(560, 290, 60, 70);
-            ctx.fillStyle = '#fff';
-            ctx.font = '12px sans-serif';
-            ctx.fillText("Ch. 3 (Safe)", 590, 355);
-
-            // 4. Exit Door
-            ctx.fillStyle = '#34495e';
-            ctx.fillRect(680, 150, 100, 310);
-            ctx.fillStyle = '#f1c40f';
-            ctx.beginPath();
-            ctx.arc(700, 310, 6, 0, Math.PI * 2);
-            ctx.fill();
-
-            // Status Bar
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
-            ctx.fillRect(0, 0, canvas.width, 50);
-
-            ctx.fillStyle = '#fff';
-            ctx.font = '16px sans-serif';
-            ctx.textAlign = 'left';
-            ctx.fillText(`Key: ${gameState.hasKey ? '🔑 Safe Key' : 'Missing'}`, 20, 30);
-
-            let mins = Math.floor(gameState.timeRemaining / 60);
-            let secs = gameState.timeRemaining % 60;
-            ctx.textAlign = 'right';
-            ctx.fillStyle = gameState.timeRemaining < 30 ? '#ff4d4d' : '#00ffcc';
-            ctx.fillText(`Time Left: ${mins}:${secs < 10 ? '0' : ''}${secs}`, 780, 30);
-
-            // Message Display
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-            ctx.fillRect(0, 540, canvas.width, 60);
-            ctx.fillStyle = '#ffeb3b';
-            ctx.font = '15px sans-serif';
-            ctx.textAlign = 'center';
-            ctx.fillText(gameState.message, 400, 575);
-        }
-
-        function drawEndScreen() {
-            ctx.fillStyle = '#0f0f15';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.textAlign = 'center';
-
-            if (gameState.doorUnlocked) {
-                ctx.fillStyle = '#2ecc71';
-                ctx.font = 'bold 46px sans-serif';
-                ctx.fillText("ESCAPED SUCCESSFULLY!", 400, 220);
-
-                ctx.fillStyle = '#ffffff';
-                ctx.font = '20px sans-serif';
-                ctx.fillText("You answered the chapter questions and broke out!", 400, 280);
-            } else {
-                ctx.fillStyle = '#e74c3c';
-                ctx.font = 'bold 46px sans-serif';
-                ctx.fillText("GAME OVER", 400, 220);
-
-                ctx.fillStyle = '#ffffff';
-                ctx.font = '20px sans-serif';
-                ctx.fillText("You ran out of time!", 400, 280);
-            }
-        }
-
-        // Input Listener
-        canvas.addEventListener('click', (e) => {
-            const rect = canvas.getBoundingClientRect();
-            const mouseX = (e.clientX - rect.left) * (canvas.width / rect.width);
-            const mouseY = (e.clientY - rect.top) * (canvas.height / rect.height);
-
-            if (currentScreen === SCREENS.GAME) {
-                handleRoomClick(mouseX, mouseY);
-            }
-        });
-
-        // Initialize Engine
-        setScreen(SCREENS.START);
-        requestAnimationFrame(draw);
+        gameLoop();
     </script>
 </body>
 </html>
