@@ -418,7 +418,7 @@
             100% { transform: scale(1); }
         }
 
-        /* --- SHAPE MODE --- */
+        /* --- SHAPE MODE FIXES --- */
         .shape-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -438,12 +438,17 @@
             font-weight: 700;
             cursor: pointer;
             box-shadow: 0 6px 12px rgba(0,0,0,0.04);
-            transition: all 0.2s ease;
+            transition: border-color 0.15s ease, background-color 0.15s ease, transform 0.1s ease;
             position: relative;
+            z-index: 1;
+        }
+
+        .shape-item:active {
+            transform: scale(0.95);
         }
 
         .shape-item img, .shape-item .name {
-            pointer-events: none;
+            pointer-events: none !important;
         }
 
         .shape-item img {
@@ -456,7 +461,7 @@
 
         .shape-item .name { font-size: 0.95rem; color: #2d3436; margin-top: 2px; }
 
-        /* GLOW ANIMATION FOR 5 SECONDS */
+        /* GLOW ANIMATION */
         .shape-item.glow-hint {
             border-color: #fcc419 !important;
             background: #fff9db !important;
@@ -465,13 +470,16 @@
 
         @keyframes tempGlow {
             0% { box-shadow: 0 0 6px #ffe066, inset 0 0 4px #ffe066; }
-            100% { box-shadow: 0 0 20px #fcc419, inset 0 0 10px #fcc419; }
+            100% { box-shadow: 0 0 18px #fcc419, inset 0 0 8px #fcc419; }
         }
 
-        .shape-item.selected {
+        /* STRICT OVERRIDE FOR SELECTION (Works even if glow-hint is active) */
+        .shape-item.selected,
+        .shape-item.glow-hint.selected {
             border-color: #2ed573 !important;
             background: #e6fffa !important;
-            box-shadow: 0 0 12px rgba(46, 213, 115, 0.8) !important;
+            box-shadow: 0 0 14px rgba(46, 213, 115, 0.9) !important;
+            animation: none !important;
         }
 
         .win-card {
@@ -597,7 +605,7 @@
                 केवल गोल (Round) फलों को टिक करें! ⚪
             </p>
             
-            <!-- HINT BUTTON FOR KIDS -->
+            <!-- HINT BUTTON -->
             <button class="hint-btn" id="btnShapeHint" onclick="trigger5SecGlowHint()">💡 मदद चाहिए? (हिंट देखें)</button>
             
             <div class="shape-grid" id="shapeGrid"></div>
@@ -625,7 +633,7 @@
     let totalScore = 0;
     let selectedFruitForSort = null;
 
-    // AUTO LOADING SPLASH SCREEN (3 SECONDS)
+    // AUTO LOADING SPLASH SCREEN
     window.addEventListener('DOMContentLoaded', () => {
         let progress = 0;
         const fill = document.getElementById('progressFill');
@@ -790,7 +798,7 @@
         }
     }
 
-    /* 3. SHAPE MODE (WITH 5-SECOND HINT GLOW & MANUAL SELECTION) */
+    /* 3. SHAPE MODE */
     function startShapeMode() {
         document.getElementById('shapeInstruction').innerText = 'केवल गोल (Round) फलों को टिक करें! ⚪';
         document.getElementById('shapeInstruction').style.color = '#2d3436';
@@ -805,20 +813,21 @@
             item.dataset.isRound = f.isRound;
             item.innerHTML = `<img src="${f.img}" alt="${f.name}"><span class="name">${f.name}</span>`;
             
-            // MANUAL TOGGLE BY KIDS
-            item.onclick = function() {
+            // DIRECT TOGGLE FIX
+            item.addEventListener('click', function(e) {
+                e.stopPropagation();
                 this.classList.toggle('selected');
-            };
+            });
+
             grid.appendChild(item);
         });
     }
 
-    // TRIGGERED WHEN KID CLICKS "💡 मदद चाहिए?" BUTTON
+    // 5-SECOND GLOW HINT TRIGGER
     function trigger5SecGlowHint() {
         const items = document.querySelectorAll('.shape-item');
         const hintBtn = document.getElementById('btnShapeHint');
         
-        // Disable button while glowing
         hintBtn.disabled = true;
         hintBtn.innerText = '⏳ 5 सेकंड तक गोल फल चमक रहे हैं...';
 
@@ -828,7 +837,6 @@
             }
         });
 
-        // REMOVE GLOW AFTER EXACTLY 5 SECONDS (5000ms)
         setTimeout(() => {
             items.forEach(item => {
                 item.classList.remove('glow-hint');
@@ -838,7 +846,7 @@
         }, 5000);
     }
 
-    // CHECK ANSWERS & GO TO WIN SCREEN
+    // CHECK ANSWERS
     function checkShapeAnswers() {
         let items = document.querySelectorAll('.shape-item');
         let correct = true;
