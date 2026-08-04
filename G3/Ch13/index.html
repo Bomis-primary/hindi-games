@@ -1,278 +1,494 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sequence Builder: Derek Redmond's Journey</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f4f7f6;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      margin: 0;
-      padding: 20px;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>हिम्मत की दौड़ - Sequence Builder</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
 
-    .game-container {
-      background: white;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-      max-width: 600px;
-      width: 100%;
-    }
+        body {
+            background: linear-gradient(135deg, #e0f2fe 0%, #fef3c7 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
 
-    h1 {
-      text-align: center;
-      color: #2c3e50;
-      margin-bottom: 10px;
-    }
+        /* Screen Management */
+        .screen {
+            display: none;
+            width: 100%;
+            max-width: 700px;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
 
-    p.instructions {
-      text-align: center;
-      color: #7f8c8d;
-      margin-bottom: 25px;
-    }
+        .screen.active {
+            display: flex;
+        }
 
-    .list-container {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
+        /* SCREEN 1: Innovine Splash Screen (5 Seconds) */
+        #screen1 {
+            height: 80vh;
+            justify-content: center;
+            align-items: center;
+        }
 
-    .draggable-item {
-      background-color: #3498db;
-      color: white;
-      padding: 15px;
-      margin-bottom: 10px;
-      border-radius: 6px;
-      cursor: grab;
-      display: flex;
-      align-items: center;
-      user-select: none;
-      transition: background-color 0.2s, transform 0.2s;
-    }
+        .logo-container {
+            animation: fadeInScale 1.5s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
 
-    .draggable-item:active {
-      cursor: grabbing;
-    }
+        .brand-logo-img {
+            max-width: 250px;
+            height: auto;
+            object-fit: contain;
+            filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.15));
+        }
 
-    .draggable-item.dragging {
-      opacity: 0.5;
-      transform: scale(0.98);
-    }
+        .splash-timer {
+            margin-top: 15px;
+            width: 180px;
+            height: 6px;
+            background: #cbd5e1;
+            border-radius: 10px;
+            overflow: hidden;
+        }
 
-    .draggable-item .number {
-      font-weight: bold;
-      background: rgba(255, 255, 255, 0.2);
-      width: 28px;
-      height: 28px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      border-radius: 50%;
-      margin-right: 15px;
-      flex-shrink: 0;
-    }
+        .splash-progress {
+            width: 0%;
+            height: 100%;
+            background: #2563eb;
+            animation: loadProgress 5s linear forwards;
+        }
 
-    .controls {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 25px;
-    }
+        /* SCREEN 2: Instructions Screen */
+        .card-box {
+            background: white;
+            padding: 35px;
+            border-radius: 24px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            max-width: 550px;
+            width: 100%;
+        }
 
-    button {
-      background-color: #2ecc71;
-      color: white;
-      border: none;
-      padding: 12px 24px;
-      border-radius: 6px;
-      font-size: 16px;
-      cursor: pointer;
-      font-weight: bold;
-      transition: background 0.3s;
-    }
+        .card-box h2 {
+            color: #1e3a8a;
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+        }
 
-    button:hover {
-      background-color: #27ae60;
-    }
+        .instructions-list {
+            text-align: left;
+            margin: 20px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            color: #374151;
+            font-size: 1.05rem;
+            line-height: 1.5;
+        }
 
-    button.reset-btn {
-      background-color: #e74c3c;
-    }
+        .btn-primary {
+            padding: 14px 32px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);
+            margin-top: 10px;
+        }
 
-    button.reset-btn:hover {
-      background-color: #c0392b;
-    }
+        .btn-primary:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+        }
 
-    #message {
-      text-align: center;
-      margin-top: 15px;
-      font-size: 18px;
-      font-weight: bold;
-    }
+        /* SCREEN 3: Game Screen */
+        .game-header h1 {
+            color: #1e3a8a;
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+        }
 
-    .correct {
-      color: #2ecc71;
-    }
+        .game-subtitle {
+            color: #475569;
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+        }
 
-    .incorrect {
-      color: #e74c3c;
-    }
-  </style>
+        .list-container {
+            list-style: none;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .draggable-item {
+            background: white;
+            padding: 14px 18px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border: 2px solid #e2e8f0;
+            cursor: grab;
+            user-select: none;
+            text-align: left;
+            transition: all 0.2s ease;
+        }
+
+        .draggable-item:active {
+            cursor: grabbing;
+        }
+
+        .draggable-item.dragging {
+            opacity: 0.4;
+            transform: scale(0.98);
+        }
+
+        .item-number {
+            background: #eff6ff;
+            color: #2563eb;
+            font-weight: bold;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+            font-size: 0.95rem;
+        }
+
+        .item-text {
+            color: #1e293b;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .feedback-msg {
+            margin-top: 15px;
+            font-weight: bold;
+            font-size: 1.05rem;
+        }
+
+        /* SCREEN 4: End Screen */
+        .end-card {
+            background: white;
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            max-width: 480px;
+            width: 100%;
+        }
+
+        .end-card h2 {
+            color: #1e3a8a;
+            font-size: 2rem;
+            margin-bottom: 12px;
+        }
+
+        .end-card p {
+            color: #4b5563;
+            font-size: 1.1rem;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        /* Animations */
+        @keyframes fadeInScale {
+            0% { opacity: 0; transform: scale(0.85); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes loadProgress {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+
+        @media (max-width: 600px) {
+            .draggable-item {
+                padding: 10px 14px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
 </head>
 <body>
 
-<div class="game-container">
-  <h1>Sequence Builder 🏃‍♂️</h1>
-  <p class="instructions">Drag and drop the events from Derek Redmond's life into the correct order!</p>
-
-  <ul class="list-container" id="draggable-list">
-    <!-- List items populated by JavaScript -->
-  </ul>
-
-  <div class="controls">
-    <button id="check-btn">Check Order</button>
-    <button class="reset-btn" id="reset-btn">Reset</button>
-  </div>
-
-  <div id="message"></div>
-</div>
-
-<script>
-  // Correct sequence based on Derek Redmond's story (Ch13)
-  const correctEvents = [
-    "Derek joined a local athletics club at 7 years old.",
-    "Derek set a British national record of 44.82s in 1985.",
-    "He won Gold in the 4x400m relay at Tokyo World Championship (1991).",
-    "Derek reached the 400m semifinals at the 1992 Barcelona Olympics.",
-    "His right hamstring tore mid-race (~250m), causing him to drop to the ground.",
-    "His father, Jim Redmond, ran onto the track to support him.",
-    "Together, Derek and his father crossed the finish line to a standing ovation."
-  ];
-
-  const draggableList = document.getElementById('draggable-list');
-  const checkBtn = document.getElementById('check-btn');
-  const resetBtn = document.getElementById('reset-btn');
-  const messageEl = document.getElementById('message');
-
-  let listItems = [];
-  let dragStartIndex;
-
-  // Initialize Game
-  function initGame() {
-    draggableList.innerHTML = '';
-    messageEl.textContent = '';
-    messageEl.className = '';
-    listItems = [];
-
-    // Shuffle events for display
-    const shuffledEvents = [...correctEvents]
-      .map(a => ({ value: a, sort: Math.random() }))
-      .sort((a, b) => a.sort - b.sort)
-      .map(a => a.value);
-
-    shuffledEvents.forEach((eventText, index) => {
-      const listItem = document.createElement('li');
-      listItem.setAttribute('data-index', index);
-
-      listItem.innerHTML = `
-        <div class="draggable-item" draggable="true">
-          <span class="number">${index + 1}</span>
-          <span class="event-text">${eventText}</span>
+    <!-- SCREEN 1: Innovine Splash Screen (5 Seconds) -->
+    <div id="screen1" class="screen active">
+        <div class="logo-container">
+            <img src="assets/logo.png" alt="Innovine Logo" class="brand-logo-img">
+            <div class="splash-timer">
+                <div class="splash-progress"></div>
+            </div>
         </div>
-      `;
+    </div>
 
-      listItems.push(listItem);
-      draggableList.appendChild(listItem);
-    });
+    <!-- SCREEN 2: Instructions Screen -->
+    <div id="screen2" class="screen">
+        <div class="card-box">
+            <h2>📜 खेल के नियम</h2>
+            <div class="instructions-list">
+                <p>1. डेरेक रेडमंड की कहानी की सभी घटनाओं को सही क्रम (Sequence) में जमाएँ।</p>
+                <p>2. वाक्यों को ऊपर या नीचे ड्रैग करके सही कालक्रम अनुसार व्यवस्थित करें।</p>
+                <p>3. व्यवस्थित करने के बाद <b>'जाँच करें'</b> बटन दबाएँ!</p>
+            </div>
+            <button class="btn-primary" onclick="goToScreen(3); startGame();">गेम शुरू करें 🚀</button>
+        </div>
+    </div>
 
-    addEventListeners();
-  }
+    <!-- SCREEN 3: Sequence Builder Game Screen -->
+    <div id="screen3" class="screen">
+        <div class="game-header">
+            <h1>🏃‍♂️ हिम्मत की दौड़: Sequence Builder</h1>
+            <p class="game-subtitle">घटनाओं को उनके सही क्रम में व्यवस्थित करें:</p>
+        </div>
 
-  // Drag and Drop Logic
-  function dragStart() {
-    dragStartIndex = +this.closest('li').getAttribute('data-index');
-    this.classList.add('dragging');
-  }
+        <ul class="list-container" id="draggable-list"></ul>
 
-  function dragEnter() {
-    this.classList.add('over');
-  }
+        <div class="controls">
+            <button class="btn-primary" onclick="checkSequence()">जाँच करें ✔️</button>
+        </div>
+        <div id="feedback" class="feedback-msg"></div>
+    </div>
 
-  function dragLeave() {
-    this.classList.remove('over');
-  }
+    <!-- SCREEN 4: End Screen -->
+    <div id="screen4" class="screen">
+        <div class="end-card">
+            <h2>🎉 अद्भुत! बेहतरीन काम!</h2>
+            <p>आपने डेरेक रेडमंड की हिम्मत और संघर्ष की पूरी कहानी को एकदम सही क्रम में व्यवस्थित कर दिया है!</p>
+            <button class="btn-primary" onclick="restartGame()">पुनः खेलें 🔄</button>
+        </div>
+    </div>
 
-  function dragOver(e) {
-    e.preventDefault();
-  }
+    <script>
+        // Sound System (Web Audio API)
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
-  function dragDrop() {
-    const dragEndIndex = +this.getAttribute('data-index');
-    swapItems(dragStartIndex, dragEndIndex);
-    this.classList.remove('over');
-  }
+        function playSound(type) {
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            const now = audioCtx.currentTime;
 
-  function swapItems(fromIndex, toIndex) {
-    const itemOne = listItems[fromIndex].querySelector('.draggable-item');
-    const itemTwo = listItems[toIndex].querySelector('.draggable-item');
+            if (type === 'drag') {
+                osc.frequency.setValueAtTime(350, now);
+                gain.gain.setValueAtTime(0.08, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
+                osc.start(now);
+                osc.stop(now + 0.08);
+            } else if (type === 'correct') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(523.25, now);
+                osc.frequency.setValueAtTime(659.25, now + 0.1);
+                gain.gain.setValueAtTime(0.15, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                osc.start(now);
+                osc.stop(now + 0.3);
+            } else if (type === 'wrong') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(200, now);
+                osc.frequency.setValueAtTime(140, now + 0.15);
+                gain.gain.setValueAtTime(0.15, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                osc.start(now);
+                osc.stop(now + 0.3);
+            } else if (type === 'win') {
+                const notes = [523.25, 659.25, 783.99, 1046.50];
+                notes.forEach((freq, index) => {
+                    const oscW = audioCtx.createOscillator();
+                    const gainW = audioCtx.createGain();
+                    oscW.connect(gainW);
+                    gainW.connect(audioCtx.destination);
+                    oscW.frequency.setValueAtTime(freq, now + index * 0.12);
+                    gainW.gain.setValueAtTime(0.15, now + index * 0.12);
+                    gainW.gain.exponentialRampToValueAtTime(0.01, now + index * 0.12 + 0.2);
+                    oscW.start(now + index * 0.12);
+                    oscW.stop(now + index * 0.12 + 0.2);
+                });
+            }
+        }
 
-    listItems[fromIndex].appendChild(itemTwo);
-    listItems[toIndex].appendChild(itemOne);
-  }
+        // Story Correct Sequence (Chapter 13 - Derek Redmond)
+        const correctSequence = [
+            "डेरेक ने मात्र सात साल की उम्र में स्थानीय क्लब से अभ्यास शुरू किया।",
+            "1985 और 1987 में उन्होंने 400 मीटर दौड़ में नए राष्ट्रीय रिकॉर्ड बनाए।",
+            "1992 में स्पेन के बार्सिलोना ओलंपिक खेलों के लिए उनका चयन हुआ।",
+            "दौड़ते-दौड़ते 250 मीटर पर पैर की हैमस्ट्रिंग में चोट लगने से वे गिर गए।",
+            "दर्द के बावजूद वे हार न मानते हुए लंगड़ाते हुए आगे बढ़ने लगे।",
+            "उनके पिता जिम रेडमंड सुरक्षाकर्मियों को पार कर मैदान में पहुँचे।",
+            "पिता और पुत्र ने मिलकर फिनिश लाइन पार की और दर्शकों ने तालियाँ बजाईं।"
+        ];
 
-  function checkOrder() {
-    let allCorrect = true;
+        let listItems = [];
+        let dragStartIndex;
 
-    listItems.forEach((listItem, index) => {
-      const eventText = listItem.querySelector('.event-text').innerText.trim();
-      
-      if (eventText !== correctEvents[index]) {
-        listItem.querySelector('.draggable-item').style.backgroundColor = '#e74c3c'; // Red
-        allCorrect = false;
-      } else {
-        listItem.querySelector('.draggable-item').style.backgroundColor = '#2ecc71'; // Green
-      }
-    });
+        // Navigation Controller
+        function goToScreen(screenNumber) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(`screen${screenNumber}`).classList.add('active');
+        }
 
-    if (allCorrect) {
-      messageEl.textContent = "🎉 Excellent! You built the complete sequence correctly!";
-      messageEl.className = "correct";
-    } else {
-      messageEl.textContent = "❌ Some steps are incorrect. Try adjusting the order!";
-      messageEl.className = "incorrect";
-    }
-  }
+        // Auto Transition: Screen 1 to Screen 2 (5 Seconds)
+        window.onload = () => {
+            setTimeout(() => {
+                goToScreen(2);
+            }, 5000);
+        };
 
-  function addEventListeners() {
-    const draggables = document.querySelectorAll('.draggable-item');
-    const dragListItems = document.querySelectorAll('.list-container li');
+        // Game Initialization
+        function startGame() {
+            document.getElementById('feedback').innerText = '';
+            const draggableList = document.getElementById('draggable-list');
+            draggableList.innerHTML = '';
+            listItems = [];
 
-    draggables.forEach(draggable => {
-      draggable.addEventListener('dragstart', dragStart);
-      draggable.addEventListener('dragend', function() {
-        this.classList.remove('dragging');
-      });
-    });
+            // Shuffle sequence
+            const shuffledEvents = [...correctSequence]
+                .map(value => ({ value, sort: Math.random() }))
+                .sort((a, b) => a.sort - b.sort)
+                .map(item => item.value);
 
-    dragListItems.forEach(item => {
-      item.addEventListener('dragover', dragOver);
-      item.addEventListener('drop', dragDrop);
-      item.addEventListener('dragenter', dragEnter);
-      item.addEventListener('dragleave', dragLeave);
-    });
-  }
+            shuffledEvents.forEach((text, index) => {
+                const listItem = document.createElement('li');
+                listItem.setAttribute('data-index', index);
 
-  checkBtn.addEventListener('click', checkOrder);
-  resetBtn.addEventListener('click', initGame);
+                listItem.innerHTML = `
+                    <div class="draggable-item" draggable="true">
+                        <span class="item-number">${index + 1}</span>
+                        <span class="item-text">${text}</span>
+                    </div>
+                `;
 
-  // Start game on page load
-  initGame();
-</script>
+                listItems.push(listItem);
+                draggableList.appendChild(listItem);
+            });
 
+            addDragListeners();
+        }
+
+        // Drag and Drop Logic
+        function dragStart() {
+            dragStartIndex = +this.closest('li').getAttribute('data-index');
+            this.classList.add('dragging');
+            playSound('drag');
+        }
+
+        function dragOver(e) {
+            e.preventDefault();
+        }
+
+        function dragDrop() {
+            const dragEndIndex = +this.getAttribute('data-index');
+            swapItems(dragStartIndex, dragEndIndex);
+            this.querySelector('.draggable-item').classList.remove('dragging');
+        }
+
+        function swapItems(fromIndex, toIndex) {
+            const itemOne = listItems[fromIndex].querySelector('.draggable-item');
+            const itemTwo = listItems[toIndex].querySelector('.draggable-item');
+
+            listItems[fromIndex].appendChild(itemTwo);
+            listItems[toIndex].appendChild(itemOne);
+
+            // Update item number badges
+            updateItemNumbers();
+        }
+
+        function updateItemNumbers() {
+            listItems.forEach((item, idx) => {
+                const badge = item.querySelector('.item-number');
+                if (badge) badge.innerText = idx + 1;
+            });
+        }
+
+        function addDragListeners() {
+            const draggables = document.querySelectorAll('.draggable-item');
+            const dragListItems = document.querySelectorAll('#draggable-list li');
+
+            draggables.forEach(draggable => {
+                draggable.addEventListener('dragstart', dragStart);
+                draggable.addEventListener('dragend', function() {
+                    this.classList.remove('dragging');
+                });
+            });
+
+            dragListItems.forEach(item => {
+                item.addEventListener('dragover', dragOver);
+                item.addEventListener('drop', dragDrop);
+            });
+        }
+
+        // Sequence Validation Logic
+        function checkSequence() {
+            let isCorrect = true;
+
+            listItems.forEach((listItem, index) => {
+                const itemText = listItem.querySelector('.item-text').innerText.trim();
+                const card = listItem.querySelector('.draggable-item');
+
+                if (itemText !== correctSequence[index]) {
+                    card.style.borderColor = '#ef4444';
+                    card.style.background = '#fef2f2';
+                    isCorrect = false;
+                } else {
+                    card.style.borderColor = '#10b981';
+                    card.style.background = '#ecfdf5';
+                }
+            });
+
+            const feedback = document.getElementById('feedback');
+            if (isCorrect) {
+                playSound('correct');
+                feedback.style.color = '#059669';
+                feedback.innerText = '✨ बिल्कुल सही क्रम!';
+                setTimeout(() => {
+                    playSound('win');
+                    goToScreen(4);
+                }, 1000);
+            } else {
+                playSound('wrong');
+                feedback.style.color = '#dc2626';
+                feedback.innerText = '❌ कुछ घटनाएँ सही स्थान पर नहीं हैं। पुनः प्रयास करें!';
+            }
+        }
+
+        function restartGame() {
+            goToScreen(3);
+            startGame();
+        }
+    </script>
 </body>
 </html>
