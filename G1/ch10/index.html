@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>वैभव की सैर - 'ऐ' की मात्रा (Interactive Game)</title>
+    <title>वैभव की सैर - 'ऐ' की मात्रा</title>
     <!-- Canvas Confetti -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
@@ -26,7 +26,20 @@
             overflow-x: hidden;
         }
 
-        /* 1. Splash Screen */
+        /* Generic Page View Container */
+        .page-card {
+            width: 100%;
+            max-width: 680px; 
+            background: #ffffff; 
+            border-radius: 24px; 
+            padding: 24px 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.12); 
+            text-align: center;
+            border: 4px solid #90cdf4;
+            position: relative;
+        }
+
+        /* 1. Splash Screen (Logo) */
         #splash-screen {
             position: fixed;
             top: 0;
@@ -45,8 +58,8 @@
         }
 
         #splash-screen img {
-            max-width: 240px;
-            width: 70%;
+            max-width: 260px;
+            width: 75%;
             height: auto;
             margin-bottom: 20px;
         }
@@ -63,20 +76,6 @@
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
-        }
-
-        /* 2. Main Game Container */
-        #game-container { 
-            display: none; 
-            width: 100%;
-            max-width: 680px; 
-            background: #ffffff; 
-            border-radius: 24px; 
-            padding: 24px 20px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.12); 
-            text-align: center;
-            border: 4px solid #90cdf4;
-            position: relative;
         }
 
         /* Header Bar */
@@ -284,6 +283,27 @@
             font-weight: bold;
             margin-top: 20px;
             box-shadow: 0 6px 15px rgba(49, 130, 206, 0.3);
+            transition: transform 0.1s ease;
+        }
+
+        .btn-action:active {
+            transform: scale(0.96);
+        }
+
+        .instruction-list {
+            text-align: left;
+            margin: 20px 0;
+            background: #f7fafc;
+            padding: 18px 20px;
+            border-radius: 16px;
+            border: 2px solid #e2e8f0;
+        }
+
+        .instruction-list li {
+            margin-bottom: 12px;
+            font-size: 16px;
+            line-height: 1.5;
+            color: #4a5568;
         }
 
         .hidden { display: none !important; }
@@ -294,7 +314,9 @@
             .crossword-grid { grid-template-columns: repeat(3, 55px); gap: 8px; }
             .cw-cell { width: 55px; height: 55px; font-size: 20px; }
             .draggable-tile { width: 48px; height: 48px; font-size: 18px; }
-            #game-container { padding: 18px 12px; }
+            .page-card { padding: 18px 12px; }
+            .instruction-list { padding: 12px 15px; }
+            .instruction-list li { font-size: 14px; }
         }
     </style>
 </head>
@@ -304,15 +326,35 @@
     <audio id="snd-correct" src="assets/correct.mp3" preload="auto"></audio>
     <audio id="snd-wrong" src="assets/wrong.mp3" preload="auto"></audio>
 
-    <!-- 1. Splash Screen -->
+    <!-- 1. Logo Screen (10-second timer) -->
     <div id="splash-screen">
         <img src="assets/innovine-logo.png" alt="Innovine Logo" onerror="this.style.display='none'">
         <div class="loader"></div>
-        <p style="margin-top:15px; color:#718096; font-size:15px; font-weight:600;">गेम लोड हो रहा है...</p>
+        <p style="margin-top:15px; color:#718096; font-size:15px; font-weight:600;">लोड हो रहा है... (<span id="timer-count">10</span>s)</p>
     </div>
 
-    <!-- 2. Main Game Container -->
-    <div id="game-container">
+    <!-- 2. Title Screen -->
+    <div id="title-screen" class="page-card hidden">
+        <h1 style="color: #2b6cb0; font-size: 32px; margin-bottom: 12px;">वैभव की सैर 🚶‍♂️</h1>
+        <h3 style="color: #4a5568; font-size: 20px; margin-bottom: 20px;">'ऐ' (ै) की मात्रा सीखें</h3>
+        <p style="font-size: 16px; color: #718096; margin-bottom: 30px;">आइए खेल-खेल में 'ऐ' की मात्रा के शब्दों का अभ्यास करें!</p>
+        <button class="btn-action" onclick="goToInstructions()">आगे बढ़ें ➔</button>
+    </div>
+
+    <!-- 3. Instructions Screen -->
+    <div id="instruction-screen" class="page-card hidden">
+        <h2 style="color: #2b6cb0; font-size: 26px; margin-bottom: 15px;">खेल के नियम 📜</h2>
+        <ul class="instruction-list">
+            <li><strong>Level 1 (सही शब्द खोजें):</strong> चित्र देखकर सही 'ऐ' की मात्रा वाला शब्द चुनें।</li>
+            <li><strong>Level 2 (अक्षर जोड़ें):</strong> गायब वर्ण चुनकर शब्द को पूरा करें।</li>
+            <li><strong>Level 3 (क्रॉसवर्ड पहेली):</strong> अक्षरों पर क्लिक करें या उन्हें खींचकर सही बॉक्स में रखें।</li>
+            <li><strong>Level 4 (सही मात्रा चुनें):</strong> चित्र देखकर सही 'ऐ' मात्रा वाले शब्द को पहचानें।</li>
+        </ul>
+        <button class="btn-action" onclick="startGame()">खेल शुरू करें 🎮</button>
+    </div>
+
+    <!-- 4. Main Game Container -->
+    <div id="game-container" class="page-card hidden">
         
         <!-- Header -->
         <div class="game-header">
@@ -404,10 +446,10 @@
                 title: "Level 2: अक्षर जोड़कर पूरा करें 🧩",
                 instruction: "सही वर्ण चुनकर 'ऐ' की मात्रा का शब्द पूरा करें:",
                 questions: [
-                    { img: "assets/camera.png", emoji: "📷", q: "____ + मे + रा = कैमेरा", options: ["कै", "क", "को", "के"], ans: 0 },
-                    { img: "assets/paisa.png", emoji: "💰", q: "____ + सा = पैसा", options: ["पा", "पै", "पो", "पे"], ans: 1 },
                     { img: "assets/swimmer.png", emoji: "🏊‍♀️", q: "____ + रा + क = तैराक", options: ["ते", "ता", "तै", "तो"], ans: 2 },
-                    { img: "assets/bag.png", emoji: "🎒", q: "____ + ग = बैग", options: ["बै", "बे", "बा", "बो"], ans: 0 }
+                    { img: "assets/bag.png", emoji: "🎒", q: "____ + ग = बैग", options: ["बै", "बे", "बा", "बो"], ans: 0 },
+                    { img: "assets/mainah.png", emoji: "🐦", q: "____ + ना = मैना", options: ["मा", "मै", "मो", "मे"], ans: 1 },
+                    { img: "assets/sainik.png", emoji: "🪖", q: "____ + नि + क = सैनिक", options: ["सै", "से", "सा", "सो"], ans: 0 }
                 ]
             },
             {
@@ -444,18 +486,36 @@
         }
         document.body.addEventListener('click', unlockAudio, { once: true });
 
-        // Hide Splash Screen
+        // Splash screen 10s countdown timer logic
         window.addEventListener('DOMContentLoaded', () => {
-            setTimeout(() => {
-                const splash = document.getElementById('splash-screen');
-                splash.style.opacity = '0';
-                setTimeout(() => {
-                    splash.style.display = 'none';
-                    document.getElementById('game-container').style.display = 'block';
-                    loadQuestion();
-                }, 500);
-            }, 1800);
+            let timeLeft = 10;
+            const timerEl = document.getElementById('timer-count');
+            
+            const countdown = setInterval(() => {
+                timeLeft--;
+                if (timerEl) timerEl.innerText = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(countdown);
+                    const splash = document.getElementById('splash-screen');
+                    splash.style.opacity = '0';
+                    setTimeout(() => {
+                        splash.style.display = 'none';
+                        document.getElementById('title-screen').classList.remove('hidden');
+                    }, 500);
+                }
+            }, 1000);
         });
+
+        function goToInstructions() {
+            document.getElementById('title-screen').classList.add('hidden');
+            document.getElementById('instruction-screen').classList.remove('hidden');
+        }
+
+        function startGame() {
+            document.getElementById('instruction-screen').classList.add('hidden');
+            document.getElementById('game-container').classList.remove('hidden');
+            loadQuestion();
+        }
 
         function triggerConfetti() {
             if (typeof confetti === 'function') {
