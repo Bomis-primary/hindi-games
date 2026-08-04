@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ओ' स्वर और मात्रा का मज़ेदार खेल</title>
+    <title>ओ' ( ो ) मात्रा का खेल</title>
     <!-- Canvas Confetti Library for Celebrations -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     
@@ -24,10 +24,10 @@
             justify-content: center;
             align-items: center;
             overflow-x: hidden;
-            padding: 10px;
+            padding: 15px;
         }
 
-        /* ---------------- SPLASH SCREEN ---------------- */
+        /* ---------------- SPLASH SCREEN (ONLY LOGO & START BUTTON) ---------------- */
         #splash-screen {
             position: fixed;
             top: 0;
@@ -40,48 +40,33 @@
             justify-content: center;
             align-items: center;
             z-index: 99999;
-            transition: opacity 0.8s ease-out;
             padding: 20px;
         }
 
-        #splash-screen img {
-            max-width: 280px;
+        .logo-img {
+            max-width: 320px;
             width: 80%;
             height: auto;
-            animation: pulse 2s infinite;
-            margin-bottom: 25px;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(0.98); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(0.98); }
+            margin-bottom: 30px;
         }
 
         /* ---------------- GAME CONTAINER ---------------- */
         #game-container {
             display: none;
             width: 100%;
-            max-width: 800px;
+            max-width: 600px;
             background: #ffffff;
-            border-radius: 20px;
-            padding: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            border-radius: 24px;
+            padding: 25px 20px;
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
             text-align: center;
             position: relative;
-            margin: auto;
-        }
-
-        .header-logo {
-            max-width: 110px;
-            height: auto;
-            margin-bottom: 5px;
         }
 
         .game-title {
             color: #ea580c;
-            font-size: 24px;
-            margin-bottom: 8px;
+            font-size: 26px;
+            margin-bottom: 15px;
         }
 
         .score-bar {
@@ -89,39 +74,25 @@
             justify-content: space-between;
             background-color: #fff7ed;
             border: 2px solid #fdba74;
-            padding: 8px 15px;
+            padding: 10px 18px;
             border-radius: 12px;
             font-weight: bold;
             color: #c2410c;
-            font-size: 16px;
-            margin-bottom: 15px;
-        }
-
-        .level-screen {
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-        }
-
-        .active-level {
-            display: flex;
+            font-size: 18px;
+            margin-bottom: 25px;
         }
 
         .btn-action {
             background: #ea580c;
             color: #ffffff;
             border: none;
-            padding: 12px 24px;
-            font-size: 18px;
+            padding: 14px 28px;
+            font-size: 20px;
             font-weight: bold;
-            border-radius: 12px;
+            border-radius: 14px;
             cursor: pointer;
-            margin-top: 15px;
-            width: 90%;
-            max-width: 300px;
-            transition: transform 0.2s, background 0.2s;
-            box-shadow: 0 4px 10px rgba(234, 88, 12, 0.3);
+            box-shadow: 0 4px 12px rgba(234, 88, 12, 0.35);
+            transition: transform 0.1s, background 0.2s;
             touch-action: manipulation;
         }
 
@@ -129,261 +100,147 @@
             transform: scale(0.96);
         }
 
-        /* ---------------- LEVEL 1: CATCH GAME ---------------- */
-        #catch-area {
-            position: relative;
-            width: 100%;
-            height: 380px;
-            background: linear-gradient(180deg, #e0f2fe 0%, #bae6fd 100%);
-            border: 3px solid #0284c7;
-            border-radius: 16px;
-            overflow: hidden;
-            touch-action: manipulation;
-        }
-
-        .falling-word {
-            position: absolute;
-            background: #ffffff;
-            border: 2px solid #0284c7;
-            color: #0369a1;
-            padding: 8px 16px;
+        /* ---------------- QUESTION CARD ---------------- */
+        .question-card {
+            background: #f8fafc;
+            border: 3px solid #cbd5e1;
             border-radius: 20px;
-            font-weight: bold;
-            font-size: 20px;
-            cursor: pointer;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-            touch-action: manipulation;
-        }
-
-        /* ---------------- LEVEL 2: SPIN WHEEL ---------------- */
-        .wheel-container {
-            position: relative;
-            width: 260px;
-            height: 260px;
-            margin: 15px auto;
-        }
-
-        #wheel {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            border: 6px solid #ea580c;
-            transition: transform 4s cubic-bezier(0.15, 0.99, 0.35, 1);
-            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
-        }
-
-        .wheel-pointer {
-            position: absolute;
-            top: -12px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0;
-            height: 0;
-            border-left: 12px solid transparent;
-            border-right: 12px solid transparent;
-            border-top: 22px solid #dc2626;
-            z-index: 10;
-        }
-
-        .wheel-options {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-top: 15px;
-            width: 100%;
-        }
-
-        .opt-btn {
-            background: #f1f5f9;
-            border: 2px solid #cbd5e1;
-            padding: 10px 16px;
-            font-size: 16px;
-            font-weight: bold;
-            border-radius: 10px;
-            cursor: pointer;
-            flex: 1 1 40%;
-            max-width: 140px;
-            touch-action: manipulation;
-        }
-
-        /* ---------------- LEVEL 3: TRACING & FILL ---------------- */
-        .tracing-box {
+            padding: 30px 15px;
+            margin-bottom: 25px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 10px;
-            width: 100%;
+            gap: 15px;
         }
 
-        canvas#trace-canvas {
-            border: 3px dashed #ea580c;
-            border-radius: 16px;
-            background-color: #fff8f1;
-            cursor: pointer;
-            touch-action: none;
-            max-width: 100%;
-        }
-
-        .fill-blanks-container {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 15px;
-            text-align: left;
-        }
-
-        .blank-item {
-            background: #fff7ed;
-            padding: 10px 12px;
-            border-radius: 12px;
-            font-size: 16px;
+        .instruction-text {
+            color: #475569;
+            font-size: 18px;
             font-weight: 600;
-            color: #431407;
+        }
+
+        .word-display {
+            font-size: 42px;
+            font-weight: bold;
+            color: #1e293b;
+            letter-spacing: 4px;
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            justify-content: center;
+            gap: 5px;
+            background: #ffffff;
+            padding: 15px 30px;
+            border-radius: 16px;
+            border: 2px dashed #ea580c;
+            min-width: 200px;
         }
 
-        .blank-item select {
-            padding: 6px 10px;
-            font-size: 15px;
-            border: 2px solid #ea580c;
-            border-radius: 8px;
-            background: white;
+        .matra-blank {
+            display: inline-block;
+            width: 45px;
+            height: 50px;
+            border-bottom: 4px solid #ea580c;
             color: #ea580c;
+            text-align: center;
+            line-height: 45px;
+        }
+
+        /* ---------------- MATRA OPTIONS ---------------- */
+        .options-container {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            width: 100%;
+        }
+
+        .matra-btn {
+            background: #ffffff;
+            border: 3px solid #ea580c;
+            color: #ea580c;
+            font-size: 32px;
             font-weight: bold;
+            width: 75px;
+            height: 75px;
+            border-radius: 18px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            touch-action: manipulation;
+            transition: transform 0.1s, background 0.2s;
         }
 
-        .item-img {
-            width: 38px;
-            height: 38px;
-            object-fit: contain;
+        .matra-btn:active {
+            transform: scale(0.92);
+            background: #fff7ed;
         }
 
-        /* ---------------- SCOREBOARD ---------------- */
+        /* ---------------- FINAL SCOREBOARD ---------------- */
         #scoreboard {
-            padding: 15px;
+            display: none;
+            flex-direction: column;
+            align-items: center;
         }
 
         .final-score {
-            font-size: 42px;
+            font-size: 52px;
             color: #ea580c;
-            margin: 10px 0;
+            margin: 15px 0;
             font-weight: 800;
         }
 
-        /* Mobile Adjustments */
         @media (max-width: 480px) {
-            .game-title { font-size: 20px; }
-            .score-bar { font-size: 14px; }
-            .falling-word { font-size: 18px; padding: 6px 12px; }
-            .wheel-container { width: 220px; height: 220px; }
-            .blank-item { font-size: 14px; }
+            .game-title { font-size: 22px; }
+            .word-display { font-size: 34px; }
+            .matra-btn { width: 65px; height: 65px; font-size: 28px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- SPLASH SCREEN -->
+    <!-- 1. SPLASH SCREEN (ONLY LOGO & START BUTTON) -->
     <div id="splash-screen">
-        <img src="assets/innovine-logo.png" alt="Innovine Logo" onerror="this.src='https://via.placeholder.com/250x100?text=Innovine+Logo'">
-        <button id="start-btn" class="btn-action" style="display:none;" onclick="startGame()">खेल शुरू करें (Start Game)</button>
+        <img src="assets/innovine-logo.png" alt="Innovine Solutions Logo" class="logo-img" onerror="this.src='https://via.placeholder.com/300x120?text=Innovine+Solutions'">
+        <button class="btn-action" onclick="startGame()">खेल शुरू करें (Start Game)</button>
     </div>
 
-    <!-- MAIN GAME CONTAINER -->
+    <!-- 2. MAIN GAME CONTAINER (ONLY LEVEL 1) -->
     <div id="game-container">
-        <img src="assets/innovine-logo.png" alt="Innovine Logo" class="header-logo" onerror="this.style.display='none'">
-        <h1 class="game-title">'ओ' ( ो ) की मात्रा का खेल</h1>
+        <h1 class="game-title">सही मात्रा चुनकर शब्द पूरा करें ✍️</h1>
         
         <div class="score-bar">
-            <span>स्तर (Level): <span id="level-num">1</span>/3</span>
+            <span>प्रश्न (Question): <span id="q-num">1</span>/10</span>
             <span>अंक (Score): <span id="score-val">0</span></span>
         </div>
 
-        <!-- LEVEL 1: CATCH CORRECT 'O' MATRA WORDS -->
-        <div id="level-1" class="level-screen active-level">
-            <h3>स्तर 1: सही 'ओ' मात्रा वाले शब्दों को पकड़ो! 🎯</h3>
-            <p style="margin-bottom: 8px; color: #64748b; font-size: 14px;">('ओ' वाले शब्दों को छूकर अंक पाएँ)</p>
-            <div id="catch-area"></div>
-        </div>
-
-        <!-- LEVEL 2: SPIN THE WHEEL -->
-        <div id="level-2" class="level-screen">
-            <h3>स्तर 2: पहिया घुमाओ और शब्द पहचानो! 🎡</h3>
-            <p style="color: #64748b; font-size: 14px;">पहिया घुमाने के लिए बटन दबाएँ!</p>
-            
-            <div class="wheel-container">
-                <div class="wheel-pointer"></div>
-                <canvas id="wheel" width="260" height="260"></canvas>
-            </div>
-
-            <button class="btn-action" id="btn-spin" onclick="spinWheel()">पहिया घुमाओ (Spin)!</button>
-
-            <div id="wheel-question-box" style="margin-top: 15px; display: none; width: 100%;">
-                <h4 id="wheel-q-text" style="color: #c2410c; margin-bottom: 10px; font-size: 18px;"></h4>
-                <div class="wheel-options" id="wheel-options-container"></div>
-            </div>
-        </div>
-
-        <!-- LEVEL 3: TRACING & FILLING -->
-        <div id="level-3" class="level-screen">
-            <h3>स्तर 3: 'ओ' मात्रा ट्रेसिंग और सही शब्द पूर्ति ✍️</h3>
-            
-            <div class="tracing-box">
-                <p style="color: #64748b; font-size: 14px;">नीचे 'ओ' ( ो ) मात्रा को ट्रेस करें:</p>
-                <canvas id="trace-canvas" width="260" height="110"></canvas>
-                <button style="background:#94a3b8; border:none; color:white; padding:5px 12px; border-radius:6px; cursor:pointer;" onclick="clearTraceCanvas()">साफ़ करें (Clear)</button>
-            </div>
-
-            <div class="fill-blanks-container">
-                <p style="color: #64748b; font-weight:bold; margin-top:8px; font-size:14px;">सही शब्द चुनकर वाक्य पूरा करें:</p>
-                
-                <div class="blank-item">
-                    <span>१. बोलता हुआ - </span>
-                    <select id="q1">
-                        <option value="">?</option>
-                        <option value="तोता">तोता</option>
-                        <option value="मोर">मोर</option>
-                    </select>
-                    <img src="assets/mor.png" class="item-img" alt="mor" onerror="this.style.display='none'">
-                </div>
-
-                <div class="blank-item">
-                    <span>२. कपड़े धोता - </span>
-                    <select id="q2">
-                        <option value="">?</option>
-                        <option value="धोबी">धोबी</option>
-                        <option value="जोकर">जोकर</option>
-                    </select>
-                </div>
-
-                <div class="blank-item">
-                    <span>३. सिर पर पहनी - </span>
-                    <select id="q3">
-                        <option value="">?</option>
-                        <option value="टोपी">टोपी</option>
-                        <option value="बोतल">बोतल</option>
-                    </select>
-                    <img src="assets/topi.png" class="item-img" alt="topi" onerror="this.style.display='none'">
+        <!-- QUESTION AREA -->
+        <div id="quiz-area">
+            <div class="question-card">
+                <div class="instruction-text">खाली स्थान में सही मात्रा लगाएँ:</div>
+                <div class="word-display" id="word-box">
+                    <!-- Word will be populated here by JavaScript -->
                 </div>
             </div>
 
-            <button class="btn-action" onclick="checkLevel3()">जाँच करें (Check Answer)</button>
+            <p style="color: #64748b; font-weight: bold; margin-bottom: 12px;">नीचे से सही मात्रा चुनें:</p>
+            <div class="options-container" id="options-box">
+                <!-- Matra options will be populated here -->
+            </div>
         </div>
 
         <!-- FINAL SCOREBOARD -->
-        <div id="scoreboard" class="level-screen">
-            <h2>शानदार प्रदर्शन! 🎉</h2>
-            <p>आपने 'ओ' की मात्रा का खेल पूरा कर लिया है!</p>
+        <div id="scoreboard">
+            <h2>बहुत बढ़िया! 🎉</h2>
+            <p style="font-size: 18px; color: #475569; margin-top: 5px;">आपने सभी प्रश्न पूरे कर लिए हैं!</p>
             <div class="final-score" id="final-score-text">0</div>
             <button class="btn-action" onclick="location.reload()">फिर से खेलें (Play Again)</button>
         </div>
     </div>
 
     <script>
-        /* ---------------- WEB AUDIO SYNTHESIZER (FULL VOLUME) ---------------- */
+        /* ---------------- FULL VOLUME WEB AUDIO SYNTHESIZER ---------------- */
         let audioCtx;
 
         function initAudio() {
@@ -407,8 +264,7 @@
             osc.frequency.setValueAtTime(523.25, now); // C5
             osc.frequency.exponentialRampToValueAtTime(880, now + 0.3); // A5
 
-            // SET TO MAXIMUM (FULL) VOLUME
-            gain.gain.setValueAtTime(1.0, now);
+            gain.gain.setValueAtTime(1.0, now); // FULL VOLUME
             gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
 
             osc.connect(gain);
@@ -430,8 +286,7 @@
             osc.frequency.setValueAtTime(180, now);
             osc.frequency.exponentialRampToValueAtTime(110, now + 0.3);
 
-            // SET TO MAXIMUM (FULL) VOLUME
-            gain.gain.setValueAtTime(1.0, now);
+            gain.gain.setValueAtTime(1.0, now); // FULL VOLUME
             gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
 
             osc.connect(gain);
@@ -441,312 +296,82 @@
             osc.stop(now + 0.3);
         }
 
-        /* ---------------- SCORE & LEVEL STATE ---------------- */
-        let globalScore = 0;
+        /* ---------------- GAME DATA & STATE ---------------- */
+        // List of 10 word questions
+        const questions = [
+            { prefix: "म", matra: "ो", suffix: "र", options: ["ो", "ा", "ी", "े"] },     // मोर
+            { prefix: "त", matra: "ो", suffix: "ता", options: ["ि", "ो", "ू", "ै"] },    // तोता
+            { prefix: "ढ", matra: "ो", suffix: "ल", options: ["ो", "ै", "ा", "ु"] },     // ढोल
+            { prefix: "ग", matra: "ो", suffix: "भी", options: ["ी", "ो", "े", "ा"] },    // गोभी
+            { prefix: "सम", matra: "ो", suffix: "सा", options: ["ू", "ो", "ि", "ै"] },   // समोसा
+            { prefix: "ब", matra: "ो", suffix: "तल", options: ["ो", "ा", "े", "ी"] },    // बोतल
+            { prefix: "ट", matra: "ो", suffix: "पी", options: ["ै", "ु", "ो", "ा"] },    // टोपी
+            { prefix: "क", matra: "ो", suffix: "यल", options: ["ो", "ी", "ू", "े"] },    // कोयल
+            { prefix: "स", matra: "ो", suffix: "ना", options: ["ा", "ो", "ै", "ि"] },    // सोना
+            { prefix: "ध", matra: "ो", suffix: "बी", options: ["ो", "ु", "े", "ी"] }     // धोबी
+        ];
 
-        function updateScore(pts) {
-            globalScore += pts;
-            document.getElementById('score-val').innerText = globalScore;
-        }
-
-        /* ---------------- 1. 10 SECONDS SPLASH SCREEN ---------------- */
-        window.addEventListener('DOMContentLoaded', () => {
-            setTimeout(() => {
-                document.getElementById('start-btn').style.display = 'inline-block';
-            }, 10000);
-        });
+        let currentIndex = 0;
+        let score = 0;
 
         function startGame() {
             initAudio();
-            const splash = document.getElementById('splash-screen');
-            splash.style.opacity = '0';
-            setTimeout(() => {
-                splash.style.display = 'none';
-                document.getElementById('game-container').style.display = 'block';
-                startLevel1();
-            }, 800);
+            document.getElementById('splash-screen').style.display = 'none';
+            document.getElementById('game-container').style.display = 'block';
+            loadQuestion();
         }
 
-        document.getElementById('splash-screen').addEventListener('click', () => {
-            if (document.getElementById('start-btn').style.display !== 'none') {
-                startGame();
+        function loadQuestion() {
+            if (currentIndex >= questions.length) {
+                showFinalScore();
+                return;
             }
-        });
 
-        /* ---------------- LEVEL 1: CATCH GAME LOGIC (ULTRA SLOW) ---------------- */
-        let catchInterval;
-        let caughtCount = 0;
-        const validOWords = ["मोर", "तोता", "ढोल", "गोभी", "समोसा", "बोतल", "सोना", "टोपी", "कोयल", "लोटा"];
-        const wrongWords = ["कमल", "नहर", "आम", "किताब", "मछली", "चिड़िया", "घर", "गाजर"];
+            const currentQ = questions[currentIndex];
+            document.getElementById('q-num').innerText = currentIndex + 1;
 
-        function createFallingWord(catchArea, xOffset) {
-            const isCorrect = Math.random() > 0.35;
-            const wordList = isCorrect ? validOWords : wrongWords;
-            const wordText = wordList[Math.floor(Math.random() * wordList.length)];
+            // Display Word with Blank
+            const wordBox = document.getElementById('word-box');
+            wordBox.innerHTML = `${currentQ.prefix}<span class="matra-blank">?</span>${currentQ.suffix}`;
 
-            const wordElem = document.createElement('div');
-            wordElem.className = 'falling-word';
-            wordElem.innerText = wordText;
-            
-            const areaWidth = catchArea.clientWidth;
-            const leftPos = xOffset === 1 
-                ? Math.random() * (areaWidth / 2 - 90) 
-                : (areaWidth / 2) + Math.random() * (areaWidth / 2 - 90);
+            // Render Options
+            const optionsBox = document.getElementById('options-box');
+            optionsBox.innerHTML = '';
 
-            wordElem.style.left = Math.max(10, leftPos) + 'px';
-            wordElem.style.top = '0px';
-
-            let posY = 0;
-            // SLOW FALL SPEED (0.4px per frame)
-            const fallSpeed = 0.4;
-
-            const fallTimer = setInterval(() => {
-                posY += fallSpeed;
-                wordElem.style.top = posY + 'px';
-
-                if (posY > catchArea.clientHeight - 40) {
-                    clearInterval(fallTimer);
-                    if (catchArea.contains(wordElem)) {
-                        catchArea.removeChild(wordElem);
-                    }
-                }
-            }, 16);
-
-            const handleTap = (e) => {
-                e.preventDefault();
-                clearInterval(fallTimer);
-                if (validOWords.includes(wordText)) {
-                    playCorrectSound();
-                    updateScore(10);
-                    caughtCount++;
-                } else {
-                    playWrongSound();
-                    updateScore(-5);
-                }
-                if (catchArea.contains(wordElem)) {
-                    catchArea.removeChild(wordElem);
-                }
-            };
-
-            wordElem.addEventListener('touchstart', handleTap);
-            wordElem.addEventListener('click', handleTap);
-
-            catchArea.appendChild(wordElem);
-        }
-
-        function startLevel1() {
-            const catchArea = document.getElementById('catch-area');
-            
-            catchInterval = setInterval(() => {
-                if (caughtCount >= 8) {
-                    clearInterval(catchInterval);
-                    setTimeout(goToLevel2, 1000);
-                    return;
-                }
-
-                createFallingWord(catchArea, 1);
-                setTimeout(() => {
-                    createFallingWord(catchArea, 2);
-                }, 400);
-
-            }, 3500);
-        }
-
-        function goToLevel2() {
-            document.getElementById('level-1').classList.remove('active-level');
-            document.getElementById('level-2').classList.add('active-level');
-            document.getElementById('level-num').innerText = '2';
-            initWheel();
-        }
-
-        /* ---------------- LEVEL 2: SPIN WHEEL (EXACT STOP & UPDATED OPTIONS) ---------------- */
-        const wheelSlices = ["मोर", "गोभी", "ढोल", "तोता", "समोसा", "टोपी"];
-        
-        // Questions with 1 Correct word & 2 Different Wrong words
-        const wheelQuestions = {
-            "तोता": { q: "बोलता हुआ पक्षी कौन सा है?", opts: ["तोता", "गाय", "बिल्ली"], ans: "तोता" },
-            "मोर": { q: "नाचता हुआ सुंदर पक्षी:", opts: ["मोर", "हाथी", "शेर"], ans: "मोर" },
-            "गोभी": { q: "इनमें से सब्ज़ी कौन सी है?", opts: ["गोभी", "सेब", "दूध"], ans: "गोभी" },
-            "ढोल": { q: "बजाने वाला बाजा कौन सा है?", opts: ["ढोल", "कलम", "किताब"], ans: "ढोल" },
-            "समोसा": { q: "गरम-गरम नमकीन पकवान:", opts: ["समोसा", "पानी", "कागज़"], ans: "समोसा" },
-            "टोपी": { q: "सिर पर क्या पहना जाता है?", opts: ["टोपी", "जूता", "चम्मच"], ans: "टोपी" }
-        };
-
-        let currentRotation = 0;
-        let isSpinning = false;
-        let spinRounds = 0;
-
-        function initWheel() {
-            const canvas = document.getElementById('wheel');
-            const ctx = canvas.getContext('2d');
-            const numSlices = wheelSlices.length;
-            const angle = (2 * Math.PI) / numSlices;
-            const colors = ['#f97316', '#fb923c', '#fdba74', '#ea580c', '#c2410c', '#9a3412'];
-
-            for (let i = 0; i < numSlices; i++) {
-                ctx.beginPath();
-                ctx.fillStyle = colors[i];
-                ctx.moveTo(130, 130);
-                ctx.arc(130, 130, 120, i * angle, (i + 1) * angle);
-                ctx.fill();
-
-                ctx.save();
-                ctx.translate(130, 130);
-                ctx.rotate(i * angle + angle / 2);
-                ctx.textAlign = "right";
-                ctx.fillStyle = "white";
-                ctx.font = "bold 18px Arial";
-                ctx.fillText(wheelSlices[i], 100, 6);
-                ctx.restore();
-            }
-        }
-
-        function spinWheel() {
-            if (isSpinning) return;
-            initAudio();
-            isSpinning = true;
-
-            document.getElementById('wheel-question-box').style.display = 'none';
-
-            // Choose a target slice randomly
-            const targetIndex = Math.floor(Math.random() * wheelSlices.length);
-            const targetWord = wheelSlices[targetIndex];
-
-            // Calculate precise angle so the top pointer lands exactly on target slice
-            const numSlices = wheelSlices.length;
-            const sliceDeg = 360 / numSlices;
-            const targetAngleDeg = 240 - (targetIndex * sliceDeg); 
-            
-            // Add 5 full spins (1800 deg)
-            const extraRounds = 1800;
-            const nextRotation = currentRotation + extraRounds + ((targetAngleDeg - (currentRotation % 360) + 360) % 360);
-            
-            currentRotation = nextRotation;
-            const wheelCanvas = document.getElementById('wheel');
-            wheelCanvas.style.transform = `rotate(${currentRotation}deg)`;
-
-            setTimeout(() => {
-                isSpinning = false;
-                showWheelQuestion(targetWord);
-            }, 4000);
-        }
-
-        function showWheelQuestion(word) {
-            const qData = wheelQuestions[word];
-            const qBox = document.getElementById('wheel-question-box');
-            const qText = document.getElementById('wheel-q-text');
-            const optsContainer = document.getElementById('wheel-options-container');
-
-            qText.innerText = qData.q;
-            optsContainer.innerHTML = '';
-
-            qData.opts.forEach(opt => {
+            currentQ.options.forEach(matraOpt => {
                 const btn = document.createElement('button');
-                btn.className = 'opt-btn';
-                btn.innerText = opt;
-                btn.onclick = () => {
-                    if (opt === qData.ans) {
-                        playCorrectSound();
-                        updateScore(15);
-                        spinRounds++;
-                        if (spinRounds >= 3) {
-                            setTimeout(goToLevel3, 1000);
-                        } else {
-                            qBox.style.display = 'none';
-                        }
-                    } else {
-                        playWrongSound();
-                        updateScore(-5);
-                    }
-                };
-                optsContainer.appendChild(btn);
+                btn.className = 'matra-btn';
+                btn.innerText = matraOpt;
+                btn.onclick = () => checkAnswer(matraOpt, currentQ.matra);
+                optionsBox.appendChild(btn);
             });
-
-            qBox.style.display = 'block';
         }
 
-        function goToLevel3() {
-            document.getElementById('level-2').classList.remove('active-level');
-            document.getElementById('level-3').classList.add('active-level');
-            document.getElementById('level-num').innerText = '3';
-            initTracingCanvas();
-        }
-
-        /* ---------------- LEVEL 3: TRACING & FILL LOGIC ---------------- */
-        function initTracingCanvas() {
-            const canvas = document.getElementById('trace-canvas');
-            const ctx = canvas.getContext('2d');
-            let drawing = false;
-
-            ctx.font = 'bold 65px Arial';
-            ctx.fillStyle = '#fed7aa';
-            ctx.textAlign = 'center';
-            ctx.fillText('ो', canvas.width / 2, 78);
-
-            function startDraw(e) { 
-                initAudio(); 
-                drawing = true; 
-                draw(e); 
-            }
-            function endDraw() { 
-                drawing = false; 
-                ctx.beginPath(); 
-            }
-            function draw(e) {
-                if (!drawing) return;
-                const rect = canvas.getBoundingClientRect();
-                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-                
-                const x = clientX - rect.left;
-                const y = clientY - rect.top;
-
-                ctx.lineWidth = 8;
-                ctx.lineCap = 'round';
-                ctx.strokeStyle = '#ea580c';
-
-                ctx.lineTo(x, y);
-                ctx.stroke();
-                ctx.beginPath();
-                ctx.moveTo(x, y);
-            }
-
-            canvas.addEventListener('mousedown', startDraw);
-            canvas.addEventListener('mouseup', endDraw);
-            canvas.addEventListener('mousemove', draw);
-
-            canvas.addEventListener('touchstart', startDraw);
-            canvas.addEventListener('touchend', endDraw);
-            canvas.addEventListener('touchmove', draw);
-        }
-
-        function clearTraceCanvas() {
-            const canvas = document.getElementById('trace-canvas');
-            const ctx = canvas.getContext('2d');
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            initTracingCanvas();
-        }
-
-        function checkLevel3() {
-            const q1Val = document.getElementById('q1').value;
-            const q2Val = document.getElementById('q2').value;
-            const q3Val = document.getElementById('q3').value;
-
-            if (q1Val === "तोता" && q2Val === "धोबी" && q3Val === "टोपी") {
+        function checkAnswer(selectedMatra, correctMatra) {
+            if (selectedMatra === correctMatra) {
                 playCorrectSound();
-                updateScore(30);
-                showScoreboard();
+                score += 10;
+                document.getElementById('score-val').innerText = score;
+                
+                // Temporarily show correct matra in word
+                const currentQ = questions[currentIndex];
+                document.getElementById('word-box').innerHTML = `${currentQ.prefix}<span style="color:#16a34a;">${correctMatra}</span>${currentQ.suffix}`;
+
+                setTimeout(() => {
+                    currentIndex++;
+                    loadQuestion();
+                }, 800);
             } else {
                 playWrongSound();
-                alert("ओह! कुछ उत्तर सही नहीं हैं। सही शब्द चुनकर दोबारा प्रयास करें!");
+                score = Math.max(0, score - 2);
+                document.getElementById('score-val').innerText = score;
             }
         }
 
-        /* ---------------- FINAL SCOREBOARD & CONFETTI ---------------- */
-        function showScoreboard() {
-            document.getElementById('level-3').classList.remove('active-level');
-            document.getElementById('scoreboard').classList.add('active-level');
-            document.getElementById('final-score-text').innerText = globalScore;
+        function showFinalScore() {
+            document.getElementById('quiz-area').style.display = 'none';
+            document.getElementById('scoreboard').style.display = 'flex';
+            document.getElementById('final-score-text').innerText = score;
 
             if (typeof confetti === 'function') {
                 confetti({
