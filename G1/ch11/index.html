@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ओ ( ो ) मात्रा का खेल - 3 लेवल्स</title>
+    <title>ओ ( ो ) मात्रा का खेल</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     
     <style>
@@ -265,7 +265,7 @@
     </div>
 
     <!-- AUDIO ELEMENTS FROM ASSETS FOLDER -->
-    <audio id="snd-clap" src="assets/clap.mp3" preload="auto"></audio>
+    <audio id="snd-clap" src="assets/correct.mp3" preload="auto"></audio>
     <audio id="snd-wrong" src="assets/wrong.mp3" preload="auto"></audio>
 
     <script>
@@ -446,7 +446,7 @@
                     document.getElementById('status-msg').innerText = `⚠️ गलत उत्तर! 1 मौका बाकी है।`;
                 } else {
                     document.getElementById('status-msg').style.color = '#dc2626';
-                    document.getElementById('status-msg').innerText = `❌ दोनों मौके समाप्त! अगला प्रश्न...`;
+                    document.getElementById('status-msg').innerText = `❌  अगला प्रश्न...`;
                     setTimeout(nextQuestion, 1200);
                 }
             }
