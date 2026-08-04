@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ओ' ( ो ) मात्रा का खेल</title>
-    <!-- Canvas Confetti Library for Celebrations -->
+    <title>ओ ( ो ) मात्रा का खेल - 3 लेवल्स</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     
     <style>
@@ -23,17 +22,14 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow-x: hidden;
             padding: 15px;
         }
 
-        /* ---------------- SPLASH SCREEN (ONLY LOGO & START BUTTON) ---------------- */
+        /* SPLASH SCREEN */
         #splash-screen {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
             background-color: #ffffff;
             display: flex;
             flex-direction: column;
@@ -50,22 +46,21 @@
             margin-bottom: 30px;
         }
 
-        /* ---------------- GAME CONTAINER ---------------- */
+        /* GAME CONTAINER */
         #game-container {
             display: none;
             width: 100%;
-            max-width: 600px;
+            max-width: 650px;
             background: #ffffff;
             border-radius: 24px;
             padding: 25px 20px;
             box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
             text-align: center;
-            position: relative;
         }
 
         .game-title {
             color: #ea580c;
-            font-size: 26px;
+            font-size: 24px;
             margin-bottom: 15px;
         }
 
@@ -78,16 +73,16 @@
             border-radius: 12px;
             font-weight: bold;
             color: #c2410c;
-            font-size: 18px;
-            margin-bottom: 25px;
+            font-size: 16px;
+            margin-bottom: 20px;
         }
 
         .btn-action {
             background: #ea580c;
             color: #ffffff;
             border: none;
-            padding: 14px 28px;
-            font-size: 20px;
+            padding: 12px 26px;
+            font-size: 18px;
             font-weight: bold;
             border-radius: 14px;
             cursor: pointer;
@@ -96,88 +91,95 @@
             touch-action: manipulation;
         }
 
-        .btn-action:active {
-            transform: scale(0.96);
+        .btn-action:active { transform: scale(0.96); }
+
+        /* SPIN WHEEL */
+        .wheel-box {
+            position: relative;
+            width: 250px;
+            height: 250px;
+            margin: 0 auto 20px auto;
         }
 
-        /* ---------------- QUESTION CARD ---------------- */
+        #wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 5px solid #ea580c;
+            transition: transform 3s cubic-bezier(0.15, 0.99, 0.18, 1);
+        }
+
+        .wheel-pointer {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0; height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-top: 25px solid #dc2626;
+            z-index: 10;
+        }
+
+        /* QUESTION CARDS */
         .question-card {
             background: #f8fafc;
             border: 3px solid #cbd5e1;
             border-radius: 20px;
-            padding: 30px 15px;
-            margin-bottom: 25px;
+            padding: 20px 15px;
+            margin-bottom: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 15px;
         }
 
-        .instruction-text {
-            color: #475569;
-            font-size: 18px;
-            font-weight: 600;
+        .q-img {
+            max-width: 160px;
+            max-height: 160px;
+            object-fit: contain;
+            border-radius: 12px;
         }
 
         .word-display {
-            font-size: 42px;
+            font-size: 36px;
             font-weight: bold;
             color: #1e293b;
-            letter-spacing: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 5px;
+            letter-spacing: 2px;
             background: #ffffff;
-            padding: 15px 30px;
+            padding: 10px 25px;
             border-radius: 16px;
             border: 2px dashed #ea580c;
-            min-width: 200px;
         }
 
-        .matra-blank {
-            display: inline-block;
-            width: 45px;
-            height: 50px;
-            border-bottom: 4px solid #ea580c;
-            color: #ea580c;
-            text-align: center;
-            line-height: 45px;
-        }
-
-        /* ---------------- MATRA OPTIONS ---------------- */
+        /* OPTIONS */
         .options-container {
             display: flex;
-            gap: 15px;
+            gap: 12px;
             justify-content: center;
             flex-wrap: wrap;
             width: 100%;
         }
 
-        .matra-btn {
+        .option-btn {
             background: #ffffff;
-            border: 3px solid #ea580c;
+            border: 2px solid #ea580c;
             color: #ea580c;
-            font-size: 32px;
+            font-size: 22px;
             font-weight: bold;
-            width: 75px;
-            height: 75px;
-            border-radius: 18px;
+            padding: 10px 20px;
+            border-radius: 14px;
             cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             box-shadow: 0 4px 10px rgba(0,0,0,0.08);
             touch-action: manipulation;
-            transition: transform 0.1s, background 0.2s;
         }
 
-        .matra-btn:active {
-            transform: scale(0.92);
+        .option-btn:active {
+            transform: scale(0.95);
             background: #fff7ed;
         }
 
-        /* ---------------- FINAL SCOREBOARD ---------------- */
+        /* FINAL SCORE */
         #scoreboard {
             display: none;
             flex-direction: column;
@@ -185,199 +187,315 @@
         }
 
         .final-score {
-            font-size: 52px;
+            font-size: 48px;
             color: #ea580c;
             margin: 15px 0;
             font-weight: 800;
-        }
-
-        @media (max-width: 480px) {
-            .game-title { font-size: 22px; }
-            .word-display { font-size: 34px; }
-            .matra-btn { width: 65px; height: 65px; font-size: 28px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- 1. SPLASH SCREEN (ONLY LOGO & START BUTTON) -->
+    <!-- 1. SPLASH SCREEN -->
     <div id="splash-screen">
         <img src="assets/innovine-logo.png" alt="Innovine Solutions Logo" class="logo-img" onerror="this.src='https://via.placeholder.com/300x120?text=Innovine+Solutions'">
-           </div>
+        <button class="btn-action" onclick="startGame()">खेल शुरू करें (Start Game)</button>
+    </div>
 
-    <!-- 2. MAIN GAME CONTAINER (ONLY LEVEL 1) -->
+    <!-- 2. MAIN GAME CONTAINER -->
     <div id="game-container">
-        <h1 class="game-title">सही मात्रा चुनकर शब्द पूरा करें ✍️</h1>
+        <h1 class="game-title" id="level-title">लेवल 1: चकरी घुमाओ और उत्तर दो 🎡</h1>
         
         <div class="score-bar">
-            <span>प्रश्न (Question): <span id="q-num">1</span>/10</span>
+            <span>स्तर (Level): <span id="lvl-num">1</span>/3</span>
+            <span>प्रश्न (Question): <span id="q-num">1</span>/5</span>
             <span>अंक (Score): <span id="score-val">0</span></span>
         </div>
 
-        <!-- QUESTION AREA -->
-        <div id="quiz-area">
-            <div class="question-card">
-                <div class="instruction-text">खाली स्थान में सही मात्रा लगाएँ:</div>
-                <div class="word-display" id="word-box">
-                    <!-- Word will be populated here by JavaScript -->
+        <!-- LEVEL 1: SPIN THE WHEEL -->
+        <div id="level1-area">
+            <div class="wheel-box">
+                <div class="wheel-pointer"></div>
+                <canvas id="wheel" width="250" height="250"></canvas>
+            </div>
+            <button class="btn-action" id="spin-btn" onclick="spinWheel()">चकरी घुमाएँ (Spin Wheel)</button>
+            
+            <div id="l1-question" style="display: none; margin-top: 20px;">
+                <div class="question-card">
+                    <p style="color:#475569; font-weight:bold;">सही मात्रा चुनें:</p>
+                    <div class="word-display" id="l1-word"></div>
                 </div>
+                <div class="options-container" id="l1-options"></div>
             </div>
+        </div>
 
-            <p style="color: #64748b; font-weight: bold; margin-bottom: 12px;">नीचे से सही मात्रा चुनें:</p>
-            <div class="options-container" id="options-box">
-                <!-- Matra options will be populated here -->
+        <!-- LEVEL 2: PICTURE BASED -->
+        <div id="level2-area" style="display: none;">
+            <div class="question-card">
+                <img id="l2-img" class="q-img" src="" alt="Question Image">
+                <p style="color:#475569; font-weight:bold;">चित्र देखकर सही नाम चुनें:</p>
             </div>
+            <div class="options-container" id="l2-options"></div>
+        </div>
+
+        <!-- LEVEL 3: MISSING WORD FILL (CHAPTER 11 PDF) -->
+        <div id="level3-area" style="display: none;">
+            <div class="question-card">
+                <p style="color:#475569; font-weight:bold;" id="l3-instruction"></p>
+                <div class="word-display" id="l3-sentence"></div>
+            </div>
+            <div class="options-container" id="l3-options"></div>
         </div>
 
         <!-- FINAL SCOREBOARD -->
         <div id="scoreboard">
-            <h2>बहुत बढ़िया! 🎉</h2>
-            <p style="font-size: 18px; color: #475569; margin-top: 5px;">आपने सभी प्रश्न पूरे कर लिए हैं!</p>
+            <h2>अद्भुत प्रदर्शन! 🎉</h2>
+            <p style="font-size: 18px; color: #475569; margin-top: 5px;">आपने तीनों लेवल पूरे कर लिए हैं!</p>
             <div class="final-score" id="final-score-text">0</div>
             <button class="btn-action" onclick="location.reload()">फिर से खेलें (Play Again)</button>
         </div>
     </div>
 
+    <!-- AUDIO ELEMENTS USING ASSETS DIRECTORY -->
+    <audio id="snd-correct" src="assets/correct.mp3" preload="auto"></audio>
+    <audio id="snd-wrong" src="assets/wrong.mp3" preload="auto"></audio>
+
     <script>
-        /* ---------------- FULL VOLUME WEB AUDIO SYNTHESIZER ---------------- */
-        let audioCtx;
-
-        function initAudio() {
-            if (!audioCtx) {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            }
-            if (audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
+        // SOUND FUNCTIONS WITH ASSETS
+        function playCorrect() {
+            const audio = document.getElementById('snd-correct');
+            audio.currentTime = 0;
+            audio.play().catch(e => console.log('Audio play failed:', e));
         }
 
-        function playCorrectSound() {
-            initAudio();
-            if (!audioCtx) return;
-            const now = audioCtx.currentTime;
-            
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(523.25, now); // C5
-            osc.frequency.exponentialRampToValueAtTime(880, now + 0.3); // A5
-
-            gain.gain.setValueAtTime(1.0, now); // FULL VOLUME
-            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
-
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-
-            osc.start(now);
-            osc.stop(now + 0.3);
+        function playWrong() {
+            const audio = document.getElementById('snd-wrong');
+            audio.currentTime = 0;
+            audio.play().catch(e => console.log('Audio play failed:', e));
         }
 
-        function playWrongSound() {
-            initAudio();
-            if (!audioCtx) return;
-            const now = audioCtx.currentTime;
-
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-
-            osc.type = 'sawtooth';
-            osc.frequency.setValueAtTime(180, now);
-            osc.frequency.exponentialRampToValueAtTime(110, now + 0.3);
-
-            gain.gain.setValueAtTime(1.0, now); // FULL VOLUME
-            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
-
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-
-            osc.start(now);
-            osc.stop(now + 0.3);
-        }
-
-        /* ---------------- GAME DATA & STATE ---------------- */
-        // List of 10 word questions
-        const questions = [
-            { prefix: "म", matra: "ो", suffix: "र", options: ["ो", "ा", "ी", "े"] },     // मोर
-            { prefix: "त", matra: "ो", suffix: "ता", options: ["ि", "ो", "ू", "ै"] },    // तोता
-            { prefix: "ढ", matra: "ो", suffix: "ल", options: ["ो", "ै", "ा", "ु"] },     // ढोल
-            { prefix: "ग", matra: "ो", suffix: "भी", options: ["ी", "ो", "े", "ा"] },    // गोभी
-            { prefix: "सम", matra: "ो", suffix: "सा", options: ["ू", "ो", "ि", "ै"] },   // समोसा
-            { prefix: "ब", matra: "ो", suffix: "तल", options: ["ो", "ा", "े", "ी"] },    // बोतल
-            { prefix: "ट", matra: "ो", suffix: "पी", options: ["ै", "ु", "ो", "ा"] },    // टोपी
-            { prefix: "क", matra: "ो", suffix: "यल", options: ["ो", "ी", "ू", "े"] },    // कोयल
-            { prefix: "स", matra: "ो", suffix: "ना", options: ["ा", "ो", "ै", "ि"] },    // सोना
-            { prefix: "ध", matra: "ो", suffix: "बी", options: ["ो", "ु", "े", "ी"] }     // धोबी
-        ];
-
-        let currentIndex = 0;
+        // GAME STATE
+        let currentLevel = 1;
+        let currentQIndex = 0;
         let score = 0;
 
+        /* LEVEL DATA */
+        const l1Questions = [
+            { prefix: "म", matra: "ो", suffix: "र", options: ["ो", "ा", "ी", "े"] },
+            { prefix: "त", matra: "ो", suffix: "ता", options: ["ि", "ो", "ू", "ै"] },
+            { prefix: "ढ", matra: "ो", suffix: "ल", options: ["ो", "ै", "ा", "ु"] },
+            { prefix: "ग", matra: "ो", suffix: "भी", options: ["ी", "ो", "े", "ा"] },
+            { prefix: "ब", matra: "ो", suffix: "तल", options: ["ो", "ा", "े", "ी"] }
+        ];
+
+        const l2Questions = [
+            { img: "assets/mor.png", answer: "मोर", options: ["मोर", "सोना", "लोटा"] },
+            { img: "assets/dhol.png", answer: "ढोल", options: ["चोर", "ढोल", "गोल"] },
+            { img: "assets/ghoda.png", answer: "घोड़ा", options: ["घोड़ा", "छोटा", "कोयला"] },
+            { img: "assets/gobi.png", answer: "गोभी", options: ["टोपी", "धोबी", "गोभी"] },
+            { img: "assets/topi.png", answer: "टोपी", options: ["टोपी", "रोटी", "बोतल"] }
+        ];
+
+        const l3Questions = [
+            { text: "नाचता हुआ _____", ans: "मोर", options: ["मोर", "सोहन", "लोटा"] },
+            { text: "कपड़े धोता _____", ans: "धोबी", options: ["धोबी", "कोयल", "जोकर"] },
+            { text: "_____ के नीचे छिप गया।", ans: "सोफ़े", options: ["सोफ़े", "समोसा", "रोटी"] },
+            { text: "रसोई में गरम-गरम _____ रखे थे।", ans: "समोसे", options: ["बोतल", "समोसे", "गोभी"] },
+            { text: "छोटा _____ घर में घुसा।", ans: "खरगोश", options: ["खरगोश", "घोड़ा", "ढोल"] }
+        ];
+
         function startGame() {
-            initAudio();
             document.getElementById('splash-screen').style.display = 'none';
             document.getElementById('game-container').style.display = 'block';
-            loadQuestion();
+            drawWheel();
+            setupLevel();
         }
 
-        function loadQuestion() {
-            if (currentIndex >= questions.length) {
-                showFinalScore();
-                return;
+        function updateScoreBar() {
+            document.getElementById('lvl-num').innerText = currentLevel;
+            document.getElementById('q-num').innerText = currentQIndex + 1;
+            document.getElementById('score-val').innerText = score;
+        }
+
+        function setupLevel() {
+            updateScoreBar();
+            if (currentLevel === 1) {
+                document.getElementById('level-title').innerText = "लेवल 1: चकरी घुमाओ और मात्रा भरो 🎡";
+                document.getElementById('level1-area').style.display = 'block';
+                document.getElementById('level2-area').style.display = 'none';
+                document.getElementById('level3-area').style.display = 'none';
+            } else if (currentLevel === 2) {
+                document.getElementById('level-title').innerText = "लेवल 2: चित्र पहचान कर नाम चुनें 🖼️";
+                document.getElementById('level1-area').style.display = 'none';
+                document.getElementById('level2-area').style.display = 'block';
+                document.getElementById('level3-area').style.display = 'none';
+                loadL2Question();
+            } else if (currentLevel === 3) {
+                document.getElementById('level-title').innerText = "लेवल 3: सही शब्द से वाक्य पूरा करें ✍️";
+                document.getElementById('level1-area').style.display = 'none';
+                document.getElementById('level2-area').style.display = 'none';
+                document.getElementById('level3-area').style.display = 'block';
+                loadL3Question();
             }
+        }
 
-            const currentQ = questions[currentIndex];
-            document.getElementById('q-num').innerText = currentIndex + 1;
+        /* ---------------- LEVEL 1: SPIN WHEEL LOGIC ---------------- */
+        function drawWheel() {
+            const canvas = document.getElementById('wheel');
+            const ctx = canvas.getContext('2d');
+            const colors = ['#f97316', '#fbbf24', '#34d399', '#60a5fa', '#a78bfa'];
+            const numSegments = 5;
+            const angle = (2 * Math.PI) / numSegments;
 
-            // Display Word with Blank
-            const wordBox = document.getElementById('word-box');
-            wordBox.innerHTML = `${currentQ.prefix}<span class="matra-blank">?</span>${currentQ.suffix}`;
+            for (let i = 0; i < numSegments; i++) {
+                ctx.beginPath();
+                ctx.arc(125, 125, 120, i * angle, (i + 1) * angle);
+                ctx.lineTo(125, 125);
+                ctx.fillStyle = colors[i];
+                ctx.fill();
+                ctx.stroke();
 
-            // Render Options
-            const optionsBox = document.getElementById('options-box');
-            optionsBox.innerHTML = '';
+                ctx.save();
+                ctx.translate(125, 125);
+                ctx.rotate(i * angle + angle / 2);
+                ctx.fillStyle = "#ffffff";
+                ctx.font = "bold 20px sans-serif";
+                ctx.fillText(`Q ${i + 1}`, 50, 5);
+                ctx.restore();
+            }
+        }
 
-            currentQ.options.forEach(matraOpt => {
+        function spinWheel() {
+            const wheel = document.getElementById('wheel');
+            const spinBtn = document.getElementById('spin-btn');
+            spinBtn.disabled = true;
+
+            const randomRotation = 1440 + (currentQIndex * 72) + Math.floor(Math.random() * 30);
+            wheel.style.transform = `rotate(${randomRotation}deg)`;
+
+            setTimeout(() => {
+                document.getElementById('l1-question').style.display = 'block';
+                loadL1Question();
+                spinBtn.disabled = false;
+            }, 3000);
+        }
+
+        function loadL1Question() {
+            const q = l1Questions[currentQIndex];
+            document.getElementById('l1-word').innerHTML = `${q.prefix}<span style="color:#ea580c; border-bottom:3px solid #ea580c;">?</span>${q.suffix}`;
+            
+            const optsBox = document.getElementById('l1-options');
+            optsBox.innerHTML = '';
+            q.options.forEach(opt => {
                 const btn = document.createElement('button');
-                btn.className = 'matra-btn';
-                btn.innerText = matraOpt;
-                btn.onclick = () => checkAnswer(matraOpt, currentQ.matra);
-                optionsBox.appendChild(btn);
+                btn.className = 'option-btn';
+                btn.innerText = opt;
+                btn.onclick = () => checkL1(opt, q.matra);
+                optsBox.appendChild(btn);
             });
         }
 
-        function checkAnswer(selectedMatra, correctMatra) {
-            if (selectedMatra === correctMatra) {
-                playCorrectSound();
+        function checkL1(selected, correct) {
+            if (selected === correct) {
+                playCorrect();
                 score += 10;
-                document.getElementById('score-val').innerText = score;
-                
-                // Temporarily show correct matra in word
-                const currentQ = questions[currentIndex];
-                document.getElementById('word-box').innerHTML = `${currentQ.prefix}<span style="color:#16a34a;">${correctMatra}</span>${currentQ.suffix}`;
-
-                setTimeout(() => {
-                    currentIndex++;
-                    loadQuestion();
-                }, 800);
+                nextQuestion();
             } else {
-                playWrongSound();
+                playWrong();
                 score = Math.max(0, score - 2);
-                document.getElementById('score-val').innerText = score;
             }
+            updateScoreBar();
+        }
+
+        /* ---------------- LEVEL 2: PICTURE LOGIC ---------------- */
+        function loadL2Question() {
+            const q = l2Questions[currentQIndex];
+            document.getElementById('l2-img').src = q.img;
+            
+            const optsBox = document.getElementById('l2-options');
+            optsBox.innerHTML = '';
+            q.options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerText = opt;
+                btn.onclick = () => checkL2(opt, q.answer);
+                optsBox.appendChild(btn);
+            });
+        }
+
+        function checkL2(selected, correct) {
+            if (selected === correct) {
+                playCorrect();
+                score += 10;
+                nextQuestion();
+            } else {
+                playWrong();
+                score = Math.max(0, score - 2);
+            }
+            updateScoreBar();
+        }
+
+        /* ---------------- LEVEL 3: CHAPTER 11 LOGIC ---------------- */
+        function loadL3Question() {
+            const q = l3Questions[currentQIndex];
+            document.getElementById('l3-instruction').innerText = "वाक्य/वाक्यांश पूरा करें:";
+            document.getElementById('l3-sentence').innerText = q.text;
+
+            const optsBox = document.getElementById('l3-options');
+            optsBox.innerHTML = '';
+            q.options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerText = opt;
+                btn.onclick = () => checkL3(opt, q.ans);
+                optsBox.appendChild(btn);
+            });
+        }
+
+        function checkL3(selected, correct) {
+            if (selected === correct) {
+                playCorrect();
+                score += 10;
+                nextQuestion();
+            } else {
+                playWrong();
+                score = Math.max(0, score - 2);
+            }
+            updateScoreBar();
+        }
+
+        /* NEXT QUESTION & LEVEL CONTROLLER */
+        function nextQuestion() {
+            currentQIndex++;
+            if (currentQIndex >= 5) {
+                currentQIndex = 0;
+                currentLevel++;
+                if (currentLevel > 3) {
+                    showFinalScore();
+                    return;
+                }
+            }
+
+            setTimeout(() => {
+                if (currentLevel === 1) {
+                    document.getElementById('l1-question').style.display = 'none';
+                }
+                setupLevel();
+            }, 600);
         }
 
         function showFinalScore() {
-            document.getElementById('quiz-area').style.display = 'none';
+            document.getElementById('level-title').style.display = 'none';
+            document.querySelector('.score-bar').style.display = 'none';
+            document.getElementById('level1-area').style.display = 'none';
+            document.getElementById('level2-area').style.display = 'none';
+            document.getElementById('level3-area').style.display = 'none';
+            
             document.getElementById('scoreboard').style.display = 'flex';
             document.getElementById('final-score-text').innerText = score;
 
             if (typeof confetti === 'function') {
-                confetti({
-                    particleCount: 150,
-                    spread: 80,
-                    origin: { y: 0.6 }
-                });
+                confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
             }
         }
     </script>
