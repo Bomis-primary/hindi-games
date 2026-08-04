@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>एक अनोखा तरबूज़ - Square Watermelon Game</title>
+    <title>एक अनोखा तरबूज़ - Square Watermelon Game with Quiz</title>
     <!-- Phaser 3 CDN -->
     <script src="https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.min.js"></script>
     <style>
@@ -23,14 +23,90 @@
             box-shadow: 0px 0px 20px rgba(0,0,0,0.8);
             border-radius: 8px;
             overflow: hidden;
+            position: relative;
+        }
+        
+        /* HTML Quiz Overlay Styling */
+        #quiz-modal {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 450px;
+            background: #ffffff;
+            border: 4px solid #2d8a4e;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            text-align: center;
+            z-index: 100;
+        }
+        #quiz-modal h3 {
+            margin-top: 0;
+            color: #2d8a4e;
+            font-size: 20px;
+        }
+        #quiz-modal p {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .quiz-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            background-color: #f0f0f0;
+            border: 2px solid #ccc;
+            border-radius: 6px;
+            font-size: 15px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .quiz-btn:hover {
+            background-color: #2d8a4e;
+            color: white;
+            border-color: #144726;
         }
     </style>
 </head>
 <body>
 
-<div id="game-container"></div>
+<div id="game-container">
+    <!-- Quiz Modal Container -->
+    <div id="quiz-modal">
+        <h3 id="quiz-title">कहानी का प्रश्न (Chapter Question)</h3>
+        <p id="quiz-question">प्रश्न यहाँ दिखाई देगा...</p>
+        <div id="quiz-options"></div>
+    </div>
+</div>
 
 <script>
+// --- Chapter Questions Data ---
+const chapterQuestions = [
+    {
+        question: "गोलू और दादाजी तरबूज़ को कौन-सा नया आकार देना चाहते थे?",
+        options: ["त्रिभुज (Triangle)", "चौकोर (Square)", "स्टार (Star)", "गोलाकार (Round)"],
+        correct: 1
+    },
+    {
+        question: "तरबूज़ को चौकोर आकार में ढालने के लिए किसका प्रयोग किया गया?",
+        options: ["पारदर्शी सांचा (Transparent Mold)", "लोहे का डिब्बा", "लकड़ी की टोकरी", "कपड़े का थैला"],
+        correct: 0
+    },
+    {
+        question: "सांचे में बंद करने के बाद भी पौधों को किसकी आवश्यकता होती है?",
+        options: ["केवल पानी", "केवल धूप", "हवा, पानी और धूप", "किसी चीज़ की नहीं"],
+        correct: 2
+    },
+    {
+        question: "चौकोर तरबूज़ बनाने का मुख्य व्यावहारिक लाभ क्या है?",
+        options: ["वे ज़्यादा मीठे होते हैं", "उन्हें रखना और ले जाना आसान होता है", "वे जल्दी पकते हैं", "उनका रंग लाल होता है"],
+        correct: 1
+    }
+];
+
 // --- Scene 1: Innovine Logo Screen ---
 class LogoScene extends Phaser.Scene {
     constructor() {
@@ -38,18 +114,15 @@ class LogoScene extends Phaser.Scene {
     }
 
     preload() {
-        // Preload logo image
         this.load.image('innovine_logo', 'assets/logo.png');
     }
 
     create() {
         this.cameras.main.setBackgroundColor('#ffffff');
 
-        // Display Innovine logo centered
         const logo = this.add.image(400, 300, 'innovine_logo').setOrigin(0.5);
         logo.setAlpha(0);
 
-        // Fade-in animation
         this.tweens.add({
             targets: logo,
             alpha: 1,
@@ -57,7 +130,7 @@ class LogoScene extends Phaser.Scene {
             ease: 'Power2'
         });
 
-        // Display for 5 seconds total before transitioning to the Main Game
+        // 5-second display delay
         this.time.delayedCall(5000, () => {
             this.cameras.main.fadeOut(500, 0, 0, 0);
             this.cameras.main.once('camerafadeoutcomplete', () => {
@@ -67,29 +140,30 @@ class LogoScene extends Phaser.Scene {
     }
 }
 
-// --- Scene 2: Square Watermelon Catching Game ---
+// --- Scene 2: Game + Chapter Quiz ---
 class GameScene extends Phaser.Scene {
     constructor() {
         super({ key: 'GameScene' });
         this.score = 0;
         this.lives = 3;
+        this.nextQuizThreshold = 50; // Trigger quiz every 50 points
+        this.questionIndex = 0;
     }
 
     preload() {
-        // Procedural graphics generation to avoid missing external asset errors
         this.createPlaceholderGraphics();
     }
 
     createPlaceholderGraphics() {
-        // Background / Farm Field
+        // Background
         const bgGfx = this.make.graphics({ x: 0, y: 0, add: false });
-        bgGfx.fillStyle(0x87CEEB, 1); // Sky
+        bgGfx.fillStyle(0x87CEEB, 1);
         bgGfx.fillRect(0, 0, 800, 400);
-        bgGfx.fillStyle(0x7CFC00, 1); // Grass/Field
+        bgGfx.fillStyle(0x7CFC00, 1);
         bgGfx.fillRect(0, 400, 800, 200);
         bgGfx.generateTexture('bg', 800, 600);
 
-        // Young Round Watermelon (Falling Object)
+        // Watermelon Sprite
         const melGfx = this.make.graphics({ x: 0, y: 0, add: false });
         melGfx.fillStyle(0x2d8a4e, 1);
         melGfx.fillCircle(20, 20, 20);
@@ -97,7 +171,7 @@ class GameScene extends Phaser.Scene {
         melGfx.strokeCircle(20, 20, 20);
         melGfx.generateTexture('watermelon', 40, 40);
 
-        // Square Transparent Mold (Player Bucket)
+        // Mold Sprite (Player)
         const moldGfx = this.make.graphics({ x: 0, y: 0, add: false });
         moldGfx.lineStyle(4, 0x00FFFF, 1);
         moldGfx.fillStyle(0xFFFFFF, 0.3);
@@ -105,7 +179,7 @@ class GameScene extends Phaser.Scene {
         moldGfx.strokeRect(0, 0, 80, 80);
         moldGfx.generateTexture('square_mold', 80, 80);
 
-        // Obstacle (Rock / Wild Pest)
+        // Obstacle
         const rockGfx = this.make.graphics({ x: 0, y: 0, add: false });
         rockGfx.fillStyle(0x808080, 1);
         rockGfx.fillTriangle(0, 40, 20, 0, 40, 40);
@@ -113,54 +187,45 @@ class GameScene extends Phaser.Scene {
     }
 
     create() {
-        // Add Background
         this.add.image(400, 300, 'bg');
 
-        // Instructions text
-        this.add.text(400, 30, 'एक अनोखा तरबूज़: चौकोर सांचे में तरबूज़ पकड़ें!', {
-            fontSize: '22px',
+        this.add.text(400, 30, 'एक अनोखा तरबूज़: सांचे में पकड़ें और प्रश्नों के उत्तर दें!', {
+            fontSize: '20px',
             color: '#000000',
             fontStyle: 'bold'
         }).setOrigin(0.5);
 
-        // Score & Lives UI
         this.scoreText = this.add.text(20, 20, 'Score: 0', { fontSize: '20px', color: '#000' });
         this.livesText = this.add.text(680, 20, 'Lives: 3', { fontSize: '20px', color: '#d32f2f', fontStyle: 'bold' });
 
-        // Player (Square Mold)
         this.player = this.physics.add.sprite(400, 520, 'square_mold');
         this.player.setCollideWorldBounds(true);
         this.player.body.setImmovable(true);
 
-        // Groups for falling items
         this.watermelons = this.physics.add.group();
         this.obstacles = this.physics.add.group();
 
-        // Keyboard Controls
         this.cursors = this.input.keyboard.createCursorKeys();
 
-        // Spawn Timers
-        this.time.addEvent({
+        this.spawnTimerMelon = this.time.addEvent({
             delay: 1200,
             callback: this.spawnWatermelon,
             callbackScope: this,
             loop: true
         });
 
-        this.time.addEvent({
+        this.spawnTimerObstacle = this.time.addEvent({
             delay: 3500,
             callback: this.spawnObstacle,
             callbackScope: this,
             loop: true
         });
 
-        // Collisions / Overlaps
         this.physics.add.overlap(this.player, this.watermelons, this.catchWatermelon, null, this);
         this.physics.add.overlap(this.player, this.obstacles, this.hitObstacle, null, this);
     }
 
     update() {
-        // Player Movement
         if (this.cursors.left.isDown) {
             this.player.setVelocityX(-400);
         } else if (this.cursors.right.isDown) {
@@ -169,24 +234,19 @@ class GameScene extends Phaser.Scene {
             this.player.setVelocityX(0);
         }
 
-        // Check for missed watermelons
         this.watermelons.children.iterate((melon) => {
-            if (melon && melon.y > 600) {
-                melon.destroy();
-            }
+            if (melon && melon.y > 600) melon.destroy();
         });
 
         this.obstacles.children.iterate((obs) => {
-            if (obs && obs.y > 600) {
-                obs.destroy();
-            }
+            if (obs && obs.y > 600) obs.destroy();
         });
     }
 
     spawnWatermelon() {
         const x = Phaser.Math.Between(50, 750);
         const melon = this.watermelons.create(x, 0, 'watermelon');
-        melon.setVelocityY(220 + this.score * 5); // Speeds up as score increases
+        melon.setVelocityY(220 + this.score * 2);
     }
 
     spawnObstacle() {
@@ -199,25 +259,79 @@ class GameScene extends Phaser.Scene {
         melon.destroy();
         this.score += 10;
         this.scoreText.setText('Score: ' + this.score);
+
+        // Trigger Chapter Question every 50 points
+        if (this.score >= this.nextQuizThreshold) {
+            this.nextQuizThreshold += 50;
+            this.triggerQuiz();
+        }
     }
 
     hitObstacle(player, obstacle) {
         obstacle.destroy();
         this.lives -= 1;
         this.livesText.setText('Lives: ' + this.lives);
-
-        // Flash Red Camera Effect
         this.cameras.main.flash(200, 255, 0, 0);
 
         if (this.lives <= 0) {
-            this.scene.restart();
-            this.score = 0;
-            this.lives = 3;
+            this.resetGame();
         }
+    }
+
+    triggerQuiz() {
+        // Pause physics and timer events
+        this.physics.pause();
+        this.spawnTimerMelon.paused = true;
+        this.spawnTimerObstacle.paused = true;
+
+        // Get question data
+        const currentData = chapterQuestions[this.questionIndex % chapterQuestions.length];
+        this.questionIndex++;
+
+        // Show HTML modal
+        const modal = document.getElementById('quiz-modal');
+        const qText = document.getElementById('quiz-question');
+        const optionsDiv = document.getElementById('quiz-options');
+
+        qText.innerText = currentData.question;
+        optionsDiv.innerHTML = '';
+
+        currentData.options.forEach((opt, idx) => {
+            const btn = document.createElement('button');
+            btn.className = 'quiz-btn';
+            btn.innerText = opt;
+            btn.onclick = () => {
+                if (idx === currentData.correct) {
+                    this.score += 20; // Correct answer bonus
+                    this.scoreText.setText('Score: ' + this.score);
+                    alert("सही उत्तर! +20 बोनस अंक! (Correct Answer!)");
+                } else {
+                    alert("गलत उत्तर! खेल जारी रखें। (Wrong Answer!)");
+                }
+                modal.style.display = 'none';
+                this.resumeGame();
+            };
+            optionsDiv.appendChild(btn);
+        });
+
+        modal.style.display = 'block';
+    }
+
+    resumeGame() {
+        this.physics.resume();
+        this.spawnTimerMelon.paused = false;
+        this.spawnTimerObstacle.paused = false;
+    }
+
+    resetGame() {
+        this.score = 0;
+        this.lives = 3;
+        this.nextQuizThreshold = 50;
+        this.scene.restart();
     }
 }
 
-// --- Game Configuration ---
+// --- Phaser Config ---
 const config = {
     type: Phaser.AUTO,
     width: 800,
@@ -225,15 +339,11 @@ const config = {
     parent: 'game-container',
     physics: {
         default: 'arcade',
-        arcade: {
-            gravity: { y: 0 },
-            debug: false
-        }
+        arcade: { gravity: { y: 0 }, debug: false }
     },
     scene: [LogoScene, GameScene]
 };
 
-// Initialize Game
 const game = new Phaser.Game(config);
 </script>
 
