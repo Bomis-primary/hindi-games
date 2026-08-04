@@ -3,25 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>वैभव की सैर - 'ऐ' की मात्रा का खेल</title>
+    <title>वैभव की सैर - 'ऐ' की मात्रा (Levels Game)</title>
     <style>
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body { 
-            font-family: 'Arial', sans-serif; 
-            text-align: center; 
             background: linear-gradient(135deg, #ffedd5, #fed7aa); 
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow-x: hidden;
-            cursor: pointer;
+            padding: 15px;
+            color: #27272a;
         }
 
         /* 1. Splash Screen */
@@ -39,19 +38,21 @@
             z-index: 9999;
             opacity: 1;
             transition: opacity 0.5s ease-in-out;
+            padding: 20px;
         }
 
         #splash-screen img {
-            max-width: 260px;
+            max-width: 220px;
+            width: 65%;
             height: auto;
             margin-bottom: 20px;
         }
 
         .loader {
-            width: 45px;
-            height: 45px;
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid #f97316;
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #f97316;
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
@@ -61,107 +62,103 @@
             100% { transform: rotate(360deg); }
         }
 
-        .tap-hint {
-            margin-top: 15px;
-            font-size: 14px;
-            color: #71717a;
-            font-weight: 500;
-        }
-
         /* 2. Main Game Container */
         #game-container { 
             display: none; 
-            width: 95%;
-            max-width: 850px; 
-            margin: 20px auto; 
-            padding: 30px; 
+            width: 100%;
+            max-width: 650px; 
             background: white; 
             border-radius: 20px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05); 
+            padding: 25px 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
+            text-align: center;
         }
 
-        .top-logo {
-            max-width: 160px;
-            height: auto;
-            margin-bottom: 15px;
-        }
-
-        h1 {
-            color: #c2410c;
-            margin-bottom: 10px;
-            font-size: 32px;
-        }
-
-        .instruction {
-            font-size: 18px;
-            color: #3f3f46;
-            margin-bottom: 25px;
-        }
-
-        .game-layout {
+        /* Top Header Info */
+        .game-header {
             display: flex;
-            flex-direction: column;
-            gap: 20px;
+            justify-content: space-between;
             align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #fed7aa;
         }
 
-        /* Score & Tracker Box */
-        .tracker-zone {
-            background-color: #ffedd5;
-            border: 3px dashed #f97316;
-            padding: 20px;
-            border-radius: 15px;
-            width: 100%;
-            max-width: 450px;
+        .badge {
+            background-color: #f97316;
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .score-box {
+            font-weight: bold;
+            color: #c2410c;
+            font-size: 16px;
+        }
+
+        /* Question Box */
+        .question-box {
+            margin: 20px 0;
+        }
+
+        .question-title {
+            font-size: 20px;
+            color: #9a3412;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .question-text {
+            font-size: 24px;
+            font-weight: bold;
+            color: #18181b;
+            background: #fff7ed;
+            padding: 15px;
+            border-radius: 12px;
+            border: 2px dashed #fdba74;
             margin-bottom: 20px;
         }
 
-        .tracker-title {
-            font-size: 22px;
-            color: #c2410c;
-            font-weight: bold;
-            margin-bottom: 10px;
+        /* Options Grid */
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
         }
 
-        .tracker-counter {
-            font-size: 16px;
-            color: #7c2d12;
-        }
-
-        /* Word Grid Setup */
-        .word-grid { 
-            display: grid; 
-            grid-template-columns: repeat(3, 1fr); 
-            gap: 20px; 
-            width: 100%;
-        }
-
-        .card { 
-            padding: 25px 15px; 
-            border: 2px solid #fed7aa; 
-            border-radius: 12px; 
-            cursor: pointer; 
-            font-size: 24px; 
+        .opt-btn {
+            padding: 15px;
+            font-size: 20px;
             font-weight: bold;
             background: #fafafa;
-            transition: all 0.2s ease;
+            border: 2px solid #fed7aa;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #3f3f46;
         }
 
-        .card:hover {
-            transform: translateY(-3px);
-            background-color: #ffedd5;
-            box-shadow: 0 6px 12px rgba(249, 115, 22, 0.15);
+        .opt-btn:active {
+            transform: scale(0.97);
         }
 
-        .card.disabled {
-            background-color: #e4e4e7;
-            border-color: #d4d4d8;
-            color: #a1a1aa;
-            cursor: not-allowed;
-            transform: none;
+        .opt-btn.correct {
+            background-color: #dcfce7 !important;
+            border-color: #22c55e !important;
+            color: #15803d !important;
         }
 
-        .btn-reset { 
+        .opt-btn.wrong {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #b91c1c !important;
+        }
+
+        /* Action & Result Buttons */
+        .btn-action { 
             padding: 12px 28px; 
             font-size: 18px; 
             cursor: pointer; 
@@ -171,124 +168,218 @@
             border-radius: 10px; 
             font-weight: bold;
             margin-top: 20px;
+            box-shadow: 0 4px 10px rgba(249, 115, 22, 0.3);
         }
 
-        .btn-reset:hover {
-            background: #ea580c;
-        }
+        .hidden { display: none !important; }
 
-        .hidden { display: none; }
+        /* Responsive Design */
+        @media (max-width: 480px) {
+            .options-grid { grid-template-columns: 1fr; }
+            .question-text { font-size: 20px; }
+            .question-title { font-size: 18px; }
+            .opt-btn { font-size: 18px; padding: 12px; }
+        }
     </style>
 </head>
 <body>
 
-    <!-- Audio Elements (Using precise asset paths provided in folder view) -->
-    <audio id="sound-correct" src="assets/correct.mp3" preload="auto"></audio>
-    <audio id="sound-wrong" src="assets/wrong.mp3" preload="auto"></audio>
+    <!-- Audio Files -->
+    <audio id="snd-correct" src="assets/correct.mp3" preload="auto"></audio>
+    <audio id="snd-wrong" src="assets/wrong.mp3" preload="auto"></audio>
 
-    <!-- 1. Splash Screen Section (5 Seconds Lock) -->
+    <!-- Splash Screen (Innovine Logo ONLY here) -->
     <div id="splash-screen">
         <img src="assets/innovine-logo.png" alt="Innovine Logo">
         <div class="loader"></div>
-        <p class="tap-hint">साउंड शुरू करने के लिए स्क्रीन पर एक बार टच करें 👇</p>
+        <p style="margin-top:15px; color:#666; font-size:14px;">लोड हो रहा है...</p>
     </div>
 
-    <!-- 2. Master Game Platform -->
+    <!-- Main Game Box -->
     <div id="game-container">
-        <!-- Logo inside main template container -->
-        <img src="assets/innovine-logo.png" alt="Innovine Logo" class="top-logo">
         
-        <h1>प्र.१. 'ऐ' मात्रा वाले शब्दों की खोज 🔍</h1>
-        
-        <div id="level-1" class="game-layout">
-            <p class="instruction"><strong>निर्देश:</strong> नीचे दिए गए शब्दों में से केवल उन शब्दों पर क्लिक करें जिनमें <strong>'ऐ' स्वर</strong> या <strong>'ै' की मात्रा</strong> है!</p>
-            
-            <!-- Target Collection Zone -->
-            <div class="tracker-zone">
-                <div class="tracker-title">🎒 वैभव का थैला</div>
-                <div class="tracker-counter">थैले में इकट्ठे किए गए शब्द: <span id="score-display">0</span> / 6</div>
+        <!-- Top Info Header -->
+        <div class="game-header">
+            <span class="badge" id="level-badge">Level 1</span>
+            <span class="score-box">अंक: <span id="score">0</span></span>
+            <span class="score-box">प्रश्न: <span id="q-count">1</span>/5</span>
+        </div>
+
+        <!-- Question View -->
+        <div id="quiz-view">
+            <div class="question-box">
+                <div class="question-title" id="instruction-text">निर्देश...</div>
+                <div class="question-text" id="question-display">प्रश्न...</div>
             </div>
 
-            <!-- Vocabulary taken directly from the provided page text and images -->
-            <div class="word-grid">
-                <!-- Correct 'ऐ' words from textbook -->
-                <div class="card" id="w1" onclick="checkWord(true, 'बैल', 'w1')">बैल</div>
-                <div class="card" id="w2" onclick="checkWord(true, 'थैला', 'w2')">थैला</div>
-                <!-- Distractors without double matra (like e matra) -->
-                <div class="card" id="w3" onclick="checkWord(false, 'रेल', 'w3')">रेल</div>
-                <div class="card" id="w4" onclick="checkWord(true, 'ऐनक', 'w4')">ऐनक</div>
-                <div class="card" id="w5" onclick="checkWord(false, 'केला', 'w5')">केला</div>
-                <div class="card" id="w6" onclick="checkWord(true, 'तैराक', 'w6')">तैराक</div>
-                <div class="card" id="w7" onclick="checkWord(false, 'सेब', 'w7')">सेब</div>
-                <div class="card" id="w8" onclick="checkWord(true, 'मैदान', 'w8')">मैदान</div>
-                <div class="card" id="w9" onclick="checkWord(true, 'सैनिक', 'w9')">सैनिक</div>
+            <div class="options-grid" id="options-container">
+                <!-- Dynamic Options Buttons -->
             </div>
         </div>
 
-        <!-- FINAL GAME END WRAPPER -->
-        <div id="result-screen" class="hidden">
-            <h2 id="msg" style="color: #c2410c; font-size: 30px; margin-bottom: 15px;"></h2>
-            <button class="btn-reset" onclick="location.reload()">फिर से खेलें</button>
+        <!-- Level Complete Screen -->
+        <div id="level-screen" class="hidden">
+            <h2 style="color: #c2410c; font-size: 24px; margin-bottom: 10px;" id="level-title">स्तर पूर्ण! 🎉</h2>
+            <p id="level-msg" style="font-size: 18px; margin-bottom: 20px;">आपने इस स्तर के सभी 5 प्रश्नों को हल कर लिया है।</p>
+            <button class="btn-action" id="next-lvl-btn" onclick="startNextLevel()">अगला स्तर शुरू करें ➔</button>
         </div>
+
+        <!-- Game Complete Screen -->
+        <div id="final-screen" class="hidden">
+            <h2 style="color: #ea580c; font-size: 28px; margin-bottom: 15px;">बधाई हो! 🏆</h2>
+            <p style="font-size: 20px; margin-bottom: 20px;">आपने 'ऐ' की मात्रा के सभी 3 लेवल्स सफलतापूर्वक पूरा कर लिए हैं!</p>
+            <p style="font-size: 22px; font-weight: bold; color: #15803d; margin-bottom: 20px;">कुल अंक: <span id="final-score">0</span> / 15</p>
+            <button class="btn-action" onclick="location.reload()">दोबारा खेलें 🔄</button>
+        </div>
+
     </div>
 
     <script>
-        let correctAnswersCount = 0;
-        const totalRequired = 6; // बैल, थैला, ऐनक, तैराक, मैदान, सैनिक
+        // Game Data matched with Chapter 10 'ऐ' की मात्रा
+        const gameLevels = [
+            {
+                level: 1,
+                title: "Level 1: सही शब्द पहचानो 🔍",
+                instruction: "नीचे दिए गए विकल्पों में से 'ऐ' (ै) की मात्रा वाला सही शब्द चुनें:",
+                questions: [
+                    { q: "चित्र पहचानिए: 🎒", options: ["थैला", "तोला", "थाली", "तील"], ans: 0 },
+                    { q: "सैनिक देश की रक्षा करता है। इसमें 'ऐ' मात्रा वाला शब्द कौन सा है?", options: ["देश", "रक्षा", "सैनिक", "करता"], ans: 2 },
+                    { q: "इनमें से 'ऐ' की मात्रा वाला शब्द चुनें:", options: ["केला", "मैदान", "रोटी", "सूरज"], ans: 1 },
+                    { q: "तैरने वाले व्यक्ति को क्या कहते हैं?", options: ["तैराक", "नाविक", "चालक", "गवैया"], ans: 0 },
+                    { q: "आँखों पर पहना जाने वाला उपकरण:", options: ["ऐनक", "टोपी", "घड़ी", "हार"], ans: 0 }
+                ]
+            },
+            {
+                level: 2,
+                title: "Level 2: रिक्त स्थान भरो ✏️",
+                instruction: "सही अक्षर चुनकर 'ऐ' की मात्रा वाले शब्द को पूरा करें:",
+                questions: [
+                    { q: "ब + ____ = बैल", options: ["ल", "ता", "र", "न"], ans: 0 },
+                    { q: "कै + ____ + रा = कैमेरा", options: ["मे", "म", "मा", "मी"], ans: 1 },
+                    { q: "पै + ____ = पैसा", options: ["सा", "सो", "से", "सी"], ans: 0 },
+                    { q: "कै + ____ = कैरम", options: ["रम", "लम", "सम", "नम"], ans: 0 },
+                    { q: "वै + ____ = वैभव", options: ["भव", "भवा", "भो", "भू"], ans: 0 }
+                ]
+            },
+            {
+                level: 3,
+                title: "Level 3: सही या गलत? ✔️❌",
+                instruction: "बताएं कि दिया गया कथन या शब्द 'ऐ' (ै) की मात्रा के अनुसार सही है या गलत:",
+                questions: [
+                    { q: "'मैना' शब्द में 'ऐ' (ै) की मात्रा का प्रयोग हुआ है।", options: ["सही", "गलत"], ans: 0 },
+                    { q: "'शेर' शब्द में 'ऐ' की मात्रा लगी हुई है।", options: ["सही", "गलत"], ans: 1 },
+                    { q: "'पैदल' में 'प' अक्षर पर 'ऐ' की मात्रा जुड़ी है।", options: ["सही", "गलत"], ans: 0 },
+                    { q: "'सैनिक' शब्द की सही वर्तनी 'सेनिक' है।", options: ["सही", "गलत"], ans: 1 },
+                    { q: "'वैभव की सैर' पाठ में 'सैर' शब्द में 'ऐ' की मात्रा है।", options: ["सही", "गलत"], ans: 0 }
+                ]
+            }
+        ];
 
-        const correctSnd = document.getElementById('sound-correct');
-        const wrongSnd = document.getElementById('sound-wrong');
+        let currentLevelIdx = 0;
+        let currentQuestionIdx = 0;
+        let score = 0;
+        let canAnswer = true;
 
-        // Global touch interaction handler to unlock web audio context upfront
-        document.body.addEventListener('click', () => {
-            correctSnd.play().then(() => { correctSnd.pause(); correctSnd.currentTime = 0; }).catch(e => console.log(e));
-            wrongSnd.play().then(() => { wrongSnd.pause(); wrongSnd.currentTime = 0; }).catch(e => console.log(e));
-        }, { once: true });
+        const sndCorrect = document.getElementById('snd-correct');
+        const sndWrong = document.getElementById('snd-wrong');
 
-        // Splash screen handler: Holds for exactly 5000 milliseconds
+        // Audio Unlocker for Mobile Browsers
+        document.body.addEventListener('touchstart', unlockAudio, { once: true });
+        document.body.addEventListener('click', unlockAudio, { once: true });
+
+        function unlockAudio() {
+            sndCorrect.play().then(() => { sndCorrect.pause(); sndCorrect.currentTime = 0; }).catch(() => {});
+            sndWrong.play().then(() => { sndWrong.pause(); sndWrong.currentTime = 0; }).catch(() => {});
+        }
+
+        // Hide Splash Screen after 2.5 Seconds
         window.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
                 const splash = document.getElementById('splash-screen');
-                splash.style.opacity = 0;
+                splash.style.opacity = '0';
                 setTimeout(() => {
                     splash.style.display = 'none';
                     document.getElementById('game-container').style.display = 'block';
+                    loadQuestion();
                 }, 500);
-            }, 5000);
+            }, 2500);
         });
 
-        function checkWord(isCorrect, wordText, cardId) {
-            const selectedCard = document.getElementById(cardId);
-            
-            if (selectedCard.classList.contains('disabled')) return;
+        function loadQuestion() {
+            canAnswer = true;
+            const levelData = gameLevels[currentLevelIdx];
+            const qData = levelData.questions[currentQuestionIdx];
 
-            if(isCorrect) {
-                correctSnd.currentTime = 0;
-                correctSnd.play().catch(err => console.log("Audio blocked:", err));
-                
-                correctAnswersCount++;
-                document.getElementById('score-display').innerText = correctAnswersCount;
-                
-                selectedCard.classList.add('disabled');
-                selectedCard.style.border = "2px solid #f97316";
-                selectedCard.style.backgroundColor = "#ffedd5";
-                
-                alert("बहुत बढ़िया! \"" + wordText + "\" में 'ऐ' की मात्रा है और यह थैले में आ गया।");
+            // Update UI Header
+            document.getElementById('level-badge').innerText = levelData.title.split(':')[0];
+            document.getElementById('q-count').innerText = currentQuestionIdx + 1;
+            document.getElementById('instruction-text').innerText = levelData.instruction;
+            document.getElementById('question-display').innerText = qData.q;
+
+            // Render Options
+            const optContainer = document.getElementById('options-container');
+            optContainer.innerHTML = '';
+
+            qData.options.forEach((optText, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'opt-btn';
+                btn.innerText = optText;
+                btn.onclick = () => handleAnswer(index, btn);
+                optContainer.appendChild(btn);
+            });
+        }
+
+        function handleAnswer(selectedIndex, btnElement) {
+            if (!canAnswer) return;
+            canAnswer = false;
+
+            const qData = gameLevels[currentLevelIdx].questions[currentQuestionIdx];
+
+            if (selectedIndex === qData.ans) {
+                sndCorrect.currentTime = 0;
+                sndCorrect.play().catch(() => {});
+                btnElement.classList.add('correct');
+                score += 1;
+                document.getElementById('score').innerText = score;
             } else {
-                wrongSnd.currentTime = 0;
-                wrongSnd.play().catch(err => console.log("Audio blocked:", err));
+                sndWrong.currentTime = 0;
+                sndWrong.play().catch(() => {});
+                btnElement.classList.add('wrong');
                 
-                alert("सोचिए! \"" + wordText + "\" में 'ऐ' की मात्रा नहीं है। दोबारा प्रयास करें!");
+                // Highlight correct answer
+                const allButtons = document.querySelectorAll('.opt-btn');
+                allButtons[qData.ans].classList.add('correct');
             }
 
-            // Check if win condition met
-            if(correctAnswersCount >= totalRequired) {
-                setTimeout(() => {
-                    document.getElementById('level-1').classList.add('hidden');
-                    document.getElementById('result-screen').classList.remove('hidden');
-                    document.getElementById('msg').innerHTML = "शानदार! 🎉<br>आपने 'ऐ' मात्रा वाले सभी सही शब्दों को खोज लिया है।";
-                }, 500);
+            // Move to Next Question or Level Complete Screen
+            setTimeout(() => {
+                currentQuestionIdx++;
+                if (currentQuestionIdx < 5) {
+                    loadQuestion();
+                } else {
+                    showLevelCompletion();
+                }
+            }, 1200);
+        }
+
+        function showLevelCompletion() {
+            document.getElementById('quiz-view').classList.add('hidden');
+            
+            if (currentLevelIdx < gameLevels.length - 1) {
+                document.getElementById('level-screen').classList.remove('hidden');
+                document.getElementById('level-title').innerText = `${gameLevels[currentLevelIdx].title.split(':')[0]} समाप्त! 🎉`;
+            } else {
+                document.getElementById('final-screen').classList.remove('hidden');
+                document.getElementById('final-score').innerText = score;
             }
+        }
+
+        function startNextLevel() {
+            currentLevelIdx++;
+            currentQuestionIdx = 0;
+            document.getElementById('level-screen').classList.add('hidden');
+            document.getElementById('quiz-view').classList.remove('hidden');
+            loadQuestion();
         }
     </script>
 </body>
