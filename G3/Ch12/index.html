@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>टाइम ट्रैवल चैलेंज - एआई का कमाल</title>
+    <title>टाइम ट्रैवल: AI क्विज़ चैलेंज</title>
     <style>
         * {
             box-sizing: border-box;
@@ -13,7 +13,7 @@
         }
 
         body {
-            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4c1d95 100%);
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -26,7 +26,7 @@
         .screen {
             display: none;
             width: 100%;
-            max-width: 700px;
+            max-width: 650px;
             flex-direction: column;
             align-items: center;
             text-align: center;
@@ -36,7 +36,7 @@
             display: flex;
         }
 
-        /* SCREEN 1: Splash Screen (5 Seconds) */
+        /* SCREEN 1: Innovine Splash Screen (5 Seconds) */
         #screen1 {
             height: 80vh;
             justify-content: center;
@@ -51,10 +51,20 @@
             gap: 20px;
         }
 
-        .game-title-splash {
-            font-size: 2.5rem;
+        .brand-logo-img {
+            max-width: 280px;
+            height: auto;
+            object-fit: contain;
+            filter: drop-shadow(0 10px 20px rgba(56, 189, 248, 0.3));
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px 25px;
+            border-radius: 16px;
+        }
+
+        .game-subtitle-splash {
+            font-size: 1.5rem;
             color: #38bdf8;
-            text-shadow: 0 0 15px rgba(56, 189, 248, 0.5);
+            margin-top: 10px;
         }
 
         .splash-timer {
@@ -76,11 +86,11 @@
         /* SCREEN 2: Instructions Screen */
         .card-box {
             background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(12px);
             padding: 35px;
             border-radius: 24px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             max-width: 550px;
             width: 100%;
         }
@@ -121,94 +131,91 @@
             transform: translateY(-2px);
         }
 
-        /* SCREEN 3: Game Screen */
-        .game-header h1 {
-            color: #38bdf8;
-            font-size: 1.8rem;
-            margin-bottom: 8px;
-        }
-
-        .game-subtitle {
-            color: #cbd5e1;
-            font-size: 0.95rem;
+        /* SCREEN 3: Quiz Game Screen */
+        .game-header {
+            width: 100%;
             margin-bottom: 20px;
         }
 
-        .list-container {
-            list-style: none;
+        .progress-bar-container {
             width: 100%;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: #38bdf8;
+            transition: width 0.3s ease;
+        }
+
+        .question-box {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 25px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .question-box h3 {
+            font-size: 1.25rem;
+            color: #f8fafc;
+            line-height: 1.5;
+        }
+
+        .options-container {
             display: flex;
             flex-direction: column;
             gap: 12px;
-            margin-bottom: 25px;
-        }
-
-        .draggable-item {
-            background: rgba(255, 255, 255, 0.95);
-            color: #0f172a;
-            padding: 14px 18px;
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-            border: 2px solid #38bdf8;
-            cursor: grab;
-            user-select: none;
-            text-align: left;
-            transition: all 0.2s ease;
-        }
-
-        .draggable-item:active {
-            cursor: grabbing;
-        }
-
-        .draggable-item.dragging {
-            opacity: 0.4;
-            transform: scale(0.98);
-        }
-
-        .item-number {
-            background: #0284c7;
-            color: white;
-            font-weight: bold;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-shrink: 0;
-            font-size: 0.95rem;
-        }
-
-        .item-text {
-            font-size: 1rem;
-            font-weight: 500;
-        }
-
-        .controls {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
             width: 100%;
         }
 
-        .feedback-msg {
-            margin-top: 15px;
-            font-weight: bold;
-            font-size: 1.1rem;
+        .option-btn {
+            background: rgba(255, 255, 255, 0.95);
+            color: #0f172a;
+            padding: 14px 20px;
+            border-radius: 14px;
+            border: 2px solid transparent;
+            font-size: 1rem;
+            font-weight: 600;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .option-btn:hover {
+            background: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3);
+        }
+
+        .option-btn.correct {
+            background: #10b981 !important;
+            color: white !important;
+            border-color: #059669 !important;
+        }
+
+        .option-btn.wrong {
+            background: #ef4444 !important;
+            color: white !important;
+            border-color: #dc2626 !important;
         }
 
         /* SCREEN 4: End Screen */
         .end-card {
             background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(12px);
             padding: 40px;
             border-radius: 24px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            max-width: 480px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            max-width: 500px;
             width: 100%;
         }
 
@@ -218,9 +225,16 @@
             margin-bottom: 12px;
         }
 
+        .score-display {
+            font-size: 1.5rem;
+            color: #facc15;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+
         .end-card p {
             color: #e2e8f0;
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             margin-bottom: 25px;
             line-height: 1.5;
         }
@@ -239,11 +253,11 @@
 </head>
 <body>
 
-    <!-- SCREEN 1: Splash Screen (5 Seconds) -->
+    <!-- SCREEN 1: Innovine Splash Screen (5 Seconds Auto Transition) -->
     <div id="screen1" class="screen active">
         <div class="logo-container">
-            <h1 class="game-title-splash">⏳ टाइम ट्रैवल चैलेंज</h1>
-            <p style="color: #cbd5e1;">एआई और तकनीक का ऐतिहासिक सफ़र</p>
+            <img src="https://innovine.in/images/logo.png" alt="Innovine Logo" class="brand-logo-img">
+            <h2 class="game-subtitle-splash">⏳ टाइम ट्रैवल: AI क्विज़ चैलेंज</h2>
             <div class="splash-timer">
                 <div class="splash-progress"></div>
             </div>
@@ -255,41 +269,42 @@
         <div class="card-box">
             <h2>📜 खेल के नियम</h2>
             <div class="instructions-list">
-                <p>1. इतिहास और एआई के विकास की घटनाओं को उनके सही कालक्रम (Chronological Order) में लगाएँ।</p>
-                <p>2. कार्ड्स को ऊपर-नीचे ड्रैग करके सही क्रम में व्यवस्थित करें।</p>
-                <p>3. सही क्रम चेक करने के लिए <b>'जाँच करें'</b> बटन दबाएँ।</p>
-                <p>4. हर बार रीस्टार्ट करने पर आपको प्रश्नों का एक नया सेट मिलेगा!</p>
+                <p>1. आपको एआई और तकनीक के समय चक्र (Time Travel) से जुड़े बहुविकल्पीय प्रश्न मिलेंगे।</p>
+                <p>2. सही उत्तर चुनकर अगले प्रश्न पर बढ़ें।</p>
+                <p>3. हर बार रीस्टार्ट करने पर आपको **नए और अलग प्रश्न** मिलेंगे!</p>
             </div>
-            <button class="btn-primary" onclick="goToScreen(3); startGame();">सफ़र शुरू करें 🚀</button>
+            <button class="btn-primary" onclick="goToScreen(3); startGame();">गेम शुरू करें 🚀</button>
         </div>
     </div>
 
-    <!-- SCREEN 3: Game Screen -->
+    <!-- SCREEN 3: Quiz Game Screen -->
     <div id="screen3" class="screen">
         <div class="game-header">
-            <h1>⏳ टाइम ट्रैवल: Sequence Builder</h1>
-            <p class="game-subtitle">घटनाओं को सबसे पुरानी से सबसे नई के क्रम (1 से 5) में लगाएँ:</p>
+            <div class="progress-bar-container">
+                <div id="progress-fill" class="progress-bar-fill"></div>
+            </div>
+            <p id="question-count" style="color: #cbd5e1; font-size: 0.9rem; text-align: right;"></p>
         </div>
 
-        <ul class="list-container" id="draggable-list"></ul>
-
-        <div class="controls">
-            <button class="btn-primary" onclick="checkSequence()">जाँच करें ✔️</button>
+        <div class="question-box">
+            <h3 id="question-text">प्रश्न यहाँ दिखाई देगा...</h3>
         </div>
-        <div id="feedback" class="feedback-msg"></div>
+
+        <div class="options-container" id="options-container"></div>
     </div>
 
     <!-- SCREEN 4: End Screen -->
     <div id="screen4" class="screen">
         <div class="end-card">
-            <h2>🎉 शानदार टाइम ट्रैवलर!</h2>
-            <p>आपने एआई और तकनीक के इतिहास को एकदम सही कालक्रम में व्यवस्थित कर दिया है!</p>
+            <h2>🎉 टाइम ट्रैवल पूरा हुआ!</h2>
+            <div class="score-display" id="final-score">आपका स्कोर: 0 / 5</div>
+            <p id="final-message">उत्कृष्ट प्रदर्शन! आप एआई के इतिहास को अच्छी तरह समझते हैं।</p>
             <button class="btn-primary" onclick="restartGame()">नए प्रश्नों के साथ पुनः खेलें 🔄</button>
         </div>
     </div>
 
     <script>
-        // Audio API for Sound Effects
+        // Sound System (Web Audio API)
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
         function playSound(type) {
@@ -300,13 +315,7 @@
             gain.connect(audioCtx.destination);
             const now = audioCtx.currentTime;
 
-            if (type === 'drag') {
-                osc.frequency.setValueAtTime(350, now);
-                gain.gain.setValueAtTime(0.08, now);
-                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
-                osc.start(now);
-                osc.stop(now + 0.08);
-            } else if (type === 'correct') {
+            if (type === 'correct') {
                 osc.type = 'sine';
                 osc.frequency.setValueAtTime(523.25, now);
                 osc.frequency.setValueAtTime(659.25, now + 0.1);
@@ -338,161 +347,141 @@
             }
         }
 
-        // Master Question Bank based on 'AI Ka Kamaal' & Tech History
-        const masterEventsPool = [
-            { id: 1, text: "जॉन मैकार्थी ने सबसे पहले 'कृत्रिम बुद्धिमत्ता' (एआई) शब्द दिया।" },
-            { id: 2, text: "कंप्यूटर का आविष्कार हुआ और डेटा स्टोरेज की शुरुआत हुई।" },
-            { id: 3, text: "एआई मशीनों ने ढेरों डेटा पढ़कर नई बातें सीखना और समझना शुरू किया।" },
-            { id: 4, text: "अस्पतालों में एआई एक्स-रे पढ़ने और बीमारियों को पहचानने में मदद करने लगा।" },
-            { id: 5, text: "सड़कों पर एआई तकनीक से चलने वाली कारों और संकेतों का विकास हुआ।" },
-            { id: 6, text: "बच्चों ने पुराने खिलौनों और मोटर का प्रयोग करके पहला रोबोट बनाया।" },
-            { id: 7, text: "फरवरी 2026 में नई दिल्ली में अंतरराष्ट्रीय एआई सम्मेलन आयोजित हुआ।" },
-            { id: 8, text: "विद्यालयों में एआई रोबोट बच्चों की पढ़ाई और मुश्किल कार्यों में मदद करने लगे।" }
+        // Question Pool from 'AI Ka Kamaal' & Tech Timeline
+        const masterQuestionsPool = [
+            {
+                question: "1. 'कृत्रिम बुद्धिमत्ता' (एआई) शब्द सबसे पहले किस वैज्ञानिक ने दिया था?",
+                options: ["जॉन मैकार्थी", "अल्बर्ट आइंस्टीन", "चार्ल्स बैबेज", "आइजैक न्यूटन"],
+                answer: 0
+            },
+            {
+                question: "2. एआई नई-नई बातें किस प्रकार सीखती है?",
+                options: ["किताबें लिखकर", "ढेरों डेटा पढ़कर", "अनुमान लगाकर", "दूसरों से पूछकर"],
+                answer: 1
+            },
+            {
+                question: "3. फरवरी 2026 में एआई पर एक बड़ा अंतरराष्ट्रीय सम्मेलन कहाँ आयोजित हुआ था?",
+                options: ["लंदन", "टोक्यो", "नई दिल्ली", "न्यू यॉर्क"],
+                answer: 2
+            },
+            {
+                question: "4. अस्पतालों में एआई डॉक्टरों की मदद किस काम में करता है?",
+                options: ["दवाइयाँ बनाने में", "एक्स-रे पढ़ने और बीमारियाँ पहचानने में", "खाना बनाने में", "सफाई करने में"],
+                answer: 1
+            },
+            {
+                question: "5. कविता में एआई को क्या कहा गया है?",
+                options: ["हमारा दुश्मन", "हमारा साथी और उज्ज्वल कल का राही", "एक साधारण खिलौना", "केवल एक मशीन"],
+                answer: 1
+            },
+            {
+                question: "6. जॉन मैकार्थी ने एआई को क्या कहा था?",
+                options: ["रोबोट बनाने का खेल", "समझदार मशीनें बनाने का विज्ञान", "कंप्यूटर प्रोग्रामिंग", "भविष्य की गणित"],
+                answer: 1
+            },
+            {
+                question: "7. कारों में एआई तकनीक चालक को क्या समझने में मदद करती है?",
+                options: ["सड़क, संकेत और ट्रैफिक", "गाड़ी की गति बदलना", "संगीत बजाना", "कार की धुलाई करना"],
+                answer: 0
+            },
+            {
+                question: "8. रमेश और उसके दोस्तों ने मिलकर क्या आविष्कार किया था?",
+                options: ["एक कंप्यूटर", "एक छोटा-सा रोबोट", "एक नया टीवी", "एक खिलौना गाड़ी"],
+                answer: 1
+            }
         ];
 
-        let currentRoundEvents = [];
-        let listItems = [];
-        let dragStartIndex;
+        let currentQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
 
-        // Navigation Controller
         function goToScreen(screenNumber) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById(`screen${screenNumber}`).classList.add('active');
         }
 
-        // Screen 1 Timer (5 Seconds Auto Transition)
+        // Screen 1 Auto-Transition (5 Seconds)
         window.onload = () => {
             setTimeout(() => {
                 goToScreen(2);
             }, 5000);
         };
 
-        // Start Game with Dynamic Random Pool Selection
+        // Start Game with Random 5 Questions
         function startGame() {
-            document.getElementById('feedback').innerText = '';
-            const draggableList = document.getElementById('draggable-list');
-            draggableList.innerHTML = '';
-            listItems = [];
+            score = 0;
+            currentQuestionIndex = 0;
+            
+            // Randomly select 5 questions from the master pool
+            const shuffled = [...masterQuestionsPool].sort(() => Math.random() - 0.5);
+            currentQuestions = shuffled.slice(0, 5);
 
-            // 1. Pick 5 random items from master pool
-            const shuffledPool = [...masterEventsPool].sort(() => Math.random() - 0.5);
-            const selectedSet = shuffledPool.slice(0, 5);
-
-            // 2. Sort selected set chronologically as the correct answer key
-            currentRoundEvents = [...selectedSet].sort((a, b) => a.id - b.id);
-
-            // 3. Shuffle selected set for user display
-            const displaySet = [...currentRoundEvents].sort(() => Math.random() - 0.5);
-
-            displaySet.forEach((item, index) => {
-                const listItem = document.createElement('li');
-                listItem.setAttribute('data-index', index);
-                listItem.setAttribute('data-id', item.id);
-
-                listItem.innerHTML = `
-                    <div class="draggable-item" draggable="true">
-                        <span class="item-number">${index + 1}</span>
-                        <span class="item-text">${item.text}</span>
-                    </div>
-                `;
-
-                listItems.push(listItem);
-                draggableList.appendChild(listItem);
-            });
-
-            addDragListeners();
+            loadQuestion();
         }
 
-        // Drag and Drop Handlers
-        function dragStart() {
-            dragStartIndex = +this.closest('li').getAttribute('data-index');
-            this.classList.add('dragging');
-            playSound('drag');
-        }
+        function loadQuestion() {
+            const q = currentQuestions[currentQuestionIndex];
+            document.getElementById('question-text').innerText = q.question;
+            document.getElementById('question-count').innerText = `प्रश्न ${currentQuestionIndex + 1} / ${currentQuestions.length}`;
+            
+            // Update Progress Bar
+            const progressPercent = ((currentQuestionIndex) / currentQuestions.length) * 100;
+            document.getElementById('progress-fill').style.width = `${progressPercent}%`;
 
-        function dragOver(e) {
-            e.preventDefault();
-        }
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
 
-        function dragDrop() {
-            const dragEndIndex = +this.getAttribute('data-index');
-            swapItems(dragStartIndex, dragEndIndex);
-            this.querySelector('.draggable-item').classList.remove('dragging');
-        }
-
-        function swapItems(fromIndex, toIndex) {
-            const itemOne = listItems[fromIndex].querySelector('.draggable-item');
-            const itemTwo = listItems[toIndex].querySelector('.draggable-item');
-
-            listItems[fromIndex].appendChild(itemTwo);
-            listItems[toIndex].appendChild(itemOne);
-
-            // Swap tracking IDs
-            const idOne = listItems[fromIndex].getAttribute('data-id');
-            const idTwo = listItems[toIndex].getAttribute('data-id');
-            listItems[fromIndex].setAttribute('data-id', idTwo);
-            listItems[toIndex].setAttribute('data-id', idOne);
-
-            updateItemNumbers();
-        }
-
-        function updateItemNumbers() {
-            listItems.forEach((item, idx) => {
-                const badge = item.querySelector('.item-number');
-                if (badge) badge.innerText = idx + 1;
+            q.options.forEach((option, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerText = option;
+                btn.onclick = () => selectOption(index, btn);
+                optionsContainer.appendChild(btn);
             });
         }
 
-        function addDragListeners() {
-            const draggables = document.querySelectorAll('.draggable-item');
-            const dragListItems = document.querySelectorAll('#draggable-list li');
+        function selectOption(selectedIndex, btnElement) {
+            const q = currentQuestions[currentQuestionIndex];
+            const allBtns = document.querySelectorAll('.option-btn');
+            
+            // Disable all buttons after selection
+            allBtns.forEach(btn => btn.style.pointerEvents = 'none');
 
-            draggables.forEach(draggable => {
-                draggable.addEventListener('dragstart', dragStart);
-                draggable.addEventListener('dragend', function() {
-                    this.classList.remove('dragging');
-                });
-            });
-
-            dragListItems.forEach(item => {
-                item.addEventListener('dragover', dragOver);
-                item.addEventListener('drop', dragDrop);
-            });
-        }
-
-        // Sequence Validation
-        function checkSequence() {
-            let isCorrect = true;
-
-            listItems.forEach((listItem, index) => {
-                const currentId = parseInt(listItem.getAttribute('data-id'));
-                const correctId = currentRoundEvents[index].id;
-                const card = listItem.querySelector('.draggable-item');
-
-                if (currentId !== correctId) {
-                    card.style.borderColor = '#ef4444';
-                    card.style.background = '#fee2e2';
-                    isCorrect = false;
-                } else {
-                    card.style.borderColor = '#10b981';
-                    card.style.background = '#d1fae5';
-                }
-            });
-
-            const feedback = document.getElementById('feedback');
-            if (isCorrect) {
+            if (selectedIndex === q.answer) {
+                btnElement.classList.add('correct');
                 playSound('correct');
-                feedback.style.color = '#34d399';
-                feedback.innerText = '✨ बिल्कुल सही कालक्रम!';
-                setTimeout(() => {
-                    playSound('win');
-                    goToScreen(4);
-                }, 1000);
+                score++;
             } else {
+                btnElement.classList.add('wrong');
+                allBtns[q.answer].classList.add('correct');
                 playSound('wrong');
-                feedback.style.color = '#f87171';
-                feedback.innerText = '❌ क्रम सही नहीं है। पुनः प्रयास करें!';
             }
+
+            setTimeout(() => {
+                currentQuestionIndex++;
+                if (currentQuestionIndex < currentQuestions.length) {
+                    loadQuestion();
+                } else {
+                    showEndScreen();
+                }
+            }, 1200);
+        }
+
+        function showEndScreen() {
+            document.getElementById('progress-fill').style.width = '100%';
+            document.getElementById('final-score').innerText = `आपका स्कोर: ${score} / ${currentQuestions.length}`;
+            
+            const msgElement = document.getElementById('final-message');
+            if (score === currentQuestions.length) {
+                msgElement.innerText = "🏆 शानदार! आपने सभी प्रश्नों के सही उत्तर दिए!";
+            } else if (score >= 3) {
+                msgElement.innerText = "👍 बहुत बढ़िया प्रयास! आपका एआई का ज्ञान अच्छा है।";
+            } else {
+                msgElement.innerText = "📖 थोड़ा और पढ़ें और फिर से प्रयास करें!";
+            }
+
+            playSound('win');
+            goToScreen(4);
         }
 
         function restartGame() {
