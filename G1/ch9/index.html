@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>ए की मात्रा - खेल और अभ्यास</title>
-  <!-- Canvas Confetti Library -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <style>
     * {
@@ -17,39 +16,134 @@
     body {
       margin: 0;
       padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+      font-family: 'Comic Sans MS', 'Chalkboard SE', 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #a8edf7 0%, #fed6e3 100%);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
     }
 
-    /* Top Navigation / Header Bar */
+    /* Page Overlay Screens */
+    .screen-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: #f8f0fc;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      text-align: center;
+      padding: 20px;
+    }
+
+    /* PAGE 1: SPLASH SCREEN */
+    #splash-logo {
+      max-width: 280px;
+      width: 70%;
+      animation: pulse 2s infinite;
+    }
+
+    .splash-timer {
+      margin-top: 20px;
+      font-size: 1.2rem;
+      color: #6c5ce7;
+      font-weight: bold;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+      100% { transform: scale(1); }
+    }
+
+    /* PAGE 2 & 3 COMMON STYLES */
+    .title-heading {
+      font-size: 2.2rem;
+      color: #4a154b;
+      font-weight: bold;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .title-subheading {
+      font-size: 1.3rem;
+      color: #6b21a8;
+      margin-bottom: 30px;
+    }
+
+    .green-btn {
+      background: #62d600;
+      color: white;
+      font-size: 1.5rem;
+      font-weight: bold;
+      padding: 12px 35px;
+      border-radius: 30px;
+      border: 3px solid #489e00;
+      cursor: pointer;
+      box-shadow: 0 6px 0 #3b8200;
+      transition: transform 0.1s;
+    }
+
+    .green-btn:active {
+      transform: translateY(4px);
+      box-shadow: 0 2px 0 #3b8200;
+    }
+
+    /* PAGE 3: INSTRUCTIONS */
+    .instructions-card {
+      background: white;
+      border: 2px solid #e9d5ff;
+      border-radius: 20px;
+      padding: 16px 24px;
+      margin: 10px 0;
+      width: 90%;
+      max-width: 450px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #2d3436;
+      text-align: left;
+    }
+
+    .card-icon {
+      font-size: 1.8rem;
+    }
+
+    /* Header */
     header {
       width: 100%;
-      max-width: 800px;
-      background: rgba(255, 255, 255, 0.9);
+      max-width: 850px;
+      background: rgba(255, 255, 255, 0.95);
       padding: 10px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-      border-bottom-left-radius: 15px;
-      border-bottom-right-radius: 15px;
+      border-bottom-left-radius: 20px;
+      border-bottom-right-radius: 20px;
     }
 
-    .logo {
-      height: 45px;
+    .header-logo {
+      height: 40px;
       object-fit: contain;
     }
 
     .scoreboard {
       display: flex;
-      gap: 15px;
+      gap: 12px;
       font-size: 1.1rem;
       font-weight: bold;
-      color: #333;
     }
 
     .score-box {
@@ -57,129 +151,120 @@
       padding: 6px 14px;
       border-radius: 20px;
       border: 2px solid #fdcb6e;
+      color: #2d3436;
     }
 
     /* Main Container */
     .game-container {
       width: 95%;
-      max-width: 800px;
+      max-width: 850px;
       margin: 15px auto;
       background: white;
-      border-radius: 20px;
+      border-radius: 24px;
       padding: 20px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.12);
       text-align: center;
       flex: 1;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      overflow: hidden;
     }
 
-    /* Level Tabs */
+    /* Level Navigation Tabs */
     .level-tabs {
       display: flex;
       justify-content: center;
-      gap: 8px;
+      gap: 6px;
       margin-bottom: 15px;
       flex-wrap: wrap;
     }
 
     .tab-btn {
-      padding: 8px 14px;
+      padding: 8px 12px;
       border: none;
       background: #e0e0e0;
-      border-radius: 12px;
+      border-radius: 14px;
       font-weight: bold;
-      color: #666;
+      color: #555;
       cursor: pointer;
-      transition: 0.3s;
+      font-size: 0.9rem;
+      transition: 0.2s;
     }
 
     .tab-btn.active {
-      background: #6c5ce7;
+      background: #ff7675;
       color: white;
       transform: scale(1.05);
+      box-shadow: 0 4px 10px rgba(255, 118, 117, 0.4);
     }
 
     .q-title {
       font-size: 1.3rem;
       color: #2d3436;
-      margin-bottom: 15px;
+      margin-bottom: 10px;
       font-weight: bold;
     }
 
-    /* Common Card / Asset Image Holder */
     .asset-img {
-      max-height: 130px;
+      max-height: 120px;
       max-width: 100%;
-      border-radius: 10px;
-      margin: 10px auto;
+      border-radius: 12px;
+      margin: 8px auto;
       display: block;
       object-fit: contain;
     }
 
-    /* Level 1: Memory Maze (Flip Cards) */
-    .grid-memory {
+    /* LEVEL 1: Memory Maze */
+    .memory-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 10px;
-      max-width: 450px;
-      margin: 0 auto;
+      max-width: 420px;
+      margin: 15px auto;
     }
 
-    .card {
+    .mem-card {
       height: 80px;
       background: #74b9ff;
-      border-radius: 10px;
+      border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.2rem;
+      font-size: 1.3rem;
       font-weight: bold;
       color: white;
       cursor: pointer;
-      perspective: 1000px;
-      transition: transform 0.3s;
+      box-shadow: 0 4px 0 #0984e3;
     }
 
-    .card.flipped {
-      background: #0984e3;
-    }
+    .mem-card.flipped { background: #fd79a8; box-shadow: 0 4px 0 #e84393; }
+    .mem-card.matched { background: #55efc4; box-shadow: 0 4px 0 #00b894; color: #2d3436; cursor: default; }
 
-    .card.matched {
-      background: #55efc4;
-      color: #2d3436;
-      cursor: default;
-    }
-
-    /* Level 2: Interactive Word Catch & Options */
-    .word-options-container {
+    /* LEVEL 2: Reach the Point */
+    .path-container {
       display: flex;
-      justify-content: center;
-      gap: 20px;
+      justify-content: space-around;
+      align-items: center;
       margin: 20px 0;
-      flex-wrap: wrap;
+      padding: 15px;
+      background: #f1f2f6;
+      border-radius: 16px;
     }
 
-    .word-btn {
-      padding: 15px 30px;
-      font-size: 1.4rem;
+    .path-btn {
+      padding: 15px 25px;
+      font-size: 1.3rem;
       font-weight: bold;
+      border-radius: 16px;
+      border: none;
       background: #a29bfe;
       color: white;
-      border: 3px solid #6c5ce7;
-      border-radius: 15px;
+      box-shadow: 0 5px 0 #6c5ce7;
       cursor: pointer;
-      box-shadow: 0 5px #6c5ce7;
-      transition: all 0.1s;
     }
 
-    .word-btn:active {
-      transform: translateY(4px);
-      box-shadow: 0 1px #6c5ce7;
-    }
-
-    /* Level 3: Drag and Drop Corner Categorization */
+    /* LEVEL 3: Drag and Drop */
     .drag-zone-container {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -189,129 +274,213 @@
 
     .drop-corner {
       min-height: 100px;
-      border: 2px dashed #0984e3;
-      border-radius: 12px;
+      border: 3px dashed #0984e3;
+      border-radius: 14px;
       background: #e1f5fe;
       padding: 8px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 5px;
     }
 
-    .drop-corner h4 {
-      margin: 0 0 5px 0;
-      font-size: 0.95rem;
-      color: #0984e3;
-    }
+    .drop-corner h4 { margin: 0 0 6px 0; color: #0984e3; }
 
     .draggable-word {
-      padding: 8px 12px;
-      background: #fdcb6e;
-      border-radius: 8px;
+      padding: 8px 14px;
+      background: #ffeaa7;
+      border-radius: 10px;
       font-weight: bold;
       cursor: grab;
-      touch-action: none;
       display: inline-block;
-      margin: 5px;
-      box-shadow: 0 3px 6px rgba(0,0,0,0.16);
+      margin: 4px;
+      border: 2px solid #fdcb6e;
     }
 
-    /* Level 4: Interactive Crossword Grid */
-    .crossword-board {
-      display: grid;
-      grid-template-columns: repeat(5, 45px);
-      grid-template-rows: repeat(5, 45px);
-      gap: 5px;
-      justify-content: center;
-      margin: 15px auto;
+    /* LEVEL 4: Canvas Tracing */
+    #trace-canvas {
+      border: 3px dashed #ff7675;
+      border-radius: 16px;
+      background: #fff;
+      cursor: crosshair;
+      touch-action: none;
     }
 
-    .cw-cell {
-      width: 45px;
-      height: 45px;
-      background: #dfe6e9;
-      border-radius: 6px;
+    /* LEVEL 5: Balloon Pop */
+    .balloon-stage {
+      position: relative;
+      height: 260px;
+      width: 100%;
+      margin: 15px 0;
+      overflow: hidden;
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-end;
+    }
+
+    .balloon {
+      position: relative;
+      width: 105px;
+      height: 125px;
+      background: #ff7675;
+      border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.2rem;
+      color: white;
+      font-size: 1.3rem;
       font-weight: bold;
+      cursor: pointer;
+      box-shadow: inset -10px -10px 0 rgba(0,0,0,0.08);
+      animation: floatSlow 6s ease-in-out infinite alternate;
+      transition: transform 0.8s ease-out, opacity 0.8s ease-out;
     }
 
-    .cw-cell.active {
-      background: #ffffff;
-      border: 2px solid #6c5ce7;
+    .balloon::after {
+      content: "";
+      position: absolute;
+      bottom: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 2px;
+      height: 14px;
+      background: #aaa;
     }
 
-    .cw-cell input {
-      width: 100%;
-      height: 100%;
-      border: none;
-      text-align: center;
-      font-size: 1.1rem;
-      font-weight: bold;
-      background: transparent;
-      outline: none;
+    .balloon:nth-child(1) { background: #ff7675; animation-delay: 0s; }
+    .balloon:nth-child(2) { background: #74b9ff; animation-delay: 1.5s; }
+    .balloon:nth-child(3) { background: #55efc4; color: #2d3436; animation-delay: 3s; }
+
+    @keyframes floatSlow {
+      0% { transform: translateY(0px) rotate(-2deg); }
+      50% { transform: translateY(-20px) rotate(2deg); }
+      100% { transform: translateY(-40px) rotate(-1deg); }
     }
 
-    /* Responsive Design Adjustments */
+    .balloon.fly-away {
+      transform: translateY(-350px) !important;
+      opacity: 0;
+    }
+
     @media (max-width: 500px) {
-      .grid-memory { grid-template-columns: repeat(3, 1fr); }
-      .crossword-board { grid-template-columns: repeat(5, 38px); grid-template-rows: repeat(5, 38px); }
-      .cw-cell { width: 38px; height: 38px; }
-      .word-btn { padding: 10px 20px; font-size: 1.2rem; }
+      .memory-grid { grid-template-columns: repeat(3, 1fr); }
+      .path-btn { padding: 10px 15px; font-size: 1.1rem; }
+      .balloon { width: 85px; height: 105px; font-size: 1.1rem; }
+      .title-heading { font-size: 1.8rem; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Top Navigation Header -->
+  <!-- PAGE 1: 10-Second Innovine Logo Splash Screen -->
+  <div id="page-splash" class="screen-overlay" onclick="goToTitlePage()">
+    <img id="splash-logo" src="assets/innovine-logo.png" alt="Innovine Logo" onerror="this.src='https://via.placeholder.com/250x100?text=Innovine+Logo'">
+    <div class="splash-timer">खेल शुरू हो रहा है... (<span id="timer-sec">10</span>s)</div>
+    <p style="color:#aaa; font-size:0.8rem; margin-top:5px;">(आगे बढ़ने के लिए कहीं भी क्लिक करें)</p>
+  </div>
+
+  <!-- PAGE 2: Chapter Title Page -->
+  <div id="page-title" class="screen-overlay" style="display: none;">
+    <div class="title-heading">
+      <span style="color:#e63946;">🔴</span> मात्रा कहाँ लगेगी? ✨
+    </div>
+    <div class="title-subheading">'े' (ए) की मात्रा का मजेदार खेल!</div>
+    <button class="green-btn" onclick="goToInstructionPage()">शुरू करें ▶</button>
+  </div>
+
+  <!-- PAGE 3: Instruction Page -->
+  <div id="page-instructions" class="screen-overlay" style="display: none;">
+    <div class="title-heading" style="font-size: 2rem;">कैसे खेलें? 🎮</div>
+    
+    <div class="instructions-card">
+      <span class="card-icon">👆</span>
+      <span>सही अक्षर या शब्द को पहचानो और छुओ।</span>
+    </div>
+
+    <div class="instructions-card">
+      <span class="card-icon">🎯</span>
+      <span>अक्षर के साथ सही मात्रा चुनकर आगे बढ़ो!</span>
+    </div>
+
+    <div class="instructions-card">
+      <span class="card-icon">🎈</span>
+      <span>३ गुब्बारे फटने से पहले सही उत्तर चुनो।</span>
+    </div>
+
+    <br>
+    <button class="green-btn" onclick="startGame()">खेलें 🎮</button>
+  </div>
+
+  <!-- Header Scoreboard -->
   <header>
-    <img src="assets/innovine-logo.png" alt="Logo" class="logo" onerror="this.style.display='none'">
+    <img src="assets/innovine-logo.png" alt="Logo" class="header-logo" onerror="this.style.display='none'">
     <div class="scoreboard">
-      <div class="score-box">स्तर: <span id="level-num">1</span>/4</div>
+      <div class="score-box">स्तर: <span id="level-num">1</span>/5</div>
       <div class="score-box">अंक: <span id="score-val">0</span></div>
     </div>
   </header>
 
-  <!-- Interactive Game Body -->
+  <!-- Main Game Container -->
   <div class="game-container">
     <div>
       <div class="level-tabs">
-        <button class="tab-btn active" onclick="loadLevel(1)">स्तर 1: शब्द-जोड़ी</button>
-        <button class="tab-btn" onclick="loadLevel(2)">स्तर 2: सही शब्द चुनें</button>
-        <button class="tab-btn" onclick="loadLevel(3)">स्तर 3: कोना चुनिए</button>
-        <button class="tab-btn" onclick="loadLevel(4)">स्तर 4: वर्ग-पहेली</button>
+        <button class="tab-btn active" onclick="loadLevel(1)">L1: मेमोरी मेज़</button>
+        <button class="tab-btn" onclick="loadLevel(2)">L2: रास्ते का खेल</button>
+        <button class="tab-btn" onclick="loadLevel(3)">L3: कोना चुनो</button>
+        <button class="tab-btn" onclick="loadLevel(4)">L4: वर्ण अनुरेखण</button>
+        <button class="tab-btn" onclick="loadLevel(5)">L5: गुब्बारे फोड़ो</button>
       </div>
-      <hr style="border:0; border-top: 1px solid #eee; margin-bottom: 15px;">
+      <hr style="border:0; border-top: 1px solid #eee; margin-bottom: 10px;">
       
       <div id="game-view">
-        <!-- Content gets rendered dynamically -->
+        <!-- Dynamic Level View -->
       </div>
     </div>
 
-    <!-- Hidden Audio Elements using the provided assets -->
+    <!-- Hidden Audio Elements -->
     <audio id="audio-correct" src="assets/correct.mp3"></audio>
     <audio id="audio-wrong" src="https://assets.mixkit.co/active_storage/sfx/2870/2870-preview.mp3"></audio>
   </div>
 
   <script>
-    // Audio controller
+    // PAGE NAVIGATION CONTROLLER
+    let splashTimeLeft = 10;
+    const splashTimerElem = document.getElementById('timer-sec');
+    const splashInterval = setInterval(() => {
+      splashTimeLeft--;
+      if (splashTimerElem) splashTimerElem.innerText = splashTimeLeft;
+      if (splashTimeLeft <= 0) {
+        goToTitlePage();
+      }
+    }, 1000);
+
+    function goToTitlePage() {
+      clearInterval(splashInterval);
+      document.getElementById('page-splash').style.display = 'none';
+      document.getElementById('page-title').style.display = 'flex';
+    }
+
+    function goToInstructionPage() {
+      document.getElementById('page-title').style.display = 'none';
+      document.getElementById('page-instructions').style.display = 'flex';
+    }
+
+    function startGame() {
+      document.getElementById('page-instructions').style.display = 'none';
+      loadLevel(1);
+    }
+
+    // AUDIO PLAYER
     function playSound(type) {
       const snd = document.getElementById(type === 'correct' ? 'audio-correct' : 'audio-wrong');
       if (snd) {
         snd.currentTime = 0;
-        snd.play().catch(e => console.log('Audio play blocked:', e));
+        snd.play().catch(() => {});
       }
     }
 
-    // State Variables
+    // GAME STATE
     let currentLevel = 1;
-    let currentQuestionIndex = 0;
+    let currentQIndex = 0;
     let totalScore = 0;
 
-    // --- LEVEL 1 DATA: Memory Maze (5 Sets) ---
+    // DATA FOR LEVELS
     const memoryMazeSets = [
       [ {t:'केला', id:1}, {t:'केला', id:1}, {t:'सेब', id:2}, {t:'सेब', id:2} ],
       [ {t:'रेल', id:1}, {t:'रेल', id:1}, {t:'पेड़', id:2}, {t:'पेड़', id:2} ],
@@ -320,40 +489,38 @@
       [ {t:'सवेरा', id:1}, {t:'सवेरा', id:1}, {t:'बेलन', id:2}, {t:'बेलन', id:2} ]
     ];
 
-    // --- LEVEL 2 DATA: Catch Correct Word (5 Questions) ---
-    const catchWordQuestions = [
-      { img: 'assets/kela.png', correct: 'केला', wrong: 'कला', prompt: 'सही शब्द पर क्लिक करें:' },
-      { img: 'assets/apple.png', correct: 'सेब', wrong: 'सब', prompt: 'सही शब्द पर क्लिक करें:' },
-      { img: 'assets/table.png', correct: 'मेज', wrong: 'मज', prompt: 'सही शब्द पर क्लिक करें:' },
-      { img: 'assets/ambulance.png', correct: 'एम्बुलेंस', wrong: 'अम्बुलेंस', prompt: 'सही शब्द पर क्लिक करें:' },
-      { img: 'assets/ekta.png', correct: 'एकता', wrong: 'अकता', prompt: 'सही शब्द पर क्लिक करें:' }
+    const reachPointQuestions = [
+      { img: 'assets/kela.png', prompt: 'बंदर को केले तक पहुँचाने के लिए सही शब्द चुनें:', correct: 'केला', wrong: 'कला' },
+      { img: 'assets/apple.png', prompt: 'बच्चों को सेब तक पहुँचने का सही रास्ता दिखाएं:', correct: 'सेब', wrong: 'सब' },
+      { img: 'assets/table.png', prompt: 'मेज तक पहुँचने का सही रास्ता कौन सा है?', correct: 'मेज', wrong: 'मज' },
+      { img: 'assets/ambulance.png', prompt: 'एम्बुलेंस तक पहुँचने के लिए सही नाम चुनें:', correct: 'एम्बुलेंस', wrong: 'अम्बुलेंस' },
+      { img: 'assets/ekta.png', prompt: 'एकता तक पहुँचने का सही शब्द पकड़ो:', correct: 'एकता', wrong: 'अकता' }
     ];
 
-    // --- LEVEL 3 DATA: Drag and Drop Corner Categorization (Image Reference: image_d91e66.jpg) ---
     const dropCornersData = [
-      { id: 'corner-play', title: 'खेल कोना ⚽', targets: ['खेल', 'गेंद'] },
-      { id: 'corner-food', title: 'खाने का कोना 🍌', targets: ['सेब', 'केले'] },
-      { id: 'corner-train', title: 'रेल कोना 🚂', targets: ['रेल', 'स्टेशन'] },
-      { id: 'corner-tree', title: 'पेड़ वाला कोना 🌳', targets: ['पेड़', 'बैठे'] }
+      { id: 'c-play', title: 'खेल कोना ⚽', targets: ['खेल', 'गेंद'] },
+      { id: 'c-food', title: 'खाने का कोना 🍌', targets: ['सेब', 'केले'] },
+      { id: 'c-train', title: 'रेल कोना 🚂', targets: ['रेल', 'स्टेशन'] },
+      { id: 'c-tree', title: 'पेड़ वाला कोना 🌳', targets: ['पेड़', 'बैठे'] }
     ];
     const draggableWordsList = ['खेल', 'गेंद', 'सेब', 'केले', 'रेल', 'स्टेशन', 'पेड़', 'बैठे'];
 
-    // --- LEVEL 4 DATA: Crossword Games (5 Words / Puzzles) ---
-    const crosswordPuzzles = [
-      { hint: '1. पटरी पर दौड़ती है (र_ल)', word: 'रेल', grid: [['रे','ल']] },
-      { hint: '2. लाल-लाल फल (से_)', word: 'सेब', grid: [['से','ब']] },
-      { hint: '3. मीठा पीला फल (के_ा)', word: 'केला', grid: [['के','ला']] },
-      { hint: '4. हरा-भरा छाया देने वाला (पे_)', word: 'पेड़', grid: [['पे','ड़']] },
-      { hint: '5. सुबह का समय (स_ेरा)', word: 'सवेरा', grid: [['स','वे','रा']] }
+    const tracingPrompts = ['ए', 'े', 'केला', 'सेब', 'रेल'];
+
+    const balloonQuestions = [
+      { prompt: 'वह शब्द चुनें जिसमें "े" की मात्रा है:', correct: 'शेर', wrong1: 'आम', wrong2: 'घर' },
+      { prompt: 'इनमें से मीठे फल का नाम कौन सा है?', correct: 'सेब', wrong1: 'जल', wrong2: 'मन' },
+      { prompt: 'पटरी पर कौन सी गाड़ी दौड़ती है?', correct: 'रेल', wrong1: 'कार', wrong2: 'बस' },
+      { prompt: 'सुबह के समय को क्या कहते हैं?', correct: 'सवेरा', wrong1: 'रात', wrong2: 'दिन' },
+      { prompt: 'पेड़ की छाया में कौन बैठा?', correct: 'नेवला', wrong1: 'मछली', wrong2: 'बत्तख' }
     ];
 
-    // --- MASTER LEVEL SWITCHER ---
+    // MASTER LEVEL LOAD CONTROLLER
     function loadLevel(lvl) {
       currentLevel = lvl;
-      currentQuestionIndex = 0;
+      currentQIndex = 0;
       document.getElementById('level-num').innerText = lvl;
-      
-      // Update Tab Styles
+
       document.querySelectorAll('.tab-btn').forEach((btn, idx) => {
         btn.classList.toggle('active', idx + 1 === lvl);
       });
@@ -362,42 +529,41 @@
       view.innerHTML = '';
 
       if (lvl === 1) renderMemoryMaze();
-      else if (lvl === 2) renderCatchWord();
-      else if (lvl === 3) renderDragDropCorner();
-      else if (lvl === 4) renderCrossword();
+      else if (lvl === 2) renderReachPoint();
+      else if (lvl === 3) renderDragDrop();
+      else if (lvl === 4) renderTracing();
+      else if (lvl === 5) renderBalloonPop();
     }
 
-    // ==========================================
-    // LEVEL 1: MEMORY MAZE FLIP
-    // ==========================================
+    // --- LEVEL 1 ---
     let flippedCards = [];
-    let matchedPairsCount = 0;
+    let matchedPairs = 0;
 
     function renderMemoryMaze() {
       const view = document.getElementById('game-view');
-      const cardsData = [...memoryMazeSets[currentQuestionIndex]].sort(() => Math.random() - 0.5);
+      const cardsData = [...memoryMazeSets[currentQIndex]].sort(() => Math.random() - 0.5);
       flippedCards = [];
-      matchedPairsCount = 0;
+      matchedPairs = 0;
 
       view.innerHTML = `
-        <div class="q-title">स्मृति खेल (Memory Maze) - प्रश्न ${currentQuestionIndex + 1}/5</div>
-        <p style="color:#666;">समान 'े' मात्रा वाले शब्दों के जोड़े ढूंढें!</p>
-        <div class="grid-memory" id="memory-grid"></div>
+        <div class="q-title">स्मृति खेल (Memory Maze) - प्रश्न ${currentQIndex + 1}/5</div>
+        <p style="color:#666; margin:0;">सही जोड़ी वाले कार्ड खोजें!</p>
+        <div class="memory-grid" id="mem-grid"></div>
       `;
 
-      const grid = document.getElementById('memory-grid');
-      cardsData.forEach((item, idx) => {
-        const cardElem = document.createElement('div');
-        cardElem.className = 'card';
-        cardElem.dataset.id = item.id;
-        cardElem.dataset.text = item.t;
-        cardElem.innerText = '?';
-        cardElem.onclick = () => handleCardClick(cardElem);
-        grid.appendChild(cardElem);
+      const grid = document.getElementById('mem-grid');
+      cardsData.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'mem-card';
+        card.dataset.id = item.id;
+        card.dataset.text = item.t;
+        card.innerText = '?';
+        card.onclick = () => flipCard(card);
+        grid.appendChild(card);
       });
     }
 
-    function handleCardClick(card) {
+    function flipCard(card) {
       if (flippedCards.length < 2 && !card.classList.contains('flipped') && !card.classList.contains('matched')) {
         card.classList.add('flipped');
         card.innerText = card.dataset.text;
@@ -405,33 +571,22 @@
 
         if (flippedCards.length === 2) {
           if (flippedCards[0].dataset.id === flippedCards[1].dataset.id) {
-            // Correct Match
             playSound('correct');
             flippedCards.forEach(c => c.classList.add('matched'));
             flippedCards = [];
-            matchedPairsCount++;
+            matchedPairs++;
             addScore(10);
 
-            if (matchedPairsCount === 2) { // 2 pairs per set
+            if (matchedPairs === 2) {
               setTimeout(() => {
-                if (currentQuestionIndex < 4) {
-                  currentQuestionIndex++;
-                  renderMemoryMaze();
-                } else {
-                  triggerConfetti();
-                  alert('स्तर 1 पूरा हुआ! बहुत बढ़िया!');
-                  loadLevel(2);
-                }
-              }, 800);
+                if (currentQIndex < 4) { currentQIndex++; renderMemoryMaze(); }
+                else { triggerConfetti(); alert('स्तर 1 पूरा हुआ!'); loadLevel(2); }
+              }, 700);
             }
           } else {
-            // Wrong Match
             playSound('wrong');
             setTimeout(() => {
-              flippedCards.forEach(c => {
-                c.classList.remove('flipped');
-                c.innerText = '?';
-              });
+              flippedCards.forEach(c => { c.classList.remove('flipped'); c.innerText = '?'; });
               flippedCards = [];
             }, 800);
           }
@@ -439,88 +594,67 @@
       }
     }
 
-    // ==========================================
-    // LEVEL 2: CATCH THE CORRECT WORD
-    // ==========================================
-    function renderCatchWord() {
-      const q = catchWordQuestions[currentQuestionIndex];
+    // --- LEVEL 2 ---
+    function renderReachPoint() {
       const view = document.getElementById('game-view');
-      
-      // Randomize option order
-      const options = [q.correct, q.wrong].sort(() => Math.random() - 0.5);
+      const q = reachPointQuestions[currentQIndex];
+      const opts = [q.correct, q.wrong].sort(() => Math.random() - 0.5);
 
       view.innerHTML = `
-        <div class="q-title">सही शब्द पकड़ो - प्रश्न ${currentQuestionIndex + 1}/5</div>
-        <img src="${q.img}" class="asset-img" alt="Illustration" onerror="this.style.display='none'">
-        <p style="font-size:1.1rem; color:#333;">${q.prompt}</p>
-        <div class="word-options-container">
-          <button class="word-btn" onclick="checkCatchWord('${options[0]}', '${q.correct}')">${options[0]}</button>
-          <button class="word-btn" onclick="checkCatchWord('${options[1]}', '${q.correct}')">${options[1]}</button>
+        <div class="q-title">रास्ते का खेल (Reach the Point) - प्रश्न ${currentQIndex + 1}/5</div>
+        <p style="color:#333;">${q.prompt}</p>
+        <img src="${q.img}" class="asset-img" alt="Target" onerror="this.style.display='none'">
+        <div class="path-container">
+          <button class="path-btn" onclick="checkPath('${opts[0]}', '${q.correct}')">🏃‍♂️ ${opts[0]}</button>
+          <span style="font-size:1.5rem;">➔</span>
+          <button class="path-btn" onclick="checkPath('${opts[1]}', '${q.correct}')">🏃‍♂️ ${opts[1]}</button>
         </div>
       `;
     }
 
-    function checkCatchWord(selected, correct) {
+    function checkPath(selected, correct) {
       if (selected === correct) {
         playSound('correct');
         addScore(10);
-        if (currentQuestionIndex < 4) {
-          currentQuestionIndex++;
-          renderCatchWord();
-        } else {
-          triggerConfetti();
-          alert('स्तर 2 पूरा हुआ! शानदार!');
-          loadLevel(3);
-        }
+        if (currentQIndex < 4) { currentQIndex++; renderReachPoint(); }
+        else { triggerConfetti(); alert('स्तर 2 पूरा हुआ!'); loadLevel(3); }
       } else {
         playSound('wrong');
       }
     }
 
-    // ==========================================
-    // LEVEL 3: DRAG & DROP CORNER CATEGORIZATION
-    // ==========================================
-    function renderDragDropCorner() {
+    // --- LEVEL 3 ---
+    function renderDragDrop() {
       const view = document.getElementById('game-view');
       view.innerHTML = `
-        <div class="q-title">सही शब्द को सही कोने में रखें (Drag & Drop)</div>
-        <p style="font-size:0.95rem; color:#555;">शब्दों को खींचकर या छूकर उनके सही कोने में रखें:</p>
-        <img src="assets/table.png" class="asset-img" alt="Table Asset" style="max-height:80px;" onerror="this.style.display='none'">
-        
-        <div id="drag-words-pool" style="margin-bottom:15px; min-height:50px;"></div>
-
+        <div class="q-title">सही शब्द को सही कोने में रखें</div>
+        <div id="words-pool" style="min-height:50px; margin-bottom:10px;"></div>
         <div class="drag-zone-container">
           ${dropCornersData.map(c => `
-            <div class="drop-corner" id="${c.id}" ondragover="allowDrop(event)" ondrop="handleDrop(event, '${c.id}')">
+            <div class="drop-corner" id="${c.id}" ondragover="event.preventDefault()" ondrop="dropWord(event, '${c.id}')">
               <h4>${c.title}</h4>
             </div>
           `).join('')}
         </div>
       `;
 
-      const pool = document.getElementById('drag-words-pool');
-      // Shuffle words
-      [...draggableWordsList].sort(() => Math.random() - 0.5).forEach(word => {
+      const pool = document.getElementById('words-pool');
+      [...draggableWordsList].sort(() => Math.random() - 0.5).forEach(w => {
         const span = document.createElement('span');
         span.className = 'draggable-word';
-        span.innerText = word;
+        span.innerText = w;
         span.draggable = true;
-        span.id = 'word-' + word;
+        span.id = 'drag-' + w;
         span.ondragstart = (e) => e.dataTransfer.setData('text', e.target.id);
-        
-        // Touch fallback for Mobile Compatibility
-        span.onclick = () => mobileTouchSelect(span);
-
+        span.onclick = () => touchCornerAssign(span);
         pool.appendChild(span);
       });
     }
 
-    function allowDrop(ev) { ev.preventDefault(); }
-
-    function handleDrop(ev, cornerId) {
-      ev.preventDefault();
-      const data = ev.dataTransfer.getData('text');
-      const elem = document.getElementById(data);
+    function dropWord(e, cornerId) {
+      e.preventDefault();
+      const id = e.dataTransfer.getData('text');
+      const elem = document.getElementById(id);
       if(!elem) return;
 
       const word = elem.innerText;
@@ -530,113 +664,172 @@
         playSound('correct');
         document.getElementById(cornerId).appendChild(elem);
         elem.draggable = false;
-        elem.onclick = null;
         elem.style.background = '#55efc4';
         addScore(10);
-        checkLevel3Completion();
+        checkLevel3Done();
       } else {
         playSound('wrong');
       }
     }
 
-    // Mobile-friendly Touch Fallback
-    let selectedMobileWord = null;
-    function mobileTouchSelect(elem) {
-      if (selectedMobileWord) selectedMobileWord.style.border = 'none';
-      selectedMobileWord = elem;
-      elem.style.border = '2px solid #6c5ce7';
-      
-      alert(`'${elem.innerText}' चुना गया। अब नीचे दिए गए सही कोने पर क्लिक करें।`);
-      
-      dropCornersData.forEach(c => {
-        const cornerElem = document.getElementById(c.id);
-        cornerElem.onclick = () => {
-          if (selectedMobileWord) {
-            const word = selectedMobileWord.innerText;
-            if (c.targets.includes(word)) {
-              playSound('correct');
-              cornerElem.appendChild(selectedMobileWord);
-              selectedMobileWord.style.border = 'none';
-              selectedMobileWord.style.background = '#55efc4';
-              selectedMobileWord.onclick = null;
-              selectedMobileWord = null;
-              addScore(10);
-              checkLevel3Completion();
-            } else {
-              playSound('wrong');
-            }
-          }
-        };
-      });
-    }
-
-    function checkLevel3Completion() {
-      const pool = document.getElementById('drag-words-pool');
-      if (pool.children.length === 0) {
-        setTimeout(() => {
-          triggerConfetti();
-          alert('अद्भुत! स्तर 3 पूरा हुआ!');
-          loadLevel(4);
-        }, 500);
+    function touchCornerAssign(elem) {
+      const targetCorner = prompt(`'${elem.innerText}' के लिए कोना चुनें:\n1. खेल कोना\n2. खाने का कोना\n3. रेल कोना\n4. पेड़ वाला कोना`);
+      const map = { '1': 'c-play', '2': 'c-food', '3': 'c-train', '4': 'c-tree' };
+      if (map[targetCorner]) {
+        const corner = dropCornersData.find(c => c.id === map[targetCorner]);
+        if (corner && corner.targets.includes(elem.innerText)) {
+          playSound('correct');
+          document.getElementById(map[targetCorner]).appendChild(elem);
+          elem.style.background = '#55efc4';
+          elem.onclick = null;
+          addScore(10);
+          checkLevel3Done();
+        } else {
+          playSound('wrong');
+        }
       }
     }
 
-    // ==========================================
-    // LEVEL 4: CROSSWORD PUZZLE
-    // ==========================================
-    function renderCrossword() {
+    function checkLevel3Done() {
+      if (document.getElementById('words-pool').children.length === 0) {
+        setTimeout(() => { triggerConfetti(); alert('स्तर 3 पूरा हुआ!'); loadLevel(4); }, 500);
+      }
+    }
+
+    // --- LEVEL 4 ---
+    function renderTracing() {
       const view = document.getElementById('game-view');
-      const puzzle = crosswordPuzzles[currentQuestionIndex];
+      const textToTrace = tracingPrompts[currentQIndex];
 
       view.innerHTML = `
-        <div class="q-title">वर्ग-पहेली (Crossword) - प्रश्न ${currentQuestionIndex + 1}/5</div>
-        <p style="font-size:1.2rem; font-weight:bold; color:#0984e3;">${puzzle.hint}</p>
-        
-        <div class="crossword-board" id="cw-board"></div>
-        
-        <button class="word-btn" style="margin-top:15px; padding:10px 20px;" onclick="checkCrosswordAnswer()">उत्तर जाँचें</button>
+        <div class="q-title">वर्ण अनुरेखण (Tracing) - प्रश्न ${currentQIndex + 1}/5</div>
+        <p style="color:#666; margin-bottom:5px;">अपनी उंगली या माउस से अक्षर/शब्द <b>"${textToTrace}"</b> को ट्रेस करें:</p>
+        <canvas id="trace-canvas" width="300" height="160"></canvas>
+        <br>
+        <button class="path-btn" style="padding:8px 18px; margin-top:10px;" onclick="clearCanvas('${textToTrace}')">साफ़ करें</button>
+        <button class="path-btn" style="padding:8px 18px; background:#55efc4; color:#2d3436;" onclick="submitTrace()">हो गया ✅</button>
       `;
 
-      const board = document.getElementById('cw-board');
-      puzzle.grid[0].forEach((char, i) => {
-        const cell = document.createElement('div');
-        cell.className = 'cw-cell active';
-        
-        const input = document.createElement('input');
-        input.maxLength = 2;
-        input.dataset.correct = char;
-        input.id = `cw-in-${i}`;
-
-        cell.appendChild(input);
-        board.appendChild(cell);
-      });
+      initCanvas(textToTrace);
     }
 
-    function checkCrosswordAnswer() {
-      const puzzle = crosswordPuzzles[currentQuestionIndex];
-      let userAns = '';
-      
-      puzzle.grid[0].forEach((_, i) => {
-        const val = document.getElementById(`cw-in-${i}`).value.trim();
-        userAns += val;
-      });
+    let isDrawing = false;
+    let ctx = null;
 
-      if (userAns === puzzle.word) {
-        playSound('correct');
-        addScore(10);
-        if (currentQuestionIndex < 4) {
-          currentQuestionIndex++;
-          renderCrossword();
-        } else {
-          triggerConfetti();
-          alert('बधाई हो! आपने सभी 4 स्तर सफलतापूर्वक पूरे कर लिए हैं! 🏆');
-        }
+    function initCanvas(text) {
+      const cvs = document.getElementById('trace-canvas');
+      ctx = cvs.getContext('2d');
+      ctx.clearRect(0, 0, cvs.width, cvs.height);
+
+      ctx.font = 'bold 70px Segoe UI, sans-serif';
+      ctx.fillStyle = '#dfe6e9';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(text, cvs.width / 2, cvs.height / 2);
+
+      const startDraw = (e) => { isDrawing = true; draw(e); };
+      const stopDraw = () => { isDrawing = false; ctx.beginPath(); };
+      const draw = (e) => {
+        if (!isDrawing) return;
+        const rect = cvs.getBoundingClientRect();
+        const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+        const y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+
+        ctx.lineWidth = 10;
+        ctx.lineCap = 'round';
+        ctx.strokeStyle = '#ff7675';
+
+        ctx.lineTo(x, y);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+      };
+
+      cvs.onmousedown = startDraw;
+      cvs.onmouseup = stopDraw;
+      cvs.onmousemove = draw;
+
+      cvs.ontouchstart = startDraw;
+      cvs.ontouchend = stopDraw;
+      cvs.ontouchmove = draw;
+    }
+
+    function clearCanvas(text) {
+      initCanvas(text);
+    }
+
+    function submitTrace() {
+      playSound('correct');
+      addScore(10);
+      if (currentQIndex < 4) {
+        currentQIndex++;
+        renderTracing();
       } else {
-        playSound('wrong');
+        triggerConfetti();
+        alert('स्तर 4 पूरा हुआ!');
+        loadLevel(5);
       }
     }
 
-    // Helper Score & Confetti trigger
+    // --- LEVEL 5 ---
+    function renderBalloonPop() {
+      const view = document.getElementById('game-view');
+      const q = balloonQuestions[currentQIndex];
+      
+      const options = [
+        { t: q.correct, correct: true },
+        { t: q.wrong1, correct: false },
+        { t: q.wrong2, correct: false }
+      ].sort(() => Math.random() - 0.5);
+
+      view.innerHTML = `
+        <div class="q-title">गुब्बारे फोड़ो (Balloon Pop) - प्रश्न ${currentQIndex + 1}/5</div>
+        <p style="font-size:1.1rem; color:#2d3436;">${q.prompt}</p>
+        <div class="balloon-stage" id="balloon-stage">
+          ${options.map((opt, idx) => `
+            <div class="balloon" id="balloon-${idx}" onclick="handleBalloonClick(this, ${opt.correct})">
+              ${opt.t}
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function handleBalloonClick(clickedElem, isCorrect) {
+      if (isCorrect) {
+        playSound('correct');
+        addScore(10);
+
+        clickedElem.style.transform = 'scale(1.4)';
+        clickedElem.style.opacity = '0';
+        clickedElem.onclick = null;
+
+        const allBalloons = document.querySelectorAll('.balloon');
+        allBalloons.forEach(b => {
+          if (b !== clickedElem) {
+            b.onclick = null;
+            b.classList.add('fly-away');
+          }
+        });
+
+        setTimeout(() => {
+          if (currentQIndex < 4) {
+            currentQIndex++;
+            renderBalloonPop();
+          } else {
+            triggerConfetti();
+            alert('🏆 बधाई हो! आपने सभी 5 स्तर पूरे कर लिए हैं!');
+          }
+        }, 1000);
+
+      } else {
+        playSound('wrong');
+        clickedElem.style.transform = 'scale(0.9)';
+        setTimeout(() => clickedElem.style.transform = 'none', 300);
+      }
+    }
+
+    // UTILITIES
     function addScore(pts) {
       totalScore += pts;
       document.getElementById('score-val').innerText = totalScore;
@@ -644,18 +837,9 @@
 
     function triggerConfetti() {
       if (typeof confetti === 'function') {
-        confetti({
-          particleCount: 100,
-          spread: 70,
-          origin: { y: 0.6 }
-        });
+        confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
       }
     }
-
-    // Initialize Game on Load
-    window.onload = () => {
-      loadLevel(1);
-    };
   </script>
 </body>
 </html>
