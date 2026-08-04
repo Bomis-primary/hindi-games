@@ -56,41 +56,18 @@
             display: flex;
         }
 
-        /* Splash Screen */
+        /* Splash Screen - Clean Logo Only */
         #screen-splash {
-            background: linear-gradient(135deg, #00c6ff, #0072ff);
-            color: white;
-        }
-
-        .splash-logo {
-            max-width: 180px;
-            max-height: 80px;
-            object-fit: contain;
-            margin-bottom: 15px;
-        }
-
-        .splash-title {
-            font-size: 28px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .splash-sub {
-            font-size: 18px;
-            margin-bottom: 25px;
-            opacity: 0.9;
-        }
-
-        .countdown-circle {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            border: 4px solid white;
+            background: #ffffff;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 32px;
-            font-weight: bold;
+        }
+
+        .splash-logo {
+            max-width: 220px;
+            max-height: 100px;
+            object-fit: contain;
         }
 
         /* Instruction Screen Logo */
@@ -254,16 +231,14 @@
 <body>
 
 <div id="game-container">
-    <!-- Screen 1: Splash -->
+    <!-- Screen 1: Splash (Only Innovine Logo) -->
     <div id="screen-splash" class="screen active">
-        <img src="assets/logo.png" alt="Logo" class="splash-logo">
-        <div class="splash-sub">अध्याय 9 - बड़े सपनों वाला बच्चा</div>
-        <div class="countdown-circle" id="splash-countdown">5</div>
+        <img src="assets/logo.png" alt="Innovine Logo" class="splash-logo">
     </div>
 
     <!-- Screen 2: Instructions -->
     <div id="screen-instructions" class="screen">
-        <img src="assets/logo.png" alt="Logo" class="instruction-logo">
+        <img src="assets/logo.png" alt="Innovine Logo" class="instruction-logo">
 
         <h2>खेल के नियम</h2>
         <p class="subtitle" style="color:#666; margin-top:3px; font-weight: 500;">अध्याय 9 - बड़े सपनों वाला बच्चा</p>
@@ -310,19 +285,10 @@
 </div>
 
 <script>
-    // 1. Splash Screen Timer
-    let logoTimer = 5;
-    const countdownEl = document.getElementById('splash-countdown');
-
-    const splashInterval = setInterval(() => {
-        logoTimer--;
-        if (countdownEl) countdownEl.innerText = logoTimer;
-        
-        if (logoTimer <= 0) {
-            clearInterval(splashInterval);
-            switchScreen('screen-instructions');
-        }
-    }, 1000);
+    // 1. Splash Screen Timer (5 Seconds displaying logo only)
+    setTimeout(() => {
+        switchScreen('screen-instructions');
+    }, 5000);
 
     // Master Pool of 15 Questions from Chapter 9
     const masterQuestionPool = [
@@ -356,7 +322,7 @@
     const gameCanvas = document.getElementById('game-canvas');
     const catcher = document.getElementById('catcher');
 
-    // Fisher-Yates Shuffle algorithm to randomize questions
+    // Fisher-Yates Shuffle algorithm to randomize questions on each replay
     function shuffleArray(array) {
         let shuffled = [...array];
         for (let i = shuffled.length - 1; i > 0; i--) {
