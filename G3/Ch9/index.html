@@ -86,6 +86,37 @@
             font-weight: bold;
         }
 
+        /* Innovine Logo Component */
+        .innovine-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .innovine-icon {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, #0072ff, #00c6ff);
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0,114,255,0.25);
+        }
+
+        .innovine-text {
+            font-size: 24px;
+            font-weight: 800;
+            color: #1e3c72;
+            letter-spacing: 0.5px;
+        }
+
+        .innovine-text span {
+            color: #0072ff;
+        }
+
         /* Instructions Screen */
         .instruction-box {
             background: #f0f4f8;
@@ -94,7 +125,7 @@
             text-align: left;
             margin: 15px 0;
             border-radius: 4px;
-            font-size: 15px;
+            font-size: 14px;
             line-height: 1.5;
         }
 
@@ -241,21 +272,31 @@
 <div id="game-container">
     <!-- Screen 1: Splash -->
     <div id="screen-splash" class="screen active">
-        <div class="splash-title">ज्ञान संगम</div>
+        <div class="splash-title">INNOVINE</div>
         <div class="splash-sub">अध्याय 9 - बड़े सपनों वाला बच्चा</div>
         <div class="countdown-circle" id="splash-countdown">5</div>
     </div>
 
     <!-- Screen 2: Instructions -->
     <div id="screen-instructions" class="screen">
+        <!-- INNOVINE LOGO ADDED HERE -->
+        <div class="innovine-logo">
+            <div class="innovine-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                </svg>
+            </div>
+            <div class="innovine-text">INNO<span>VINE</span></div>
+        </div>
+
         <h2>खेल के नियम</h2>
-        <p class="subtitle" style="color:#666; margin-top:5px;">अध्याय 9 - बड़े सपनों वाला बच्चा</p>
+        <p class="subtitle" style="color:#666; margin-top:3px; font-weight: 500;">अध्याय 9 - बड़े सपनों वाला बच्चा</p>
         
         <div class="instruction-box">
             <ul>
                 <li>स्क्रीन पर दिए गए प्रश्न/संकेत को ध्यान से पढ़ें।</li>
                 <li>ऊपर से गिरते हुए अक्षरों में से सही अक्षर को बास्केट से पकड़ें।</li>
-                <li>बास्केट चलाने के लिए <b>Left/Right Arrow Key</b> या <b>Mouse/Touch Drag</b> का उपयोग करें।</li>
+                <li>बास्केट चलाने के लिए <b>Left/Right Arrow Key</b> या <b>Touch/Mouse Drag</b> का प्रयोग करें।</li>
                 <li>सही अक्षर (+10) | गलत अक्षर (-5)</li>
             </ul>
         </div>
