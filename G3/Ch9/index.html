@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>इन्नोवाइन - कलाम की यात्रा (अध्याय पुनरावृत्ति)</title>
+    <title>इन्नोवाइन - कलाम की यात्रा (Innovine)</title>
     <style>
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            user-select: none;
         }
 
         body {
@@ -22,9 +23,9 @@
             padding: 20px;
         }
 
-        #game-card {
+        #game-container {
             width: 100%;
-            max-width: 700px;
+            max-width: 750px;
             background: #1e293b;
             border-radius: 16px;
             border: 2px solid #38bdf8;
@@ -37,7 +38,7 @@
 
         /* Branding Logo */
         .brand-logo {
-            max-width: 160px;
+            max-width: 150px;
             height: auto;
             margin-bottom: 15px;
             display: inline-block;
@@ -46,14 +47,45 @@
         h1 {
             color: #38bdf8;
             font-size: 2rem;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             text-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
         }
 
         p.subtitle {
             color: #94a3b8;
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             margin-bottom: 20px;
+        }
+
+        /* Screen Management */
+        .screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        /* Instructions List */
+        .instructions-box {
+            background: #0f172a;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: left;
+            margin-bottom: 25px;
+            border: 1px solid #334155;
+            width: 100%;
+        }
+
+        .instructions-box li {
+            font-size: 1.05rem;
+            margin-bottom: 12px;
+            list-style: none;
+            color: #cbd5e1;
+            line-height: 1.5;
         }
 
         /* Progress Bar */
@@ -62,7 +94,7 @@
             background: #334155;
             height: 12px;
             border-radius: 6px;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             overflow: hidden;
         }
 
@@ -84,11 +116,11 @@
             margin-bottom: 20px;
             font-weight: bold;
             color: #fbbf24;
-            font-size: 1.05rem;
+            width: 100%;
         }
 
         .hud-logo {
-            height: 28px;
+            height: 26px;
             width: auto;
         }
 
@@ -102,6 +134,7 @@
             justify-content: center;
             color: #f1f5f9;
             line-height: 1.5;
+            width: 100%;
         }
 
         /* Options Grid */
@@ -110,6 +143,7 @@
             grid-template-columns: 1fr 1fr;
             gap: 15px;
             margin-bottom: 20px;
+            width: 100%;
         }
 
         @media (max-width: 500px) {
@@ -149,6 +183,7 @@
 
         /* Feedback Box */
         .feedback {
+            width: 100%;
             min-height: 50px;
             font-size: 1rem;
             margin-bottom: 20px;
@@ -183,6 +218,7 @@
             border-radius: 25px;
             cursor: pointer;
             transition: transform 0.2s, background 0.2s;
+            margin: 5px;
         }
 
         .btn:hover {
@@ -208,22 +244,40 @@
 </head>
 <body>
 
-<div id="game-card">
+<div id="game-container">
 
-    <!-- START SCREEN -->
-    <div id="start-screen">
-        <img src="assets/logo.png" alt="इन्नोवाइन लोगो" class="brand-logo" onerror="this.style.display='none'">
+    <!-- SCREEN 1: START SCREEN -->
+    <div id="start-screen" class="screen active">
+        <img src="assets/logo.png" alt="Innovine Logo" class="brand-logo" onerror="this.style.display='none'">
         <h1>🚀 कलाम की यात्रा</h1>
-        <p class="subtitle">हिंदी पाठ पुनरावृत्ति चुनौती (Innovine)</p>
-        <p style="margin-bottom: 25px; color: #cbd5e1; line-height: 1.6;">
-            डॉ. ए.पी.जे. अब्दुल कलाम के जीवन, उनकी उपलब्धियों और पाठ से जुड़े प्रश्नों का उत्तर देकर अपने ज्ञान का परीक्षण करें! 
-            सही उत्तर चुनकर अंक प्राप्त करें और अपना सर्वश्रेष्ठ स्कोर बनाएं।
+        <p class="subtitle">हिंदी पाठ पुनरावृत्ति (Innovine)</p>
+        <p style="margin-bottom: 25px; color: #cbd5e1; line-height: 1.6; max-width: 600px;">
+            डॉ. ए.पी.जे. अब्दुल कलाम के जीवन और पाठ से जुड़ी अपनी समझ का परीक्षण करें! 
+            प्रश्नों के सही उत्तर देकर मिसाइल मिशन पूरा करें और अपना स्कोर बढ़ाएं।
         </p>
-        <button class="btn" onclick="startGame()">खेल शुरू करें</button>
+        <button class="btn" onclick="showScreen('instruction-screen')">आगे बढ़ें ➔</button>
     </div>
 
-    <!-- PLAY SCREEN -->
-    <div id="play-screen" class="hidden">
+    <!-- INSTRUCTION SCREEN -->
+    <div id="instruction-screen" class="screen">
+        <img src="assets/logo.png" alt="Innovine Logo" class="brand-logo" onerror="this.style.display='none'">
+        <h1>खेल के नियम और निर्देश</h1>
+        
+        <ul class="instructions-box">
+            <li>📌 <strong>लक्ष्य:</strong> डॉ. कलाम के पाठ पर आधारित सभी सवालों का सही जवाब देना।</li>
+            <li>🎯 <strong>अंक प्रणाली:</strong> प्रत्येक सही उत्तर पर आपको <strong>20 अंक</strong> मिलेंगे।</li>
+            <li>💡 <strong>व्याख्या:</strong> हर विकल्प को चुनने के बाद सही उत्तर और उसकी व्याख्या दिखाई जाएगी।</li>
+            <li>🚀 <strong>मिशन:</strong> 100% अंक प्राप्त करके 'मिसाइल मास्टर' का पदक हासिल करें!</li>
+        </ul>
+
+        <div>
+            <button class="btn" style="background: #64748b; color: #fff;" onclick="showScreen('start-screen')">← पीछे</button>
+            <button class="btn" onclick="startGame()">खेल शुरू करें 🚀</button>
+        </div>
+    </div>
+
+    <!-- GAME SCREEN -->
+    <div id="game-screen" class="screen">
         <div class="hud">
             <img src="assets/logo.png" alt="Innovine" class="hud-logo" onerror="this.style.display='none'">
             <div>प्रश्न: <span id="current-q">1</span>/<span id="total-q">5</span></div>
@@ -243,21 +297,33 @@
         <button id="next-btn" class="btn hidden" onclick="nextQuestion()">अगला प्रश्न ➔</button>
     </div>
 
-    <!-- RESULT SCREEN -->
-    <div id="end-screen" class="hidden">
-        <img src="assets/logo.png" alt="इन्नोवाइन लोगो" class="brand-logo" onerror="this.style.display='none'">
+    <!-- END SCREEN -->
+    <div id="end-screen" class="screen">
+        <img src="assets/logo.png" alt="Innovine Logo" class="brand-logo" onerror="this.style.display='none'">
         <h1>मिशन पूरा हुआ! 🌟</h1>
         <div class="rocket-launch">🚀</div>
         <p class="subtitle">अध्याय पुनरावृत्ति परिणाम</p>
-        <p id="final-stats" style="font-size: 1.3rem; margin-bottom: 15px; color: #fbbf24;"></p>
-        <p id="revision-msg" style="margin-bottom: 25px; color: #cbd5e1; line-height: 1.6;"></p>
-        <button class="btn" onclick="startGame()">पुनः खेलें</button>
+        <p id="final-stats" style="font-size: 1.3rem; margin-bottom: 15px; color: #fbbf24; font-weight: bold;"></p>
+        <p id="revision-msg" style="margin-bottom: 25px; color: #cbd5e1; line-height: 1.6; max-width: 600px;"></p>
+        
+        <div>
+            <button class="btn" onclick="startGame()">पुनः खेलें 🔄</button>
+            <button class="btn" style="background: #64748b; color: #fff;" onclick="showScreen('start-screen')">मुख्य स्क्रीन</button>
+        </div>
     </div>
 
 </div>
 
 <script>
-    // Chapter Revision Question Bank in Hindi
+    // Screen Navigation
+    function showScreen(screenId) {
+        document.querySelectorAll('.screen').forEach(screen => {
+            screen.classList.remove('active');
+        });
+        document.getElementById(screenId).classList.add('active');
+    }
+
+    // Hindi Question Bank
     const chapterQuestions = [
         {
             question: "डॉ. ए.पी.जे. अब्दुल कलाम का जन्म कहाँ हुआ था?",
@@ -323,9 +389,7 @@
     function startGame() {
         currentQuestionIndex = 0;
         score = 0;
-        document.getElementById('start-screen').classList.add('hidden');
-        document.getElementById('end-screen').classList.add('hidden');
-        document.getElementById('play-screen').classList.remove('hidden');
+        showScreen('game-screen');
         document.getElementById('total-q').innerText = chapterQuestions.length;
         loadQuestion();
     }
@@ -395,8 +459,7 @@
 
     function showEndScreen() {
         document.getElementById('progress-bar').style.width = '100%';
-        document.getElementById('play-screen').classList.add('hidden');
-        document.getElementById('end-screen').classList.remove('hidden');
+        showScreen('end-screen');
 
         document.getElementById('final-stats').innerText = `आपका अंतिम स्कोर: ${score} / ${chapterQuestions.length * 20}`;
         
