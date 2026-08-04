@@ -1,282 +1,552 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>मुन्ना की मेला सैर - 'उ' की मात्रा का खेल</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>मुन्ना की मेला सैर - उ की मात्रा का खेल</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-        body { 
-            font-family: 'Arial', sans-serif; 
-            text-align: center; 
-            background: linear-gradient(135deg, #eef2ff, #e0e7ff); 
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow-x: hidden;
-            cursor: pointer; /* उपयोगकर्ता को संकेत देने के लिए कि कहीं भी क्लिक करें */
-        }
+    :root {
+      --bg1: #fff7ed;
+      --bg2: #ede9fe;
+      --card: #ffffff;
+      --ink: #1f2937;
+      --muted: #6b7280;
+      --primary: #7c3aed;
+      --primary-dark: #5b21b6;
+      --accent: #f59e0b;
+      --success: #10b981;
+      --danger: #ef4444;
+      --border: #ddd6fe;
+      --soft: #f8fafc;
+      --shadow: 0 14px 35px rgba(76, 29, 149, 0.12);
+      --radius: 22px;
+    }
 
-        /* 1. Splash Screen */
-        #splash-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #ffffff;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            opacity: 1;
-            transition: opacity 0.5s ease-in-out;
-        }
+    body {
+      font-family: Arial, "Noto Sans Devanagari", sans-serif;
+      background: linear-gradient(135deg, var(--bg1), var(--bg2));
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      color: var(--ink);
+      overflow-x: hidden;
+      cursor: pointer;
+    }
 
-        #splash-screen img {
-            max-width: 260px;
-            height: auto;
-            margin-bottom: 20px;
-        }
+    #splash-screen {
+      position: fixed;
+      inset: 0;
+      background: #ffffff;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      transition: opacity 0.5s ease;
+      padding: 20px;
+    }
 
-        .loader {
-            width: 45px;
-            height: 45px;
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid #4f46e5;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
+    #splash-screen img {
+      max-width: 240px;
+      width: 70%;
+      height: auto;
+      margin-bottom: 18px;
+    }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+    .loader {
+      width: 46px;
+      height: 46px;
+      border: 5px solid #ececec;
+      border-top: 5px solid var(--primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
 
-        .tap-instruction {
-            margin-top: 15px;
-            font-size: 14px;
-            color: #6b7280;
-            font-weight: 500;
-        }
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
 
-        /* 2. Main Game Wrapper */
-        #game-container { 
-            display: none; 
-            width: 95%;
-            max-width: 850px; 
-            margin: 20px auto; 
-            padding: 30px; 
-            background: white; 
-            border-radius: 20px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
-        }
+    .tap-instruction {
+      margin-top: 16px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+      max-width: 320px;
+    }
 
-        .top-logo {
-            max-width: 160px;
-            height: auto;
-            margin-bottom: 15px;
-        }
+    #game-container {
+      display: none;
+      width: 100%;
+      max-width: 980px;
+      background: rgba(255, 255, 255, 0.96);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      padding: 20px;
+    }
 
-        h1 {
-            color: #1e3a8a;
-            margin-bottom: 10px;
-            font-size: 32px;
-        }
+    .top-logo {
+      max-width: 150px;
+      margin: 0 auto 14px;
+      display: block;
+    }
 
-        .instruction {
-            font-size: 18px;
-            color: #4b5563;
-            margin-bottom: 25px;
-        }
+    h1 {
+      color: #1e1b4b;
+      font-size: clamp(28px, 4vw, 40px);
+      margin-bottom: 10px;
+      text-align: center;
+    }
 
-        .game-layout {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            align-items: center;
-        }
+    .subtitle {
+      color: var(--muted);
+      font-size: clamp(15px, 2.6vw, 19px);
+      margin-bottom: 18px;
+      line-height: 1.5;
+      text-align: center;
+    }
 
-        .basket-zone {
-            background-color: #fef3c7;
-            border: 3px dashed #d97706;
-            padding: 20px;
-            border-radius: 15px;
-            width: 100%;
-            max-width: 400px;
-            margin-bottom: 20px;
-        }
+    .status-bar {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
 
-        .basket-title {
-            font-size: 22px;
-            color: #b45309;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
+    .pill {
+      background: #ede9fe;
+      color: var(--primary-dark);
+      padding: 10px 16px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 15px;
+    }
 
-        .basket-counter {
-            font-size: 16px;
-            color: #78350f;
-        }
+    .round {
+      display: none;
+    }
 
-        .word-grid { 
-            display: grid; 
-            grid-template-columns: repeat(3, 1fr); 
-            gap: 20px; 
-            width: 100%;
-        }
+    .round.active {
+      display: block;
+    }
 
-        .card { 
-            padding: 25px 15px; 
-            border: 2px solid #818cf8; 
-            border-radius: 12px; 
-            cursor: pointer; 
-            font-size: 24px; 
-            font-weight: bold;
-            background: #f8fafc;
-            transition: all 0.2s ease;
-        }
+    .layout {
+      display: grid;
+      grid-template-columns: 1.05fr 1.35fr;
+      gap: 22px;
+      align-items: start;
+    }
 
-        .card:hover {
-            transform: translateY(-3px);
-            background-color: #e0e7ff;
-            box-shadow: 0 6px 12px rgba(79, 70, 229, 0.15);
-        }
+    .panel {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 18px;
+      border: 2px solid #efe7ff;
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+    }
 
-        .card.disabled {
-            background-color: #e2e8f0;
-            border-color: #cbd5e1;
-            color: #94a3b8;
-            cursor: not-allowed;
-            transform: none;
-        }
+    .basket-panel {
+      background: linear-gradient(180deg, #fff7d6, #ffefb3);
+      border: 3px dashed #d97706;
+      text-align: center;
+      position: sticky;
+      top: 10px;
+    }
 
-        .btn { 
-            padding: 12px 28px; 
-            font-size: 18px; 
-            cursor: pointer; 
-            background: #4f46e5; 
-            color: white; 
-            border: none; 
-            border-radius: 10px; 
-            font-weight: bold;
-            margin-top: 20px;
-        }
+    .basket-panel h2 {
+      color: #92400e;
+      margin-bottom: 10px;
+      font-size: clamp(22px, 3vw, 28px);
+    }
 
-        .hidden { display: none; }
-    </style>
+    .basket-image {
+      width: min(100%, 300px);
+      margin: 8px auto 12px;
+      display: block;
+      filter: drop-shadow(0 10px 14px rgba(146, 64, 14, 0.18));
+    }
+
+    .basket-note {
+      color: #78350f;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    .word-grid,
+    .choice-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      width: 100%;
+    }
+
+    .card,
+    .pair-card {
+      min-height: 88px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 16px 12px;
+      background: var(--soft);
+      border: 2px solid #c4b5fd;
+      border-radius: 18px;
+      font-size: clamp(22px, 3vw, 28px);
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+
+    .card:hover,
+    .pair-card:hover,
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 18px rgba(124, 58, 237, 0.14);
+    }
+
+    .card:active,
+    .pair-card:active,
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .card.disabled,
+    .pair-card.disabled {
+      opacity: 0.72;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .pair-item {
+      margin-bottom: 16px;
+      border: 2px solid #ede9fe;
+      border-radius: 20px;
+      padding: 16px;
+      background: #fcfcff;
+    }
+
+    .pair-item.disabled {
+      opacity: 0.9;
+    }
+
+    .pair-label {
+      font-size: clamp(18px, 2.8vw, 24px);
+      color: #312e81;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .btn {
+      margin-top: 20px;
+      padding: 12px 24px;
+      min-height: 48px;
+      border: none;
+      border-radius: 12px;
+      background: var(--primary);
+      color: #fff;
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .hidden { display: none !important; }
+
+    #result-screen {
+      text-align: center;
+      padding: 18px 6px 8px;
+    }
+
+    #msg {
+      color: var(--primary-dark);
+      font-size: clamp(28px, 4vw, 38px);
+      line-height: 1.4;
+      margin-bottom: 16px;
+    }
+
+    .result-text {
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.6;
+      margin-bottom: 8px;
+    }
+
+    @media (max-width: 820px) {
+      #game-container { padding: 16px; }
+      .layout { grid-template-columns: 1fr; }
+      .basket-panel { position: static; }
+    }
+
+    @media (max-width: 640px) {
+      body { padding: 10px; }
+      #game-container { border-radius: 20px; }
+      .word-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .choice-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .panel, .pair-item { padding: 14px; }
+      .card, .pair-card { min-height: 74px; font-size: 22px; }
+      .pill { width: 100%; text-align: center; }
+    }
+  </style>
 </head>
 <body>
+  <audio id="sound-clap" src="assets/correct.mp3" preload="auto"></audio>
+  <audio id="sound-wrong" src="assets/wrong.mp3" preload="auto"></audio>
 
-    <!-- Audio Elements with corrected absolute relative path 'assets/' -->
-    <audio id="sound-clap" src="assets/correct.mp3" preload="auto"></audio>
-    <audio id="sound-wrong" src="assets/wrong.mp3" preload="auto"></audio>
+  <div id="splash-screen">
+    <img src="assets/innovine-logo.png" alt="Innovine Logo">
+    <div class="loader"></div>
+    <p class="tap-instruction">साउंड चालू करने के लिए स्क्रीन पर कहीं भी एक बार टच या क्लिक करें 👇</p>
+  </div>
 
-    <!-- 1. Splash Screen Section (5 Seconds Logo Display) -->
-    <div id="splash-screen">
-        <img src="assets/innovine-logo.png" alt="Innovine Logo">
-        <div class="loader"></div>
-        <p class="tap-instruction">साउंड चालू करने के लिए स्क्रीन पर कहीं भी एक बार टच करें 👇</p>
+  <div id="game-container">
+    <img src="assets/innovine-logo.png" alt="Innovine Logo" class="top-logo">
+    <h1>मुन्ना की मेला सैर - उ की मात्रा का खेल</h1>
+    <p class="subtitle">पहले दौर में सही शब्द टोकरी में चुनिए। दूसरे दौर में सही वर्तनी पहचानिए।</p>
+
+    <div class="status-bar">
+      <div class="pill" id="round-label">दौर 1 / 2</div>
+      <div class="pill" id="progress-label">प्रगति: 0 / 5</div>
     </div>
 
-    <!-- 2. Master Game Platform -->
-    <div id="game-container">
-        <!-- Logo inside main container -->
-        <img src="assets/innovine-logo.png" alt="Innovine Logo" class="top-logo">
-        
-        <h1>प्र.१. उ की टोकरी 🧺</h1>
-        
-        <div id="level-1" class="game-layout">
-            <p class="instruction"><strong>निर्देश:</strong> केवल उन शब्दों पर क्लिक करें जिनमें <strong>'उ' स्वर</strong> या <strong>'u' की मात्रा</strong> है।</p>
-            
-            <div class="basket-zone">
-                <div class="basket-title">🧺 'उ' की टोकरी</div>
-                <div class="basket-counter">टोकरी में शब्द: <span id="score-display">0</span> / 5</div>
-            </div>
-
-            <div class="word-grid">
-                <div class="card" id="w1" onclick="checkWord(true, 'उल्लू', 'w1')">उल्लू</div>
-                <div class="card" id="w2" onclick="checkWord(true, 'कुर्सी', 'w2')">कुर्सी</div>
-                <div class="card" id="w3" onclick="checkWord(false, 'कमल', 'w3')">कमल</div>
-                <div class="card" id="w4" onclick="checkWord(true, 'गुड़िया', 'w4')">गुड़िया</div>
-                <div class="card" id="w5" onclick="checkWord(false, 'आम', 'w5')">आम</div>
-                <div class="card" id="w6" onclick="checkWord(true, 'चुहिया', 'w6')">चुहिया</div>
-                <div class="card" id="w7" onclick="checkWord(false, 'घर', 'w7')">घर</div>
-                <div class="card" id="w8" onclick="checkWord(true, 'कुटिया', 'w8')">कुटिया</div>
-                <div class="card" id="w9" onclick="checkWord(false, 'टोकरी', 'w9')">टोकरी</div>
-            </div>
+    <section id="round-1" class="round active">
+      <div class="layout">
+        <div class="panel basket-panel">
+          <h2>🧺 उ की टोकरी</h2>
+          <svg class="basket-image" viewBox="0 0 320 250" aria-label="टोकरी की तस्वीर" role="img">
+            <defs>
+              <linearGradient id="basketBody" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#d97706"></stop>
+                <stop offset="50%" stop-color="#b45309"></stop>
+                <stop offset="100%" stop-color="#92400e"></stop>
+              </linearGradient>
+              <linearGradient id="basketTop" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#fbbf24"></stop>
+                <stop offset="100%" stop-color="#d97706"></stop>
+              </linearGradient>
+            </defs>
+            <path d="M88 86 C105 35, 214 35, 232 86" fill="none" stroke="#8b5e34" stroke-width="14" stroke-linecap="round"></path>
+            <ellipse cx="160" cy="92" rx="104" ry="23" fill="url(#basketTop)" stroke="#8b5e34" stroke-width="4"></ellipse>
+            <path d="M58 90 Q70 210 160 228 Q250 210 262 90 Z" fill="url(#basketBody)" stroke="#7c2d12" stroke-width="4"></path>
+            <g stroke="#fcd34d" stroke-width="4" opacity="0.9">
+              <path d="M84 103 L100 214"></path>
+              <path d="M114 98 L125 221"></path>
+              <path d="M144 95 L149 226"></path>
+              <path d="M176 95 L171 226"></path>
+              <path d="M206 98 L195 221"></path>
+              <path d="M236 103 L220 214"></path>
+            </g>
+            <g stroke="#fef3c7" stroke-width="5" opacity="0.55">
+              <path d="M72 122 C120 137, 200 137, 248 122"></path>
+              <path d="M68 150 C120 164, 200 164, 252 150"></path>
+              <path d="M72 177 C120 190, 200 190, 248 177"></path>
+            </g>
+          </svg>
+          <p class="basket-note">केवल वे शब्द चुनिए जिनमें <strong>उ</strong> या <strong>ु</strong> की मात्रा हो।</p>
         </div>
 
-        <!-- FINAL GAME END WRAPPER -->
-        <div id="result-screen" class="hidden">
-            <h2 id="msg" style="color: #4f46e5; font-size: 30px; margin-bottom: 15px;"></h2>
-            <button class="btn" onclick="location.reload()">फिर से खेलें</button>
+        <div class="panel">
+          <p class="subtitle"><strong>दौर 1:</strong> सही शब्दों पर टैप या क्लिक करें।</p>
+          <div class="word-grid">
+            <div class="card" id="w1" onclick="checkWord(true, 'उल्लू', 'w1')">उल्लू</div>
+            <div class="card" id="w2" onclick="checkWord(true, 'कुर्सी', 'w2')">कुर्सी</div>
+            <div class="card" id="w3" onclick="checkWord(false, 'कमल', 'w3')">कमल</div>
+            <div class="card" id="w4" onclick="checkWord(true, 'गुड़िया', 'w4')">गुड़िया</div>
+            <div class="card" id="w5" onclick="checkWord(false, 'आम', 'w5')">आम</div>
+            <div class="card" id="w6" onclick="checkWord(true, 'चुहिया', 'w6')">चुहिया</div>
+            <div class="card" id="w7" onclick="checkWord(false, 'घर', 'w7')">घर</div>
+            <div class="card" id="w8" onclick="checkWord(true, 'कुटिया', 'w8')">कुटिया</div>
+            <div class="card" id="w9" onclick="checkWord(false, 'टोकरी', 'w9')">टोकरी</div>
+          </div>
         </div>
+      </div>
+    </section>
+
+    <section id="round-2" class="round">
+      <div class="panel">
+        <p class="subtitle"><strong>दौर 2:</strong> हर जोड़ी में <strong>उ</strong> की सही वर्तनी चुनिए।</p>
+
+        <div class="pair-item" id="pair1-wrap">
+          <div class="pair-label">1. सही शब्द चुनिए:</div>
+          <div class="choice-grid">
+            <div class="pair-card" id="p1a" onclick="checkSpelling(event, true, 'गुलाब', 'pair1-wrap', ['p1a','p1b'])">गुलाब</div>
+            <div class="pair-card" id="p1b" onclick="checkSpelling(event, false, 'गलाब', 'pair1-wrap', ['p1a','p1b'])">गलाब</div>
+          </div>
+        </div>
+
+        <div class="pair-item" id="pair2-wrap">
+          <div class="pair-label">2. सही शब्द चुनिए:</div>
+          <div class="choice-grid">
+            <div class="pair-card" id="p2a" onclick="checkSpelling(event, false, 'करसी', 'pair2-wrap', ['p2a','p2b'])">करसी</div>
+            <div class="pair-card" id="p2b" onclick="checkSpelling(event, true, 'कुर्सी', 'pair2-wrap', ['p2a','p2b'])">कुर्सी</div>
+          </div>
+        </div>
+
+        <div class="pair-item" id="pair3-wrap">
+          <div class="pair-label">3. सही शब्द चुनिए:</div>
+          <div class="choice-grid">
+            <div class="pair-card" id="p3a" onclick="checkSpelling(event, true, 'मुकुट', 'pair3-wrap', ['p3a','p3b'])">मुकुट</div>
+            <div class="pair-card" id="p3b" onclick="checkSpelling(event, false, 'मकुट', 'pair3-wrap', ['p3a','p3b'])">मकुट</div>
+          </div>
+        </div>
+
+        <div class="pair-item" id="pair4-wrap">
+          <div class="pair-label">4. सही शब्द चुनिए:</div>
+          <div class="choice-grid">
+            <div class="pair-card" id="p4a" onclick="checkSpelling(event, false, 'चहिया', 'pair4-wrap', ['p4a','p4b'])">चहिया</div>
+            <div class="pair-card" id="p4b" onclick="checkSpelling(event, true, 'चुहिया', 'pair4-wrap', ['p4a','p4b'])">चुहिया</div>
+          </div>
+        </div>
+
+        <div class="pair-item" id="pair5-wrap">
+          <div class="pair-label">5. सही शब्द चुनिए:</div>
+          <div class="choice-grid">
+            <div class="pair-card" id="p5a" onclick="checkSpelling(event, true, 'पुस्तक', 'pair5-wrap', ['p5a','p5b'])">पुस्तक</div>
+            <div class="pair-card" id="p5b" onclick="checkSpelling(event, false, 'पसतक', 'pair5-wrap', ['p5a','p5b'])">पसतक</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div id="result-screen" class="hidden">
+      <h2 id="msg"></h2>
+      <p class="result-text">आपने उ की मात्रा वाले दोनों दौर पूरे कर लिए।</p>
+      <button class="btn" onclick="location.reload()">फिर से खेलें</button>
     </div>
+  </div>
 
-    <script>
-        let correctAnswersCount = 0;
-        const totalRequired = 5; 
+  <script>
+    let roundOneScore = 0;
+    let roundTwoScore = 0;
+    const roundOneTarget = 5;
+    const roundTwoTarget = 5;
+    let currentRound = 1;
 
-        const clapSnd = document.getElementById('sound-clap');
-        const wrongSnd = document.getElementById('sound-wrong');
+    const clapSnd = document.getElementById('sound-clap');
+    const wrongSnd = document.getElementById('sound-wrong');
 
-        // Global click listener to unlock AudioContext immediately upon user interaction
-        document.body.addEventListener('click', () => {
-            clapSnd.play().then(() => { clapSnd.pause(); clapSnd.currentTime = 0; }).catch(e => console.log(e));
-            wrongSnd.play().then(() => { wrongSnd.pause(); wrongSnd.currentTime = 0; }).catch(e => console.log(e));
-        }, { once: true }); // triggers only once
+    function safePlay(audioEl) {
+      if (!audioEl) return;
+      audioEl.currentTime = 0;
+      audioEl.play().catch(function () {});
+    }
 
-        // Splash screen handler - Keeps logo on screen for exactly 5000 milliseconds
-        window.addEventListener('DOMContentLoaded', () => {
-            setTimeout(() => {
-                const splash = document.getElementById('splash-screen');
-                splash.style.opacity = 0;
-                setTimeout(() => {
-                    splash.style.display = 'none';
-                    document.getElementById('game-container').style.display = 'block';
-                }, 500);
-            }, 5000);
+    function unlockAudio() {
+      [clapSnd, wrongSnd].forEach(function(audioEl) {
+        if (!audioEl) return;
+        audioEl.play().then(function() {
+          audioEl.pause();
+          audioEl.currentTime = 0;
+        }).catch(function() {});
+      });
+    }
+
+    ['click', 'touchstart', 'keydown'].forEach(function(evt) {
+      document.body.addEventListener(evt, unlockAudio, { once: true, passive: true });
+    });
+
+    window.addEventListener('DOMContentLoaded', function () {
+      setTimeout(function () {
+        const splash = document.getElementById('splash-screen');
+        splash.style.opacity = '0';
+        setTimeout(function () {
+          splash.style.display = 'none';
+          document.getElementById('game-container').style.display = 'block';
+        }, 500);
+      }, 3500);
+      updateProgress();
+    });
+
+    function updateProgress() {
+      document.getElementById('round-label').innerText = 'दौर ' + currentRound + ' / 2';
+      const score = currentRound === 1 ? roundOneScore : roundTwoScore;
+      const total = currentRound === 1 ? roundOneTarget : roundTwoTarget;
+      document.getElementById('progress-label').innerText = 'प्रगति: ' + score + ' / ' + total;
+    }
+
+    function checkWord(isCorrect, wordText, cardId) {
+      const selectedCard = document.getElementById(cardId);
+      if (!selectedCard || selectedCard.classList.contains('disabled')) return;
+
+      if (isCorrect) {
+        safePlay(clapSnd);
+        roundOneScore += 1;
+        selectedCard.classList.add('disabled');
+        selectedCard.style.borderColor = '#10b981';
+        selectedCard.style.background = '#ecfdf5';
+        alert('बहुत बढ़िया! "' + wordText + '" में उ की ध्वनि है।');
+      } else {
+        safePlay(wrongSnd);
+        selectedCard.style.borderColor = '#ef4444';
+        selectedCard.style.background = '#fef2f2';
+        setTimeout(function () {
+          selectedCard.style.borderColor = '#c4b5fd';
+          selectedCard.style.background = '#f8fafc';
+        }, 500);
+        alert('सोचिए! "' + wordText + '" में उ या ु की मात्रा नहीं है।');
+      }
+
+      updateProgress();
+
+      if (roundOneScore >= roundOneTarget) {
+        setTimeout(function () {
+          document.getElementById('round-1').classList.remove('active');
+          document.getElementById('round-1').classList.add('hidden');
+          document.getElementById('round-2').classList.add('active');
+          currentRound = 2;
+          updateProgress();
+          alert('शाबाश! अब दूसरा दौर खेलिए और सही वर्तनी चुनिए।');
+        }, 300);
+      }
+    }
+
+    function checkSpelling(evt, isCorrect, wordText, wrapId, optionIds) {
+      const wrap = document.getElementById(wrapId);
+      if (!wrap || wrap.classList.contains('disabled')) return;
+
+      const first = document.getElementById(optionIds[0]);
+      const second = document.getElementById(optionIds[1]);
+      const chosen = evt.currentTarget;
+
+      if (isCorrect) {
+        safePlay(clapSnd);
+        roundTwoScore += 1;
+        wrap.classList.add('disabled');
+        [first, second].forEach(function(card) {
+          card.classList.add('disabled');
         });
+        chosen.style.borderColor = '#10b981';
+        chosen.style.background = '#ecfdf5';
+        alert('सही जवाब! "' + wordText + '" की वर्तनी सही है।');
+      } else {
+        safePlay(wrongSnd);
+        chosen.style.borderColor = '#ef4444';
+        chosen.style.background = '#fef2f2';
+        setTimeout(function () {
+          chosen.style.borderColor = '#c4b5fd';
+          chosen.style.background = '#f8fafc';
+        }, 500);
+        alert('फिर से सोचिए! "' + wordText + '" सही वर्तनी नहीं है।');
+      }
 
-        function checkWord(isCorrect, wordText, cardId) {
-            const selectedCard = document.getElementById(cardId);
-            if (selectedCard.classList.contains('disabled')) return;
+      updateProgress();
 
-            if(isCorrect) {
-                clapSnd.currentTime = 0;
-                clapSnd.play().catch(err => console.log("Audio play blocked:", err));
-                
-                correctAnswersCount++;
-                document.getElementById('score-display').innerText = correctAnswersCount;
-                
-                selectedCard.classList.add('disabled');
-                selectedCard.style.border = "2px solid #10b981";
-                
-                alert("बहुत बढ़िया! \"" + wordText + "\" में 'उ' की ध्वनि है।");
-            } else {
-                wrongSnd.currentTime = 0;
-                wrongSnd.play().catch(err => console.log("Audio play blocked:", err));
-                
-                alert("सोचिए! \"" + wordText + "\" में 'उ' या 'ु' की मात्रा नहीं है। दोबारा प्रयास करें!");
-            }
-
-            if(correctAnswersCount >= totalRequired) {
-                setTimeout(() => {
-                    document.getElementById('level-1').classList.add('hidden');
-                    document.getElementById('result-screen').classList.remove('hidden');
-                    document.getElementById('msg').innerHTML = "अद्भुत! 🎉<br>आपने सभी सही शब्दों को 'उ की टोकरी' में पहुँचा दिया है।";
-                }, 500);
-            }
-        }
-    </script>
+      if (roundTwoScore >= roundTwoTarget) {
+        setTimeout(function () {
+          document.getElementById('round-2').classList.remove('active');
+          document.getElementById('round-2').classList.add('hidden');
+          document.getElementById('result-screen').classList.remove('hidden');
+          document.getElementById('msg').innerHTML = 'अद्भुत! 🎉<br>आपने उ की मात्रा के दोनों दौर जीत लिए।';
+        }, 300);
+      }
+    }
+  </script>
 </body>
 </html>
