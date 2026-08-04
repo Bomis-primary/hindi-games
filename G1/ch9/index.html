@@ -187,6 +187,7 @@
       font-weight: bold;
       color: #00b894;
       margin-bottom: 8px;
+      transition: all 0.3s ease;
     }
 
     /* LEVEL 1: Memory Cards */
@@ -355,16 +356,7 @@
       font-size: 1.1rem;
     }
 
-    /* LEVEL 4: Canvas Tracing */
-    #trace-canvas {
-      border: 3px dashed #ff7675;
-      border-radius: 20px;
-      background: #fff;
-      cursor: crosshair;
-      touch-action: none;
-    }
-
-    /* LEVEL 5: Balloons */
+    /* LEVEL 4: Balloons */
     .balloon-stage {
       position: relative;
       height: 260px;
@@ -390,6 +382,7 @@
       cursor: pointer;
       box-shadow: inset -10px -10px 0 rgba(0,0,0,0.08);
       animation: floatSlow 5s ease-in-out infinite alternate;
+      transition: all 0.3s;
     }
 
     .balloon:nth-child(2) { background: #74b9ff; animation-delay: 1s; }
@@ -430,8 +423,7 @@
     <div class="instructions-card"><span>🧠 <b>स्तर १:</b> कार्ड्स पलटकर सही जोड़े ढूँढें।</span></div>
     <div class="instructions-card"><span>🔍 <b>स्तर २:</b> चित्र देखकर सही नाम पहचानें।</span></div>
     <div class="instructions-card"><span>🧺 <b>स्तर ३:</b> 'े' की मात्रा वाले शब्द सही टोकरी में डालें।</span></div>
-    <div class="instructions-card"><span>✍️ <b>स्तर ४:</b> २ वर्णों का सुंदर अनुरेखण करें।</span></div>
-    <div class="instructions-card"><span>🎈 <b>स्तर ५:</b> सही शब्द वाले गुब्बारे फोड़ें!</span></div>
+    <div class="instructions-card"><span>🎈 <b>स्तर ४:</b> सही शब्द वाले गुब्बारे फोड़ें!</span></div>
 
     <br>
     <button class="green-btn" onclick="startGame()">खेलें 🎮</button>
@@ -453,7 +445,7 @@
   <header>
     <img src="assets/innovine-logo.png" alt="Logo" class="header-logo" onerror="this.style.display='none'">
     <div class="scoreboard">
-      <div class="score-box">स्तर: <span id="level-num">1</span>/5</div>
+      <div class="score-box">स्तर: <span id="level-num">1</span>/4</div>
       <div class="score-box">अंक: <span id="score-val">0</span></div>
     </div>
   </header>
@@ -465,8 +457,7 @@
         <button class="tab-btn active" onclick="loadLevel(1)">L1: मेमोरी भूलभुलैया</button>
         <button class="tab-btn" onclick="loadLevel(2)">L2: सही शब्द पहचानो</button>
         <button class="tab-btn" onclick="loadLevel(3)">L3: चित्र अवलोकन</button>
-        <button class="tab-btn" onclick="loadLevel(4)">L4: वर्ण अनुरेखण</button>
-        <button class="tab-btn" onclick="loadLevel(5)">L5: गुब्बारे फोड़ो</button>
+        <button class="tab-btn" onclick="loadLevel(4)">L4: गुब्बारे फोड़ो</button>
       </div>
       <hr style="border:0; border-top: 1px solid #eee; margin-bottom: 10px;">
       
@@ -477,7 +468,7 @@
     <!-- AUDIO -->
     <audio id="audio-correct" src="assets/correct.mp3"></audio>
     <audio id="audio-wrong" src="https://wrong.mp3"></audio>
-      </div>
+  </div>
 
   <script>
     let splashTimeout = null;
@@ -514,6 +505,7 @@
       }
     }
 
+    // Custom non-blocking feedback (In-app UI message)
     function showFeedback(msg, isSuccess = true) {
       const banner = document.getElementById('feedback-msg');
       if (!banner) return;
@@ -535,20 +527,17 @@
       { img: 'assets/ekta.png', correct: 'एकता', wrong: 'अकता' }
     ];
 
-    // Park scene words with 'े' (ए) Matra vs Non 'े' Matra
     const level3Words = [
       { word: 'पेड़', hasE: true },
       { word: 'बेंच', hasE: true },
       { word: 'गेंद', hasE: true },
       { word: 'सूरज', hasE: false },
       { word: 'झूला', hasE: false },
-       { word: 'बच्चे', hasE: true },
+      { word: 'बच्चे', hasE: true },
       { word: 'पतंग', hasE: false },
       { word: 'तालाब', hasE: false },
       { word: 'फूल', hasE: false }
     ];
-
-    const tracingPrompts = ['ए', 'केला']; // Exactly 2 tracing questions
 
     const balloonQuestions = [
       { prompt: 'वह शब्द चुनें जिसमें "े" की मात्रा है:', correct: 'शेर', wrong1: 'आम', wrong2: 'घर' },
@@ -573,8 +562,7 @@
       if (lvl === 1) renderMemoryMaze();
       else if (lvl === 2) renderSahiWord();
       else if (lvl === 3) renderChitraTokri();
-      else if (lvl === 4) renderTracing();
-      else if (lvl === 5) renderBalloonPop();
+      else if (lvl === 4) renderBalloonPop();
     }
 
     // --- LEVEL 1: Memory Maze ---
@@ -679,7 +667,7 @@
       view.innerHTML = `
         <div class="q-title">चित्र अवलोकन</div>
         <p style="color:#2d3436; font-weight:bold; font-size:1.1rem; margin-bottom:10px;">
-          चित्र को देखकर 'े' (ए) की मात्रा वाले शब्द को क्लिक करो और सही टोकरी में डालो:
+          शब्द पर क्लिक करें या सही टोकरी में खींच कर डालें:
         </p>
         <div class="chitra-wrapper">
           <div class="chitra-container">
@@ -709,7 +697,7 @@
         span.dataset.hasE = item.hasE;
         span.ondragstart = (e) => e.dataTransfer.setData('text', e.target.id);
         
-        // Touch/Click Support
+        // Quick Click Handler (Without Alert Dialog)
         span.onclick = () => quickSelectWord(span, item.hasE);
         
         pool.appendChild(span);
@@ -760,80 +748,7 @@
       }
     }
 
-    // --- LEVEL 4: Canvas Tracing (Strictly 2 Questions) ---
-    function renderTracing() {
-      const view = document.getElementById('game-view');
-      const textToTrace = tracingPrompts[currentQIndex];
-
-      view.innerHTML = `
-        <div class="q-title">वर्ण अनुरेखण (Tracing) - प्रश्न ${currentQIndex + 1}/2</div>
-        <p style="color:#666; margin-bottom:5px;">अक्षर/शब्द <b>"${textToTrace}"</b> को ट्रेस करें:</p>
-        <canvas id="trace-canvas" width="300" height="160"></canvas>
-        <br>
-        <button class="path-btn" style="padding:8px 18px; margin-top:10px; background:#a29bfe;" onclick="clearCanvas('${textToTrace}')">साफ़ करें</button>
-        <button class="path-btn" style="padding:8px 18px; background:#00b894;" onclick="submitTrace()">हो गया ✅</button>
-      `;
-
-      initCanvas(textToTrace);
-    }
-
-    let isDrawing = false;
-    let ctx = null;
-
-    function initCanvas(text) {
-      const cvs = document.getElementById('trace-canvas');
-      ctx = cvs.getContext('2d');
-      ctx.clearRect(0, 0, cvs.width, cvs.height);
-
-      ctx.font = 'bold 70px Segoe UI, sans-serif';
-      ctx.fillStyle = '#dfe6e9';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(text, cvs.width / 2, cvs.height / 2);
-
-      const startDraw = (e) => { isDrawing = true; draw(e); };
-      const stopDraw = () => { isDrawing = false; ctx.beginPath(); };
-      const draw = (e) => {
-        if (!isDrawing) return;
-        const rect = cvs.getBoundingClientRect();
-        const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
-        const y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
-
-        ctx.lineWidth = 10;
-        ctx.lineCap = 'round';
-        ctx.strokeStyle = '#6c5ce7';
-
-        ctx.lineTo(x, y);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(x, y);
-      };
-
-      cvs.onmousedown = startDraw;
-      cvs.onmouseup = stopDraw;
-      cvs.onmousemove = draw;
-      cvs.ontouchstart = startDraw;
-      cvs.ontouchend = stopDraw;
-      cvs.ontouchmove = draw;
-    }
-
-    function clearCanvas(text) { initCanvas(text); }
-
-    function submitTrace() {
-      playSound('correct');
-      addScore(10);
-      showFeedback('बहुत बढ़िया! ✍️');
-      if (currentQIndex < 1) { // 2 questions total (index 0 and 1)
-        currentQIndex++;
-        renderTracing();
-      } else {
-        triggerConfetti();
-        showFeedback('स्तर 4 पूर्ण हुआ!', true);
-        setTimeout(() => { loadLevel(5); }, 1200);
-      }
-    }
-
-    // --- LEVEL 5: Balloon Pop ---
+    // --- LEVEL 4: Balloon Pop ---
     function renderBalloonPop() {
       const view = document.getElementById('game-view');
       const q = balloonQuestions[currentQIndex];
