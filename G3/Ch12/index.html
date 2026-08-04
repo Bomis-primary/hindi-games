@@ -1,499 +1,293 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>टाइम ट्रैवल: AI टेक कलेक्टर</title>
+    <title>Time Capsule Sorting Game</title>
     <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --capsule-bg: #334155;
+            --text-color: #f8fafc;
+            --accent-color: #38bdf8;
+            --border-color: #475569;
+        }
+
         * {
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
         }
 
         body {
-            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             min-height: 100vh;
             display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            color: #ffffff;
-        }
-
-        /* Screen Management */
-        .screen {
-            display: none;
-            width: 100%;
-            max-width: 800px;
             flex-direction: column;
             align-items: center;
+            padding: 1rem;
+            touch-action: manipulation;
+        }
+
+        h1 {
+            margin-bottom: 0.5rem;
+            font-size: 1.5rem;
             text-align: center;
         }
 
-        .screen.active {
-            display: flex;
+        p.instructions {
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            color: #94a3b8;
+            text-align: center;
         }
 
-        /* SCREEN 1: ONLY Innovine Logo (5 Seconds) */
-        #screen1 {
-            height: 80vh;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .logo-only-container {
-            animation: fadeInScale 1.5s ease-in-out;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .brand-logo-img {
-            max-width: 320px;
-            width: 80vw;
-            height: auto;
-            object-fit: contain;
-            filter: drop-shadow(0 10px 25px rgba(56, 189, 248, 0.4));
-            background: rgba(255, 255, 255, 0.95);
-            padding: 20px 30px;
-            border-radius: 20px;
-        }
-
-        /* SCREEN 2: Instructions Screen */
-        .card-box {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(12px);
-            padding: 35px;
-            border-radius: 24px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            max-width: 550px;
+        .game-container {
             width: 100%;
-        }
-
-        .card-box h2 {
-            color: #38bdf8;
-            margin-bottom: 15px;
-            font-size: 1.8rem;
-        }
-
-        .instructions-list {
-            text-align: left;
-            margin: 20px 0;
+            max-width: 900px;
             display: flex;
             flex-direction: column;
-            gap: 12px;
-            color: #e2e8f0;
-            font-size: 1.05rem;
-            line-height: 1.5;
+            gap: 1.5rem;
         }
 
-        .btn-primary {
-            padding: 14px 32px;
-            background: #0284c7;
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.4);
-            margin-top: 10px;
-        }
-
-        .btn-primary:hover {
-            background: #0369a1;
-            transform: translateY(-2px);
-        }
-
-        /* SCREEN 3: Tech Collector Game Screen */
-        .game-header h2 {
-            color: #38bdf8;
-            font-size: 1.8rem;
-            margin-bottom: 8px;
-        }
-
-        .game-subtitle {
-            color: #cbd5e1;
-            font-size: 0.95rem;
-            margin-bottom: 20px;
-        }
-
-        /* Time Capsules (Drop Zones) */
-        .capsules-container {
+        .capsules-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 1rem;
             width: 100%;
-            margin-bottom: 25px;
         }
 
         .time-capsule {
-            background: rgba(255, 255, 255, 0.08);
-            border: 2px dashed #38bdf8;
-            border-radius: 18px;
-            padding: 15px;
-            min-height: 140px;
+            background-color: var(--capsule-bg);
+            border: 2px dashed var(--border-color);
+            border-radius: 12px;
+            padding: 1rem 0.5rem;
+            min-height: 180px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            transition: all 0.3s ease;
+            transition: background-color 0.2s, border-color 0.2s;
         }
 
-        .time-capsule.hovered {
-            background: rgba(56, 189, 248, 0.2);
-            border-style: solid;
+        .time-capsule.drag-over {
+            background-color: #1e293b;
+            border-color: var(--accent-color);
         }
 
-        .capsule-title {
-            font-weight: bold;
-            color: #facc15;
-            margin-bottom: 10px;
-            font-size: 1.1rem;
+        .time-capsule h2 {
+            font-size: 1rem;
+            margin-bottom: 0.75rem;
+            color: var(--accent-color);
+            pointer-events: none;
         }
 
-        /* Tech Items Pool */
         .items-pool {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 18px;
-            padding: 15px;
-            width: 100%;
-            min-height: 100px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1rem;
+            min-height: 120px;
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 0.5rem;
             justify-content: center;
-            align-items: center;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            align-content: flex-start;
         }
 
-        .tech-card {
-            background: #ffffff;
+        .item-card {
+            background-color: var(--accent-color);
             color: #0f172a;
-            padding: 10px 16px;
-            border-radius: 12px;
             font-weight: 600;
-            font-size: 0.95rem;
+            font-size: 0.85rem;
+            padding: 0.6rem 0.8rem;
+            border-radius: 8px;
             cursor: grab;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-            user-select: none;
-            transition: transform 0.2s;
+            touch-action: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            transition: transform 0.1s, opacity 0.1s;
         }
 
-        .tech-card:active {
+        .item-card:active {
             cursor: grabbing;
         }
 
-        .tech-card.dragging {
+        .item-card.dragging {
             opacity: 0.5;
         }
 
-        .feedback-msg {
-            margin-top: 15px;
-            font-weight: bold;
-            font-size: 1.1rem;
-            min-height: 25px;
+        .item-card.touch-dragging {
+            position: fixed;
+            pointer-events: none;
+            z-index: 1000;
+            opacity: 0.9;
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.4);
         }
 
-        /* SCREEN 4: End Screen */
-        .end-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(12px);
-            padding: 40px;
-            border-radius: 24px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            max-width: 500px;
-            width: 100%;
-        }
-
-        .end-card h2 {
-            color: #38bdf8;
-            font-size: 2rem;
-            margin-bottom: 12px;
-        }
-
-        .end-card p {
-            color: #e2e8f0;
-            font-size: 1.05rem;
-            margin-bottom: 25px;
-            line-height: 1.5;
-        }
-
-        @keyframes fadeInScale {
-            0% { opacity: 0; transform: scale(0.85); }
-            100% { opacity: 1; transform: scale(1); }
+        @media (min-width: 600px) {
+            h1 { font-size: 2rem; }
+            p.instructions { font-size: 1rem; }
+            .capsules-grid { grid-template-columns: repeat(3, 1fr); }
+            .time-capsule { min-height: 220px; }
+            .item-card { font-size: 0.95rem; }
         }
     </style>
 </head>
 <body>
 
-    <!-- SCREEN 1: ONLY Innovine Logo (5 Seconds Auto Transition) -->
-    <div id="screen1" class="screen active">
-        <div class="logo-only-container">
-            <img src="assets/logo.png" alt="Innovine Logo" class="brand-logo-img">
-        </div>
-    </div>
+    <h1>Time Capsule Sorting Game</h1>
+    <p class="instructions">Drag or touch items to sort them into the correct era!</p>
 
-    <!-- SCREEN 2: Instructions Screen -->
-    <div id="screen2" class="screen">
-        <div class="card-box">
-            <h2>📜 टाइम यात्रा के नियम</h2>
-            <div class="instructions-list">
-                <p>1. स्क्रीन पर एआई की अलग-अलग खोजें और तकनीक कार्ड्स के रूप में मिलेंगी।</p>
-                <p>2. प्रत्येक टेक कार्ड को उसके सही <b>Time Capsule (समय काल)</b> में ड्रैग करके ड्रॉप करें।</p>
-                <p>3. सभी कार्ड्स सही कैप्सूल में रखने पर ही टाइम ट्रैवल पूरा होगा!</p>
+    <div class="game-container">
+        <div class="capsules-grid">
+            <div class="time-capsule" data-era="1980s">
+                <h2>1980s</h2>
             </div>
-            <button class="btn-primary" onclick="goToScreen(3); startGame();">यात्रा शुरू करें 🚀</button>
-        </div>
-    </div>
-
-    <!-- SCREEN 3: Tech Collector Game Screen -->
-    <div id="screen3" class="screen">
-        <div class="game-header">
-            <h2>🛸 टाइम कैप्सूल: टेक कलेक्टर</h2>
-            <p class="game-subtitle">नीचे दिए गए कार्ड्स को सही समय काल (Time Capsule) में रखें:</p>
-        </div>
-
-        <!-- Time Capsules -->
-        <div class="capsules-container" id="capsules-container">
-            <div class="time-capsule" data-era="past">
-                <div class="capsule-title">📜 अतीत (शुरुआती दौर)</div>
+            <div class="time-capsule" data-era="2000s">
+                <h2>2000s</h2>
             </div>
-            <div class="time-capsule" data-era="present">
-                <div class="capsule-title">⚡ वर्तमान (आज का समय)</div>
-            </div>
-            <div class="time-capsule" data-era="future">
-                <div class="capsule-title">🚀 भविष्य (आने वाला समय)</div>
+            <div class="time-capsule" data-era="2020s">
+                <h2>2020s</h2>
             </div>
         </div>
 
-        <!-- Cards Pool -->
-        <div class="items-pool" id="items-pool"></div>
-
-        <div id="feedback" class="feedback-msg"></div>
-        <button class="btn-primary" style="margin-top: 15px;" onclick="checkAnswers()">जाँच करें ✔️</button>
-    </div>
-
-    <!-- SCREEN 4: End Screen -->
-    <div id="screen4" class="screen">
-        <div class="end-card">
-            <h2>🎉 टाइम मास्टर!</h2>
-            <p>आपने एआई के अतीत, वर्तमान और भविष्य की सभी तकनीकों को उनके सही समय कैप्सूल में रख दिया है!</p>
-            <button class="btn-primary" onclick="restartGame()">नया चैलेंज खेलें 🔄</button>
+        <div class="items-pool" id="pool">
+            <div class="item-card" draggable="true" data-era="1980s">Cassette Tape</div>
+            <div class="item-card" draggable="true" data-era="2000s">Flip Phone</div>
+            <div class="item-card" draggable="true" data-era="2020s">VR Headset</div>
+            <div class="item-card" draggable="true" data-era="1980s">Arcade Token</div>
+            <div class="item-card" draggable="true" data-era="2000s">iPod Classic</div>
+            <div class="item-card" draggable="true" data-era="2020s">Smart Watch</div>
         </div>
     </div>
 
     <script>
-        // --- Sound System (MP3 Files with Fallback Synthesis) ---
-        const sounds = {
-            correct: new Audio('assets/correct.mp3'),
-            wrong: new Audio('assets/wrong.mp3'),
-            drag: new Audio('assets/drag.mp3'),
-            win: new Audio('assets/win.mp3')
-        };
-
-        // Fallback Web Audio API for synthetic sounds if MP3 fails to load
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
-        function playSound(type) {
-            // Attempt to play external MP3 sound first
-            if (sounds[type]) {
-                sounds[type].currentTime = 0;
-                sounds[type].play().catch(() => {
-                    // Fallback to Web Audio API synthesis if MP3 file is missing/blocked
-                    playSynthSound(type);
-                });
-            } else {
-                playSynthSound(type);
-            }
-        }
-
-        function playSynthSound(type) {
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            const now = audioCtx.currentTime;
-
-            if (type === 'drag') {
-                osc.frequency.setValueAtTime(300, now);
-                gain.gain.setValueAtTime(0.05, now);
-                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
-                osc.start(now);
-                osc.stop(now + 0.05);
-            } else if (type === 'correct') {
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(523.25, now);
-                osc.frequency.setValueAtTime(659.25, now + 0.1);
-                gain.gain.setValueAtTime(0.15, now);
-                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
-                osc.start(now);
-                osc.stop(now + 0.3);
-            } else if (type === 'wrong') {
-                osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(180, now);
-                osc.frequency.setValueAtTime(130, now + 0.15);
-                gain.gain.setValueAtTime(0.15, now);
-                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
-                osc.start(now);
-                osc.stop(now + 0.3);
-            } else if (type === 'win') {
-                const notes = [523.25, 659.25, 783.99, 1046.50];
-                notes.forEach((freq, index) => {
-                    const oscW = audioCtx.createOscillator();
-                    const gainW = audioCtx.createGain();
-                    oscW.connect(gainW);
-                    gainW.connect(audioCtx.destination);
-                    oscW.frequency.setValueAtTime(freq, now + index * 0.12);
-                    gainW.gain.setValueAtTime(0.15, now + index * 0.12);
-                    gainW.gain.exponentialRampToValueAtTime(0.01, now + index * 0.12 + 0.2);
-                    oscW.start(now + index * 0.12);
-                    oscW.stop(now + index * 0.12 + 0.2);
-                });
-            }
-        }
-
-        // Master Items Pool from 'AI Ka Kamaal'
-        const masterItemsPool = [
-            { text: "जॉन मैकार्थी द्वारा AI नाम देना", era: "past" },
-            { text: "पहला कंप्यूटर आविष्कार", era: "past" },
-            { text: "अस्पतालों में AI एक्स-रे", era: "present" },
-            { text: "स्मार्टफोन में AI वॉयस असिस्टेंट", era: "present" },
-            { text: "अंतरराष्ट्रीय AI सम्मेलन 2026", era: "present" },
-            { text: "पूरी तरह से स्वचालित AI शहर", era: "future" },
-            { text: "सोचने वाले रोबोटिक शिक्षक", era: "future" },
-            { text: "अंतरिक्ष में AI खोजी रोबोट", era: "future" }
-        ];
+        const cards = document.querySelectorAll('.item-card');
+        const dropZones = document.querySelectorAll('.time-capsule, .items-pool');
 
         let draggedCard = null;
+        let activeTouchTarget = null;
+        let initialTouchX = 0;
+        let initialTouchY = 0;
 
-        function goToScreen(screenNumber) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(`screen${screenNumber}`).classList.add('active');
+        cards.forEach(card => {
+            // Desktop Drag Events
+            card.addEventListener('dragstart', handleDragStart);
+            card.addEventListener('dragend', handleDragEnd);
+
+            // Mobile Touch Events
+            card.addEventListener('touchstart', handleTouchStart, { passive: false });
+            card.addEventListener('touchmove', handleTouchMove, { passive: false });
+            card.addEventListener('touchend', handleTouchEnd);
+        });
+
+        dropZones.forEach(zone => {
+            zone.addEventListener('dragover', handleDragOver);
+            zone.addEventListener('dragenter', handleDragEnter);
+            zone.addEventListener('dragleave', handleDragLeave);
+            zone.addEventListener('drop', handleDrop);
+        });
+
+        // HTML5 Desktop Drag Functions
+        function handleDragStart(e) {
+            draggedCard = this;
+            this.classList.add('dragging');
+            e.dataTransfer.setData('text/plain', ''); // Safari fix
         }
 
-        // Screen 1: Exactly 5 Seconds
-        window.onload = () => {
-            setTimeout(() => {
-                goToScreen(2);
-            }, 5000);
-        };
-
-        function startGame() {
-            document.getElementById('feedback').innerText = '';
-            const itemsPool = document.getElementById('items-pool');
-            itemsPool.innerHTML = '';
-
-            // Reset capsules
-            document.querySelectorAll('.time-capsule').forEach(capsule => {
-                const title = capsule.querySelector('.capsule-title');
-                capsule.innerHTML = '';
-                capsule.appendChild(title);
-            });
-
-            // Randomly pick 6 cards
-            const shuffled = [...masterItemsPool].sort(() => Math.random() - 0.5).slice(0, 6);
-
-            shuffled.forEach(item => {
-                const card = document.createElement('div');
-                card.className = 'tech-card';
-                card.draggable = true;
-                card.innerText = item.text;
-                card.setAttribute('data-era', item.era);
-
-                card.addEventListener('dragstart', (e) => {
-                    draggedCard = card;
-                    card.classList.add('dragging');
-                    playSound('drag');
-                });
-
-                card.addEventListener('dragend', () => {
-                    card.classList.remove('dragging');
-                });
-
-                itemsPool.appendChild(card);
-            });
-
-            setupDropZones();
+        function handleDragEnd() {
+            this.classList.remove('dragging');
+            draggedCard = null;
         }
 
-        function setupDropZones() {
-            const zones = document.querySelectorAll('.time-capsule, .items-pool');
-
-            zones.forEach(zone => {
-                zone.addEventListener('dragover', (e) => {
-                    e.preventDefault();
-                    if (zone.classList.contains('time-capsule')) {
-                        zone.classList.add('hovered');
-                    }
-                });
-
-                zone.addEventListener('dragleave', () => {
-                    zone.classList.remove('hovered');
-                });
-
-                zone.addEventListener('drop', (e) => {
-                    e.preventDefault();
-                    zone.classList.remove('hovered');
-                    if (draggedCard) {
-                        zone.appendChild(draggedCard);
-                        playSound('drag');
-                    }
-                });
-            });
+        function handleDragOver(e) {
+            e.preventDefault();
         }
 
-        function checkAnswers() {
-            const capsules = document.querySelectorAll('.time-capsule');
-            const itemsPool = document.getElementById('items-pool');
-            const feedback = document.getElementById('feedback');
-
-            if (itemsPool.children.length > 0) {
-                feedback.style.color = '#facc15';
-                feedback.innerText = '⚠️ कृपया सभी टेक कार्ड्स को कैप्सूल में रखें!';
-                playSound('wrong');
-                return;
-            }
-
-            let isAllCorrect = true;
-
-            capsules.forEach(capsule => {
-                const targetEra = capsule.getAttribute('data-era');
-                const cards = capsule.querySelectorAll('.tech-card');
-
-                cards.forEach(card => {
-                    if (card.getAttribute('data-era') !== targetEra) {
-                        isAllCorrect = false;
-                        card.style.border = '2px solid #ef4444';
-                    } else {
-                        card.style.border = '2px solid #10b981';
-                    }
-                });
-            });
-
-            if (isAllCorrect) {
-                playSound('correct');
-                feedback.style.color = '#34d399';
-                feedback.innerText = '✨ शानदार! सभी कार्ड्स सही कैप्सूल में हैं!';
-                setTimeout(() => {
-                    playSound('win');
-                    goToScreen(4);
-                }, 1200);
-            } else {
-                playSound('wrong');
-                feedback.style.color = '#f87171';
-                feedback.innerText = '❌ कुछ कार्ड गलत कैप्सूल में हैं! (लाल बॉर्डर वाले कार्ड्स सुधारें)';
+        function handleDragEnter(e) {
+            e.preventDefault();
+            if (this.classList.contains('time-capsule')) {
+                this.classList.add('drag-over');
             }
         }
 
-        function restartGame() {
-            goToScreen(3);
-            startGame();
+        function handleDragLeave() {
+            this.classList.remove('drag-over');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            this.classList.remove('drag-over');
+            if (draggedCard) {
+                this.appendChild(draggedCard);
+            }
+        }
+
+        // Touch Drag Functions (Mobile/Tablet)
+        function handleTouchStart(e) {
+            draggedCard = this;
+            const touch = e.touches[0];
+            
+            // Get card coordinates relative to touch point
+            const rect = draggedCard.getBoundingClientRect();
+            initialTouchX = touch.clientX - rect.left;
+            initialTouchY = touch.clientY - rect.top;
+
+            draggedCard.classList.add('touch-dragging');
+            positionCardAtTouch(touch.clientX, touch.clientY);
+        }
+
+        function handleTouchMove(e) {
+            if (!draggedCard) return;
+            e.preventDefault(); // Prevents page scrolling while dragging
+
+            const touch = e.touches[0];
+            positionCardAtTouch(touch.clientX, touch.clientY);
+
+            // Temporarily hide dragged element to detect drop target beneath finger
+            draggedCard.style.display = 'none';
+            const elementUnder = document.elementFromPoint(touch.clientX, touch.clientY);
+            draggedCard.style.display = '';
+
+            // Update dropzone hover highlights
+            dropZones.forEach(zone => zone.classList.remove('drag-over'));
+            if (elementUnder) {
+                const targetZone = elementUnder.closest('.time-capsule');
+                if (targetZone) {
+                    targetZone.classList.add('drag-over');
+                    activeTouchTarget = targetZone;
+                } else {
+                    activeTouchTarget = elementUnder.closest('.items-pool');
+                }
+            }
+        }
+
+        function handleTouchEnd(e) {
+            if (!draggedCard) return;
+
+            draggedCard.classList.remove('touch-dragging');
+            draggedCard.style.left = '';
+            draggedCard.style.top = '';
+            draggedCard.style.width = '';
+
+            dropZones.forEach(zone => zone.classList.remove('drag-over'));
+
+            if (activeTouchTarget) {
+                activeTouchTarget.appendChild(draggedCard);
+            }
+
+            draggedCard = null;
+            activeTouchTarget = null;
+        }
+
+        function positionCardAtTouch(x, y) {
+            draggedCard.style.left = `${x - initialTouchX}px`;
+            draggedCard.style.top = `${y - initialTouchY}px`;
         }
     </script>
 </body>
