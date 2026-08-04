@@ -36,51 +36,29 @@
             display: flex;
         }
 
-        /* SCREEN 1: Innovine Splash Screen (5 Seconds) */
+        /* SCREEN 1: ONLY Innovine Logo (5 Seconds) */
         #screen1 {
             height: 80vh;
             justify-content: center;
             align-items: center;
         }
 
-        .logo-container {
+        .logo-only-container {
             animation: fadeInScale 1.5s ease-in-out;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
-            gap: 20px;
         }
 
         .brand-logo-img {
-            max-width: 280px;
+            max-width: 320px;
+            width: 80vw;
             height: auto;
             object-fit: contain;
-            filter: drop-shadow(0 10px 20px rgba(56, 189, 248, 0.3));
+            filter: drop-shadow(0 10px 25px rgba(56, 189, 248, 0.4));
             background: rgba(255, 255, 255, 0.95);
-            padding: 15px 25px;
-            border-radius: 16px;
-        }
-
-        .game-subtitle-splash {
-            font-size: 1.5rem;
-            color: #38bdf8;
-            margin-top: 10px;
-        }
-
-        .splash-timer {
-            margin-top: 15px;
-            width: 200px;
-            height: 8px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
-        .splash-progress {
-            width: 0%;
-            height: 100%;
-            background: #38bdf8;
-            animation: loadProgress 5s linear forwards;
+            padding: 20px 30px;
+            border-radius: 20px;
         }
 
         /* SCREEN 2: Instructions Screen */
@@ -135,6 +113,12 @@
         .game-header {
             width: 100%;
             margin-bottom: 20px;
+        }
+
+        .game-title {
+            color: #38bdf8;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
         }
 
         .progress-bar-container {
@@ -244,23 +228,14 @@
             0% { opacity: 0; transform: scale(0.85); }
             100% { opacity: 1; transform: scale(1); }
         }
-
-        @keyframes loadProgress {
-            0% { width: 0%; }
-            100% { width: 100%; }
-        }
     </style>
 </head>
 <body>
 
-    <!-- SCREEN 1: Innovine Splash Screen (5 Seconds Auto Transition) -->
+    <!-- SCREEN 1: ONLY Innovine Logo (5 Seconds Auto Transition) -->
     <div id="screen1" class="screen active">
-        <div class="logo-container">
+        <div class="logo-only-container">
             <img src="https://innovine.in/images/logo.png" alt="Innovine Logo" class="brand-logo-img">
-            <h2 class="game-subtitle-splash">⏳ टाइम ट्रैवल: AI क्विज़ चैलेंज</h2>
-            <div class="splash-timer">
-                <div class="splash-progress"></div>
-            </div>
         </div>
     </div>
 
@@ -269,9 +244,9 @@
         <div class="card-box">
             <h2>📜 खेल के नियम</h2>
             <div class="instructions-list">
-                <p>1. आपको एआई और तकनीक के समय चक्र (Time Travel) से जुड़े बहुविकल्पीय प्रश्न मिलेंगे।</p>
+                <p>1. आपको एआई और तकनीक के विकास से जुड़े बहुविकल्पीय प्रश्न मिलेंगे।</p>
                 <p>2. सही उत्तर चुनकर अगले प्रश्न पर बढ़ें।</p>
-                <p>3. हर बार रीस्टार्ट करने पर आपको **नए और अलग प्रश्न** मिलेंगे!</p>
+                <p>3. हर बार रीस्टार्ट करने पर आपको प्रश्नों का नया सेट मिलेगा!</p>
             </div>
             <button class="btn-primary" onclick="goToScreen(3); startGame();">गेम शुरू करें 🚀</button>
         </div>
@@ -280,6 +255,7 @@
     <!-- SCREEN 3: Quiz Game Screen -->
     <div id="screen3" class="screen">
         <div class="game-header">
+            <h2 class="game-title">⏳ टाइम ट्रैवल: AI क्विज़</h2>
             <div class="progress-bar-container">
                 <div id="progress-fill" class="progress-bar-fill"></div>
             </div>
@@ -287,7 +263,7 @@
         </div>
 
         <div class="question-box">
-            <h3 id="question-text">प्रश्न यहाँ दिखाई देगा...</h3>
+            <h3 id="question-text">प्रश्न लोड हो रहा है...</h3>
         </div>
 
         <div class="options-container" id="options-container"></div>
@@ -400,7 +376,7 @@
             document.getElementById(`screen${screenNumber}`).classList.add('active');
         }
 
-        // Screen 1 Auto-Transition (5 Seconds)
+        // Screen 1 Auto-Transition (Exactly 5 Seconds)
         window.onload = () => {
             setTimeout(() => {
                 goToScreen(2);
