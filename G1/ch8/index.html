@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>'ऊ' और 'ू' (बड़ी ऊ) की मात्रा - खेल और अभ्यास</title>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     * {
       box-sizing: border-box;
@@ -17,7 +18,7 @@
       margin: 0;
       padding: 0;
       font-family: 'Fredoka', 'Comic Sans MS', 'Chalkboard SE', sans-serif;
-      background: linear-gradient(135deg, #a8ff78 0%, #78ffd6 100%);
+      background: linear-gradient(135deg, #74ebd5 0%, #9ace6e 100%);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -31,7 +32,7 @@
       left: 0;
       width: 100vw;
       height: 100vh;
-      background: #ffffff;
+      background: rgba(255, 255, 255, 0.98);
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -58,14 +59,15 @@
     }
 
     .title-heading {
-      font-size: 2rem;
+      font-size: 2.2rem;
       color: #2d3436;
       font-weight: 800;
       margin-bottom: 12px;
+      text-shadow: 2px 2px 0px #fff;
     }
 
     .title-subheading {
-      font-size: 1.1rem;
+      font-size: 1.2rem;
       color: #0984e3;
       margin-bottom: 25px;
       font-weight: bold;
@@ -74,31 +76,36 @@
     .green-btn {
       background: linear-gradient(135deg, #00b894, #00cec9);
       color: white;
-      font-size: 1.2rem;
+      font-size: 1.3rem;
       font-weight: bold;
-      padding: 14px 36px;
+      padding: 14px 40px;
       border-radius: 50px;
       border: none;
       cursor: pointer;
       box-shadow: 0 8px 20px rgba(0, 184, 148, 0.4);
-      transition: all 0.2s ease;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .green-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 10px 25px rgba(0, 184, 148, 0.6);
     }
 
     .green-btn:active { transform: scale(0.95); }
 
     .instructions-card {
-      background: #f1f2f6;
+      background: #ffffff;
       border-left: 6px solid #0984e3;
       border-radius: 16px;
-      padding: 10px 18px;
-      margin: 6px 0;
+      padding: 12px 20px;
+      margin: 8px 0;
       width: 95%;
       max-width: 500px;
       display: flex;
       align-items: center;
       gap: 12px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-      font-size: 0.95rem;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+      font-size: 1rem;
       font-weight: 600;
       color: #2d3436;
       text-align: left;
@@ -109,7 +116,7 @@
       max-width: 900px;
       background: rgba(255, 255, 255, 0.92);
       backdrop-filter: blur(10px);
-      padding: 10px 20px;
+      padding: 12px 24px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -118,20 +125,20 @@
       border-bottom-right-radius: 20px;
     }
 
-    .header-logo { height: 40px; object-fit: contain; }
+    .header-logo { height: 42px; object-fit: contain; }
 
     .scoreboard {
       display: flex;
-      gap: 10px;
-      font-size: 0.95rem;
+      gap: 12px;
+      font-size: 1rem;
       font-weight: bold;
     }
 
     .score-box {
       background: #ffffff;
-      padding: 6px 12px;
+      padding: 8px 16px;
       border-radius: 20px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
       color: #2d3436;
       border: 2px solid #74b9ff;
     }
@@ -141,9 +148,9 @@
       max-width: 900px;
       margin: 15px auto;
       background: rgba(255, 255, 255, 0.95);
-      border-radius: 24px;
-      padding: 18px;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+      border-radius: 28px;
+      padding: 20px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.12);
       text-align: center;
       flex: 1;
       display: flex;
@@ -154,20 +161,20 @@
     .level-tabs {
       display: flex;
       justify-content: center;
-      gap: 6px;
-      margin-bottom: 10px;
+      gap: 8px;
+      margin-bottom: 12px;
       flex-wrap: wrap;
     }
 
     .tab-btn {
-      padding: 6px 10px;
+      padding: 8px 14px;
       border: none;
       background: #dfe6e9;
-      border-radius: 14px;
+      border-radius: 16px;
       font-weight: bold;
       color: #636e72;
       cursor: pointer;
-      font-size: 0.82rem;
+      font-size: 0.88rem;
       transition: all 0.3s;
     }
 
@@ -179,15 +186,15 @@
     }
 
     .q-title {
-      font-size: 1.25rem;
+      font-size: 1.35rem;
       color: #2d3436;
       margin-bottom: 8px;
       font-weight: bold;
     }
 
     .feedback-banner {
-      height: 26px;
-      font-size: 1.1rem;
+      height: 30px;
+      font-size: 1.2rem;
       font-weight: bold;
       color: #00b894;
       margin-bottom: 8px;
@@ -195,72 +202,82 @@
     }
 
     .asset-img {
-      max-height: 130px;
+      max-height: 140px;
       max-width: 100%;
-      border-radius: 16px;
-      margin: 8px auto;
+      border-radius: 18px;
+      margin: 10px auto;
       display: block;
       object-fit: contain;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+      background: #f8f9fa;
+      padding: 6px;
     }
 
     .options-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-      gap: 12px;
-      max-width: 500px;
+      gap: 14px;
+      max-width: 520px;
       margin: 15px auto;
     }
 
     .opt-btn {
-      padding: 12px 14px;
-      font-size: 1.15rem;
+      padding: 14px 16px;
+      font-size: 1.2rem;
       font-weight: bold;
-      border-radius: 18px;
+      border-radius: 20px;
       border: none;
       background: #6c5ce7;
       color: white;
-      box-shadow: 0 5px 0 #574b90;
+      box-shadow: 0 6px 0 #574b90;
       cursor: pointer;
-      transition: all 0.2s;
+      transition: all 0.15s ease-in-out;
+    }
+
+    .opt-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 0 #574b90;
     }
 
     .opt-btn:active {
-      transform: translateY(3px);
+      transform: translateY(4px);
       box-shadow: 0 2px 0 #574b90;
     }
 
-    /* LEVEL 2 STYLES (Sentence Fill Style) */
+    /* LEVEL 2 STYLES */
     .l2-sentence-card {
-      background: #f1f2f6;
-      border: 3px solid #0984e3;
-      border-radius: 20px;
-      padding: 15px;
-      max-width: 500px;
+      background: #f8f9fa;
+      border: 3px solid #74b9ff;
+      border-radius: 24px;
+      padding: 18px;
+      max-width: 520px;
       margin: 10px auto;
       box-shadow: 0 8px 20px rgba(0,0,0,0.05);
     }
 
     .sentence-box {
-      font-size: 1.25rem;
+      font-size: 1.35rem;
       font-weight: bold;
       color: #2d3436;
-      margin: 12px 0;
+      margin: 15px 0;
+      line-height: 1.6;
     }
 
     .blank-space {
       display: inline-block;
-      min-width: 80px;
+      min-width: 90px;
       border-bottom: 3px dashed #e63946;
       color: #e63946;
-      padding: 0 6px;
+      padding: 0 8px;
+      transition: all 0.3s;
     }
 
-    /* LEVEL 4 STYLES (Hard Curved / Zig-Zag Track) */
+    /* LEVEL 4 STYLES */
     .destination-board {
       background: linear-gradient(180deg, #ffeaa7 0%, #fab1a0 100%);
       border-radius: 24px;
-      padding: 15px;
-      max-width: 550px;
+      padding: 16px;
+      max-width: 580px;
       margin: 5px auto;
       box-shadow: 0 10px 25px rgba(0,0,0,0.1);
       border: 3px solid #e17055;
@@ -270,7 +287,7 @@
     .svg-track-container {
       position: relative;
       width: 100%;
-      height: 140px;
+      height: 150px;
       margin: 10px 0;
     }
 
@@ -284,23 +301,25 @@
 
     .runner-avatar {
       position: absolute;
-      font-size: 2.3rem;
-      transition: all 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+      font-size: 2.5rem;
+      transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
       transform: translate(-50%, -50%);
       z-index: 10;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
     }
 
     .target-avatar {
       position: absolute;
-      font-size: 2.5rem;
+      font-size: 2.7rem;
       transform: translate(-50%, -50%);
       z-index: 5;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
     }
 
     .step-node {
       position: absolute;
-      width: 32px;
-      height: 32px;
+      width: 36px;
+      height: 36px;
       background: #ffffff;
       border: 3px solid #d63031;
       border-radius: 50%;
@@ -308,10 +327,11 @@
       align-items: center;
       justify-content: center;
       font-weight: bold;
-      font-size: 0.9rem;
+      font-size: 1rem;
       transform: translate(-50%, -50%);
       z-index: 6;
       transition: all 0.3s;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
 
     .step-node.active {
@@ -330,9 +350,9 @@
     .choice-btn-l4 {
       background: #ffffff;
       border: 3px solid #0984e3;
-      border-radius: 16px;
-      padding: 10px 6px;
-      font-size: 1.1rem;
+      border-radius: 18px;
+      padding: 12px 8px;
+      font-size: 1.15rem;
       font-weight: bold;
       color: #2d3436;
       cursor: pointer;
@@ -345,11 +365,32 @@
     .final-score-card {
       background: #ffffff;
       border-radius: 28px;
-      padding: 25px 15px;
-      max-width: 420px;
+      padding: 30px 20px;
+      max-width: 440px;
       width: 90%;
       box-shadow: 0 15px 40px rgba(0,0,0,0.15);
       border: 4px solid #00b894;
+    }
+
+    /* Animations */
+    .correct-anim {
+      animation: popSuccess 0.4s ease-out;
+    }
+
+    .wrong-anim {
+      animation: shakeError 0.4s ease-out;
+    }
+
+    @keyframes popSuccess {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes shakeError {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-8px); }
+      40%, 80% { transform: translateX(8px); }
     }
   </style>
 </head>
@@ -358,7 +399,7 @@
   <!-- SPLASH & SCREENS -->
   <div id="page-splash" class="screen-overlay" onclick="goToTitlePage()">
     <img id="splash-logo" src="assets/innovine-logo.png" alt="Innovine Logo" onerror="this.src='https://via.placeholder.com/280x100?text=Innovine+Logo'">
-     </div>
+  </div>
 
   <div id="page-title" class="screen-overlay" style="display: none;">
     <div class="title-heading">🐪 'ऊ' और 'ू' (बड़ी ऊ) की मात्रा 🌸</div>
@@ -381,10 +422,10 @@
 
   <div id="page-final-score" class="screen-overlay" style="display: none;">
     <div class="final-score-card">
-      <div style="font-size:3.5rem;">🏆🥳🎉</div>
-      <div class="title-heading" style="font-size: 1.6rem; color:#6c5ce7;">शानदार प्रदर्शन!</div>
-      <div style="font-size: 1.1rem; color:#00b894; font-weight:bold;">आपने सभी ५ स्तर सफलतापूर्वक पूर्ण कर लिए!</div>
-      <div style="background:#f8f9fa; border-radius:16px; padding:12px; margin:15px 0; font-size:1.2rem; font-weight:bold;">
+      <div style="font-size:3.8rem;">🏆🥳🎉</div>
+      <div class="title-heading" style="font-size: 1.7rem; color:#6c5ce7;">शानदार प्रदर्शन!</div>
+      <div style="font-size: 1.15rem; color:#00b894; font-weight:bold;">आपने सभी ५ स्तर सफलतापूर्वक पूर्ण कर लिए!</div>
+      <div style="background:#f8f9fa; border-radius:16px; padding:14px; margin:18px 0; font-size:1.3rem; font-weight:bold;">
         कुल अंक: <span id="final-score-val" style="color:#e63946;">0</span>
       </div>
       <button class="green-btn" onclick="resetGame()">पुनः खेलें 🔄</button>
@@ -401,7 +442,7 @@
   </header>
 
   <!-- MAIN CONTAINER -->
-  <div class="game-container">
+  <div class="game-container" id="game-container-card">
     <div>
       <div class="level-tabs">
         <button class="tab-btn active" onclick="loadLevel(1)">L1: शब्द चुनो</button>
@@ -410,7 +451,7 @@
         <button class="tab-btn" onclick="loadLevel(4)">L4: मंज़िल का रास्ता</button>
         <button class="tab-btn" onclick="loadLevel(5)">L5: सही शब्द पहचानो</button>
       </div>
-      <hr style="border:0; border-top: 1px solid #eee; margin-bottom: 8px;">
+      <hr style="border:0; border-top: 2px dashed #dfe6e9; margin-bottom: 12px;">
       
       <div class="feedback-banner" id="feedback-msg"></div>
       <div id="game-view"></div>
@@ -425,7 +466,7 @@
     let splashTimeout = null;
 
     window.onload = function() {
-      splashTimeout = setTimeout(goToTitlePage, 8000);
+      splashTimeout = setTimeout(goToTitlePage, 6000);
     };
 
     function goToTitlePage() {
@@ -447,18 +488,53 @@
     function playSound(type) {
       let sndId = (type === 'correct') ? 'audio-correct' : 'audio-wrong';
       const snd = document.getElementById(sndId);
-      if (snd) {
+      if (snd && snd.src && !snd.src.endsWith('mp3')) {
         snd.currentTime = 0;
-        snd.play().catch(() => {});
+        snd.play().catch(() => playFallbackSound(type));
+      } else {
+        playFallbackSound(type);
       }
+    }
+
+    function playFallbackSound(type) {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        
+        if (type === 'correct') {
+          osc.frequency.setValueAtTime(523.25, ctx.currentTime);
+          osc.frequency.setValueAtTime(659.25, ctx.currentTime + 0.1);
+          gain.gain.setValueAtTime(0.1, ctx.currentTime);
+          osc.start();
+          osc.stop(ctx.currentTime + 0.25);
+        } else {
+          osc.frequency.setValueAtTime(220, ctx.currentTime);
+          osc.frequency.setValueAtTime(180, ctx.currentTime + 0.1);
+          gain.gain.setValueAtTime(0.1, ctx.currentTime);
+          osc.start();
+          osc.stop(ctx.currentTime + 0.25);
+        }
+      } catch(e) {}
     }
 
     function showFeedback(msg, isSuccess = true) {
       const banner = document.getElementById('feedback-msg');
+      const card = document.getElementById('game-container-card');
       if (!banner) return;
+      
       banner.innerText = msg;
       banner.style.color = isSuccess ? '#00b894' : '#d63031';
-      setTimeout(() => { banner.innerText = ''; }, 1500);
+      
+      if (card) {
+        card.classList.remove('correct-anim', 'wrong-anim');
+        void card.offsetWidth; // Trigger reflow
+        card.classList.add(isSuccess ? 'correct-anim' : 'wrong-anim');
+      }
+
+      setTimeout(() => { banner.innerText = ''; }, 1600);
     }
 
     function shuffleArray(arr) {
@@ -470,25 +546,23 @@
     let totalScore = 0;
 
     // --- DATASETS ---
-
-    // Level 1: Word Selection
     const level1Master = [
       { img: 'assets/chuha.png', correct: 'चूहा', options: ['चूहा', 'चिड़िया', 'बिल्ली'] },
       { img: 'assets/kabutar.png', correct: 'कबूतर', options: ['कबूतर', 'तोता', 'मोर'] },
       { img: 'assets/phool.png', correct: 'फूल', options: ['फूल', 'पत्ता', 'फल'] },
       { img: 'assets/gudiya.png', correct: 'गुड़िया', options: ['गुड़िया', 'खिलौना', 'परी'] },
+      { img: 'assets/spoon.png', correct: 'चम्मच', options: ['चम्मच', 'काँटा', 'कटोरी'] },
       { img: 'assets/tortoise.png', correct: 'कछुआ', options: ['कछुआ', 'मछली', 'मगरमच्छ'] }
     ];
 
-    // Level 2: Sentence Completion (NEW QUESTION STYLE)
     const level2SentenceMaster = [
       { img: 'assets/chuha.png', pre: 'बगीचे में एक ', post: ' घूम रहा था।', correct: 'चूहा', wrong: ['चूहे', 'चीहा'] },
       { img: 'assets/phool.png', pre: 'पूजा के लिए सुंदर ', post: ' लाओ।', correct: 'फूल', wrong: ['फल', 'फुल'] },
       { img: 'assets/kabutar.png', pre: 'छत पर ', post: ' दाना चुग रहा है।', correct: 'कबूतर', wrong: ['कबुतर', 'कौआ'] },
+      { img: 'assets/spoon.png', pre: 'खीर खाने के लिए ', post: ' दो।', correct: 'चम्मच', wrong: ['चाकू', 'कटोरी'] },
       { img: 'assets/tortoise.png', pre: 'धीमी चाल से ', post: ' चला।', correct: 'कछुआ', wrong: ['खरगोश', 'मछली'] }
     ];
 
-    // Level 3: Quiz Questions
     const level3Master = [
       { prompt: 'रेगिस्तान का जहाज़ कौन-सा है?', correct: 'ऊँट', options: ['ऊँट', 'उंट', 'औंट'] },
       { prompt: 'इनमें से बड़ी "ू" मात्रा वाला सही शब्द चुनें:', correct: 'सूरजमुखी', options: ['सूरजमुखी', 'सुरजमुखि', 'सूरजमुखि'] },
@@ -497,7 +571,6 @@
       { prompt: 'पूजा में प्रयोग होने वाली सामग्री:', correct: 'कपूर', options: ['कपूर', 'कपुर', 'कपार'] }
     ];
 
-    // Level 4: Hard Zig-Zag Curved Track Destination Game
     const level4DestinationMaster = [
       {
         runner: '🐭', target: '🧀', title: 'चूहे को टेढ़े-मेढ़े रास्ते से पनीर तक पहुँचाएँ!',
@@ -533,7 +606,6 @@
       }
     ];
 
-    // Level 5: Identify Correct Word (NEW LEVEL)
     const level5IdentifyMaster = [
       { prompt: 'इनमें से बड़ी "ू" मात्रा का सही शब्द कौन-सा है?', correct: 'सूरज', wrong: ['सुरज', 'सोरज', 'सरज'] },
       { prompt: 'शुद्ध शब्द की पहचान करें:', correct: 'भालू', wrong: ['भालु', 'भोलो', 'भाल'] },
@@ -584,7 +656,7 @@
       }
     }
 
-    // --- LEVEL 1: Word Selector ---
+    // --- LEVEL 1 ---
     function renderLevel1() {
       const view = document.getElementById('game-view');
       const q = currentL1Questions[currentQIndex];
@@ -592,7 +664,7 @@
 
       view.innerHTML = `
         <div class="q-title">शब्द चुनो - प्रश्न ${currentQIndex + 1}/5</div>
-        <p style="color:#2d3436; font-weight:bold;">चित्र देखकर सही शब्द पर क्लिक करें:</p>
+        <p style="color:#2d3436; font-weight:bold; margin: 4px 0;">चित्र देखकर सही शब्द पर क्लिक करें:</p>
         <img src="${q.img}" class="asset-img" alt="Quiz Image" onerror="this.src='https://via.placeholder.com/150?text=Item'">
         <div class="options-grid">
           ${opts.map(opt => `
@@ -606,10 +678,10 @@
       if (selected === correct) {
         playSound('correct');
         addScore(10);
-        showFeedback('बिल्कुल सही! ✨');
+        showFeedback('बिल्कुल सही! ✨', true);
         if (currentQIndex < 4) {
           currentQIndex++;
-          renderLevel1();
+          setTimeout(renderLevel1, 600);
         } else {
           triggerConfetti();
           showFeedback('शानदार! स्तर 1 पूरा हुआ!', true);
@@ -621,7 +693,7 @@
       }
     }
 
-    // --- LEVEL 2: Sentence Fill Style (NEW) ---
+    // --- LEVEL 2 ---
     function renderLevel2() {
       const view = document.getElementById('game-view');
       const q = currentL2Questions[currentQIndex];
@@ -636,7 +708,7 @@
           </div>
           <div class="options-grid" style="margin-top:15px;">
             ${opts.map(opt => `
-              <button class="opt-btn" style="background:#0984e3; box-shadow:0 5px 0 #0984e3;" onclick="checkLevel2('${opt}', '${q.correct}')">${opt}</button>
+              <button class="opt-btn" style="background:#0984e3; box-shadow:0 6px 0 #0768b5;" onclick="checkLevel2('${opt}', '${q.correct}')">${opt}</button>
             `).join('')}
           </div>
         </div>
@@ -649,7 +721,7 @@
         document.getElementById('blank-target').style.color = '#00b894';
         playSound('correct');
         addScore(10);
-        showFeedback('सही शब्द! 🎯');
+        showFeedback('सही शब्द! 🎯', true);
 
         setTimeout(() => {
           if (currentQIndex < 4) {
@@ -660,14 +732,14 @@
             showFeedback('शाबाश! स्तर 2 पूरा हुआ!', true);
             setTimeout(() => { loadLevel(3); }, 1400);
           }
-        }, 1000);
+        }, 800);
       } else {
         playSound('wrong');
         showFeedback('गलत! सही शब्द चुनें', false);
       }
     }
 
-    // --- LEVEL 3: Spelling Quiz ---
+    // --- LEVEL 3 ---
     function renderLevel3() {
       const view = document.getElementById('game-view');
       const q = currentL3Questions[currentQIndex];
@@ -675,10 +747,10 @@
 
       view.innerHTML = `
         <div class="q-title">प्रश्नोत्तर और सही शब्द - प्रश्न ${currentQIndex + 1}/5</div>
-        <p style="font-size:1.1rem; color:#2d3436; font-weight:bold;">${q.prompt}</p>
-        <div class="options-grid" style="margin-top:25px;">
+        <p style="font-size:1.2rem; color:#2d3436; font-weight:bold; margin: 15px 0;">${q.prompt}</p>
+        <div class="options-grid" style="margin-top:20px;">
           ${opts.map(opt => `
-            <button class="opt-btn" style="background:#00b894; box-shadow:0 5px 0 #00897b;" onclick="checkLevel3('${opt}', '${q.correct}')">${opt}</button>
+            <button class="opt-btn" style="background:#00b894; box-shadow:0 6px 0 #00897b;" onclick="checkLevel3('${opt}', '${q.correct}')">${opt}</button>
           `).join('')}
         </div>
       `;
@@ -688,10 +760,10 @@
       if (selected === correct) {
         playSound('correct');
         addScore(10);
-        showFeedback('उत्कृष्ट! सही उत्तर 👍');
+        showFeedback('उत्कृष्ट! सही उत्तर 👍', true);
         if (currentQIndex < 4) {
           currentQIndex++;
-          renderLevel3();
+          setTimeout(renderLevel3, 600);
         } else {
           triggerConfetti();
           showFeedback('बहुत बढ़िया! स्तर 3 पूरा हुआ!', true);
@@ -703,8 +775,7 @@
       }
     }
 
-    // --- LEVEL 4: Curved Zig-Zag Track Destination Game ---
-    // Curved Path Points for 3 steps + Start & End
+    // --- LEVEL 4 ---
     const curvePoints = [
       { x: 10, y: 80 },  // Start
       { x: 32, y: 25 },  // Step 1
@@ -718,13 +789,11 @@
       const mission = currentL4Questions[currentQIndex];
       const currentStep = mission.steps[l4StepIndex];
       const choices = shuffleArray([currentStep.correct, ...currentStep.wrong]);
-
-      // Calculate position on curved path
       const pos = curvePoints[l4StepIndex];
 
       view.innerHTML = `
         <div class="q-title">मंज़िल का रास्ता (मिशन ${currentQIndex + 1}/${currentL4Questions.length})</div>
-        <p style="font-size:1.05rem; color:#2d3436; font-weight:bold; margin-bottom:5px;">${mission.title}</p>
+        <p style="font-size:1.1rem; color:#2d3436; font-weight:bold; margin-bottom:5px;">${mission.title}</p>
         
         <div class="destination-board">
           <div class="svg-track-container">
@@ -732,19 +801,15 @@
               <path class="svg-path" d="M 10 80 Q 32 10 55 90 T 92 75" />
             </svg>
 
-            <!-- Step Markers -->
             <div class="step-node ${l4StepIndex >= 1 ? 'active' : ''}" style="left:32%; top:25%;">1</div>
             <div class="step-node ${l4StepIndex >= 2 ? 'active' : ''}" style="left:55%; top:90%;">2</div>
             <div class="step-node ${l4StepIndex >= 3 ? 'active' : ''}" style="left:78%; top:30%;">3</div>
 
-            <!-- Runner Character -->
             <div class="runner-avatar" id="runner-char" style="left: ${pos.x}%; top: ${pos.y}%;">${mission.runner}</div>
-
-            <!-- Target Goal -->
             <div class="target-avatar" style="left: ${curvePoints[4].x}%; top: ${curvePoints[4].y}%;">${mission.target}</div>
           </div>
 
-          <p style="color:#d63031; font-weight:bold; background:#fff; padding:6px; border-radius:10px; margin: 8px 0;">${currentStep.prompt}</p>
+          <p style="color:#d63031; font-weight:bold; background:#fff; padding:8px; border-radius:12px; margin: 8px 0; box-shadow:0 2px 6px rgba(0,0,0,0.05);">${currentStep.prompt}</p>
 
           <div class="path-choices-l4">
             ${choices.map(choice => `
@@ -759,14 +824,12 @@
       if (selected === correct) {
         playSound('correct');
         addScore(10);
-        
         l4StepIndex++;
 
         if (l4StepIndex < 3) {
-          showFeedback('सही उत्तर! आगे बढ़िए 🏃‍♂️');
+          showFeedback('सही उत्तर! आगे बढ़िए 🏃‍♂️', true);
           renderLevel4();
         } else {
-          // Final Step to Target
           const runner = document.getElementById('runner-char');
           if (runner) {
             runner.style.left = `${curvePoints[4].x}%`;
@@ -786,7 +849,7 @@
               showFeedback('शानदार! स्तर 4 पूरा हुआ!', true);
               setTimeout(() => { loadLevel(5); }, 1400);
             }
-          }, 1500);
+          }, 1400);
         }
 
       } else {
@@ -795,7 +858,7 @@
       }
     }
 
-    // --- LEVEL 5: Identify Correct Word (NEW LEVEL) ---
+    // --- LEVEL 5 ---
     function renderLevel5() {
       const view = document.getElementById('game-view');
       const q = currentL5Questions[currentQIndex];
@@ -803,10 +866,10 @@
 
       view.innerHTML = `
         <div class="q-title">सही शब्द पहचानो - प्रश्न ${currentQIndex + 1}/5</div>
-        <p style="font-size:1.1rem; color:#2d3436; font-weight:bold; margin-bottom:15px;">${q.prompt}</p>
+        <p style="font-size:1.2rem; color:#2d3436; font-weight:bold; margin-bottom:18px;">${q.prompt}</p>
         <div class="options-grid">
           ${opts.map(opt => `
-            <button class="opt-btn" style="background:#e67e22; box-shadow:0 5px 0 #d35400;" onclick="checkLevel5('${opt}', '${q.correct}')">${opt}</button>
+            <button class="opt-btn" style="background:#e67e22; box-shadow:0 6px 0 #d35400;" onclick="checkLevel5('${opt}', '${q.correct}')">${opt}</button>
           `).join('')}
         </div>
       `;
@@ -816,11 +879,11 @@
       if (selected === correct) {
         playSound('correct');
         addScore(10);
-        showFeedback('बिल्कुल सही शब्द! ⭐');
+        showFeedback('बिल्कुल सही शब्द! ⭐', true);
 
         if (currentQIndex < 4) {
           currentQIndex++;
-          renderLevel5();
+          setTimeout(renderLevel5, 600);
         } else {
           showFinalScoreboard();
         }
@@ -830,7 +893,7 @@
       }
     }
 
-    // --- SCOREBOARD & RESET ---
+    // --- SCORE & CONFETTI ---
     function showFinalScoreboard() {
       triggerMassiveConfetti();
       document.getElementById('final-score-val').innerText = totalScore;
@@ -851,13 +914,13 @@
 
     function triggerConfetti() {
       if (typeof confetti === 'function') {
-        confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
+        confetti({ particleCount: 70, spread: 60, origin: { y: 0.6 } });
       }
     }
 
     function triggerMassiveConfetti() {
       if (typeof confetti === 'function') {
-        confetti({ particleCount: 180, spread: 100, origin: { y: 0.6 } });
+        confetti({ particleCount: 160, spread: 100, origin: { y: 0.6 } });
       }
     }
   </script>
