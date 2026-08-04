@@ -185,6 +185,11 @@
             color: #742a2a !important;
         }
 
+        /* Level 4 Layout */
+        .level4-grid {
+            grid-template-columns: repeat(2, 1fr) !important;
+        }
+
         /* Crossword Styling (Level 3) */
         .crossword-grid {
             display: grid;
@@ -285,6 +290,7 @@
 
         @media (max-width: 480px) {
             .options-grid { grid-template-columns: 1fr; }
+            .level4-grid { grid-template-columns: 1fr 1fr !important; }
             .crossword-grid { grid-template-columns: repeat(3, 55px); gap: 8px; }
             .cw-cell { width: 55px; height: 55px; font-size: 20px; }
             .draggable-tile { width: 48px; height: 48px; font-size: 18px; }
@@ -373,24 +379,24 @@
         <div id="final-screen" class="hidden">
             <h1 style="color: #2b6cb0; font-size: 32px; margin-bottom: 10px;">अद्भुत खेल! 🏆</h1>
             <p style="font-size: 18px; color: #4a5568; margin-bottom: 15px;">आपने 'ऐ' की मात्रा के सभी लेवल्स पूरे कर लिए हैं!</p>
-            <p style="font-size: 24px; font-weight: bold; color: #2f855a; margin-bottom: 25px;">कुल अंक: <span id="final-score">0</span></p>
+            <p style="font-size: 24px; font-weight: bold; color: #2f855a; margin-bottom: 25px;">कुल अंक: <span id="final-score">0</span> / 17</p>
             <button class="btn-action" onclick="location.reload()">पुनः खेलें 🔄</button>
         </div>
 
     </div>
 
     <script>
-        // Updated Game Structure
+        // Full Game Configuration
         const gameLevels = [
             {
                 level: 1,
                 title: "Level 1: सही शब्द खोजें 🔍",
-                instruction: "चित्र पहचानकर 'ऐ' (ै) मात्रा वाला सही शब्द चुनें:",
+                instruction: "चित्र पहचानकर सही 'ऐ' (ै) मात्रा वाला शब्द खोजें:",
                 questions: [
-                    { img: "assets/camera.png", emoji: "📷", q: "चित्र के लिए 'ऐ' मात्रा वाला सही शब्द चुनें:", options: ["कैमेरा", "कमरा", "किताब", "कार"], ans: 0 },
-                    { img: "assets/paisa.png", emoji: "💰", q: "चित्र के लिए सही शब्द पहचानें:", options: ["कागज़", "पैसा", "पेड़", "पत्ता"], ans: 1 },
-                    { img: "assets/thaila.png", emoji: "🛍️", q: "चित्र के लिए सही शब्द चुनें:", options: ["थाली", "थेला", "थैला", "तोता"], ans: 2 },
-                    { img: "assets/bull.png", emoji: "🐂", q: "चित्र के लिए सही शब्द चुनें:", options: ["बैल", "बेल", "बाल", "बिल्ली"], ans: 0 }
+                    { img: "assets/camera.png", emoji: "📷", q: "चित्र का सही 'ऐ' मात्रा वाला शब्द खोजें:", options: ["कैमेरा", "कमरा", "किताब", "कार"], ans: 0 },
+                    { img: "assets/paisa.png", emoji: "💰", q: "चित्र का सही 'ऐ' मात्रा वाला शब्द खोजें:", options: ["कागज़", "पैसा", "पेड़", "पत्ता"], ans: 1 },
+                    { img: "assets/thaila.png", emoji: "🛍️", q: "चित्र का सही 'ऐ' मात्रा वाला शब्द खोजें:", options: ["थाली", "थेला", "थैला", "तोता"], ans: 2 },
+                    { img: "assets/bull.png", emoji: "🐂", q: "चित्र का सही 'ऐ' मात्रा वाला शब्द खोजें:", options: ["बैल", "बेल", "बाल", "बिल्ली"], ans: 0 }
                 ]
             },
             {
@@ -411,7 +417,7 @@
             },
             {
                 level: 4,
-                title: "Level 4: सही वर्तनी की पहचान (Spelling Choice) ✨",
+                title: "Level 4: सही मात्रा चुनें ✨",
                 instruction: "चित्र देखकर सही मात्रा ('ऐ' / 'ए') वाला सही शब्द चुनें:",
                 questions: [
                     { img: "assets/thaila.png", emoji: "🛍️", q: "चित्र के लिए सही शब्द चुनें:", options: ["थैला", "थेला"], ans: 0 },
@@ -475,7 +481,7 @@
                 const imgEl = document.getElementById('question-img');
                 const emojiEl = document.getElementById('question-emoji');
 
-                // Safe Image loading fallback to prevent freezing
+                // Safe Image loading fallback
                 imgEl.classList.remove('hidden');
                 emojiEl.classList.add('hidden');
                 imgEl.src = qData.img;
@@ -490,6 +496,13 @@
 
                 const optContainer = document.getElementById('options-container');
                 optContainer.innerHTML = '';
+
+                // Add grid adjustment for Level 4
+                if (currentLevelIdx === 3) {
+                    optContainer.classList.add('level4-grid');
+                } else {
+                    optContainer.classList.remove('level4-grid');
+                }
 
                 qData.options.forEach((optText, index) => {
                     const btn = document.createElement('button');
@@ -540,14 +553,13 @@
             }, 1200);
         }
 
-        /* Level 3 Crossword Interaction (Supports Click & Drag for Mobile) */
+        /* Level 3 Crossword Interaction (Supports Touch & Click for Mobile) */
         function setupCrossword() {
             correctSlots = 0;
             selectedTile = null;
             const tiles = document.querySelectorAll('.draggable-tile');
             const dropZones = document.querySelectorAll('.drop-zone');
 
-            // Reset cells
             dropZones.forEach(zone => {
                 zone.innerText = '';
                 zone.classList.remove('correct');
@@ -555,6 +567,8 @@
 
             tiles.forEach(tile => {
                 tile.style.visibility = 'visible';
+                tile.style.border = 'none';
+
                 tile.onclick = () => {
                     tiles.forEach(t => t.style.border = 'none');
                     selectedTile = tile;
@@ -568,14 +582,12 @@
             });
 
             dropZones.forEach(zone => {
-                // Click to place
                 zone.onclick = () => {
                     if (selectedTile && !zone.classList.contains('correct')) {
                         checkAndPlace(zone, selectedTile.innerText, selectedTile);
                     }
                 };
 
-                // Drag & Drop
                 zone.ondragover = (e) => e.preventDefault();
                 zone.ondrop = (e) => {
                     e.preventDefault();
