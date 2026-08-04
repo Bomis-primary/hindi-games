@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>वैभव की सैर - 'ऐ' की मात्रा (Multi-Level Interactive Game)</title>
-    <!-- Canvas Confetti Library -->
+    <title>वैभव की सैर - 'ऐ' की मात्रा (Interactive Game)</title>
+    <!-- Canvas Confetti -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         * {
@@ -26,7 +26,7 @@
             overflow-x: hidden;
         }
 
-        /* 1. Splash Screen - Innovine Logo ONLY */
+        /* 1. Splash Screen */
         #splash-screen {
             position: fixed;
             top: 0;
@@ -123,7 +123,8 @@
             border-radius: 20px;
             padding: 12px;
             margin: 0 auto 15px auto;
-            max-width: 200px;
+            max-width: 220px;
+            min-height: 120px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -135,8 +136,13 @@
             object-fit: contain;
         }
 
+        .emoji-display {
+            font-size: 65px;
+            line-height: 1;
+        }
+
         .question-text {
-            font-size: 22px;
+            font-size: 21px;
             font-weight: bold;
             color: #2d3748;
             margin-bottom: 20px;
@@ -179,7 +185,7 @@
             color: #742a2a !important;
         }
 
-        /* 3. Crossword Drag and Drop Styling (Level 3) */
+        /* Crossword Styling (Level 3) */
         .crossword-grid {
             display: grid;
             grid-template-columns: repeat(3, 65px);
@@ -237,9 +243,10 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: grab;
+            cursor: pointer;
             box-shadow: 0 4px 8px rgba(0,0,0,0.15);
             touch-action: none;
+            user-select: none;
         }
 
         .crossword-hints {
@@ -258,12 +265,6 @@
             gap: 8px;
             font-weight: bold;
             color: #744210;
-        }
-
-        .hint-item img {
-            width: 35px;
-            height: 35px;
-            object-fit: contain;
         }
 
         /* Action Buttons */
@@ -293,13 +294,13 @@
 </head>
 <body>
 
-    <!-- Sound Assets -->
+    <!-- Audio Elements -->
     <audio id="snd-correct" src="assets/correct.mp3" preload="auto"></audio>
     <audio id="snd-wrong" src="assets/wrong.mp3" preload="auto"></audio>
 
     <!-- 1. Splash Screen -->
     <div id="splash-screen">
-        <img src="assets/innovine-logo.png" alt="Innovine Logo">
+        <img src="assets/innovine-logo.png" alt="Innovine Logo" onerror="this.style.display='none'">
         <div class="loader"></div>
         <p style="margin-top:15px; color:#718096; font-size:15px; font-weight:600;">गेम लोड हो रहा है...</p>
     </div>
@@ -311,7 +312,7 @@
         <div class="game-header">
             <span class="level-pill" id="level-badge">Level 1</span>
             <span class="info-pill">अंक: <span id="score">0</span></span>
-            <span class="info-pill" id="q-counter-box">प्रश्न: <span id="q-count">1</span>/5</span>
+            <span class="info-pill" id="q-counter-box">प्रश्न: <span id="q-count">1</span>/4</span>
         </div>
 
         <!-- Quiz Screen (Levels 1, 2, 4) -->
@@ -319,7 +320,8 @@
             <div class="instruction-box" id="instruction-text">निर्देश...</div>
             
             <div class="image-card" id="img-card">
-                <img id="question-img" src="" alt="Question Illustration">
+                <img id="question-img" src="" alt="Illustration">
+                <span id="question-emoji" class="emoji-display hidden"></span>
             </div>
 
             <div class="question-text" id="question-display">प्रश्न...</div>
@@ -331,18 +333,14 @@
 
         <!-- Level 3 Crossword Screen -->
         <div id="crossword-view" class="hidden">
-            <div class="instruction-box">अक्षरों को खींचकर (Drag & Drop) क्रॉसवर्ड पूरा करें:</div>
+            <div class="instruction-box">अक्षरों पर क्लिक करें या खींचकर क्रॉसवर्ड पूरा करें:</div>
 
             <div class="crossword-hints">
                 <div class="hint-item">
-                    <span>1.</span>
-                    <img src="assets/camera.png" alt="कैमेरा">
-                    <span>कैमेरा</span>
+                    <span>1. 📷 कैमेरा</span>
                 </div>
                 <div class="hint-item">
-                    <span>2.</span>
-                    <img src="assets/paisa.png" alt="पैसा">
-                    <span>पैसा</span>
+                    <span>2. 💰 पैसा</span>
                 </div>
             </div>
 
@@ -367,61 +365,59 @@
         <!-- Level Completion Screen -->
         <div id="level-screen" class="hidden">
             <h2 style="color: #2b6cb0; font-size: 26px; margin-bottom: 12px;" id="level-title">स्तर पूर्ण! 🎉</h2>
-            <p id="level-msg" style="font-size: 18px; margin-bottom: 20px; color: #4a5568;">शाबाश! आपने यह स्तर सफलतापूर्वक पार कर लिया है।</p>
+            <p style="font-size: 18px; margin-bottom: 20px; color: #4a5568;">शाबाश! आपने यह स्तर सफलतापूर्वक पार कर लिया है।</p>
             <button class="btn-action" onclick="startNextLevel()">अगला स्तर शुरू करें ➔</button>
         </div>
 
         <!-- Game End Screen -->
         <div id="final-screen" class="hidden">
             <h1 style="color: #2b6cb0; font-size: 32px; margin-bottom: 10px;">अद्भुत खेल! 🏆</h1>
-            <p style="font-size: 18px; color: #4a5568; margin-bottom: 15px;">आपने 'ऐ' की मात्रा के सभी 4 लेवल्स पूरे कर लिए हैं!</p>
-            <p style="font-size: 24px; font-weight: bold; color: #2f855a; margin-bottom: 25px;">कुल अंक: <span id="final-score">0</span> / 19</p>
+            <p style="font-size: 18px; color: #4a5568; margin-bottom: 15px;">आपने 'ऐ' की मात्रा के सभी लेवल्स पूरे कर लिए हैं!</p>
+            <p style="font-size: 24px; font-weight: bold; color: #2f855a; margin-bottom: 25px;">कुल अंक: <span id="final-score">0</span></p>
             <button class="btn-action" onclick="location.reload()">पुनः खेलें 🔄</button>
         </div>
 
     </div>
 
     <script>
-        // Full Game Data including NEW LEVEL 4
+        // Updated Game Structure
         const gameLevels = [
             {
                 level: 1,
-                title: "Level 1: चित्र पहचान 📷",
-                instruction: "चित्र देखकर सही 'ऐ' की मात्रा वाला शब्द चुनें:",
+                title: "Level 1: सही शब्द खोजें 🔍",
+                instruction: "चित्र पहचानकर 'ऐ' (ै) मात्रा वाला सही शब्द चुनें:",
                 questions: [
-                    { img: "assets/camera.png", q: "चित्र का सही नाम चुनें:", options: ["कैमेरा", "कार", "कलम", "किताब"], ans: 0 },
-                    { img: "assets/paisa.png", q: "चित्र में क्या दिखाया गया है?", options: ["कागज़", "पैसा", "पेड़", "पत्थर"], ans: 1 },
-                    { img: "assets/battery.png", q: "चित्र का नाम पहचानें:", options: ["बटन", "बाल्टी", "बैटरी", "बल्ला"], ans: 2 },
-                    { img: "assets/bell.png", q: "इनमें से 'ऐ' मात्रा वाला शब्द कौन सा है?", options: ["घंटी", "ऐनक", "बैल", "पैदल"], ans: 2 },
-                    { img: "assets/per.png", q: "चित्र देखकर सही शब्द पहचानें:", options: ["पैर", "पानी", "पत्ता", "पंख"], ans: 0 }
+                    { img: "assets/camera.png", emoji: "📷", q: "चित्र के लिए 'ऐ' मात्रा वाला सही शब्द चुनें:", options: ["कैमेरा", "कमरा", "किताब", "कार"], ans: 0 },
+                    { img: "assets/paisa.png", emoji: "💰", q: "चित्र के लिए सही शब्द पहचानें:", options: ["कागज़", "पैसा", "पेड़", "पत्ता"], ans: 1 },
+                    { img: "assets/thaila.png", emoji: "🛍️", q: "चित्र के लिए सही शब्द चुनें:", options: ["थाली", "थेला", "थैला", "तोता"], ans: 2 },
+                    { img: "assets/bull.png", emoji: "🐂", q: "चित्र के लिए सही शब्द चुनें:", options: ["बैल", "बेल", "बाल", "बिल्ली"], ans: 0 }
                 ]
             },
             {
                 level: 2,
-                title: "Level 2: रिक्त स्थान पूरा करो 🧩",
-                instruction: "सही वर्ण चुनकर 'ऐ' की मात्रा वाला शब्द पूरा करें:",
+                title: "Level 2: अक्षर जोड़कर पूरा करें 🧩",
+                instruction: "सही वर्ण चुनकर 'ऐ' की मात्रा का शब्द पूरा करें:",
                 questions: [
-                    { img: "assets/camera.png", q: "____ + मे + रा = कैमेरा", options: ["कै", "क", "को", "के"], ans: 0 },
-                    { img: "assets/paisa.png", q: "____ + सा = पैसा", options: ["पा", "पै", "पो", "पे"], ans: 1 },
-                    { img: "assets/battery.png", q: "बै + ____ + री = बैटरी", options: ["ट", "टा", "टो", "टी"], ans: 0 },
-                    
-                    { img: "assets/per.png", q: "____ + र = पैर", options: ["पे", "पो", "पै", "पा"], ans: 2 }
+                    { img: "assets/camera.png", emoji: "📷", q: "____ + मे + रा = कैमेरा", options: ["कै", "क", "को", "के"], ans: 0 },
+                    { img: "assets/paisa.png", emoji: "💰", q: "____ + सा = पैसा", options: ["पा", "पै", "पो", "पे"], ans: 1 },
+                    { img: "assets/swimmer.png", emoji: "🏊‍♀️", q: "____ + रा + क = तैराक", options: ["ते", "ता", "तै", "तो"], ans: 2 },
+                    { img: "assets/bag.png", emoji: "🎒", q: "____ + ग = बैग", options: ["बै", "बे", "बा", "बो"], ans: 0 }
                 ]
             },
             {
                 level: 3,
-                title: "Level 3: क्रॉसवर्ड ड्रैग एंड ड्रॉप 🧩",
-                instruction: "अक्षरों को खींचकर क्रॉसवर्ड पहेली पूरी करें!"
+                title: "Level 3: क्रॉसवर्ड पहेली 🧩",
+                instruction: "अक्षरों को क्रॉसवर्ड में सही जगह रखें!"
             },
             {
                 level: 4,
-                title: "Level 4: सही वर्तनी चुनें (Spelling Choice) ✨",
-                instruction: "चित्र देखकर सही मात्रा ('ऐ' / 'ए') वाले सही शब्द पर क्लिक करें:",
+                title: "Level 4: सही वर्तनी की पहचान (Spelling Choice) ✨",
+                instruction: "चित्र देखकर सही मात्रा ('ऐ' / 'ए') वाला सही शब्द चुनें:",
                 questions: [
-                    { img: "assets/thaila.png", fallbackEmoji: "🛍️", q: "चित्र के लिए सही शब्द चुनें:", options: ["थैला", "थेला"], ans: 0 },
-                    { img: "assets/bull.png", fallbackEmoji: "🐂", q: "चित्र देखकर सही वर्तनी पहचानें:", options: ["बैल", "बेल"], ans: 0 },
-                    { img: "assets/swimmer.png", fallbackEmoji: "🏊‍♀️", q: "तैरने वाले व्यक्ति के लिए सही शब्द:", options: ["तैराक", "तेराक"], ans: 0 },
-                    { img: "assets/bag.png", fallbackEmoji: "🎒", q: "स्कूल बैग के लिए सही शब्द:", options: ["बैग", "बेग"], ans: 0 }
+                    { img: "assets/thaila.png", emoji: "🛍️", q: "चित्र के लिए सही शब्द चुनें:", options: ["थैला", "थेला"], ans: 0 },
+                    { img: "assets/bull.png", emoji: "🐂", q: "चित्र के लिए सही शब्द चुनें:", options: ["बैल", "बेल"], ans: 0 },
+                    { img: "assets/swimmer.png", emoji: "🏊‍♀️", q: "चित्र के लिए सही शब्द चुनें:", options: ["तैराक", "तेराक"], ans: 0 },
+                    { img: "assets/bag.png", emoji: "🎒", q: "चित्र के लिए सही शब्द चुनें:", options: ["बैग", "बेग"], ans: 0 }
                 ]
             }
         ];
@@ -431,18 +427,16 @@
         let score = 0;
         let canAnswer = true;
         let correctSlots = 0;
+        let selectedTile = null;
 
         const sndCorrect = document.getElementById('snd-correct');
         const sndWrong = document.getElementById('snd-wrong');
-
-        // Unlock Audio Context
-        document.body.addEventListener('touchstart', unlockAudio, { once: true });
-        document.body.addEventListener('click', unlockAudio, { once: true });
 
         function unlockAudio() {
             sndCorrect.play().then(() => { sndCorrect.pause(); sndCorrect.currentTime = 0; }).catch(() => {});
             sndWrong.play().then(() => { sndWrong.pause(); sndWrong.currentTime = 0; }).catch(() => {});
         }
+        document.body.addEventListener('click', unlockAudio, { once: true });
 
         // Hide Splash Screen
         window.addEventListener('DOMContentLoaded', () => {
@@ -454,16 +448,12 @@
                     document.getElementById('game-container').style.display = 'block';
                     loadQuestion();
                 }, 500);
-            }, 2500);
+            }, 1800);
         });
 
         function triggerConfetti() {
             if (typeof confetti === 'function') {
-                confetti({
-                    particleCount: 110,
-                    spread: 80,
-                    origin: { y: 0.6 }
-                });
+                confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
             }
         }
 
@@ -474,30 +464,27 @@
             document.getElementById('level-badge').innerText = levelData.title.split(':')[0];
 
             if (currentLevelIdx !== 2) {
-                // Levels 1, 2, and 4 Display
                 document.getElementById('quiz-view').classList.remove('hidden');
                 document.getElementById('crossword-view').classList.add('hidden');
                 document.getElementById('q-counter-box').classList.remove('hidden');
 
                 const qData = levelData.questions[currentQuestionIdx];
-                const totalQ = levelData.questions.length;
-                document.getElementById('q-count').innerText = `${currentQuestionIdx + 1}/${totalQ}`;
+                document.getElementById('q-count').innerText = `${currentQuestionIdx + 1}/${levelData.questions.length}`;
                 document.getElementById('instruction-text').innerText = levelData.instruction;
 
-                const imgCard = document.getElementById('img-card');
                 const imgEl = document.getElementById('question-img');
+                const emojiEl = document.getElementById('question-emoji');
 
-                if (qData.img) {
-                    imgEl.src = qData.img;
-                    imgEl.onerror = () => {
-                        if(qData.fallbackEmoji) {
-                            imgCard.innerHTML = `<span style="font-size: 70px;">${qData.fallbackEmoji}</span>`;
-                        }
-                    };
-                    imgCard.classList.remove('hidden');
-                } else {
-                    imgCard.classList.add('hidden');
-                }
+                // Safe Image loading fallback to prevent freezing
+                imgEl.classList.remove('hidden');
+                emojiEl.classList.add('hidden');
+                imgEl.src = qData.img;
+                
+                imgEl.onerror = () => {
+                    imgEl.classList.add('hidden');
+                    emojiEl.innerText = qData.emoji;
+                    emojiEl.classList.remove('hidden');
+                };
 
                 document.getElementById('question-display').innerText = qData.q;
 
@@ -512,11 +499,10 @@
                     optContainer.appendChild(btn);
                 });
             } else {
-                // Level 3 Display - Crossword
                 document.getElementById('quiz-view').classList.add('hidden');
                 document.getElementById('crossword-view').classList.remove('hidden');
                 document.getElementById('q-counter-box').classList.add('hidden');
-                setupDragAndDrop();
+                setupCrossword();
             }
         }
 
@@ -539,7 +525,9 @@
                 btnElement.classList.add('wrong');
                 
                 const allButtons = document.querySelectorAll('.opt-btn');
-                allButtons[qData.ans].classList.add('correct');
+                if(allButtons[qData.ans]) {
+                    allButtons[qData.ans].classList.add('correct');
+                }
             }
 
             setTimeout(() => {
@@ -552,61 +540,83 @@
             }, 1200);
         }
 
-        /* Level 3 Drag & Drop logic */
-        function setupDragAndDrop() {
+        /* Level 3 Crossword Interaction (Supports Click & Drag for Mobile) */
+        function setupCrossword() {
+            correctSlots = 0;
+            selectedTile = null;
             const tiles = document.querySelectorAll('.draggable-tile');
             const dropZones = document.querySelectorAll('.drop-zone');
 
+            // Reset cells
+            dropZones.forEach(zone => {
+                zone.innerText = '';
+                zone.classList.remove('correct');
+            });
+
             tiles.forEach(tile => {
-                tile.addEventListener('dragstart', (e) => {
-                    e.dataTransfer.setData('text/plain', e.target.innerText);
-                    e.dataTransfer.setData('tile-id', e.target.id);
-                });
+                tile.style.visibility = 'visible';
+                tile.onclick = () => {
+                    tiles.forEach(t => t.style.border = 'none');
+                    selectedTile = tile;
+                    tile.style.border = '3px solid #f6ad55';
+                };
+
+                tile.ondragstart = (e) => {
+                    e.dataTransfer.setData('text', tile.innerText);
+                    e.dataTransfer.setData('id', tile.id);
+                };
             });
 
             dropZones.forEach(zone => {
-                zone.addEventListener('dragover', (e) => e.preventDefault());
-
-                zone.addEventListener('drop', (e) => {
-                    e.preventDefault();
-                    const draggedText = e.dataTransfer.getData('text/plain');
-                    const tileId = e.dataTransfer.getData('tile-id');
-                    const expectedText = zone.getAttribute('data-ans');
-
-                    if (zone.classList.contains('correct')) return;
-
-                    if (draggedText === expectedText) {
-                        sndCorrect.currentTime = 0;
-                        sndCorrect.play().catch(() => {});
-                        
-                        zone.innerText = draggedText;
-                        zone.classList.add('correct');
-                        
-                        const usedTile = document.getElementById(tileId);
-                        if (usedTile) usedTile.style.visibility = 'hidden';
-
-                        correctSlots++;
-                        score += 1;
-                        document.getElementById('score').innerText = score;
-
-                        if (correctSlots === 5) {
-                            setTimeout(() => {
-                                showLevelCompletion();
-                            }, 800);
-                        }
-                    } else {
-                        sndWrong.currentTime = 0;
-                        sndWrong.play().catch(() => {});
-                        
-                        zone.style.borderColor = '#e53e3e';
-                        zone.style.background = '#fed7d7';
-                        setTimeout(() => {
-                            zone.style.borderColor = '#4299e1';
-                            zone.style.background = '#ebf8ff';
-                        }, 500);
+                // Click to place
+                zone.onclick = () => {
+                    if (selectedTile && !zone.classList.contains('correct')) {
+                        checkAndPlace(zone, selectedTile.innerText, selectedTile);
                     }
-                });
+                };
+
+                // Drag & Drop
+                zone.ondragover = (e) => e.preventDefault();
+                zone.ondrop = (e) => {
+                    e.preventDefault();
+                    const tileId = e.dataTransfer.getData('id');
+                    const tileText = e.dataTransfer.getData('text');
+                    const tileEl = document.getElementById(tileId);
+                    checkAndPlace(zone, tileText, tileEl);
+                };
             });
+        }
+
+        function checkAndPlace(zone, text, tileEl) {
+            const expectedText = zone.getAttribute('data-ans');
+
+            if (text === expectedText) {
+                sndCorrect.currentTime = 0;
+                sndCorrect.play().catch(() => {});
+                
+                zone.innerText = text;
+                zone.classList.add('correct');
+                if (tileEl) tileEl.style.visibility = 'hidden';
+                selectedTile = null;
+
+                correctSlots++;
+                score += 1;
+                document.getElementById('score').innerText = score;
+
+                if (correctSlots === 5) {
+                    setTimeout(() => showLevelCompletion(), 800);
+                }
+            } else {
+                sndWrong.currentTime = 0;
+                sndWrong.play().catch(() => {});
+                
+                zone.style.borderColor = '#e53e3e';
+                zone.style.background = '#fed7d7';
+                setTimeout(() => {
+                    zone.style.borderColor = '#4299e1';
+                    zone.style.background = '#ebf8ff';
+                }, 500);
+            }
         }
 
         function showLevelCompletion() {
@@ -616,7 +626,7 @@
 
             if (currentLevelIdx < gameLevels.length - 1) {
                 document.getElementById('level-screen').classList.remove('hidden');
-                document.getElementById('level-title').innerText = `${gameLevels[currentLevelIdx].title.split(':')[0]} पूरा हुआ! 🌟`;
+                document.getElementById('level-title').innerText = `${gameLevels[currentLevelIdx].title.split(':')[0]} पूर्ण हुआ! 🌟`;
             } else {
                 document.getElementById('final-screen').classList.remove('hidden');
                 document.getElementById('final-score').innerText = score;
