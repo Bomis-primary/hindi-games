@@ -3,221 +3,199 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>इन्नोवाइन - कलाम की यात्रा (Innovine)</title>
+    <title>सच्चा देशप्रेम - Word Cable Repair</title>
     <style>
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', Arial, sans-serif;
             user-select: none;
         }
 
         body {
-            background: #0f172a;
-            color: #f8fafc;
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            color: #ffffff;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 20px;
+            padding: 10px;
         }
 
         #game-container {
             width: 100%;
-            max-width: 750px;
-            background: #1e293b;
-            border-radius: 16px;
-            border: 2px solid #38bdf8;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
-            padding: 30px;
+            max-width: 700px;
+            background: #ffffff;
+            color: #333;
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+            padding: 20px;
             text-align: center;
             position: relative;
-            overflow: hidden;
-            min-height: 420px;
+            min-height: 580px;
             display: flex;
             justify-content: center;
             align-items: center;
+            overflow: hidden;
         }
 
-        /* Branding Logo - ONLY ON SCREEN 1 */
-        .brand-logo-splash {
-            max-width: 260px;
-            height: auto;
-            margin-bottom: 25px;
-            animation: pulse 1.5s infinite alternate;
-        }
-
-        .timer-text {
-            color: #38bdf8;
-            font-size: 1rem;
-            margin-top: 15px;
-            font-weight: bold;
-        }
-
-        h1 {
-            color: #38bdf8;
-            font-size: 2rem;
-            margin-bottom: 12px;
-            text-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
-        }
-
-        p.subtitle {
-            color: #94a3b8;
-            font-size: 1.05rem;
-            margin-bottom: 20px;
-        }
-
-        /* Screen Management */
         .screen {
             display: none;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             width: 100%;
+            height: 100%;
         }
 
-        .screen.active {
-            display: flex;
-        }
+        .screen.active { display: flex; }
 
-        /* Instructions List */
-        .instructions-box {
-            background: #0f172a;
-            border-radius: 10px;
+        h1 { color: #0f2027; font-size: 2rem; margin-bottom: 10px; }
+        p.subtitle { color: #555; font-size: 1rem; margin-bottom: 20px; }
+
+        .instructions-list {
+            background: #f0f4f8;
+            border-radius: 12px;
             padding: 20px;
             text-align: left;
-            margin-bottom: 25px;
-            border: 1px solid #334155;
+            margin-bottom: 20px;
             width: 100%;
         }
 
-        .instructions-box li {
-            font-size: 1.05rem;
-            margin-bottom: 12px;
-            list-style: none;
-            color: #cbd5e1;
+        .instructions-list li {
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+            color: #444;
             line-height: 1.5;
         }
 
-        /* Progress Bar */
-        .progress-container {
+        #game-canvas {
             width: 100%;
-            background: #334155;
-            height: 12px;
-            border-radius: 6px;
-            margin-bottom: 20px;
+            height: 380px;
+            background: #111e25;
+            border: 2px solid #0f2027;
+            border-radius: 12px;
+            position: relative;
             overflow: hidden;
+            margin-bottom: 10px;
         }
 
-        .progress-bar {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(90deg, #38bdf8, #818cf8);
-            transition: width 0.4s ease;
-        }
-
-        /* Stats HUD */
         .hud {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            background: #0f172a;
-            padding: 12px 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            font-weight: bold;
-            color: #fbbf24;
             width: 100%;
+            background: #eef2f7;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #0f2027;
         }
 
-        /* Question Area */
-        .question-box {
-            font-size: 1.25rem;
-            margin-bottom: 20px;
-            min-height: 60px;
+        /* Riddle Prompt Display */
+        #riddle-box {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #203a43;
+            color: #00e676;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            border: 1px solid #00e676;
+            width: 90%;
+            z-index: 10;
+        }
+
+        /* Cable Wire Line */
+        #cable-wire {
+            position: absolute;
+            bottom: 40px;
+            left: 5%;
+            width: 90%;
+            height: 6px;
+            background: #444;
+            border-radius: 3px;
+        }
+
+        /* Slots for Building the Word */
+        #word-slots {
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 10;
+        }
+
+        .slot {
+            width: 36px;
+            height: 40px;
+            background: #1a262c;
+            border: 2px dashed #00e676;
+            border-radius: 6px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #f1f5f9;
-            line-height: 1.5;
-            width: 100%;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #ffffff;
+            box-shadow: inset 0 0 5px rgba(0,230,118,0.3);
         }
 
-        /* Options Grid */
-        .options-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 20px;
-            width: 100%;
-        }
-
-        @media (max-width: 500px) {
-            .options-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .option-btn {
-            background: #334155;
+        /* Falling Letter Node */
+        .falling-node {
+            position: absolute;
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(145deg, #00b0ff, #0081cb);
             color: #fff;
-            border: 2px solid transparent;
-            padding: 14px;
-            font-size: 1rem;
-            border-radius: 10px;
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 10px #00b0ff;
             cursor: pointer;
-            transition: all 0.2s ease;
-            text-align: left;
-            line-height: 1.4;
         }
 
-        .option-btn:hover {
-            background: #475569;
-            border-color: #38bdf8;
-            transform: translateY(-2px);
+        #catcher {
+            position: absolute;
+            bottom: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 18px;
+            background: #ff9800;
+            border-radius: 9px;
+            box-shadow: 0 0 10px #ff9800;
+            z-index: 10;
         }
 
-        .option-btn.correct {
-            background: #166534 !important;
-            border-color: #22c55e !important;
-        }
-
-        .option-btn.wrong {
-            background: #991b1b !important;
-            border-color: #ef4444 !important;
-        }
-
-        /* Feedback Box */
-        .feedback {
-            width: 100%;
-            min-height: 50px;
-            font-size: 1rem;
-            margin-bottom: 20px;
-            padding: 12px;
-            border-radius: 8px;
+        #game-feedback {
+            position: absolute;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.85rem;
             display: none;
-            line-height: 1.5;
+            z-index: 20;
         }
 
-        .feedback.show {
-            display: block;
-        }
+        .fb-correct { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .fb-wrong { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
 
-        .feedback.correct-text {
-            background: rgba(34, 197, 94, 0.15);
-            color: #4ade80;
-        }
-
-        .feedback.wrong-text {
-            background: rgba(239, 68, 68, 0.15);
-            color: #f87171;
-        }
-
-        /* Controls */
         .btn {
-            background: #38bdf8;
-            color: #0f172a;
+            background: #00b0ff;
+            color: #ffffff;
             border: none;
             padding: 12px 30px;
             font-size: 1.1rem;
@@ -225,312 +203,257 @@
             border-radius: 25px;
             cursor: pointer;
             transition: transform 0.2s, background 0.2s;
-            margin: 5px;
+            box-shadow: 0 4px 10px rgba(0, 176, 255, 0.3);
         }
 
-        .btn:hover {
-            background: #7dd3fc;
-            transform: scale(1.05);
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        .rocket-launch {
-            font-size: 3rem;
-            margin: 15px 0;
-            animation: bounce 1s infinite alternate;
-        }
-
-        @keyframes bounce {
-            from { transform: translateY(0); }
-            to { transform: translateY(-10px); }
-        }
-
-        @keyframes pulse {
-            from { transform: scale(1); }
-            to { transform: scale(1.05); }
-        }
+        .btn:hover { background: #0081cb; transform: translateY(-2px); }
     </style>
 </head>
 <body>
 
 <div id="game-container">
 
-    <!-- SCREEN 1: LOGO ONLY (5 SECONDS) -->
-    <div id="logo-screen" class="screen active">
-        <img src="assets/logo.png" alt="Innovine Logo" class="brand-logo-splash" onerror="this.onerror=null; this.src='https://via.placeholder.com/220x80?text=INNOVINE';">
-        <p class="timer-text">लोड हो रहा है... (<span id="splash-timer">5</span>)</p>
-    </div>
-
-    <!-- SCREEN 2: INSTRUCTIONS SCREEN -->
-    <div id="instruction-screen" class="screen">
-        <h1>🚀 कलाम की यात्रा</h1>
-        <p class="subtitle">खेल के नियम और निर्देश</p>
+    <!-- INSTRUCTIONS -->
+    <div id="screen-instructions" class="screen active">
+        <h1>⚡ Cable Word Repair</h1>
+        <p class="subtitle">अध्याय 8 - सच्चा देशप्रेम</p>
         
-        <ul class="instructions-box">
-            <li>📌 <strong>लक्ष्य:</strong> 15 प्रश्नों के पूल में से चुने गए <strong>10 प्रश्नों</strong> का सही उत्तर देना।</li>
-            <li>🎯 <strong>अंक प्रणाली:</strong> प्रत्येक सही उत्तर पर आपको <strong>10 अंक</strong> मिलेंगे (कुल अंक: 100)।</li>
-            <li>💡 <strong>व्याख्या:</strong> प्रत्येक उत्तर के बाद आपको सही जवाब की स्पष्ट व्याख्या मिलेगी।</li>
-            <li>🚀 <strong>मिशन:</strong> अधिकतम अंक प्राप्त कर अध्याय की संपूर्ण पुनरावृत्ति करें!</li>
+        <ul class="instructions-list">
+            <li>🧩 <strong>नया गेम मोड:</strong> शब्द-निर्माण (Word Building)!</li>
+            <li>💡 <strong>लक्ष्य:</strong> ऊपर दिए गए संकेत (Hint) को पढ़कर गिरते हुए <strong>अक्षरों (Letters)</strong> को क्रम से बास्केट में पकड़ें और सही शब्द पूरा करें।</li>
+            <li>⌨️ <strong>कंट्रोल:</strong> बास्केट को घुमाने के लिए <strong>Left/Right Arrow keys</strong> या माउस/टच ड्रैग का प्रयोग करें।</li>
+            <li>⚠️ <strong>सावधानी:</strong> केवल वही अक्षर कैच करें जो शब्द के **अगले खाली स्थान** में सही बैठता हो!</li>
         </ul>
 
-        <div>
-            <button class="btn" onclick="startGame()">खेल शुरू करें 🚀</button>
-        </div>
+        <button class="btn" onclick="startGame()">केबल रिपेयर शुरू करें 🛠️</button>
     </div>
 
-    <!-- SCREEN 3: GAME PLAY SCREEN -->
-    <div id="game-screen" class="screen">
+    <!-- GAMEPLAY -->
+    <div id="screen-game" class="screen">
         <div class="hud">
-            <div>प्रश्न: <span id="current-q">1</span>/<span id="total-q">10</span></div>
+            <div>शब्द: <span id="current-q">1</span>/<span id="total-q">4</span></div>
             <div>अंक: <span id="score">0</span></div>
         </div>
 
-        <div class="progress-container">
-            <div id="progress-bar" class="progress-bar"></div>
+        <div id="game-canvas">
+            <div id="riddle-box">संकेत लोड हो रहा है...</div>
+            <div id="game-feedback"></div>
+            
+            <div id="word-slots"></div>
+            <div id="cable-wire"></div>
+            <div id="catcher"></div>
         </div>
 
-        <div id="question" class="question-box">प्रश्न यहाँ दिखाई देगा...</div>
-
-        <div id="options" class="options-grid"></div>
-
-        <div id="feedback" class="feedback"></div>
-
-        <button id="next-btn" class="btn hidden" onclick="nextQuestion()">अगला प्रश्न ➔</button>
+        <p style="font-size: 0.8rem; color: #666;">👈 बास्केट चलाने के लिए एरो कीज़ या माउस का प्रयोग करें 👉</p>
     </div>
 
-    <!-- SCREEN 4: END SCREEN -->
-    <div id="end-screen" class="screen">
-        <h1>मिशन पूरा हुआ! 🌟</h1>
-        <div class="rocket-launch">🚀</div>
-        <p class="subtitle">अध्याय पुनरावृत्ति परिणाम</p>
-        <p id="final-stats" style="font-size: 1.3rem; margin-bottom: 15px; color: #fbbf24; font-weight: bold;"></p>
-        <p id="revision-msg" style="margin-bottom: 25px; color: #cbd5e1; line-height: 1.6; max-width: 600px;"></p>
+    <!-- END SCREEN -->
+    <div id="screen-end" class="screen">
+        <h1>🎉 केबल रिपेयर सफल!</h1>
+        <p class="subtitle">आपने सभी महत्वपूर्ण शब्दों को सफलतापूर्वक जोड़ा!</p>
         
-        <div>
-            <button class="btn" onclick="startGame()">पुनः खेलें 🔄</button>
+        <div style="font-size: 1.4rem; font-weight: bold; color: #0f2027; margin-bottom: 15px;">
+            अंतिम स्कोर: <span id="final-score">0</span>
         </div>
+
+        <button class="btn" onclick="startGame()">पुनः खेलें 🔄</button>
     </div>
 
 </div>
 
 <script>
-    // 5-Second Timer for Screen 1 (Logo Screen)
-    let timeLeft = 5;
-    const timerElement = document.getElementById('splash-timer');
+    const wordData = [
+        { hint: "💡 अमन ने मेले से क्या खरीदा?", targetWord: ["हा", "थी"] },
+        { hint: "💡 राष्ट्रगान के समय क्या व्यक्त किया गया?", targetWord: ["स", "म्मा", "न"] },
+        { hint: "💡 छोटा बच्चा किस चीज़ के पीछे भाग रहा था?", targetWord: ["गेँ", "द"] },
+        { hint: "💡 बच्चे को बचाने में किसने मदद की?", targetWord: ["गा", "र्ड"] }
+    ];
 
-    const splashInterval = setInterval(() => {
-        timeLeft--;
-        if (timerElement) {
-            timerElement.innerText = timeLeft;
-        }
-        if (timeLeft <= 0) {
-            clearInterval(splashInterval);
-            showScreen('instruction-screen');
-        }
-    }, 1000);
+    let currentLevel = 0;
+    let score = 0;
+    let catcherX = 50;
+    let targetLetters = [];
+    let filledLetters = [];
+    let fallingElements = [];
+    let gameLoopInterval = null;
+    let spawnInterval = null;
 
-    // Screen Management
-    function showScreen(screenId) {
-        document.querySelectorAll('.screen').forEach(screen => {
-            screen.classList.remove('active');
-        });
+    const gameCanvas = document.getElementById('game-canvas');
+    const catcher = document.getElementById('catcher');
+
+    function switchScreen(screenId) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.getElementById(screenId).classList.add('active');
     }
 
-    // Full Pool of 15 Questions
-    const questionPool = [
-        {
-            question: "डॉ. ए.पी.जे. अब्दुल कलाम का जन्म कहाँ हुआ था?",
-            options: ["रामेश्वरम, तमिलनाडु", "तिरुवनंतपुरम, केरल", "बेंगलुरु, कर्नाटक", "हैदराबाद, तेलंगाना"],
-            correct: 0,
-            explanation: "डॉ. कलाम का जन्म 15 अक्टूबर 1931 को तमिलनाडु के प्रसिद्ध द्वीप शहर रामेश्वरम में हुआ था।"
-        },
-        {
-            question: "बचपन में अपने परिवार की आर्थिक मदद के लिए कलाम क्या काम करते थे?",
-            options: ["मंदिर में फूल बेचते थे", "इमली के बीज इकट्ठा करते थे और अखबार बांटते थे", "मछली फार्म में काम करते थे", "साइकिल की मरम्मत करते थे"],
-            correct: 1,
-            explanation: "कलाम इमली के बीज इकट्ठा कर बेचते थे तथा चचेरे भाई शमसुद्दीन की मदद के लिए अखबार बांटते थे।"
-        },
-        {
-            question: "इसरो (ISRO) में डॉ. कलाम ने किस प्रमुख उपग्रह प्रक्षेपण यान का नेतृत्व किया?",
-            options: ["चंद्रयान-1", "मंगलयान", "एस.एल.वी.-3 (SLV-3)", "इनसैट-1ए"],
-            correct: 2,
-            explanation: "डॉ. कलाम भारत के पहले स्वदेशी उपग्रह प्रक्षेपण यान (SLV-3) के प्रोजेक्ट डायरेक्टर थे।"
-        },
-        {
-            question: "डॉ. कलाम को 'मिसाइल मैन ऑफ इंडिया' क्यों कहा जाता है?",
-            options: ["उन्होंने तोपखाने की खोज की", "अग्नि और पृथ्वी मिसाइलों का सफल विकास किया", "वे वायुसेना के पायलट थे", "उन्होंने परमाणु पनडुब्बी बनाई"],
-            correct: 1,
-            explanation: "उन्होंने भारत के एकीकृत निर्देशित मिसाइल विकास कार्यक्रम का सफल नेतृत्व किया।"
-        },
-        {
-            question: "डॉ. अब्दुल कलाम भारत के कौन-से नंबर के राष्ट्रपति बने?",
-            options: ["9वें", "10वें", "11वें", "12वें"],
-            correct: 2,
-            explanation: "डॉ. कलाम वर्ष 2002 से 2007 तक भारत के 11वें राष्ट्रपति रहे।"
-        },
-        {
-            question: "डॉ. कलाम का पूरा नाम क्या था?",
-            options: ["अब्दुल पाकिर जैनुलआब्दीन कलाम", "अवुल पाकिर जैनुलआब्दीन अब्दुल कलाम", "अहमद पाकिर जैनुल कलाम", "अबुल कलाम आजाद"],
-            correct: 1,
-            explanation: "उनका पूर्ण नाम 'अवुल पाकिर जैनुलआब्दीन अब्दुल कलाम' था।"
-        },
-        {
-            question: "कलाम जी के पिता जी का क्या नाम था?",
-            options: ["जैनुलआब्दीन", "शमसुद्दीन", "जलालुद्दीन", "अहमद हुसैन"],
-            correct: 0,
-            explanation: "उनके पिता का नाम जैनुलआब्दीन था, जो बहुत ही उदार और सरल विचार वाले व्यक्ति थे।"
-        },
-        {
-            question: "अब्दुल कलाम की माता जी का क्या नाम था?",
-            options: ["आशियम्मा", "फातिमा", "रेशमा", "ज़ोहरा"],
-            correct: 0,
-            explanation: "उनकी माता जी का नाम आशियम्मा था, जो एक अत्यंत दयालु और गृहिणी महिला थीं।"
-        },
-        {
-            question: "डॉ. कलाम को भारत का सर्वोच्च नागरिक सम्मान 'भारत रत्न' किस वर्ष दिया गया?",
-            options: ["1990", "1997", "2001", "2005"],
-            correct: 1,
-            explanation: "डॉ. कलाम को देश सेवा और विज्ञान के क्षेत्र में अतुलनीय योगदान के लिए 1997 में 'भारत रत्न' से सम्मानित किया गया।"
-        },
-        {
-            question: "डॉ. कलाम को किस नाम से जनता के बीच प्रियता मिली?",
-            options: ["जनता के राष्ट्रपति (People's President)", "राष्ट्रपिता", "लौह पुरुष", "युग पुरुष"],
-            correct: 0,
-            explanation: "अपने सादगी और छात्रों से लगाव के कारण उन्हें 'जनता के राष्ट्रपति' (People's President) कहा जाता है।"
-        },
-        {
-            question: "डॉ. कलाम की प्रसिद्ध आत्मकथा (Autobiography) का क्या नाम है?",
-            options: ["माई एक्सपेरिमेंट्स विद ट्रुथ", "विंग्स ऑफ फायर (Wings of Fire)", "इग्नाइटेड माइंड्स", "द डिस्कवरी ऑफ इंडिया"],
-            correct: 1,
-            explanation: "'विंग्स ऑफ फायर' (अग्नि की उड़ान) डॉ. एपीजे अब्दुल कलाम की प्रसिद्ध आत्मकथा है।"
-        },
-        {
-            question: "बचपन में कलाम के सबसे करीबी मित्र कौन थे, जो मंदिर के मुख्य पुजारी के बेटे थे?",
-            options: ["रामानंद शास्त्री", "अराविंदन", "शिवप्रकाशन", "शमसुद्दीन"],
-            correct: 0,
-            explanation: "रामानंद शास्त्री, रामेश्वरम मंदिर के मुख्य पुजारी पक्षी लक्ष्मण शास्त्री के पुत्र थे और कलाम के परम मित्र थे।"
-        },
-        {
-            question: "डॉ. कलाम ने स्नातक (Graduation) की शिक्षा किस विषय में पूरी की?",
-            options: ["कंप्यूटर साइंस", "भौतिक विज्ञान (Physics)", "रसायन विज्ञान", "गणित"],
-            correct: 1,
-            explanation: "उन्होंने सेंट जोसेफ कॉलेज, तिरुचिरापल्ली से 1954 में भौतिक विज्ञान (Physics) में स्नातक किया।"
-        },
-        {
-            question: "डॉ. कलाम ने एयरोस्पेस इंजीनियरिंग की पढ़ाई कहाँ से की?",
-            options: ["IIT मद्रास", "एम.आई.टी. (MIT - मद्रास इंस्टीट्यूट ऑफ टेक्नोलॉजी)", "IIT दिल्ली", "IISc बेंगलुरु"],
-            correct: 1,
-            explanation: "उन्होंने मद्रास इंस्टीट्यूट ऑफ टेक्नोलॉजी (MIT) से एयरोस्पेस इंजीनियरिंग की डिग्री हासिल की।"
-        },
-        {
-            question: "डॉ. कलाम का निधन किस स्थान पर छात्रों को संबोधित करते समय हुआ?",
-            options: ["शिलॉन्ग (IIM Shillong)", "दिल्ली", "बेंगलुरु", "गुवाहाटी"],
-            correct: 0,
-            explanation: "27 जुलाई 2015 को IIM शिलॉन्ग में व्याख्यान देते समय डॉ. कलाम का निधन हुआ।"
-        }
-    ];
-
-    let currentGameQuestions = [];
-    let currentQuestionIndex = 0;
-    let score = 0;
-    let selectedOption = false;
-
-    // Helper Function: Pick 10 Random Questions from 15
-    function selectRandomQuestions() {
-        const shuffled = [...questionPool].sort(() => 0.5 - Math.random());
-        return shuffled.slice(0, 10);
-    }
-
     function startGame() {
-        currentGameQuestions = selectRandomQuestions();
-        currentQuestionIndex = 0;
+        currentLevel = 0;
         score = 0;
-        showScreen('game-screen');
-        document.getElementById('total-q').innerText = currentGameQuestions.length;
-        loadQuestion();
+        catcherX = 50;
+        switchScreen('screen-game');
+        document.getElementById('total-q').innerText = wordData.length;
+
+        window.addEventListener('keydown', handleKeyDown);
+        gameCanvas.addEventListener('mousemove', handleMouseMove);
+        gameCanvas.addEventListener('touchmove', handleTouchMove);
+
+        startLevel();
     }
 
-    function loadQuestion() {
-        selectedOption = false;
-        const qData = currentGameQuestions[currentQuestionIndex];
-        
-        document.getElementById('current-q').innerText = currentQuestionIndex + 1;
+    function startLevel() {
+        document.querySelectorAll('.falling-node').forEach(e => e.remove());
+        fallingElements = [];
+
+        const lvl = wordData[currentLevel];
+        targetLetters = [...lvl.targetWord];
+        filledLetters = new Array(targetLetters.length).fill('');
+
+        document.getElementById('riddle-box').innerText = lvl.hint;
+        document.getElementById('current-q').innerText = currentLevel + 1;
         document.getElementById('score').innerText = score;
-        const progressPercent = ((currentQuestionIndex) / currentGameQuestions.length) * 100;
-        document.getElementById('progress-bar').style.width = progressPercent + '%';
 
-        document.getElementById('question').innerText = qData.question;
+        // Render Empty Slots
+        const slotsContainer = document.getElementById('word-slots');
+        slotsContainer.innerHTML = '';
+        for (let i = 0; i < targetLetters.length; i++) {
+            const slot = document.createElement('div');
+            slot.className = 'slot';
+            slot.id = 'slot-' + i;
+            slotsContainer.appendChild(slot);
+        }
+
+        updateCatcherPos();
+
+        if (gameLoopInterval) clearInterval(gameLoopInterval);
+        if (spawnInterval) clearInterval(spawnInterval);
+
+        gameLoopInterval = setInterval(updateGame, 30);
+        spawnInterval = setInterval(spawnLetterNode, 1500);
+    }
+
+    function updateCatcherPos() {
+        catcher.style.left = catcherX + '%';
+    }
+
+    function handleKeyDown(e) {
+        if (e.key === 'ArrowLeft' && catcherX > 10) catcherX -= 8;
+        if (e.key === 'ArrowRight' && catcherX < 90) catcherX += 8;
+        updateCatcherPos();
+    }
+
+    function handleMouseMove(e) {
+        const rect = gameCanvas.getBoundingClientRect();
+        let relX = ((e.clientX - rect.left) / rect.width) * 100;
+        catcherX = Math.max(10, Math.min(90, relX));
+        updateCatcherPos();
+    }
+
+    function handleTouchMove(e) {
+        if (!e.touches[0]) return;
+        const rect = gameCanvas.getBoundingClientRect();
+        let relX = ((e.touches[0].clientX - rect.left) / rect.width) * 100;
+        catcherX = Math.max(10, Math.min(90, relX));
+        updateCatcherPos();
+    }
+
+    function spawnLetterNode() {
+        // Pool contains required current letter + random distractor letters
+        const currentNeededIndex = filledLetters.findIndex(val => val === '');
+        if (currentNeededIndex === -1) return;
+
+        const correctChar = targetLetters[currentNeededIndex];
+        const distractorPool = ["का", "रा", "पा", "ना", "मा", "ली", "जा", "ता"];
         
-        const feedbackEl = document.getElementById('feedback');
-        feedbackEl.className = 'feedback';
-        feedbackEl.innerText = '';
-        document.getElementById('next-btn').classList.add('hidden');
+        const isCorrectSpawn = Math.random() < 0.6; // 60% chance to drop useful letter
+        const letterText = isCorrectSpawn ? correctChar : distractorPool[Math.floor(Math.random() * distractorPool.length)];
 
-        const optionsContainer = document.getElementById('options');
-        optionsContainer.innerHTML = '';
+        const el = document.createElement('div');
+        el.className = 'falling-node';
+        el.innerText = letterText;
 
-        const optionPrefixes = ['क', 'ख', 'ग', 'घ'];
+        const startX = Math.floor(Math.random() * 70) + 15;
+        el.style.left = startX + '%';
+        el.style.top = '50px';
 
-        qData.options.forEach((optText, idx) => {
-            const btn = document.createElement('button');
-            btn.className = 'option-btn';
-            btn.innerText = `(${optionPrefixes[idx]}) ${optText}`;
-            btn.onclick = () => selectOption(idx, btn);
-            optionsContainer.appendChild(btn);
+        gameCanvas.appendChild(el);
+
+        fallingElements.push({
+            el: el,
+            x: startX,
+            y: 50,
+            text: letterText
         });
     }
 
-    function selectOption(index, button) {
-        if (selectedOption) return;
-        selectedOption = true;
-
-        const qData = currentGameQuestions[currentQuestionIndex];
-        const allButtons = document.querySelectorAll('.option-btn');
-        const feedbackEl = document.getElementById('feedback');
-
-        if (index === qData.correct) {
-            score += 10;
-            button.classList.add('correct');
-            feedbackEl.innerText = "✨ सही उत्तर! " + qData.explanation;
-            feedbackEl.classList.add('show', 'correct-text');
-        } else {
-            button.classList.add('wrong');
-            allButtons[qData.correct].classList.add('correct');
-            feedbackEl.innerText = "❌ गलत उत्तर। सही उत्तर है: " + qData.explanation;
-            feedbackEl.classList.add('show', 'wrong-text');
-        }
-
-        document.getElementById('score').innerText = score;
-        document.getElementById('next-btn').classList.remove('hidden');
+    function showFeedback(text, isCorrect) {
+        const fb = document.getElementById('game-feedback');
+        fb.innerText = text;
+        fb.className = isCorrect ? 'fb-correct' : 'fb-wrong';
+        fb.style.display = 'block';
+        setTimeout(() => { fb.style.display = 'none'; }, 1200);
     }
 
-    function nextQuestion() {
-        currentQuestionIndex++;
-        if (currentQuestionIndex < currentGameQuestions.length) {
-            loadQuestion();
-        } else {
-            showEndScreen();
+    function updateGame() {
+        const canvasHeight = gameCanvas.clientHeight;
+
+        for (let i = fallingElements.length - 1; i >= 0; i--) {
+            let item = fallingElements[i];
+            item.y += 2.2;
+            item.el.style.top = item.y + 'px';
+
+            // Catch Collision with Catcher Wire
+            if (item.y >= canvasHeight - 35 && item.y <= canvasHeight - 10) {
+                if (Math.abs(item.x - catcherX) < 12) {
+                    
+                    const nextNeededIndex = filledLetters.findIndex(val => val === '');
+                    
+                    if (nextNeededIndex !== -1 && item.text === targetLetters[nextNeededIndex]) {
+                        // Correct letter caught in sequence
+                        filledLetters[nextNeededIndex] = item.text;
+                        document.getElementById('slot-' + nextNeededIndex).innerText = item.text;
+                        score += 10;
+                        showFeedback("⚡ कनेक्शन सही! +10", true);
+
+                        // Check if word complete
+                        if (filledLetters.findIndex(val => val === '') === -1) {
+                            setTimeout(nextLevel, 800);
+                        }
+                    } else {
+                        // Wrong letter or wrong sequence caught
+                        score = Math.max(0, score - 5);
+                        showFeedback("❌ गलत अक्षर! -5", false);
+                    }
+
+                    document.getElementById('score').innerText = score;
+                    item.el.remove();
+                    fallingElements.splice(i, 1);
+                    continue;
+                }
+            }
+
+            if (item.y > canvasHeight) {
+                item.el.remove();
+                fallingElements.splice(i, 1);
+            }
         }
     }
 
-    function showEndScreen() {
-        document.getElementById('progress-bar').style.width = '100%';
-        showScreen('end-screen');
-
-        document.getElementById('final-stats').innerText = `आपका अंतिम स्कोर: ${score} / ${currentGameQuestions.length * 10}`;
-        
-        const msgEl = document.getElementById('revision-msg');
-        if (score === 100) {
-            msgEl.innerText = "🌟 उत्कृष्ट! आपको इस अध्याय की पूर्ण और सटीक जानकारी है!";
-        } else if (score >= 70) {
-            msgEl.innerText = "👍 बहुत बढ़िया! आपकी पाठ पर अच्छी पकड़ है।";
+    function nextLevel() {
+        currentLevel++;
+        if (currentLevel < wordData.length) {
+            startLevel();
         } else {
-            msgEl.innerText = "📚 अच्छा प्रयास! पाठ को एक बार फिर ध्यान से पढ़ें और पुनः प्रयास करें।";
+            endGame();
         }
+    }
+
+    function endGame() {
+        clearInterval(gameLoopInterval);
+        clearInterval(spawnInterval);
+        window.removeEventListener('keydown', handleKeyDown);
+
+        switchScreen('screen-end');
+        document.getElementById('final-score').innerText = score;
     }
 </script>
 
