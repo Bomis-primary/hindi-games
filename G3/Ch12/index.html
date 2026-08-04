@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>टाइम ट्रैवल चैलेंज - एआई का कमाल</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4c1d95 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: #ffffff;
+        }
+
+        /* Screen Management */
+        .screen {
+            display: none;
+            width: 100%;
+            max-width: 700px;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        /* SCREEN 1: Splash Screen (5 Seconds) */
+        #screen1 {
+            height: 80vh;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .logo-container {
+            animation: fadeInScale 1.5s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .game-title-splash {
+            font-size: 2.5rem;
+            color: #38bdf8;
+            text-shadow: 0 0 15px rgba(56, 189, 248, 0.5);
+        }
+
+        .splash-timer {
+            margin-top: 15px;
+            width: 200px;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .splash-progress {
+            width: 0%;
+            height: 100%;
+            background: #38bdf8;
+            animation: loadProgress 5s linear forwards;
+        }
+
+        /* SCREEN 2: Instructions Screen */
+        .card-box {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 35px;
+            border-radius: 24px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            max-width: 550px;
+            width: 100%;
+        }
+
+        .card-box h2 {
+            color: #38bdf8;
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+        }
+
+        .instructions-list {
+            text-align: left;
+            margin: 20px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            color: #e2e8f0;
+            font-size: 1.05rem;
+            line-height: 1.5;
+        }
+
+        .btn-primary {
+            padding: 14px 32px;
+            background: #0284c7;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.4);
+            margin-top: 10px;
+        }
+
+        .btn-primary:hover {
+            background: #0369a1;
+            transform: translateY(-2px);
+        }
+
+        /* SCREEN 3: Game Screen */
+        .game-header h1 {
+            color: #38bdf8;
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+        }
+
+        .game-subtitle {
+            color: #cbd5e1;
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+        }
+
+        .list-container {
+            list-style: none;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .draggable-item {
+            background: rgba(255, 255, 255, 0.95);
+            color: #0f172a;
+            padding: 14px 18px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            border: 2px solid #38bdf8;
+            cursor: grab;
+            user-select: none;
+            text-align: left;
+            transition: all 0.2s ease;
+        }
+
+        .draggable-item:active {
+            cursor: grabbing;
+        }
+
+        .draggable-item.dragging {
+            opacity: 0.4;
+            transform: scale(0.98);
+        }
+
+        .item-number {
+            background: #0284c7;
+            color: white;
+            font-weight: bold;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+            font-size: 0.95rem;
+        }
+
+        .item-text {
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .feedback-msg {
+            margin-top: 15px;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        /* SCREEN 4: End Screen */
+        .end-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            max-width: 480px;
+            width: 100%;
+        }
+
+        .end-card h2 {
+            color: #38bdf8;
+            font-size: 2rem;
+            margin-bottom: 12px;
+        }
+
+        .end-card p {
+            color: #e2e8f0;
+            font-size: 1.1rem;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        /* Animations */
+        @keyframes fadeInScale {
+            0% { opacity: 0; transform: scale(0.85); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes loadProgress {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SCREEN 1: Splash Screen (5 Seconds) -->
+    <div id="screen1" class="screen active">
+        <div class="logo-container">
+            <h1 class="game-title-splash">⏳ टाइम ट्रैवल चैलेंज</h1>
+            <p style="color: #cbd5e1;">एआई और तकनीक का ऐतिहासिक सफ़र</p>
+            <div class="splash-timer">
+                <div class="splash-progress"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCREEN 2: Instructions Screen -->
+    <div id="screen2" class="screen">
+        <div class="card-box">
+            <h2>📜 खेल के नियम</h2>
+            <div class="instructions-list">
+                <p>1. इतिहास और एआई के विकास की घटनाओं को उनके सही कालक्रम (Chronological Order) में लगाएँ।</p>
+                <p>2. कार्ड्स को ऊपर-नीचे ड्रैग करके सही क्रम में व्यवस्थित करें।</p>
+                <p>3. सही क्रम चेक करने के लिए <b>'जाँच करें'</b> बटन दबाएँ।</p>
+                <p>4. हर बार रीस्टार्ट करने पर आपको प्रश्नों का एक नया सेट मिलेगा!</p>
+            </div>
+            <button class="btn-primary" onclick="goToScreen(3); startGame();">सफ़र शुरू करें 🚀</button>
+        </div>
+    </div>
+
+    <!-- SCREEN 3: Game Screen -->
+    <div id="screen3" class="screen">
+        <div class="game-header">
+            <h1>⏳ टाइम ट्रैवल: Sequence Builder</h1>
+            <p class="game-subtitle">घटनाओं को सबसे पुरानी से सबसे नई के क्रम (1 से 5) में लगाएँ:</p>
+        </div>
+
+        <ul class="list-container" id="draggable-list"></ul>
+
+        <div class="controls">
+            <button class="btn-primary" onclick="checkSequence()">जाँच करें ✔️</button>
+        </div>
+        <div id="feedback" class="feedback-msg"></div>
+    </div>
+
+    <!-- SCREEN 4: End Screen -->
+    <div id="screen4" class="screen">
+        <div class="end-card">
+            <h2>🎉 शानदार टाइम ट्रैवलर!</h2>
+            <p>आपने एआई और तकनीक के इतिहास को एकदम सही कालक्रम में व्यवस्थित कर दिया है!</p>
+            <button class="btn-primary" onclick="restartGame()">नए प्रश्नों के साथ पुनः खेलें 🔄</button>
+        </div>
+    </div>
+
+    <script>
+        // Audio API for Sound Effects
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playSound(type) {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            const now = audioCtx.currentTime;
+
+            if (type === 'drag') {
+                osc.frequency.setValueAtTime(350, now);
+                gain.gain.setValueAtTime(0.08, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
+                osc.start(now);
+                osc.stop(now + 0.08);
+            } else if (type === 'correct') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(523.25, now);
+                osc.frequency.setValueAtTime(659.25, now + 0.1);
+                gain.gain.setValueAtTime(0.15, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                osc.start(now);
+                osc.stop(now + 0.3);
+            } else if (type === 'wrong') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(200, now);
+                osc.frequency.setValueAtTime(140, now + 0.15);
+                gain.gain.setValueAtTime(0.15, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                osc.start(now);
+                osc.stop(now + 0.3);
+            } else if (type === 'win') {
+                const notes = [523.25, 659.25, 783.99, 1046.50];
+                notes.forEach((freq, index) => {
+                    const oscW = audioCtx.createOscillator();
+                    const gainW = audioCtx.createGain();
+                    oscW.connect(gainW);
+                    gainW.connect(audioCtx.destination);
+                    oscW.frequency.setValueAtTime(freq, now + index * 0.12);
+                    gainW.gain.setValueAtTime(0.15, now + index * 0.12);
+                    gainW.gain.exponentialRampToValueAtTime(0.01, now + index * 0.12 + 0.2);
+                    oscW.start(now + index * 0.12);
+                    oscW.stop(now + index * 0.12 + 0.2);
+                });
+            }
+        }
+
+        // Master Question Bank based on 'AI Ka Kamaal' & Tech History
+        const masterEventsPool = [
+            { id: 1, text: "जॉन मैकार्थी ने सबसे पहले 'कृत्रिम बुद्धिमत्ता' (एआई) शब्द दिया।" },
+            { id: 2, text: "कंप्यूटर का आविष्कार हुआ और डेटा स्टोरेज की शुरुआत हुई।" },
+            { id: 3, text: "एआई मशीनों ने ढेरों डेटा पढ़कर नई बातें सीखना और समझना शुरू किया।" },
+            { id: 4, text: "अस्पतालों में एआई एक्स-रे पढ़ने और बीमारियों को पहचानने में मदद करने लगा।" },
+            { id: 5, text: "सड़कों पर एआई तकनीक से चलने वाली कारों और संकेतों का विकास हुआ।" },
+            { id: 6, text: "बच्चों ने पुराने खिलौनों और मोटर का प्रयोग करके पहला रोबोट बनाया।" },
+            { id: 7, text: "फरवरी 2026 में नई दिल्ली में अंतरराष्ट्रीय एआई सम्मेलन आयोजित हुआ।" },
+            { id: 8, text: "विद्यालयों में एआई रोबोट बच्चों की पढ़ाई और मुश्किल कार्यों में मदद करने लगे।" }
+        ];
+
+        let currentRoundEvents = [];
+        let listItems = [];
+        let dragStartIndex;
+
+        // Navigation Controller
+        function goToScreen(screenNumber) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(`screen${screenNumber}`).classList.add('active');
+        }
+
+        // Screen 1 Timer (5 Seconds Auto Transition)
+        window.onload = () => {
+            setTimeout(() => {
+                goToScreen(2);
+            }, 5000);
+        };
+
+        // Start Game with Dynamic Random Pool Selection
+        function startGame() {
+            document.getElementById('feedback').innerText = '';
+            const draggableList = document.getElementById('draggable-list');
+            draggableList.innerHTML = '';
+            listItems = [];
+
+            // 1. Pick 5 random items from master pool
+            const shuffledPool = [...masterEventsPool].sort(() => Math.random() - 0.5);
+            const selectedSet = shuffledPool.slice(0, 5);
+
+            // 2. Sort selected set chronologically as the correct answer key
+            currentRoundEvents = [...selectedSet].sort((a, b) => a.id - b.id);
+
+            // 3. Shuffle selected set for user display
+            const displaySet = [...currentRoundEvents].sort(() => Math.random() - 0.5);
+
+            displaySet.forEach((item, index) => {
+                const listItem = document.createElement('li');
+                listItem.setAttribute('data-index', index);
+                listItem.setAttribute('data-id', item.id);
+
+                listItem.innerHTML = `
+                    <div class="draggable-item" draggable="true">
+                        <span class="item-number">${index + 1}</span>
+                        <span class="item-text">${item.text}</span>
+                    </div>
+                `;
+
+                listItems.push(listItem);
+                draggableList.appendChild(listItem);
+            });
+
+            addDragListeners();
+        }
+
+        // Drag and Drop Handlers
+        function dragStart() {
+            dragStartIndex = +this.closest('li').getAttribute('data-index');
+            this.classList.add('dragging');
+            playSound('drag');
+        }
+
+        function dragOver(e) {
+            e.preventDefault();
+        }
+
+        function dragDrop() {
+            const dragEndIndex = +this.getAttribute('data-index');
+            swapItems(dragStartIndex, dragEndIndex);
+            this.querySelector('.draggable-item').classList.remove('dragging');
+        }
+
+        function swapItems(fromIndex, toIndex) {
+            const itemOne = listItems[fromIndex].querySelector('.draggable-item');
+            const itemTwo = listItems[toIndex].querySelector('.draggable-item');
+
+            listItems[fromIndex].appendChild(itemTwo);
+            listItems[toIndex].appendChild(itemOne);
+
+            // Swap tracking IDs
+            const idOne = listItems[fromIndex].getAttribute('data-id');
+            const idTwo = listItems[toIndex].getAttribute('data-id');
+            listItems[fromIndex].setAttribute('data-id', idTwo);
+            listItems[toIndex].setAttribute('data-id', idOne);
+
+            updateItemNumbers();
+        }
+
+        function updateItemNumbers() {
+            listItems.forEach((item, idx) => {
+                const badge = item.querySelector('.item-number');
+                if (badge) badge.innerText = idx + 1;
+            });
+        }
+
+        function addDragListeners() {
+            const draggables = document.querySelectorAll('.draggable-item');
+            const dragListItems = document.querySelectorAll('#draggable-list li');
+
+            draggables.forEach(draggable => {
+                draggable.addEventListener('dragstart', dragStart);
+                draggable.addEventListener('dragend', function() {
+                    this.classList.remove('dragging');
+                });
+            });
+
+            dragListItems.forEach(item => {
+                item.addEventListener('dragover', dragOver);
+                item.addEventListener('drop', dragDrop);
+            });
+        }
+
+        // Sequence Validation
+        function checkSequence() {
+            let isCorrect = true;
+
+            listItems.forEach((listItem, index) => {
+                const currentId = parseInt(listItem.getAttribute('data-id'));
+                const correctId = currentRoundEvents[index].id;
+                const card = listItem.querySelector('.draggable-item');
+
+                if (currentId !== correctId) {
+                    card.style.borderColor = '#ef4444';
+                    card.style.background = '#fee2e2';
+                    isCorrect = false;
+                } else {
+                    card.style.borderColor = '#10b981';
+                    card.style.background = '#d1fae5';
+                }
+            });
+
+            const feedback = document.getElementById('feedback');
+            if (isCorrect) {
+                playSound('correct');
+                feedback.style.color = '#34d399';
+                feedback.innerText = '✨ बिल्कुल सही कालक्रम!';
+                setTimeout(() => {
+                    playSound('win');
+                    goToScreen(4);
+                }, 1000);
+            } else {
+                playSound('wrong');
+                feedback.style.color = '#f87171';
+                feedback.innerText = '❌ क्रम सही नहीं है। पुनः प्रयास करें!';
+            }
+        }
+
+        function restartGame() {
+            goToScreen(3);
+            startGame();
+        }
+    </script>
+</body>
+</html>
