@@ -62,6 +62,13 @@
             color: white;
         }
 
+        .splash-logo {
+            max-width: 180px;
+            max-height: 80px;
+            object-fit: contain;
+            margin-bottom: 15px;
+        }
+
         .splash-title {
             font-size: 28px;
             font-weight: bold;
@@ -86,35 +93,12 @@
             font-weight: bold;
         }
 
-        /* Innovine Logo Component */
-        .innovine-logo {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        .innovine-icon {
-            width: 42px;
-            height: 42px;
-            background: linear-gradient(135deg, #0072ff, #00c6ff);
-            border-radius: 10px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 4px 8px rgba(0,114,255,0.25);
-        }
-
-        .innovine-text {
-            font-size: 24px;
-            font-weight: 800;
-            color: #1e3c72;
-            letter-spacing: 0.5px;
-        }
-
-        .innovine-text span {
-            color: #0072ff;
+        /* Instruction Screen Logo */
+        .instruction-logo {
+            max-width: 160px;
+            max-height: 60px;
+            object-fit: contain;
+            margin-bottom: 10px;
         }
 
         /* Instructions Screen */
@@ -272,22 +256,14 @@
 <div id="game-container">
     <!-- Screen 1: Splash -->
     <div id="screen-splash" class="screen active">
-        <div class="splash-title">INNOVINE</div>
+        <img src="assets/logo.png" alt="Logo" class="splash-logo">
         <div class="splash-sub">अध्याय 9 - बड़े सपनों वाला बच्चा</div>
         <div class="countdown-circle" id="splash-countdown">5</div>
     </div>
 
     <!-- Screen 2: Instructions -->
     <div id="screen-instructions" class="screen">
-        <!-- INNOVINE LOGO ADDED HERE -->
-        <div class="innovine-logo">
-            <div class="innovine-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-                </svg>
-            </div>
-            <div class="innovine-text">INNO<span>VINE</span></div>
-        </div>
+        <img src="assets/logo.png" alt="Logo" class="instruction-logo">
 
         <h2>खेल के नियम</h2>
         <p class="subtitle" style="color:#666; margin-top:3px; font-weight: 500;">अध्याय 9 - बड़े सपनों वाला बच्चा</p>
