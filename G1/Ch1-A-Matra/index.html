@@ -1,713 +1,1536 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>अ की जादुई दुनिया - Innovine Games</title>
-    <style>
-        :root {
-            --primary-color: #ff6b6b;
-            --secondary-color: #4ecdc4;
-            --accent-color: #ffe66d;
-            --bg-color: #f7f9fc;
-            --text-color: #2f3e46;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#fff8e8">
+  <title>स्वर अ की खोज | Innovine</title>
+  <style>
+    :root {
+      --ink: #24324a;
+      --muted: #667085;
+      --cream: #fff8e8;
+      --card: rgba(255, 255, 255, 0.97);
+      --primary: #6558e8;
+      --primary-dark: #463db6;
+      --a-colour: #ef6c00;
+      --yellow: #ffd166;
+      --green: #2eaf68;
+      --green-soft: #e9f8ef;
+      --red: #dc5151;
+      --red-soft: #fff0f0;
+      --blue-soft: #eef4ff;
+      --line: #e5e8f0;
+      --shadow: 0 12px 34px rgba(36, 50, 74, 0.14);
+    }
 
-        * {
-            box-sizing: border-box;
-            user-select: none;
-            -webkit-user-select: none;
-            margin: 0;
-            padding: 0;
-        }
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-        body {
-            font-family: 'Arial Rounded MT Bold', 'Comic Sans MS', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            overflow: hidden;
-            touch-action: manipulation;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
+    html, body {
+      width: 100%;
+      min-height: 100%;
+      margin: 0;
+      overflow: hidden;
+    }
 
-        #game-container {
-            width: 100%;
-            max-width: 500px;
-            height: 100vh;
-            max-height: 850px;
-            background: white;
-            position: relative;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            border-radius: 16px;
-        }
+    body {
+      font-family: "Noto Sans Devanagari", "Mangal", "Arial Unicode MS", Arial, sans-serif;
+      color: var(--ink);
+      background: var(--cream);
+      touch-action: manipulation;
+    }
 
-        .screen {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            text-align: center;
-        }
+    button { font: inherit; }
 
-        .screen.active {
-            display: flex;
-        }
+    .app {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      height: 100dvh;
+      min-height: 100%;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 13% 17%, rgba(255, 209, 102, 0.25), transparent 25%),
+        radial-gradient(circle at 88% 17%, rgba(101, 88, 232, 0.16), transparent 23%),
+        linear-gradient(145deg, #fffaf0 0%, #f3f6ff 55%, #fef4ff 100%);
+    }
 
-        #logo-screen {
-            background-color: #ffffff;
-            z-index: 100;
-        }
+    .screen {
+      position: absolute;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: max(16px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+    }
 
-        .logo-img {
-            max-width: 250px;
-            animation: pulse 1.5s infinite;
-        }
+    .screen.active { display: flex; }
 
-        #instruction-screen {
-            background: linear-gradient(135deg, #ffe66d, #ff6b6b);
-            color: white;
-        }
+    #logo-screen {
+      z-index: 30;
+      background: #ffffff;
+      flex-direction: column;
+      gap: 20px;
+    }
 
-        .game-header {
-            width: 100%;
-            padding: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #f0f3f7;
-            font-size: 1.2rem;
-            font-weight: bold;
-            border-bottom: 4px solid #e2a5a5;
-        }
+    #logo-screen img {
+      display: block;
+      width: min(65vw, 320px);
+      max-height: 40vh;
+      object-fit: contain;
+    }
 
-        .game-body {
-            flex: 1;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 15px;
-            overflow-y: auto;
-        }
+    .ambient-layer {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
 
-        .btn {
-            background: var(--secondary-color);
-            color: white;
-            border: none;
-            padding: 12px 35px;
-            font-size: 1.3rem;
-            border-radius: 50px;
-            cursor: pointer;
-            box-shadow: 0 6px #37a39b;
-            transition: all 0.1s;
-            margin-top: 15px;
-            font-weight: bold;
-        }
+    .ambient {
+      position: absolute;
+      opacity: 0.2;
+      animation: floaty 8s ease-in-out infinite;
+      will-change: transform;
+    }
 
-        .btn:active {
-            transform: translateY(4px);
-            box-shadow: 0 2px #37a39b;
-        }
+    .ambient.star {
+      color: #f4b942;
+      font-size: 24px;
+    }
 
-        h2 {
-            font-size: 1.6rem;
-            margin-bottom: 10px;
-            color: #2f3e46;
-        }
+    .ambient.ribbon {
+      width: 8px;
+      height: 42px;
+      border-radius: 8px;
+      background: rgba(101, 88, 232, 0.48);
+      transform: rotate(18deg);
+    }
 
-        .hint-text {
-            font-size: 1.1rem;
-            margin-bottom: 15px;
-            color: #666;
-        }
+    .a1 { left: 5%; top: 12%; animation-delay: -1s; }
+    .a2 { left: 86%; top: 16%; animation-delay: -3s; }
+    .a3 { left: 10%; top: 76%; animation-delay: -5s; }
+    .a4 { left: 90%; top: 72%; animation-delay: -2s; }
+    .a5 { left: 48%; top: 6%; animation-delay: -4s; }
+    .a6 { left: 62%; top: 86%; animation-delay: -6s; }
+    .a7 { left: 25%; top: 32%; animation-delay: -7s; }
+    .a8 { left: 76%; top: 42%; animation-delay: -2.5s; }
 
-        /* Grid Containers */
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            width: 100%;
-            max-width: 360px;
-        }
+    @keyframes floaty {
+      0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+      50% { transform: translate3d(0, -13px, 0) rotate(8deg); }
+    }
 
-        .grid-item {
-            background: #f8f9fa;
-            border: 3px solid #e9ecef;
-            border-radius: 12px;
-            padding: 15px;
-            font-size: 2.5rem;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            transition: transform 0.1s;
-        }
+    .panel {
+      position: relative;
+      z-index: 2;
+      width: min(92vw, 760px);
+      max-height: 94vh;
+      max-height: 94dvh;
+      padding: clamp(20px, 4vw, 40px);
+      overflow: auto;
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      border-radius: 28px;
+      background: var(--card);
+      box-shadow: var(--shadow);
+      text-align: center;
+      -webkit-overflow-scrolling: touch;
+    }
 
-        .grid-item span {
-            font-size: 1.1rem;
-            margin-top: 5px;
-            font-weight: bold;
-        }
+    .title-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 68px;
+      min-height: 68px;
+      margin-bottom: 12px;
+      border-radius: 22px;
+      background: linear-gradient(145deg, var(--yellow), #ffb84c);
+      color: #543a00;
+      font-size: 2.5rem;
+      font-weight: 900;
+      box-shadow: 0 8px 0 #e7a536;
+    }
 
-        /* Level 3: Sorting */
-        .words-pool {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: center;
-            margin-bottom: 30px;
-        }
+    h1, h2, p { margin-top: 0; }
 
-        .word-tag {
-            background: var(--accent-color);
-            padding: 10px 20px;
-            border-radius: 20px;
-            font-size: 1.3rem;
-            font-weight: bold;
-            cursor: pointer;
-            border: 2px solid #e6cc4d;
-        }
+    h1 {
+      margin-bottom: 10px;
+      font-size: clamp(2rem, 6vw, 3.35rem);
+      line-height: 1.15;
+    }
 
-        .basket {
-            width: 160px;
-            height: 120px;
-            background: #d9a05b;
-            border-radius: 0 0 50px 50px;
-            border: 5px solid #b37d3d;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-        }
+    .intro-copy {
+      max-width: 620px;
+      margin: 0 auto 18px;
+      color: var(--muted);
+      font-size: clamp(1rem, 2.8vw, 1.22rem);
+      line-height: 1.55;
+    }
 
-        /* Level 4: Matching */
-        .match-container {
-            display: flex;
-            justify-content: space-between;
-            width: 100%;
-            gap: 20px;
-        }
+    .rules {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin: 18px 0 22px;
+    }
 
-        .match-column {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            width: 45%;
-        }
+    .rule {
+      padding: 13px 10px;
+      border-radius: 16px;
+      background: var(--blue-soft);
+      font-size: 0.97rem;
+      line-height: 1.42;
+      font-weight: 800;
+    }
 
-        .match-card {
-            background: #f1f3f5;
-            border: 2px solid #ced4da;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            cursor: pointer;
-            text-align: center;
-        }
+    .swar-a {
+      color: var(--a-colour);
+      font-weight: 1000;
+      text-shadow: 0 1px 0 rgba(255,255,255,0.7);
+    }
 
-        .match-card.selected {
-            background: #ffe66d;
-            border-color: #ff6b6b;
-        }
+    .primary-btn, .secondary-btn, .small-btn {
+      min-height: 52px;
+      padding: 11px 22px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: 900;
+      transition: transform 0.12s ease, box-shadow 0.12s ease;
+    }
 
-        .match-card.matched {
-            background: #d4edda;
-            border-color: #28a745;
-            color: #155724;
-            pointer-events: none;
-        }
+    .primary-btn {
+      min-width: 190px;
+      border: 0;
+      background: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 7px 0 var(--primary-dark);
+      font-size: 1.08rem;
+    }
 
-        /* Level 5: Balloons */
-        #balloon-area {
-            width: 100%;
-            height: 320px;
-            background: #eef1f6;
-            border-radius: 15px;
-            position: relative;
-            overflow: hidden;
-            border: 2px dashed #ccc;
-        }
+    .secondary-btn, .small-btn {
+      border: 2px solid var(--primary);
+      background: #ffffff;
+      color: var(--primary-dark);
+      box-shadow: 0 4px 0 #d7d3ff;
+    }
 
-        .balloon {
-            position: absolute;
-            width: 70px;
-            height: 85px;
-            background: #ff6b6b;
-            border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.5rem;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: inset -5px -5px 10px rgba(0,0,0,0.1);
-        }
+    .small-btn {
+      min-height: 46px;
+      padding: 9px 17px;
+      font-size: 0.96rem;
+    }
 
-        .balloon::after {
-            content: "🎈";
-            position: absolute;
-            bottom: -12px;
-            font-size: 0.8rem;
-        }
+    .primary-btn:active,
+    .secondary-btn:active,
+    .small-btn:active {
+      transform: translateY(3px);
+      box-shadow: 0 2px 0 var(--primary-dark);
+    }
 
-        /* Level 6: Fill in the Blanks */
-        .blank-question {
-            font-size: 2.2rem;
-            letter-spacing: 5px;
-            margin-bottom: 20px;
-            background: #f8f9fa;
-            padding: 10px 20px;
-            border-radius: 10px;
-            border: 2px solid #e9ecef;
-        }
+    button:focus-visible {
+      outline: 4px solid rgba(101, 88, 232, 0.27);
+      outline-offset: 3px;
+    }
 
-        .options-container {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-        }
+    #game-screen {
+      padding: 0;
+      align-items: stretch;
+      justify-content: stretch;
+    }
 
-        .option-btn {
-            background: #fff;
-            border: 3px solid var(--secondary-color);
-            font-size: 1.8rem;
-            padding: 10px 25px;
-            border-radius: 12px;
-            cursor: pointer;
-            font-weight: bold;
-            box-shadow: 0 4px #37a39b;
-        }
+    .game-shell {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      width: min(100%, 960px);
+      height: 100%;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.89);
+      box-shadow: 0 0 35px rgba(36, 50, 74, 0.12);
+    }
 
-        .option-btn:active {
-            transform: translateY(2px);
-            box-shadow: 0 2px #37a39b;
-        }
+    .topbar {
+      flex: 0 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto auto auto;
+      align-items: center;
+      gap: 10px;
+      min-height: 76px;
+      padding: max(12px, env(safe-area-inset-top)) max(14px, env(safe-area-inset-right)) 12px max(14px, env(safe-area-inset-left));
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.97);
+    }
 
-        .score-badge {
-            font-size: 4rem;
-            color: var(--primary-color);
-            margin: 20px 0;
-            animation: bounce 1s infinite alternate;
-        }
+    .level-info { min-width: 0; }
 
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
+    .level-name {
+      display: block;
+      overflow: hidden;
+      color: var(--primary-dark);
+      font-size: clamp(0.98rem, 2.5vw, 1.16rem);
+      font-weight: 900;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
 
-        @keyframes bounce {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(-10px); }
-        }
-    </style>
+    .challenge-count {
+      display: block;
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 0.87rem;
+      font-weight: 750;
+    }
+
+    .score-box, .timer-box {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 8px 12px;
+      border-radius: 14px;
+      background: var(--blue-soft);
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .timer-box.low {
+      color: #a61b1b;
+      background: #ffeaea;
+      animation: timerPulse 0.9s ease-in-out infinite;
+    }
+
+    @keyframes timerPulse {
+      50% { transform: scale(1.04); }
+    }
+
+    .sound-btn {
+      width: 46px;
+      height: 46px;
+      border: 0;
+      border-radius: 50%;
+      background: #ffffff;
+      color: var(--ink);
+      box-shadow: 0 3px 12px rgba(36, 50, 74, 0.12);
+      cursor: pointer;
+      font-size: 1.22rem;
+    }
+
+    .progress-track {
+      flex: 0 0 auto;
+      width: 100%;
+      height: 8px;
+      overflow: hidden;
+      background: #e9ecf4;
+    }
+
+    .progress-fill {
+      width: 0;
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), #9b8cff);
+      transition: width 0.35s ease;
+    }
+
+    .game-main {
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 0;
+      padding: clamp(12px, 2.8vw, 26px);
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .prompt-card {
+      width: min(100%, 790px);
+      margin: 0 auto 14px;
+      padding: clamp(14px, 2.8vw, 22px);
+      border: 1px solid #eceef5;
+      border-radius: 22px;
+      background: #ffffff;
+      box-shadow: 0 8px 24px rgba(36, 50, 74, 0.08);
+      text-align: center;
+    }
+
+    .prompt-label {
+      display: inline-block;
+      margin-bottom: 7px;
+      padding: 5px 12px;
+      border-radius: 999px;
+      background: #f1efff;
+      color: var(--primary-dark);
+      font-size: 0.9rem;
+      font-weight: 900;
+    }
+
+    .question-text {
+      margin: 0;
+      font-size: clamp(1.3rem, 3.8vw, 1.95rem);
+      line-height: 1.42;
+      font-weight: 900;
+    }
+
+    .task-area {
+      width: min(100%, 790px);
+      margin: 0 auto;
+    }
+
+    .word-display {
+      display: block;
+      width: fit-content;
+      text-align: center;
+      min-width: min(78vw, 270px);
+      min-height: 72px;
+      margin: 2px auto 16px;
+      padding: 10px 22px;
+      border: 3px solid #f2d18c;
+      border-radius: 22px;
+      background: #fff9e9;
+      box-shadow: 0 6px 0 #ead19b;
+      font-size: clamp(2rem, 7vw, 3rem);
+      font-weight: 1000;
+      line-height: 1.1;
+    }
+
+    .piece-tray {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 13px;
+      width: 100%;
+    }
+
+    .letter-piece {
+      min-width: 76px;
+      min-height: 68px;
+      padding: 10px 16px;
+      border: 3px solid #dce1ec;
+      border-radius: 20px;
+      background: #ffffff;
+      color: var(--ink);
+      box-shadow: 0 6px 0 #d6dbe6;
+      cursor: pointer;
+      font-size: clamp(1.55rem, 5vw, 2.2rem);
+      font-weight: 1000;
+      transition: transform 0.13s ease, background 0.13s ease, border-color 0.13s ease;
+    }
+
+    .letter-piece:active { transform: translateY(3px); box-shadow: 0 2px 0 #d6dbe6; }
+
+    .letter-piece.wrong, .build-slot.wrong {
+      border-color: var(--red);
+      background: var(--red-soft);
+      animation: shake 0.35s ease;
+    }
+
+    .letter-piece.correct, .build-slot.correct {
+      border-color: var(--green);
+      background: var(--green-soft);
+      color: #17623b;
+      box-shadow: none;
+    }
+
+    @keyframes shake {
+      25% { transform: translateX(-5px); }
+      50% { transform: translateX(5px); }
+      75% { transform: translateX(-3px); }
+    }
+
+    .sort-game {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+    }
+
+    .word-card {
+      display: block;
+      width: fit-content;
+      text-align: center;
+      min-width: min(74vw, 270px);
+      min-height: 76px;
+      margin: 0 auto 14px;
+      padding: 10px 24px;
+      border: 4px solid #f2c25b;
+      border-radius: 20px;
+      background: #fff7d9;
+      box-shadow: 0 7px 0 #e2b448;
+      cursor: grab;
+      touch-action: none;
+      font-size: clamp(2rem, 7vw, 3rem);
+      font-weight: 1000;
+      transition: transform 0.3s ease, opacity 0.3s ease, border-color 0.2s ease;
+      will-change: transform;
+    }
+
+    .word-card.dragging {
+      z-index: 5;
+      cursor: grabbing;
+      transition: none;
+      box-shadow: 0 14px 28px rgba(36, 50, 74, 0.2);
+    }
+
+    .baskets-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: clamp(12px, 3vw, 24px);
+      width: min(100%, 680px);
+      margin: 0 auto;
+    }
+
+    .basket-drop {
+      min-width: 0;
+      min-height: 188px;
+      padding: 12px 10px 14px;
+      border: 3px solid #e7dbff;
+      border-radius: 26px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8f5ff 100%);
+      cursor: pointer;
+      transition: transform 0.16s ease, background 0.16s ease, border-color 0.16s ease;
+      box-shadow: 0 8px 18px rgba(101, 88, 232, 0.08);
+    }
+
+    .basket-drop:hover,
+    .basket-drop.drag-over {
+      transform: translateY(-3px);
+      border-color: #8b80ff;
+      background: #f5f3ff;
+    }
+
+    .basket-drop.wrong-target {
+      border-color: var(--red);
+      background: var(--red-soft);
+      animation: shake 0.35s ease;
+    }
+
+    .basket-drop.correct-target {
+      border-color: var(--green);
+      background: var(--green-soft);
+    }
+
+    .basket-label {
+      display: block;
+      min-height: 30px;
+      margin-bottom: 8px;
+      color: var(--ink);
+      font-size: clamp(1rem, 3vw, 1.18rem);
+      font-weight: 1000;
+      line-height: 1.25;
+    }
+
+    .basket-emoji {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 82px;
+      margin: 0 auto 8px;
+      font-size: clamp(3.2rem, 8vw, 4.8rem);
+      line-height: 1;
+    }
+
+    .basket-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 64px;
+      min-height: 38px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: #ffe8b1;
+      color: #7a4c00;
+      font-size: 1.05rem;
+      font-weight: 1000;
+      box-shadow: inset 0 -2px 0 rgba(0,0,0,0.06);
+    }
+
+    .picture-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: min(100%, 280px);
+      margin: 0 auto 14px;
+      padding: 14px;
+      border-radius: 24px;
+      background: linear-gradient(180deg, #fffefc 0%, #f7fbff 100%);
+      border: 3px solid #dce9ff;
+      box-shadow: 0 8px 18px rgba(36, 50, 74, 0.08);
+    }
+
+    .picture-label {
+      margin: 0 0 8px;
+      color: var(--muted);
+      font-size: 0.92rem;
+      font-weight: 800;
+    }
+
+    .picture-clue {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 128px;
+      height: 128px;
+      border-radius: 26px;
+      background: #fff9e9;
+      border: 3px solid #f2d18c;
+      box-shadow: 0 6px 0 #ead19b;
+      font-size: 4.2rem;
+      line-height: 1;
+      user-select: none;
+    }
+
+    .picture-clue svg {
+      width: 92px;
+      height: 92px;
+      display: block;
+    }
+
+    .build-game {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+    }
+
+    .build-slots {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 9px;
+      width: 100%;
+      min-height: 74px;
+      margin-bottom: 16px;
+    }
+
+    .build-slot {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 68px;
+      min-height: 66px;
+      padding: 8px 12px;
+      border: 3px dashed #bfc5d2;
+      border-radius: 17px;
+      background: rgba(255, 255, 255, 0.74);
+      color: var(--ink);
+      font-size: clamp(1.45rem, 4.6vw, 2rem);
+      font-weight: 1000;
+    }
+
+    .build-slot.filled {
+      border-style: solid;
+      border-color: #9e96ff;
+      background: #f2f0ff;
+    }
+
+    .build-tray {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 11px;
+      width: 100%;
+      margin-bottom: 14px;
+    }
+
+    .build-tile {
+      min-width: 72px;
+      min-height: 60px;
+      padding: 8px 14px;
+      border: 3px solid #f0bd54;
+      border-radius: 17px;
+      background: #fff6d4;
+      color: var(--ink);
+      box-shadow: 0 5px 0 #dba83e;
+      cursor: pointer;
+      font-size: clamp(1.4rem, 4.5vw, 1.95rem);
+      font-weight: 1000;
+    }
+
+    .build-tile:disabled { visibility: hidden; }
+
+    .build-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .feedback-line {
+      width: min(100%, 790px);
+      min-height: 50px;
+      margin: 13px auto 0;
+      padding: 10px 14px;
+      border-radius: 15px;
+      color: var(--muted);
+      font-size: 0.98rem;
+      line-height: 1.4;
+      font-weight: 850;
+      text-align: center;
+    }
+
+    .feedback-line.good { color: #17623b; background: var(--green-soft); }
+    .feedback-line.bad { color: #8f2020; background: var(--red-soft); }
+    .feedback-line.info { color: #3f3a91; background: #f1efff; }
+
+    .feedback-pop {
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      z-index: 40;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      width: 108px;
+      height: 108px;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      color: #ffffff;
+      font-size: 4.1rem;
+      font-weight: 900;
+      box-shadow: 0 14px 35px rgba(36, 50, 74, 0.25);
+      pointer-events: none;
+    }
+
+    .feedback-pop.show { display: flex; animation: popIn 0.55s ease both; }
+    .feedback-pop.correct-pop { background: var(--green); }
+    .feedback-pop.wrong-pop { width: 80px; height: 80px; background: rgba(220, 81, 81, 0.93); font-size: 3rem; }
+
+    @keyframes popIn {
+      0% { opacity: 0; transform: translate(-50%, -50%) scale(0.35); }
+      60% { opacity: 1; transform: translate(-50%, -50%) scale(1.12); }
+      100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    }
+
+    .confetti-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 39;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .confetti-star {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      font-size: 24px;
+      animation: starBurst 900ms ease-out forwards;
+      will-change: transform, opacity;
+    }
+
+    @keyframes starBurst {
+      0% { opacity: 1; transform: translate(-50%, -50%) scale(0.4) rotate(0deg); }
+      100% { opacity: 0; transform: translate(var(--tx), var(--ty)) scale(1.15) rotate(300deg); }
+    }
+
+    .level-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 35;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: rgba(40, 45, 72, 0.5);
+      -webkit-backdrop-filter: blur(3px);
+      backdrop-filter: blur(3px);
+    }
+
+    .level-overlay.show { display: flex; }
+
+    .level-card {
+      width: min(90vw, 480px);
+      padding: 28px 22px;
+      border-radius: 26px;
+      background: #ffffff;
+      box-shadow: var(--shadow);
+      text-align: center;
+      animation: levelRise 0.45s ease both;
+    }
+
+    .level-card .big-icon { margin-bottom: 8px; font-size: 3.2rem; }
+    .level-card h2 { margin-bottom: 8px; font-size: 2rem; }
+    .level-card p { margin-bottom: 0; color: var(--muted); font-size: 1.04rem; line-height: 1.45; }
+
+    @keyframes levelRise {
+      from { opacity: 0; transform: translateY(18px) scale(0.96); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .result-stars {
+      margin: 10px 0 14px;
+      color: #f4b942;
+      font-size: clamp(2rem, 7vw, 3.3rem);
+      letter-spacing: 4px;
+    }
+
+    .result-score {
+      margin: 10px auto;
+      color: var(--primary-dark);
+      font-size: clamp(2.5rem, 9vw, 4.5rem);
+      font-weight: 1000;
+    }
+
+    .result-summary {
+      margin: 0 auto 20px;
+      color: var(--muted);
+      font-size: 1.07rem;
+      line-height: 1.55;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    @media (max-width: 620px) {
+      .rules { grid-template-columns: 1fr; }
+      .rule { padding: 9px 10px; }
+      .topbar { min-height: 68px; gap: 7px; }
+      .score-box, .timer-box { min-height: 43px; padding: 7px 9px; font-size: 0.9rem; }
+      .sound-btn { width: 42px; height: 42px; }
+      .baskets-row { gap: 9px; }
+      .basket-drop { min-height: 172px; }
+      .picture-clue { width: 110px; height: 110px; font-size: 3.5rem; }
+      .picture-clue svg { width: 78px; height: 78px; }
+    }
+  </style>
 </head>
 <body>
+  <main class="app" id="app">
+    <!-- Logo Screen (Displays for 10 seconds) -->
+    <section class="screen active" id="logo-screen" aria-label="Innovine logo">
+      <img src="assets/innovine-logo.png" alt="Innovine Logo" draggable="false">
+    </section>
 
-    <div id="game-container">
-        
-        <!-- LOGO SCREEN (5 SECONDS) -->
-        <div id="logo-screen" class="screen active">
-            <img src="assets/innovine-logo.png" alt="Innovine Logo" class="logo-img" onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='block';">
-            <h1 id="logo-fallback" style="display:none; font-size: 2.5rem; color: #2f3e46;">INNOVINE SOLUTIONS</h1>
-        </div>
-
-        <!-- INSTRUCTION SCREEN -->
-        <div id="instruction-screen" class="screen">
-            <h1 style="font-size: 2.3rem; margin-bottom: 20px;">चलो खेलें! 🎮</h1>
-            <p style="font-size: 1.3rem; padding: 0 10px;">अक्षर <b>"अ"</b> को पहचानें और मजेदार गतिविधियाँ पूरी करें।</p>
-            <button class="btn" onclick="startGame()">शुरू करें (Start)</button>
-        </div>
-
-        <!-- PLAYABLE AREA -->
-        <div id="game-play" style="display: none; flex-direction: column; height: 100%;">
-            <div class="game-header">
-                <span id="game-title">स्तर 1/6</span>
-                <span>स्कोर: <span id="score-display" style="color: var(--primary-color);">0</span></span>
-            </div>
-
-            <div class="game-body">
-                
-                <!-- LEVEL 1: ODD ONE OUT -->
-                <div id="level-1" class="level-container" style="display: none; width: 100%;">
-                    <h2>1. अलग शब्द पहचानो (Odd One Out)</h2>
-                    <p class="hint-text">उस चित्र को चुनें जो 'अ' अक्षर से शुरू <b>नहीं</b> होता है!</p>
-                    <div class="grid-container" id="l1-grid"></div>
-                </div>
-
-                <!-- LEVEL 2: TAP THE PICTURE -->
-                <div id="level-2" class="level-container" style="display: none; width: 100%;">
-                    <h2>2. 'अ' ढूँढ़ो (Find Objects)</h2>
-                    <p class="hint-text">उन चित्रों को छुएं जो 'अ' से शुरू होते हैं[cite: 1]!</p>
-                    <div class="grid-container" id="l2-grid"></div>
-                </div>
-
-                <!-- LEVEL 3: SORT TO BASKET -->
-                <div id="level-3" class="level-container" style="display: none; align-items: center; flex-direction: column;">
-                    <h2>3. खींचो और रखो (Sort Words)</h2>
-                    <p class="hint-text">सिर्फ 'अ' वाले शब्दों पर टैप करके टोकरी में रखें[cite: 1]!</p>
-                    <div class="words-pool" id="l3-pool"></div>
-                    <div class="basket">
-                        <span>अ की टोकरी</span>
-                        <span style="font-size: 2rem;">🧺</span>
-                    </div>
-                </div>
-
-                <!-- LEVEL 4: MATCH PICTURE & WORD -->
-                <div id="level-4" class="level-container" style="display: none; width: 100%;">
-                    <h2>4. मिलाओ (Match Pairs)</h2>
-                    <p class="hint-text">चित्र को सही शब्द के साथ मिलाएँ[cite: 1]!</p>
-                    <div class="match-container">
-                        <div class="match-column" id="match-pics"></div>
-                        <div class="match-column" id="match-words"></div>
-                    </div>
-                </div>
-
-                <!-- LEVEL 5: POP THE BALLOONS -->
-                <div id="level-5" class="level-container" style="display: none; width: 100%;">
-                    <h2>5. गुब्बारे फोड़ो (Pop Balloons)</h2>
-                    <p class="hint-text">'अ' अक्षर वाले गुब्बारों को छुएं[cite: 1]!</p>
-                    <div id="balloon-area"></div>
-                </div>
-
-                <!-- LEVEL 6: FILL IN THE BLANKS -->
-                <div id="level-6" class="level-container" style="display: none; text-align: center; width: 100%;">
-                    <h2>6. खाली स्थान भरो (Fill Blank)</h2>
-                    <p class="hint-text">सही अक्षर चुनकर शब्द पूरा करें[cite: 1]!</p>
-                    <div class="blank-question" id="l6-question">_नार</div>
-                    <div class="options-container" id="l6-options"></div>
-                </div>
-
-            </div>
-        </div>
-
-        <!-- FINAL SCREEN -->
-        <div id="end-screen" class="screen" style="background: linear-gradient(135deg, #4ecdc4, #ffe66d);">
-            <h1 style="font-size: 2.5rem; color: white;">🎉 अद्भुत! 🎉</h1>
-            <p style="font-size: 1.5rem; color: white; margin-top: 10px;">आपने खेल सफलतापूर्वक पूरा कर लिया!</p>
-            <div class="score-badge" id="final-score">0</div>
-            <button class="btn" onclick="location.reload()" style="background: var(--primary-color); box-shadow: 0 6px #b84343;">फिर से खेलें 🔄</button>
-        </div>
-
+    <!-- Ambient Floating Stars -->
+    <div class="ambient-layer" aria-hidden="true">
+      <span class="ambient star a1">★</span>
+      <span class="ambient ribbon a2"></span>
+      <span class="ambient star a3">★</span>
+      <span class="ambient ribbon a4"></span>
+      <span class="ambient star a5">★</span>
+      <span class="ambient ribbon a6"></span>
+      <span class="ambient star a7">★</span>
+      <span class="ambient ribbon a8"></span>
     </div>
 
-    <!-- AUDIO FILES -->
-    <audio id="snd-correct" src="assets/correct.mp3"></audio>
-    <audio id="snd-wrong" src="assets/wrong.mp3"></audio>
-    <audio id="snd-clap" src="assets/clap.mp3"></audio>
+    <!-- Intro / Start Screen -->
+    <section class="screen" id="intro-screen">
+      <div class="panel">
+        <div class="title-badge" aria-hidden="true">अ</div>
+        <h1>स्वर अ की खोज</h1>
+        <p class="intro-copy">
+          तीन खेल पूरे कीजिए। पहले शब्द में स्वर पहचानिए, फिर शब्दों को टोकरी में छाँटिए और अंत में चित्र देखकर शब्द बनाइए।
+        </p>
+        <div class="rules" aria-label="खेल के नियम">
+          <div class="rule">स्तर 1<br>सही स्वर चुनें</div>
+          <div class="rule">स्तर 2<br>सही टोकरी में रखें</div>
+          <div class="rule">स्तर 3<br>चित्र देखकर शब्द बनाएँ</div>
+        </div>
+        <button class="primary-btn" id="start-btn" type="button">खेल शुरू करें</button>
+      </div>
+    </section>
 
-    <script>
-        let score = 0;
-        let currentLevel = 1;
+    <!-- Game Screen -->
+    <section class="screen" id="game-screen">
+      <div class="game-shell">
+        <header class="topbar">
+          <div class="level-info">
+            <span class="level-name" id="level-name">स्तर 1</span>
+            <span class="challenge-count" id="challenge-count">चुनौती 1/10</span>
+          </div>
+          <div class="score-box" aria-label="स्कोर">
+            <span class="score-label">स्कोर:&nbsp;</span><span id="score-value">0</span>
+          </div>
+          <div class="timer-box" id="timer-box" aria-label="शेष समय">
+            <span class="timer-label">समय:&nbsp;</span><span id="timer-value">60</span>s
+          </div>
+          <button class="sound-btn" id="sound-btn" type="button" aria-label="ध्वनि बंद करें" title="ध्वनि बंद करें">🔊</button>
+        </header>
 
-        function playSound(id) {
-            const sound = document.getElementById(id);
-            if (sound) {
-                sound.currentTime = 0;
-                sound.play().catch(() => {});
-            }
+        <div class="progress-track" aria-hidden="true">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+
+        <section class="game-main">
+          <div class="prompt-card">
+            <span class="prompt-label" id="prompt-label">खेल</span>
+            <h2 class="question-text" id="question-text"></h2>
+          </div>
+
+          <div class="task-area" id="task-area"></div>
+          <div class="feedback-line" id="feedback-line" role="status" aria-live="polite"></div>
+        </section>
+      </div>
+    </section>
+
+    <!-- Result Screen -->
+    <section class="screen" id="result-screen">
+      <div class="panel">
+        <div class="title-badge" aria-hidden="true">★</div>
+        <h1 id="result-title">बहुत अच्छा!</h1>
+        <div class="result-stars" id="result-stars" aria-label="प्रदर्शन सितारे">★★★</div>
+        <div class="result-score"><span id="final-score">0</span>/300</div>
+        <p class="result-summary" id="result-summary"></p>
+        <button class="primary-btn" id="play-again-btn" type="button">फिर से खेलें</button>
+      </div>
+    </section>
+
+    <!-- Overlays -->
+    <div class="feedback-pop" id="feedback-pop" aria-hidden="true"></div>
+    <div class="confetti-layer" id="confetti-layer" aria-hidden="true"></div>
+
+    <div class="level-overlay" id="level-overlay" aria-hidden="true">
+      <div class="level-card">
+        <div class="big-icon" id="level-icon">⭐</div>
+        <h2 id="overlay-title">स्तर 1</h2>
+        <p id="overlay-copy"></p>
+      </div>
+    </div>
+
+    <!-- Audio Elements bound directly to assets/ -->
+    <audio id="audio-correct" src="assets/correct.mp3" preload="auto"></audio>
+    <audio id="audio-wrong" src="assets/wrong.mp3" preload="auto"></audio>
+    <audio id="audio-clap" src="assets/clap.mp3" preload="auto"></audio>
+
+    <span class="sr-only" id="live-region" aria-live="assertive"></span>
+  </main>
+
+  <script>
+    (function () {
+      "use strict";
+
+      var QUESTION_TIME = 60;
+      var POINTS_FIRST_TRY = 10;
+      var POINTS_SECOND_TRY = 5;
+      var QUESTIONS_PER_LEVEL = 10;
+      var TOTAL_QUESTIONS = 30;
+
+      function svgPomegranate() {
+        return '<svg viewBox="0 0 100 100" aria-hidden="true"><path d="M43 17c2-6 4-8 7-8s5 2 7 8l8 2-5 6c9 8 14 18 14 31 0 21-16 36-36 36S2 77 2 56c0-13 5-23 14-31l-5-6 8-2c2-6 4-8 7-8s5 2 7 8z" fill="#cf2e2e" stroke="#8f1919" stroke-width="3"/><circle cx="38" cy="45" r="4" fill="#f26b6b" opacity=".6"/><circle cx="30" cy="55" r="3" fill="#f26b6b" opacity=".5"/><path d="M36 21c5 4 23 4 28 0" fill="none" stroke="#8f1919" stroke-width="3" stroke-linecap="round"/><path d="M29 14l7 7M50 9v11M71 14l-7 7" stroke="#9c5c12" stroke-width="4" stroke-linecap="round"/></svg>';
+      }
+
+      function svgWalnut() {
+        return '<svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 12c20 0 34 17 34 36 0 23-14 40-34 40S16 71 16 48c0-19 14-36 34-36z" fill="#b7834c" stroke="#7a522b" stroke-width="3"/><path d="M50 16c-7 4-11 10-11 18 0 6 2 10 5 15-4 3-6 7-6 12 0 8 5 15 12 23" fill="none" stroke="#7a522b" stroke-width="3" stroke-linecap="round"/><path d="M50 16c7 4 11 10 11 18 0 6-2 10-5 15 4 3 6 7 6 12 0 8-5 15-12 23" fill="none" stroke="#7a522b" stroke-width="3" stroke-linecap="round"/><path d="M32 34c4 3 6 7 6 12M68 34c-4 3-6 7-6 12M31 58c6 2 10 6 12 11M69 58c-6 2-10 6-12 11" fill="none" stroke="#8c6134" stroke-width="3" stroke-linecap="round"/></svg>';
+      }
+
+      function svgPickleJar() {
+        return '<svg viewBox="0 0 100 100" aria-hidden="true"><rect x="30" y="10" width="40" height="10" rx="3" fill="#6c7a89"/><rect x="26" y="18" width="48" height="67" rx="10" fill="#d7eef7" stroke="#5e7d8a" stroke-width="3"/><rect x="32" y="28" width="36" height="47" rx="7" fill="#f4d35e" opacity=".95"/><path d="M39 37c5-6 14-6 18 0-5 6-14 6-18 0z" fill="#4f8a10"/><path d="M36 48c4-4 10-5 14-2 2 1 3 3 5 4-4 5-12 7-19 4-3-1-5-3-6-6 2 0 4 0 6 0z" fill="#5a9b19"/><path d="M39 60c6-5 15-5 20 1-4 4-10 6-15 5-3 0-6-2-8-6 1 0 2 0 3 0z" fill="#4f8a10"/><circle cx="58" cy="38" r="2" fill="#d94841"/><circle cx="49" cy="55" r="2" fill="#d94841"/><circle cx="42" cy="64" r="2" fill="#d94841"/></svg>';
+      }
+
+      function svgGuava() {
+        return '<svg viewBox="0 0 100 100" aria-hidden="true"><ellipse cx="34" cy="54" rx="20" ry="24" fill="#7ecb63" stroke="#4a8d38" stroke-width="3"/><ellipse cx="60" cy="54" rx="24" ry="26" fill="#8dd36b" stroke="#4a8d38" stroke-width="3"/><ellipse cx="60" cy="54" rx="16" ry="18" fill="#f7a1b5"/><circle cx="55" cy="48" r="1.8" fill="#f7d06f"/><circle cx="63" cy="48" r="1.8" fill="#f7d06f"/><circle cx="58" cy="54" r="1.8" fill="#f7d06f"/><circle cx="65" cy="56" r="1.8" fill="#f7d06f"/><circle cx="57" cy="61" r="1.8" fill="#f7d06f"/><path d="M43 28c6-7 14-10 21-10" stroke="#6a8f2a" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M64 18c6 0 10 2 14 6-5 2-10 2-14-1z" fill="#66aa44"/></svg>';
+      }
+
+      function svgWardrobe() {
+        return '<svg viewBox="0 0 100 100" aria-hidden="true"><rect x="20" y="14" width="60" height="72" rx="4" fill="#c89055" stroke="#8b5a2b" stroke-width="4"/><rect x="24" y="18" width="24" height="64" fill="#d9a066" stroke="#8b5a2b" stroke-width="2"/><rect x="52" y="18" width="24" height="64" fill="#d9a066" stroke="#8b5a2b" stroke-width="2"/><circle cx="43" cy="50" r="2.8" fill="#6b3f17"/><circle cx="57" cy="50" r="2.8" fill="#6b3f17"/><rect x="16" y="10" width="68" height="8" rx="3" fill="#9f6b3c"/><rect x="24" y="86" width="8" height="6" fill="#8b5a2b"/><rect x="68" y="86" width="8" height="6" fill="#8b5a2b"/></svg>';
+      }
+
+      function getPictureMarkup(key) {
+        var map = {
+          anar: svgPomegranate(),
+          akhrot: svgWalnut(),
+          achar: svgPickleJar(),
+          amrud: svgGuava(),
+          almari: svgWardrobe()
+        };
+        return map[key] || '';
+      }
+
+      var levels = [
+        {
+          type: "find",
+          name: "स्तर 1: स्वर पहचानो",
+          label: "स्वर पहचान",
+          icon: "⭐",
+          intro: "हर शब्द के टुकड़ों में सही स्वर पर टैप कीजिए।",
+          questions: [
+            { id: "find-1", word: "अनार", pieces: ["अ", "ना", "र"], explanation: "अनार का पहला स्वर अ है।" },
+            { id: "find-2", word: "अजगर", pieces: ["अ", "ज", "ग", "र"], explanation: "अजगर का पहला स्वर अ है।" },
+            { id: "find-3", word: "अदरक", pieces: ["अ", "द", "र", "क"], explanation: "अदरक का पहला स्वर अ है।" },
+            { id: "find-4", word: "अचार", pieces: ["अ", "चा", "र"], explanation: "अचार का पहला स्वर अ है।" },
+            { id: "find-5", word: "अमरूद", pieces: ["अ", "म", "रू", "द"], explanation: "अमरूद का पहला स्वर अ है।" },
+            { id: "find-6", word: "अखबार", pieces: ["अ", "ख", "बा", "र"], explanation: "अखबार का पहला स्वर अ है।" },
+            { id: "find-7", word: "अचकन", pieces: ["अ", "च", "क", "न"], explanation: "अचकन का पहला स्वर अ है।" },
+            { id: "find-8", word: "अलमारी", pieces: ["अ", "ल", "मा", "री"], explanation: "अलमारी का पहला स्वर अ है।" },
+            { id: "find-9", word: "अनानास", pieces: ["अ", "ना", "ना", "स"], explanation: "अनानास का पहला स्वर अ है।" },
+            { id: "find-10", word: "अखरोट", pieces: ["अ", "ख", "रो", "ट"], explanation: "अखरोट का पहला स्वर अ है।" }
+          ]
+        },
+        {
+          type: "sort",
+          name: "स्तर 2: अ की टोकरी",
+          label: "शब्द छाँटो",
+          icon: "🧺",
+          intro: "शब्द कार्ड को अ की टोकरी या दूसरी टोकरी में सही जगह रखिए।",
+          questions: [
+            { id: "sort-1", word: "अंगूर", group: "a", explanation: "अंगूर अ से शुरू होता है।" },
+            { id: "sort-2", word: "किताब", group: "other", explanation: "किताब क से शुरू होती है, अ से नहीं।" },
+            { id: "sort-3", word: "अमन", group: "a", explanation: "अमन अ से शुरू होता है।" },
+            { id: "sort-4", word: "पतंग", group: "other", explanation: "पतंग प से शुरू होती है, अ से नहीं।" },
+            { id: "sort-5", word: "अकबर", group: "a", explanation: "अकबर अ से शुरू होता है।" },
+            { id: "sort-6", word: "गमला", group: "other", explanation: "गमला ग से शुरू होता है, अ से नहीं।" },
+            { id: "sort-7", word: "अजब", group: "a", explanation: "अजब अ से शुरू होता है।" },
+            { id: "sort-8", word: "कमल", group: "other", explanation: "कमल क से शुरू होता है, अ से नहीं।" },
+            { id: "sort-9", word: "असर", group: "a", explanation: "असर अ से शुरू होता है।" },
+            { id: "sort-10", word: "सूरज", group: "other", explanation: "सूरज स से शुरू होता है, अ से नहीं।" }
+          ]
+        },
+        {
+          type: "build",
+          name: "स्तर 3: चित्र और शब्द",
+          label: "शब्द बनाओ",
+          icon: "🧩",
+          intro: "चित्र देखिए और सही अक्षरों को चुनकर शब्द पूरा कीजिए।",
+          questions: [
+            { id: "build-1", word: "अनार", pictureKey: "anar", tiles: ["अ", "ना", "र", "म", "क"], target: ["अ", "ना", "र"], explanation: "चित्र देखकर सही शब्द अनार बनता है।" },
+            { id: "build-2", word: "अखरोट", pictureKey: "akhrot", tiles: ["अ", "ख", "रो", "ट", "ल"], target: ["अ", "ख", "रो", "ट"], explanation: "चित्र देखकर सही शब्द अखरोट बनता है।" },
+            { id: "build-3", word: "अचार", pictureKey: "achar", tiles: ["अ", "चा", "र", "प", "ग"], target: ["अ", "चा", "र"], explanation: "चित्र देखकर सही शब्द अचार बनता है।" },
+            { id: "build-4", word: "अमरूद", pictureKey: "amrud", tiles: ["अ", "म", "रू", "द", "न"], target: ["अ", "म", "रू", "द"], explanation: "चित्र देखकर सही शब्द अमरूद बनता है।" },
+            { id: "build-5", word: "अलमारी", pictureKey: "almari", tiles: ["अ", "ल", "मा", "री", "स"], target: ["अ", "ल", "मा", "री"], explanation: "चित्र देखकर सही शब्द अलमारी बनता है।" },
+            { id: "build-6", word: "अमरूद", pictureKey: "amrud", tiles: ["अ", "म", "रू", "द", "त"], target: ["अ", "म", "रू", "द"], explanation: "चित्र देखकर सही शब्द अमरूद बनता है।" },
+            { id: "build-7", word: "अचार", pictureKey: "achar", tiles: ["अ", "चा", "र", "श", "भ"], target: ["अ", "चा", "र"], explanation: "चित्र देखकर सही शब्द अचार बनता है।" },
+            { id: "build-8", word: "अनार", pictureKey: "anar", tiles: ["अ", "ना", "र", "ज", "ब"], target: ["अ", "ना", "र"], explanation: "चित्र देखकर सही शब्द अनार बनता है।" },
+            { id: "build-9", word: "अखरोट", pictureKey: "akhrot", tiles: ["अ", "ख", "रो", "ट", "द"], target: ["अ", "ख", "रो", "ट"], explanation: "चित्र देखकर सही शब्द अखरोट बनता है।" },
+            { id: "build-10", word: "अलमारी", pictureKey: "almari", tiles: ["अ", "ल", "मा", "री", "ह"], target: ["अ", "ल", "मा", "री"], explanation: "चित्र देखकर सही शब्द अलमारी बनता है।" }
+          ]
+        }
+      ];
+
+      var state = {
+        levelIndex: 0,
+        questionIndex: 0,
+        totalIndex: 0,
+        score: 0,
+        soundOn: true,
+        timerId: null,
+        timeLeft: QUESTION_TIME,
+        attemptCount: 0,
+        buildSlots: [],
+        dragData: null
+      };
+
+      var dom = {
+        logoScreen: document.getElementById("logo-screen"),
+        introScreen: document.getElementById("intro-screen"),
+        gameScreen: document.getElementById("game-screen"),
+        resultScreen: document.getElementById("result-screen"),
+        startBtn: document.getElementById("start-btn"),
+        playAgainBtn: document.getElementById("play-again-btn"),
+        soundBtn: document.getElementById("sound-btn"),
+        levelName: document.getElementById("level-name"),
+        challengeCount: document.getElementById("challenge-count"),
+        scoreValue: document.getElementById("score-value"),
+        timerValue: document.getElementById("timer-value"),
+        timerBox: document.getElementById("timer-box"),
+        progressFill: document.getElementById("progress-fill"),
+        promptLabel: document.getElementById("prompt-label"),
+        questionText: document.getElementById("question-text"),
+        taskArea: document.getElementById("task-area"),
+        feedbackLine: document.getElementById("feedback-line"),
+        feedbackPop: document.getElementById("feedback-pop"),
+        confettiLayer: document.getElementById("confetti-layer"),
+        levelOverlay: document.getElementById("level-overlay"),
+        overlayTitle: document.getElementById("overlay-title"),
+        overlayCopy: document.getElementById("overlay-copy"),
+        levelIcon: document.getElementById("level-icon"),
+        finalScore: document.getElementById("final-score"),
+        resultStars: document.getElementById("result-stars"),
+        resultTitle: document.getElementById("result-title"),
+        resultSummary: document.getElementById("result-summary"),
+        audioCorrect: document.getElementById("audio-correct"),
+        audioWrong: document.getElementById("audio-wrong"),
+        audioClap: document.getElementById("audio-clap"),
+        liveRegion: document.getElementById("live-region")
+      };
+
+      function initApp() {
+        // Keeps the logo screen active for 10000ms (10 seconds)
+        setTimeout(function () {
+          showScreen(dom.introScreen);
+        }, 10000);
+
+        dom.startBtn.addEventListener("click", startGame);
+        dom.playAgainBtn.addEventListener("click", startGame);
+        dom.soundBtn.addEventListener("click", toggleSound);
+      }
+
+      function showScreen(screenEl) {
+        var screens = [dom.logoScreen, dom.introScreen, dom.gameScreen, dom.resultScreen];
+        screens.forEach(function (s) {
+          s.classList.remove("active");
+        });
+        screenEl.classList.add("active");
+      }
+
+      function toggleSound() {
+        state.soundOn = !state.soundOn;
+        dom.soundBtn.textContent = state.soundOn ? "🔊" : "🔇";
+        dom.soundBtn.title = state.soundOn ? "ध्वनि बंद करें" : "ध्वनि चालू करें";
+        dom.soundBtn.setAttribute("aria-label", dom.soundBtn.title);
+      }
+
+      function playAudio(audioEl) {
+        if (!state.soundOn || !audioEl) return;
+        try {
+          audioEl.currentTime = 0;
+          audioEl.play().catch(function () {});
+        } catch (e) {}
+      }
+
+      function speak(text) {
+        var announce = dom.liveRegion;
+        if (announce) announce.textContent = text;
+      }
+
+      function startGame() {
+        state.levelIndex = 0;
+        state.questionIndex = 0;
+        state.totalIndex = 0;
+        state.score = 0;
+        dom.scoreValue.textContent = "0";
+        showScreen(dom.gameScreen);
+        showLevelIntro(0);
+      }
+
+      function showLevelIntro(levelIdx) {
+        stopTimer();
+        var level = levels[levelIdx];
+        dom.levelIcon.textContent = level.icon;
+        dom.overlayTitle.textContent = level.name;
+        dom.overlayCopy.textContent = level.intro;
+        dom.levelOverlay.classList.add("show");
+
+        setTimeout(function () {
+          dom.levelOverlay.classList.remove("show");
+          loadQuestion();
+        }, 2200);
+      }
+
+      function loadQuestion() {
+        state.attemptCount = 0;
+        state.buildSlots = [];
+
+        var currentLevel = levels[state.levelIndex];
+        var q = currentLevel.questions[state.questionIndex];
+
+        dom.levelName.textContent = currentLevel.name;
+        dom.challengeCount.textContent = "चुनौती " + (state.questionIndex + 1) + "/" + QUESTIONS_PER_LEVEL;
+        dom.promptLabel.textContent = currentLevel.label;
+        dom.progressFill.style.width = ((state.totalIndex / TOTAL_QUESTIONS) * 100) + "%";
+
+        setFeedback("", "");
+        dom.taskArea.innerHTML = "";
+
+        if (currentLevel.type === "find") {
+          renderFindQuestion(q);
+        } else if (currentLevel.type === "sort") {
+          renderSortQuestion(q);
+        } else if (currentLevel.type === "build") {
+          renderBuildQuestion(q);
         }
 
-        // --- FIXED LOGO SCREEN TIMER (5 SECONDS) ---
-        setTimeout(() => {
-            const logoScreen = document.getElementById('logo-screen');
-            const instScreen = document.getElementById('instruction-screen');
-            if(logoScreen && instScreen) {
-                logoScreen.classList.remove('active');
-                instScreen.classList.add('active');
-            }
-        }, 5000);
+        resetTimer();
+      }
 
-        function startGame() {
-            document.getElementById('instruction-screen').classList.remove('active');
-            document.getElementById('game-play').style.display = 'flex';
-            loadLevel(1);
+      function resetTimer() {
+        stopTimer();
+        state.timeLeft = QUESTION_TIME;
+        updateTimerDisplay();
+        state.timerId = setInterval(function () {
+          state.timeLeft--;
+          updateTimerDisplay();
+          if (state.timeLeft <= 0) {
+            stopTimer();
+            handleTimeout();
+          }
+        }, 1000);
+      }
+
+      function stopTimer() {
+        if (state.timerId) {
+          clearInterval(state.timerId);
+          state.timerId = null;
+        }
+      }
+
+      function updateTimerDisplay() {
+        dom.timerValue.textContent = state.timeLeft;
+        if (state.timeLeft <= 10) {
+          dom.timerBox.classList.add("low");
+        } else {
+          dom.timerBox.classList.remove("low");
+        }
+      }
+
+      function handleTimeout() {
+        var currentLevel = levels[state.levelIndex];
+        var q = currentLevel.questions[state.questionIndex];
+        playAudio(dom.audioWrong);
+        showFeedbackPop(false);
+        setFeedback("समय समाप्त! सही उत्तर: " + (q.word || q.target.join("")), "bad");
+        speak("समय समाप्त!");
+
+        setTimeout(function () {
+          advanceQuestion();
+        }, 2000);
+      }
+
+      function renderFindQuestion(q) {
+        dom.questionText.innerHTML = 'इस शब्द में <span class="swar-a">स्वर "अ"</span> कहाँ है? टैप करें:';
+
+        var wrap = document.createElement("div");
+        var wordBox = document.createElement("div");
+        wordBox.className = "word-display";
+        wordBox.textContent = q.word;
+
+        var tray = document.createElement("div");
+        tray.className = "piece-tray";
+
+        q.pieces.forEach(function (p) {
+          var btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "letter-piece";
+          btn.textContent = p;
+          btn.addEventListener("click", function () {
+            checkFindAnswer(p, btn, q);
+          });
+          tray.appendChild(btn);
+        });
+
+        wrap.appendChild(wordBox);
+        wrap.appendChild(tray);
+        dom.taskArea.appendChild(wrap);
+      }
+
+      function checkFindAnswer(piece, btn, q) {
+        if (piece === "अ") {
+          btn.classList.add("correct");
+          handleSuccess(q.explanation);
+        } else {
+          btn.classList.add("wrong");
+          handleFailure("फिर से कोशिश करें! यह स्वर 'अ' नहीं है।");
+        }
+      }
+
+      function renderSortQuestion(q) {
+        dom.questionText.innerHTML = 'क्या यह शब्द <span class="swar-a">"अ"</span> से शुरू होता है? सही टोकरी में रखें:';
+
+        var wrap = document.createElement("div");
+        wrap.className = "sort-game";
+
+        var wordCard = document.createElement("div");
+        wordCard.className = "word-card";
+        wordCard.textContent = q.word;
+        wordCard.draggable = true;
+
+        var basketsRow = document.createElement("div");
+        basketsRow.className = "baskets-row";
+
+        var basketA = createBasket("a", "स्वर अ वाली टोकरी", "🧺", "अ");
+        var basketOther = createBasket("other", "अन्य अक्षर", "🧺", "अन्य");
+
+        basketsRow.appendChild(basketA);
+        basketsRow.appendChild(basketOther);
+
+        wrap.appendChild(wordCard);
+        wrap.appendChild(basketsRow);
+        dom.taskArea.appendChild(wrap);
+
+        setupDragAndDrop(wordCard, [basketA, basketOther], q);
+      }
+
+      function createBasket(groupKey, title, emoji, badge) {
+        var b = document.createElement("div");
+        b.className = "basket-drop";
+        b.dataset.group = groupKey;
+        b.innerHTML = '<span class="basket-label">' + title + '</span>' +
+                      '<div class="basket-emoji">' + emoji + '</div>' +
+                      '<span class="basket-badge">' + badge + '</span>';
+        return b;
+      }
+
+      function setupDragAndDrop(card, baskets, q) {
+        card.addEventListener("dragstart", function (e) {
+          e.dataTransfer.setData("text/plain", q.group);
+          card.classList.add("dragging");
+        });
+
+        card.addEventListener("dragend", function () {
+          card.classList.remove("dragging");
+        });
+
+        baskets.forEach(function (b) {
+          b.addEventListener("dragover", function (e) {
+            e.preventDefault();
+            b.classList.add("drag-over");
+          });
+
+          b.addEventListener("dragleave", function () {
+            b.classList.remove("drag-over");
+          });
+
+          b.addEventListener("drop", function (e) {
+            e.preventDefault();
+            b.classList.remove("drag-over");
+            checkSortAnswer(b.dataset.group, b, q);
+          });
+
+          b.addEventListener("click", function () {
+            checkSortAnswer(b.dataset.group, b, q);
+          });
+        });
+      }
+
+      function checkSortAnswer(selectedGroup, basketEl, q) {
+        if (selectedGroup === q.group) {
+          basketEl.classList.add("correct-target");
+          handleSuccess(q.explanation);
+        } else {
+          basketEl.classList.add("wrong-target");
+          setTimeout(function () {
+            basketEl.classList.remove("wrong-target");
+          }, 400);
+          handleFailure("गलत टोकरी! फिर से ध्यान से सोचिए।");
+        }
+      }
+
+      function renderBuildQuestion(q) {
+        dom.questionText.textContent = "चित्र पहचानकर अक्षर जोड़िए और शब्द बनाइए:";
+
+        var wrap = document.createElement("div");
+        wrap.className = "build-game";
+
+        var picCard = document.createElement("div");
+        picCard.className = "picture-card";
+        picCard.innerHTML = '<span class="picture-label">चित्र सुराग</span>' +
+                            '<div class="picture-clue">' + getPictureMarkup(q.pictureKey) + '</div>';
+
+        var slotsContainer = document.createElement("div");
+        slotsContainer.className = "build-slots";
+
+        for (var i = 0; i < q.target.length; i++) {
+          var slot = document.createElement("div");
+          slot.className = "build-slot";
+          slot.dataset.index = i;
+          slotsContainer.appendChild(slot);
         }
 
-        function updateScore(points) {
-            score += points;
-            if(score < 0) score = 0;
-            document.getElementById('score-display').innerText = score;
+        var tray = document.createElement("div");
+        tray.className = "build-tray";
+
+        q.tiles.forEach(function (tileText, idx) {
+          var btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "build-tile";
+          btn.textContent = tileText;
+          btn.dataset.tileIndex = idx;
+          btn.addEventListener("click", function () {
+            addTileToBuild(tileText, btn, q);
+          });
+          tray.appendChild(btn);
+        });
+
+        var actions = document.createElement("div");
+        actions.className = "build-actions";
+
+        var clearBtn = document.createElement("button");
+        clearBtn.type = "button";
+        clearBtn.className = "small-btn";
+        clearBtn.textContent = "मिटाएँ";
+        clearBtn.addEventListener("click", function () {
+          resetBuildSlots(q);
+        });
+
+        actions.appendChild(clearBtn);
+
+        wrap.appendChild(picCard);
+        wrap.appendChild(slotsContainer);
+        wrap.appendChild(tray);
+        wrap.appendChild(actions);
+
+        dom.taskArea.appendChild(wrap);
+      }
+
+      function addTileToBuild(tileText, tileBtn, q) {
+        if (state.buildSlots.length >= q.target.length) return;
+
+        state.buildSlots.push({ text: tileText, btnEl: tileBtn });
+        tileBtn.disabled = true;
+
+        updateBuildSlotsUI();
+
+        if (state.buildSlots.length === q.target.length) {
+          checkBuildAnswer(q);
+        }
+      }
+
+      function resetBuildSlots(q) {
+        state.buildSlots.forEach(function (item) {
+          if (item.btnEl) item.btnEl.disabled = false;
+        });
+        state.buildSlots = [];
+        updateBuildSlotsUI();
+        setFeedback("", "");
+      }
+
+      function updateBuildSlotsUI() {
+        var slots = dom.taskArea.querySelectorAll(".build-slot");
+        slots.forEach(function (slot, idx) {
+          if (state.buildSlots[idx]) {
+            slot.textContent = state.buildSlots[idx].text;
+            slot.classList.add("filled");
+          } else {
+            slot.textContent = "";
+            slot.classList.remove("filled", "wrong", "correct");
+          }
+        });
+      }
+
+      function checkBuildAnswer(q) {
+        var userWord = state.buildSlots.map(function (s) { return s.text; }).join("");
+        var targetWord = q.target.join("");
+
+        var slots = dom.taskArea.querySelectorAll(".build-slot");
+
+        if (userWord === targetWord) {
+          slots.forEach(function (s) { s.classList.add("correct"); });
+          handleSuccess(q.explanation);
+        } else {
+          slots.forEach(function (s) { s.classList.add("wrong"); });
+          handleFailure("शब्द सही नहीं बना। मिटाएँ दबाकर फिर से कोशिश करें!");
+        }
+      }
+
+      function handleSuccess(explanation) {
+        stopTimer();
+        state.attemptCount++;
+
+        var points = (state.attemptCount === 1) ? POINTS_FIRST_TRY : POINTS_SECOND_TRY;
+        state.score += points;
+        dom.scoreValue.textContent = state.score;
+
+        playAudio(dom.audioCorrect);
+        triggerConfetti();
+        showFeedbackPop(true);
+
+        setFeedback("शाबाश! सही उत्तर! (+ " + points + " अंक) " + (explanation || ""), "good");
+        speak("शाबाश! सही उत्तर!");
+
+        setTimeout(function () {
+          advanceQuestion();
+        }, 1800);
+      }
+
+      function handleFailure(msg) {
+        state.attemptCount++;
+        playAudio(dom.audioWrong);
+        showFeedbackPop(false);
+        setFeedback(msg, "bad");
+        speak("गलत उत्तर! फिर कोशिश करें।");
+      }
+
+      function advanceQuestion() {
+        state.questionIndex++;
+        state.totalIndex++;
+
+        if (state.questionIndex >= QUESTIONS_PER_LEVEL) {
+          state.levelIndex++;
+          state.questionIndex = 0;
+
+          if (state.levelIndex >= levels.length) {
+            finishGame();
+          } else {
+            showLevelIntro(state.levelIndex);
+          }
+        } else {
+          loadQuestion();
+        }
+      }
+
+      function finishGame() {
+        stopTimer();
+        playAudio(dom.audioClap);
+
+        dom.finalScore.textContent = state.score;
+
+        var stars = "★☆☆";
+        var title = "अच्छा प्रयास!";
+        var summary = "आपने स्वर 'अ' का अच्छा अभ्यास किया। थोड़ा और प्रयास करके आप full marks ला सकते हैं!";
+
+        if (state.score >= 250) {
+          stars = "★★★";
+          title = "अद्भुत! आप स्वर अ के विजेता हैं!";
+          summary = "शानदार प्रदर्शन! आपने सभी चुनौतियों को बहुत ही बेहतरीन तरीके से पूरा किया।";
+        } else if (state.score >= 180) {
+          stars = "★★☆";
+          title = "बहुत बढ़िया!";
+          summary = "आपने स्वर 'अ' को अच्छे से पहचान लिया है। बहुत अच्छा खेल!";
         }
 
-        function loadLevel(lvl) {
-            currentLevel = lvl;
-            document.querySelectorAll('.level-container').forEach(el => el.style.display = 'none');
-            
-            if(lvl <= 6) {
-                document.getElementById('game-title').innerText = `स्तर ${lvl}/6`;
-            }
-            
-            if (lvl === 1) {
-                document.getElementById('level-1').style.display = 'block';
-                setupLevel1();
-            } else if (lvl === 2) {
-                document.getElementById('level-2').style.display = 'block';
-                setupLevel2();
-            } else if (lvl === 3) {
-                document.getElementById('level-3').style.display = 'flex';
-                setupLevel3();
-            } else if (lvl === 4) {
-                document.getElementById('level-4').style.display = 'block';
-                setupLevel4();
-            } else if (lvl === 5) {
-                document.getElementById('level-5').style.display = 'block';
-                setupLevel5();
-            } else if (lvl === 6) {
-                document.getElementById('level-6').style.display = 'block';
-                setupLevel6();
-            } else {
-                document.getElementById('game-play').style.display = 'none';
-                document.getElementById('end-screen').classList.add('active');
-                document.getElementById('final-score').innerText = score;
-                playSound('snd-clap');
-            }
+        dom.resultStars.textContent = stars;
+        dom.resultTitle.textContent = title;
+        dom.resultSummary.textContent = summary;
+
+        showScreen(dom.resultScreen);
+      }
+
+      function setFeedback(msg, type) {
+        dom.feedbackLine.textContent = msg;
+        dom.feedbackLine.className = "feedback-line " + (type || "");
+      }
+
+      function showFeedbackPop(isCorrect) {
+        dom.feedbackPop.textContent = isCorrect ? "✓" : "✗";
+        dom.feedbackPop.className = "feedback-pop show " + (isCorrect ? "correct-pop" : "wrong-pop");
+
+        setTimeout(function () {
+          dom.feedbackPop.className = "feedback-pop";
+        }, 600);
+      }
+
+      function triggerConfetti() {
+        dom.confettiLayer.innerHTML = "";
+        var colors = ["#ffd166", "#ef6c00", "#6558e8", "#2eaf68", "#dc5151"];
+
+        for (var i = 0; i < 18; i++) {
+          var star = document.createElement("span");
+          star.className = "confetti-star";
+          star.textContent = "★";
+          star.style.color = colors[Math.floor(Math.random() * colors.length)];
+
+          var angle = Math.random() * Math.PI * 2;
+          var dist = 80 + Math.random() * 140;
+          var tx = Math.cos(angle) * dist + "px";
+          var ty = Math.sin(angle) * dist + "px";
+
+          star.style.setProperty("--tx", tx);
+          star.style.setProperty("--ty", ty);
+
+          dom.confettiLayer.appendChild(star);
         }
 
-        /* --- ACTIVITY 1: ODD ONE OUT --- */
-        const l1Data = [
-            { word: 'अदरक', icon: '🫚', isOdd: false },[cite: 1]
-            { word: 'अचार', icon: '🫙', isOdd: false },[cite: 1]
-            { word: 'किताब', icon: '📚', isOdd: true }, 
-            { word: 'अमरूद', icon: '🥑', isOdd: false }[cite: 1]
-        ];
-        function setupLevel1() {
-            const grid = document.getElementById('l1-grid');
-            grid.innerHTML = '';
-            l1Data.forEach(item => {
-                const div = document.createElement('div');
-                div.className = 'grid-item';
-                div.innerHTML = `${item.icon} <span>${item.word}</span>`;[cite: 1]
-                div.onclick = () => {
-                    if (item.isOdd) {
-                        playSound('snd-correct');
-                        div.style.background = '#d4edda';
-                        updateScore(10);
-                        setTimeout(() => loadLevel(2), 1200);
-                    } else {
-                        playSound('snd-wrong');
-                        div.style.background = '#f8d7da';
-                        updateScore(-5);
-                    }
-                };
-                grid.appendChild(div);
-            });
-        }
+        setTimeout(function () {
+          dom.confettiLayer.innerHTML = "";
+        }, 950);
+      }
 
-        /* --- ACTIVITY 2: FIND OBJECTS --- */
-        const l2Data = [
-            { word: 'अनार', icon: '🍎', isA: true },[cite: 1]
-            { word: 'घर', icon: '🏠', isA: false },[cite: 1]
-            { word: 'अजगर', icon: '🐍', isA: true },[cite: 1]
-            { word: 'बत्तख', icon: '🦆', isA: false }[cite: 1]
-        ];
-        function setupLevel2() {
-            const grid = document.getElementById('l2-grid');
-            grid.innerHTML = '';
-            let correctLeft = l2Data.filter(i => i.isA).length;
-
-            l2Data.forEach(item => {
-                const div = document.createElement('div');
-                div.className = 'grid-item';
-                div.innerHTML = `${item.icon} <span>${item.word}</span>`;[cite: 1]
-                div.onclick = () => {
-                    if (div.style.pointerEvents === 'none') return;
-                    if (item.isA) {
-                        playSound('snd-correct');
-                        div.style.background = '#d4edda';
-                        updateScore(10);
-                        correctLeft--;
-                        div.style.pointerEvents = 'none';
-                        if (correctLeft === 0) setTimeout(() => loadLevel(3), 1200);
-                    } else {
-                        playSound('snd-wrong');
-                        div.style.background = '#f8d7da';
-                        updateScore(-5);
-                    }
-                };
-                grid.appendChild(div);
-            });
-        }
-
-        /* --- ACTIVITY 3: SORT WORDS --- */
-        const l3Data = [
-            { text: 'अचार', isA: true },[cite: 1]
-            { text: 'कमल', isA: false },[cite: 1]
-            { text: 'अखबार', isA: true },[cite: 1]
-            { text: 'नमक', isA: false }[cite: 1]
-        ];
-        function setupLevel3() {
-            const pool = document.getElementById('l3-pool');
-            pool.innerHTML = '';
-            let itemsToFind = l3Data.filter(i => i.isA).length;
-
-            l3Data.forEach(item => {
-                const tag = document.createElement('div');
-                tag.className = 'word-tag';
-                tag.innerText = item.text;[cite: 1]
-                tag.onclick = () => {
-                    if(item.isA) {
-                        playSound('snd-correct');
-                        tag.style.transform = 'scale(0)';
-                        updateScore(10);
-                        itemsToFind--;
-                        if(itemsToFind === 0) setTimeout(() => loadLevel(4), 1200);
-                    } else {
-                        playSound('snd-wrong');
-                        tag.style.background = '#f8d7da';
-                        updateScore(-5);
-                    }
-                };
-                pool.appendChild(tag);
-            });
-        }
-
-        /* --- ACTIVITY 4: MATCH PAIRS --- */
-        const l4Items = [
-            { id: 1, word: 'अमरूद', icon: '🥑' },[cite: 1]
-            { id: 2, word: 'अचकन', icon: '🥋' }[cite: 1]
-        ];
-        let selPic = null, selWord = null;
-        function setupLevel4() {
-            const picsCol = document.getElementById('match-pics');
-            const wordsCol = document.getElementById('match-words');
-            picsCol.innerHTML = ''; wordsCol.innerHTML = '';
-            let totalMatches = l4Items.length;
-
-            [...l4Items].sort(() => Math.random() - 0.5).forEach(item => {
-                const card = document.createElement('div');
-                card.className = 'match-card'; card.innerHTML = item.icon; card.dataset.id = item.id;
-                card.onclick = () => {
-                    document.querySelectorAll('#match-pics .match-card').forEach(c => c.classList.remove('selected'));
-                    card.classList.add('selected'); selPic = card; checkMatch();
-                };
-                picsCol.appendChild(card);
-            });
-
-            [...l4Items].sort(() => Math.random() - 0.5).forEach(item => {
-                const card = document.createElement('div');
-                card.className = 'match-card'; card.innerText = item.word; card.dataset.id = item.id;[cite: 1]
-                card.onclick = () => {
-                    document.querySelectorAll('#match-words .match-card').forEach(c => c.classList.remove('selected'));
-                    card.classList.add('selected'); selWord = card; checkMatch();
-                };
-                wordsCol.appendChild(card);
-            });
-
-            function checkMatch() {
-                if (selPic && selWord) {
-                    if (selPic.dataset.id === selWord.dataset.id) {
-                        playSound('snd-correct');
-                        selPic.classList.add('matched'); selWord.classList.add('matched');
-                        updateScore(10); totalMatches--;
-                        selPic = null; selWord = null;
-                        if (totalMatches === 0) setTimeout(() => loadLevel(5), 1200);
-                    } else {
-                        playSound('snd-wrong');
-                        selPic.classList.remove('selected'); selWord.classList.remove('selected');
-                        selPic = null; selWord = null; updateScore(-5);
-                    }
-                }
-            }
-        }
-
-        /* --- ACTIVITY 5: BALLOON POPPING --- */
-        const balloonData = [
-            { text: 'अ', isCorrect: true },[cite: 1]
-            { text: 'क', isCorrect: false },
-            { text: 'अ', isCorrect: true },[cite: 1]
-            { text: 'म', isCorrect: false },
-            { text: 'अ', isCorrect: true }[cite: 1]
-        ];
-        function setupLevel5() {
-            const area = document.getElementById('balloon-area');
-            area.innerHTML = '';
-            let correctBalloonsLeft = balloonData.filter(b => b.isCorrect).length;
-
-            balloonData.forEach((data, index) => {
-                const b = document.createElement('div');
-                b.className = 'balloon';
-                b.innerText = data.text;
-                
-                b.style.left = (20 + (index * 75) % 360) + 'px';
-                b.style.top = (40 + (index * 60) % 220) + 'px';
-                b.style.backgroundColor = ['#ff6b6b', '#4ecdc4', '#ffe66d', '#a29bfe', '#fd79a8'][index];
-
-                b.onclick = () => {
-                    if (data.isCorrect) {
-                        playSound('snd-correct');
-                        b.style.transform = 'scale(1.3)';
-                        b.style.opacity = '0';
-                        b.style.transition = 'all 0.3s';
-                        b.style.pointerEvents = 'none';
-                        updateScore(10);
-                        correctBalloonsLeft--;
-                        if (correctBalloonsLeft === 0) {
-                            setTimeout(() => loadLevel(6), 1200);
-                        }
-                    } else {
-                        playSound('snd-wrong');
-                        updateScore(-5);
-                    }
-                };
-                area.appendChild(b);
-            });
-        }
-
-        /* --- NEW ACTIVITY 6: FILL IN THE BLANK --- */
-        const l6Questions = [
-            { display: '_नार', correct: 'अ', options: ['अ', 'इ', 'उ'] },[cite: 1]
-            { display: '_दरक', correct: 'अ', options: ['क', 'अ', 'प'] }[cite: 1]
-        ];
-        let currentL6Idx = 0;
-
-        function setupLevel6() {
-            if (currentL6Idx >= l6Questions.length) {
-                loadLevel(7); // Ends game
-                return;
-            }
-            
-            const qData = l6Questions[currentL6Idx];
-            document.getElementById('l6-question').innerText = qData.display;
-            
-            const optContainer = document.getElementById('l6-options');
-            optContainer.innerHTML = '';
-
-            qData.options.forEach(opt => {
-                const btn = document.createElement('button');
-                btn.className = 'option-btn';
-                btn.innerText = opt;
-                btn.onclick = () => {
-                    if (opt === qData.correct) {
-                        playSound('snd-correct');
-                        updateScore(10);
-                        currentL6Idx++;
-                        setTimeout(() => setupLevel6(), 1200);
-                    } else {
-                        playSound('snd-wrong');
-                        updateScore(-5);
-                    }
-                };
-                optContainer.appendChild(btn);
-            });
-        }
-    </script>
+      window.addEventListener("DOMContentLoaded", initApp);
+    })();
+  </script>
 </body>
 </html>
