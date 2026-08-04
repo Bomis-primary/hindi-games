@@ -3,298 +3,297 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>सच्चा देशप्रेम - Cable Word Repair</title>
+    <title>बड़े सपनों वाला बच्चा - Catching Game</title>
     <style>
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Arial, sans-serif;
             user-select: none;
         }
 
         body {
-            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
-            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: #fff;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 10px;
+            overflow: hidden;
         }
 
         #game-container {
             width: 100%;
-            max-width: 700px;
+            max-width: 480px;
+            height: 90vh;
+            max-height: 800px;
             background: #ffffff;
             color: #333;
-            border-radius: 20px;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .screen {
+            display: none;
+            width: 100%;
+            height: 100%;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             padding: 20px;
             text-align: center;
-            position: relative;
-            min-height: 580px;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        /* Splash Screen */
+        #screen-splash {
+            background: linear-gradient(135deg, #00c6ff, #0072ff);
+            color: white;
+        }
+
+        .splash-title {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .splash-sub {
+            font-size: 18px;
+            margin-bottom: 25px;
+            opacity: 0.9;
+        }
+
+        .countdown-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 4px solid white;
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow: hidden;
+            font-size: 32px;
+            font-weight: bold;
         }
 
-        /* Screen Management */
-        .screen {
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            height: 100%;
-        }
-
-        .screen.active { 
-            display: flex; 
-        }
-
-        /* Screen 1: Innovine Logo Splash */
-        .splash-logo {
-            max-width: 280px;
-            height: auto;
-            margin-bottom: 20px;
-            animation: fadeIn 1.5s ease-in-out;
-        }
-
-        .timer-text {
-            color: #666;
-            font-size: 0.9rem;
-            margin-top: 15px;
-        }
-
-        /* Typography */
-        h1 { color: #0f2027; font-size: 2rem; margin-bottom: 10px; }
-        p.subtitle { color: #555; font-size: 1rem; margin-bottom: 20px; }
-
-        /* Instructions */
-        .instructions-list {
+        /* Instructions Screen */
+        .instruction-box {
             background: #f0f4f8;
-            border-radius: 12px;
-            padding: 20px;
+            border-left: 5px solid #0072ff;
+            padding: 15px;
             text-align: left;
-            margin-bottom: 20px;
-            width: 100%;
-        }
-
-        .instructions-list li {
-            font-size: 0.95rem;
-            margin-bottom: 10px;
-            color: #444;
+            margin: 15px 0;
+            border-radius: 4px;
+            font-size: 15px;
             line-height: 1.5;
         }
 
-        /* Gameplay Elements */
-        #game-canvas {
-            width: 100%;
-            height: 380px;
-            background: #111e25;
-            border: 2px solid #0f2027;
-            border-radius: 12px;
-            position: relative;
-            overflow: hidden;
-            margin-bottom: 10px;
+        .btn {
+            background: #0072ff;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 25px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,114,255,0.3);
+            transition: transform 0.1s, background 0.2s;
+            margin-top: 15px;
         }
 
-        .hud {
+        .btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Game Screen */
+        #screen-game {
+            padding: 0;
+            justify-content: flex-start;
+        }
+
+        .game-header {
+            width: 100%;
+            background: #2c3e50;
+            color: white;
+            padding: 10px 15px;
             display: flex;
             justify-content: space-between;
-            width: 100%;
-            background: #eef2f7;
-            padding: 10px 15px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .riddle-card {
+            width: 90%;
+            background: #fff8e1;
+            border: 2px solid #ffe082;
             border-radius: 8px;
-            margin-bottom: 10px;
-            font-weight: bold;
-            color: #0f2027;
-        }
-
-        #riddle-box {
-            position: absolute;
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #203a43;
-            color: #00e676;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: bold;
-            border: 1px solid #00e676;
-            width: 90%;
-            z-index: 10;
-        }
-
-        #cable-wire {
-            position: absolute;
-            bottom: 40px;
-            left: 5%;
-            width: 90%;
-            height: 6px;
-            background: #444;
-            border-radius: 3px;
-        }
-
-        #word-slots {
-            position: absolute;
-            bottom: 50px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 8px;
-            z-index: 10;
-        }
-
-        .slot {
-            width: 36px;
-            height: 40px;
-            background: #1a262c;
-            border: 2px dashed #00e676;
-            border-radius: 6px;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 15px;
+            font-weight: 600;
+            color: #5d4037;
+            min-height: 50px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
+        }
+
+        .slots-container {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .slot {
+            width: 40px;
+            height: 40px;
+            border: 2px dashed #90a4ae;
+            border-radius: 6px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
             font-weight: bold;
-            color: #ffffff;
-            box-shadow: inset 0 0 5px rgba(0,230,118,0.3);
+            background: #f1f8e9;
+            color: #2e7d32;
+        }
+
+        .canvas-area {
+            width: 100%;
+            flex-grow: 1;
+            background: linear-gradient(to bottom, #e3f2fd, #bbdefb);
+            position: relative;
+            overflow: hidden;
+            touch-action: none;
         }
 
         .falling-node {
             position: absolute;
-            width: 36px;
-            height: 36px;
-            background: linear-gradient(145deg, #00b0ff, #0081cb);
-            color: #fff;
+            width: 45px;
+            height: 45px;
+            background: #ffffff;
+            border: 2px solid #1976d2;
             border-radius: 50%;
-            font-weight: bold;
-            font-size: 1.1rem;
             display: flex;
-            align-items: center;
             justify-content: center;
-            box-shadow: 0 0 10px #00b0ff;
-            cursor: pointer;
+            align-items: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: #0d47a1;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+            transform: translateX(-50%);
         }
 
         #catcher {
             position: absolute;
-            bottom: 5px;
-            left: 50%;
-            transform: translateX(-50%);
+            bottom: 10px;
             width: 80px;
-            height: 18px;
-            background: #ff9800;
-            border-radius: 9px;
-            box-shadow: 0 0 10px #ff9800;
-            z-index: 10;
+            height: 20px;
+            background: #d32f2f;
+            border-radius: 10px;
+            border: 2px solid #b71c1c;
+            transform: translateX(-50%);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
 
         #game-feedback {
             position: absolute;
-            top: 50px;
+            top: 40%;
             left: 50%;
-            transform: translateX(-50%);
-            padding: 6px 15px;
+            transform: translate(-50%, -50%);
+            padding: 8px 16px;
             border-radius: 20px;
             font-weight: bold;
-            font-size: 0.85rem;
+            font-size: 16px;
             display: none;
-            z-index: 20;
+            z-index: 10;
         }
 
-        .fb-correct { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-        .fb-wrong { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .fb-correct { background: #c8e6c9; color: #2e7d32; border: 1px solid #4caf50; }
+        .fb-wrong { background: #ffcdd2; color: #c62828; border: 1px solid #ef5350; }
 
-        .btn {
-            background: #00b0ff;
-            color: #ffffff;
-            border: none;
-            padding: 12px 30px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: transform 0.2s, background 0.2s;
-            box-shadow: 0 4px 10px rgba(0, 176, 255, 0.3);
-        }
-
-        .btn:hover { background: #0081cb; transform: translateY(-2px); }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
+        /* End Screen */
+        .lesson-card {
+            background: #e8f5e9;
+            border: 1px solid #a5d6a7;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            color: #1b5e20;
+            font-size: 14px;
+            line-height: 1.4;
         }
     </style>
 </head>
 <body>
 
 <div id="game-container">
-
-    <!-- SCREEN 1: INNOVINE LOGO SPLASH -->
-    <div id="screen-logo" class="screen active">
-        <img src="assets/logo.png" alt="Innovine Logo" class="splash-logo" onerror="this.onerror=null; this.src='https://via.placeholder.com/280x100?text=INNOVINE+LOGO';">
-        <p class="timer-text">लोड हो रहा है... (<span id="splash-countdown">5</span>)</p>
+    <!-- Screen 1: Splash -->
+    <div id="screen-splash" class="screen active">
+        <div class="splash-title">ज्ञान संगम</div>
+        <div class="splash-sub">अध्याय 9 - बड़े सपनों वाला बच्चा</div>
+        <div class="countdown-circle" id="splash-countdown">5</div>
     </div>
 
-    <!-- SCREEN 2: INSTRUCTIONS -->
+    <!-- Screen 2: Instructions -->
     <div id="screen-instructions" class="screen">
-        <h1>⚡ Cable Word Repair</h1>
-        <p class="subtitle">अध्याय 8 - सच्चा देशप्रेम</p>
+        <h2>खेल के नियम</h2>
+        <p class="subtitle" style="color:#666; margin-top:5px;">अध्याय 9 - बड़े सपनों वाला बच्चा</p>
         
-        <ul class="instructions-list">
-            <li>🧩 <strong>खेल का नियम:</strong> दिए गए संकेत (Hint) को पढ़कर सही उत्तर बनाने वाले अक्षरों को खोजें।</li>
-            <li>🎯 <strong>लक्ष्य:</strong> ऊपर से गिरते अक्षरों (Letters) को **सही क्रम** में कैच करके केबल के खाली स्थानों को भरें!</li>
-            <li>⌨️ <strong>कंट्रोल:</strong> कैचर को चलाने के लिए **Left/Right Arrow keys** या माउस/टच ड्रैग का प्रयोग करें।</li>
-            <li>✅ <strong>सही अक्षर:</strong> +10 अंक | ❌ <strong>गलत अक्षर/क्रम:</strong> -5 अंक</li>
-        </ul>
-
-        <button class="btn" onclick="startGame()">केबल रिपेयर शुरू करें 🚀</button>
+        <div class="instruction-box">
+            <ul>
+                <li>स्क्रीन पर दिए गए प्रश्न/संकेत को ध्यान से पढ़ें।</li>
+                <li>ऊपर से गिरते हुए अक्षरों में से सही अक्षर को बास्केट से पकड़ें।</li>
+                <li>बास्केट चलाने के लिए <b>Left/Right Arrow Key</b> या <b>Mouse/Touch Drag</b> का उपयोग करें।</li>
+                <li>सही अक्षर (+10) | गलत अक्षर (-5)</li>
+            </ul>
+        </div>
+        <button class="btn" onclick="startGame()">खेल शुरू करें</button>
     </div>
 
-    <!-- SCREEN 3: GAMEPLAY -->
+    <!-- Screen 3: Game -->
     <div id="screen-game" class="screen">
-        <div class="hud">
-            <div>शब्द: <span id="current-q">1</span>/<span id="total-q">4</span></div>
-            <div>अंक: <span id="score">0</span></div>
+        <div class="game-header">
+            <div>प्रश्न: <span id="current-q">1</span>/<span id="total-q">5</span></div>
+            <div>स्कोर: <span id="score">0</span></div>
         </div>
 
-        <div id="game-canvas">
-            <div id="riddle-box">संकेत लोड हो रहा है...</div>
+        <div class="riddle-card" id="riddle-box">प्रश्न लोड हो रहा है...</div>
+        <div class="slots-container" id="word-slots"></div>
+
+        <div class="canvas-area" id="game-canvas">
             <div id="game-feedback"></div>
-            
-            <div id="word-slots"></div>
-            <div id="cable-wire"></div>
             <div id="catcher"></div>
         </div>
-
-        <p style="font-size: 0.85rem; color: #666; margin-top: 5px;">👈 बास्केट चलाने के लिए एरो कीज़ दबाएं या माउस/टच ड्रैग करें 👉</p>
     </div>
 
-    <!-- SCREEN 4: END SCREEN -->
+    <!-- Screen 4: End -->
     <div id="screen-end" class="screen">
-        <h1>🎉 केबल रिपेयर सफल!</h1>
-        <p class="subtitle">आपने सभी महत्वपूर्ण शब्दों को सफलतापूर्वक जोड़ा!</p>
+        <h2>बधाई हो! 🎉</h2>
+        <p style="margin-top: 10px; font-size: 18px;">आपका कुल स्कोर: <b id="final-score" style="color:#0072ff;">0</b></p>
         
-        <div style="font-size: 1.4rem; font-weight: bold; color: #0f2027; margin-bottom: 15px;">
-            आपका अंतिम स्कोर: <span id="final-score">0</span>
-        </div>
-
-        <div style="background: #eef2f7; padding: 15px; border-radius: 10px; color: #333; margin-bottom: 25px; line-height: 1.6;">
-            <strong>आज का मुख्य सबक:</strong><br>
-            "राष्ट्रगान का सम्मान करना, सतर्क रहना और दूसरों की जान व सुरक्षा में मदद करना ही सच्चा देशप्रेम है।"
+        <div class="lesson-card">
+            <strong>डॉ. कलाम का संदेश:</strong><br>
+            "सपना वह नहीं होता जो आप सोते समय देखते हैं, सपना वह होता है जो आपको सोने न दे।"
         </div>
 
         <button class="btn" onclick="startGame()">पुनः खेलें 🔄</button>
     </div>
-
 </div>
 
 <script>
-    // 1. Splash Screen Timer (5 Seconds)
+    // 1. Splash Screen Timer
     let logoTimer = 5;
     const countdownEl = document.getElementById('splash-countdown');
 
@@ -308,13 +307,26 @@
         }
     }, 1000);
 
-    const wordData = [
-        { hint: "💡 अमन ने मेले से क्या खरीदा?", targetWord: ["हा", "थी"] },
-        { hint: "💡 राष्ट्रगान के समय क्या व्यक्त किया गया?", targetWord: ["स", "म्मा", "न"] },
-        { hint: "💡 छोटा बच्चा किस चीज़ के पीछे भाग रहा था?", targetWord: ["गेँ", "द"] },
-        { hint: "💡 बच्चे को बचाने में किसने मदद की?", targetWord: ["गा", "र्ड"] }
+    // Master Pool of 15 Questions from Chapter 9
+    const masterQuestionPool = [
+        { hint: "💡 कलाम जी का जन्म तमिलनाडु के किस शहर में हुआ था?", targetWord: ["रा", "मे", "श्व", "र", "म"] },
+        { hint: "💡 बचपन में कलाम जी पढ़ाई का खर्च निकालने के लिए क्या बाँटते थे?", targetWord: ["अ", "ख", "बा", "र"] },
+        { hint: "💡 कलाम जी के प्रिय प्राथमिक शिक्षक का क्या नाम था?", targetWord: ["सु", "ब्र", "म्ह", "ण्य", "म"] },
+        { hint: "💡 शिक्षक ने समुद्र किनारे क्या उड़ाकर कलाम जी को प्रेरित किया?", targetWord: ["प", "क्षी"] },
+        { hint: "💡 कलाम जी ने किस विषय में इंजीनियरिंग की पढ़ाई पूरी की?", targetWord: ["ए", "रो", "नॉ", "टि", "क्स"] },
+        { hint: "💡 ऋषिकेश में कलाम जी किस महान स्वामी जी से मिले थे?", targetWord: ["शि", "वा", "न", "द"] },
+        { hint: "💡 स्वामी शिवानंद की सलाह मानकर कलाम जी क्या बने?", targetWord: ["वै", "ज्ञा", "नि", "क"] },
+        { hint: "💡 मिसाइलों के निर्माण में योगदान के कारण उन्हें क्या कहा गया?", targetWord: ["मि", "सा", "इ", "ल", "मै", "न"] },
+        { hint: "💡 कलाम जी भारत के किस सर्वोच्च पद पर आसीन हुए?", targetWord: ["रा", "ष्ट्र", "प", "ति"] },
+        { hint: "💡 कलाम जी को किस सर्वोच्च नागरिक सम्मान से नवाजा गया?", targetWord: ["भा", "र", "त", "र", "त्न"] },
+        { hint: "💡 कलाम जी के अनुसार सफलता पाने के लिए क्या सबसे ज़रूरी है?", targetWord: ["मे", "ह", "न", "त"] },
+        { hint: "💡 कलाम जी ने बच्चों को हमेशा कैसे सपने देखने को कहा?", targetWord: ["ब", "ड़े"] },
+        { hint: "💡 कलाम जी के अनुसार सच्चे सपने वो हैं जो हमें क्या न करने दें?", targetWord: ["सो", "ने"] },
+        { hint: "💡 कलाम जी का पूरा जीवन हमारे लिए क्या है?", targetWord: ["प्रे", "र", "णा"] },
+        { hint: "💡 कलाम जी को किनके साथ समय बिताना सबसे प्रिय था?", targetWord: ["ब", "च्चों"] }
     ];
 
+    let currentGameQuestions = [];
     let currentLevel = 0;
     let score = 0;
     let catcherX = 50;
@@ -327,17 +339,30 @@
     const gameCanvas = document.getElementById('game-canvas');
     const catcher = document.getElementById('catcher');
 
+    // Fisher-Yates Shuffle algorithm to randomize questions
+    function shuffleArray(array) {
+        let shuffled = [...array];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        return shuffled;
+    }
+
     function switchScreen(screenId) {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.getElementById(screenId).classList.add('active');
     }
 
     function startGame() {
+        // Randomly pick 5 questions from the pool of 15
+        currentGameQuestions = shuffleArray(masterQuestionPool).slice(0, 5);
+
         currentLevel = 0;
         score = 0;
         catcherX = 50;
         switchScreen('screen-game');
-        document.getElementById('total-q').innerText = wordData.length;
+        document.getElementById('total-q').innerText = currentGameQuestions.length;
 
         window.addEventListener('keydown', handleKeyDown);
         gameCanvas.addEventListener('mousemove', handleMouseMove);
@@ -350,7 +375,7 @@
         document.querySelectorAll('.falling-node').forEach(e => e.remove());
         fallingElements = [];
 
-        const lvl = wordData[currentLevel];
+        const lvl = currentGameQuestions[currentLevel];
         targetLetters = [...lvl.targetWord];
         filledLetters = new Array(targetLetters.length).fill('');
 
@@ -373,7 +398,7 @@
         if (spawnInterval) clearInterval(spawnInterval);
 
         gameLoopInterval = setInterval(updateGame, 30);
-        spawnInterval = setInterval(spawnLetterNode, 1500);
+        spawnInterval = setInterval(spawnLetterNode, 1400);
     }
 
     function updateCatcherPos() {
@@ -406,7 +431,7 @@
         if (currentNeededIndex === -1) return;
 
         const correctChar = targetLetters[currentNeededIndex];
-        const distractorPool = ["का", "रा", "पा", "ना", "मा", "ली", "जा", "ता"];
+        const distractorPool = ["का", "रा", "पा", "ना", "मा", "ली", "जा", "ता", "दी", "रे"];
         
         const isCorrectSpawn = Math.random() < 0.6;
         const letterText = isCorrectSpawn ? correctChar : distractorPool[Math.floor(Math.random() * distractorPool.length)];
@@ -442,7 +467,7 @@
 
         for (let i = fallingElements.length - 1; i >= 0; i--) {
             let item = fallingElements[i];
-            item.y += 2.2;
+            item.y += 2.5;
             item.el.style.top = item.y + 'px';
 
             if (item.y >= canvasHeight - 35 && item.y <= canvasHeight - 10) {
@@ -454,7 +479,7 @@
                         filledLetters[nextNeededIndex] = item.text;
                         document.getElementById('slot-' + nextNeededIndex).innerText = item.text;
                         score += 10;
-                        showFeedback("⚡ कनेक्शन सही! +10", true);
+                        showFeedback("⚡ सही अक्षर! +10", true);
 
                         if (filledLetters.findIndex(val => val === '') === -1) {
                             setTimeout(nextLevel, 800);
@@ -480,7 +505,7 @@
 
     function nextLevel() {
         currentLevel++;
-        if (currentLevel < wordData.length) {
+        if (currentLevel < currentGameQuestions.length) {
             startLevel();
         } else {
             endGame();
