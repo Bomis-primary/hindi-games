@@ -201,7 +201,7 @@
     </div>
 
     <div class="stats-board">
-        <div>स्कोर: <span id="score" class="score-val">0</span> / 10</div>
+        <div>स्कोर: <span id="score" class="score-val">0</span> / <span id="total-score">8</span></div>
     </div>
 
     <div class="game-container">
@@ -225,9 +225,9 @@
     <!-- Victory Modal -->
     <div class="modal" id="winModal">
         <div class="modal-content">
-            <h2>🎉 शाबाश!</h2>
-            <p>आपने सभी खेलों को सही श्रेणी में छाँट लिया है!</p>
-            <button class="btn-restart" onclick="restartGame()">पुनः खेलें</button>
+            <h2>🎉 शानदार खेल!</h2>
+            <p>आपने सभी नए खेलों को बिल्कुल सही छाँट लिया है!</p>
+            <button class="btn-restart" onclick="restartGame()">नए खेलों के साथ पुनः खेलें 🔄</button>
         </div>
     </div>
 
@@ -254,8 +254,8 @@
                 osc.stop(now + 0.1);
             } else if (type === 'correct') {
                 osc.type = 'sine';
-                osc.frequency.setValueAtTime(523.25, now); // C5
-                osc.frequency.setValueAtTime(659.25, now + 0.1); // E5
+                osc.frequency.setValueAtTime(523.25, now);
+                osc.frequency.setValueAtTime(659.25, now + 0.1);
                 gain.gain.setValueAtTime(0.15, now);
                 gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
                 osc.start(now);
@@ -284,8 +284,8 @@
             }
         }
 
-        // Game Data based on Chapter 14
-        const gameItemsData = [
+        // Master Question Bank (16 Items)
+        const masterItemsBank = [
             { id: 1, name: '🏏 क्रिकेट', category: 'outdoor' },
             { id: 2, name: '🎲 लूडो', category: 'indoor' },
             { id: 3, name: '⚽ फुटबॉल', category: 'outdoor' },
@@ -295,26 +295,37 @@
             { id: 7, name: '🙈 छुपम-छुपाई', category: 'outdoor' },
             { id: 8, name: '♟️ शतरंज', category: 'indoor' },
             { id: 9, name: '🪢 रस्सी-खींच', category: 'outdoor' },
-            { id: 10, name: '🌀 लट्टू', category: 'outdoor' }
+            { id: 10, name: '🌀 लट्टू', category: 'outdoor' },
+            { id: 11, name: '🃏 ताश का खेल', category: 'indoor' },
+            { id: 12, name: '🐍 साँप-सीढ़ी', category: 'indoor' },
+            { id: 13, name: '🧱 कैरम', category: 'indoor' },
+            { id: 14, name: '🏸 बैडमिंटन', category: 'outdoor' },
+            { id: 15, name: '🏃 पकड़म-पकड़ाई', category: 'outdoor' },
+            { id: 16, name: '👁️ आँख-मिचौली', category: 'outdoor' }
         ];
 
+        let currentRoundItems = [];
         let selectedItem = null;
         let score = 0;
+        const ITEMS_PER_ROUND = 8; // Number of cards per round
 
         function initGame() {
             score = 0;
             selectedItem = null;
             document.getElementById('score').innerText = score;
+            document.getElementById('total-score').innerText = ITEMS_PER_ROUND;
             document.getElementById('outdoorBin').innerHTML = '';
             document.getElementById('indoorBin').innerHTML = '';
             document.getElementById('winModal').style.display = 'none';
 
-            // Shuffle Items
-            const shuffled = [...gameItemsData].sort(() => Math.random() - 0.5);
+            // Randomly select items from Master Bank for fresh gameplay
+            const shuffledBank = [...masterItemsBank].sort(() => Math.random() - 0.5);
+            currentRoundItems = shuffledBank.slice(0, ITEMS_PER_ROUND);
+
             const pool = document.getElementById('itemsPool');
             pool.innerHTML = '';
 
-            shuffled.forEach(item => {
+            currentRoundItems.forEach(item => {
                 const card = document.createElement('div');
                 card.className = 'game-card';
                 card.innerText = item.name;
@@ -344,14 +355,14 @@
                     document.getElementById('outdoorBin') : document.getElementById('indoorBin');
                 
                 selectedItem.element.classList.remove('selected');
-                selectedItem.element.onclick = null; // Disable further clicking
+                selectedItem.element.onclick = null; // Disable clicking after move
                 targetBin.appendChild(selectedItem.element);
 
                 score++;
                 document.getElementById('score').innerText = score;
                 selectedItem = null;
 
-                if (score === gameItemsData.length) {
+                if (score === ITEMS_PER_ROUND) {
                     setTimeout(() => {
                         playSound('win');
                         document.getElementById('winModal').style.display = 'flex';
@@ -363,7 +374,7 @@
                 selectedItem.element.style.borderColor = '#ef4444';
                 setTimeout(() => {
                     if (selectedItem && selectedItem.element) {
-                        selectedItem.element.style.borderColor = '#2563eb';
+                        selectedItem.element.style.borderColor = '#e2e8f0';
                     }
                 }, 500);
             }
