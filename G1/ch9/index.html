@@ -24,7 +24,7 @@
       align-items: center;
     }
 
-    /* Fullscreen Overlay Pages */
+    /* Screen Overlays */
     .screen-overlay {
       position: fixed;
       top: 0;
@@ -189,7 +189,7 @@
       margin-bottom: 8px;
     }
 
-    /* LEVEL 1: Interactive Memory Grid */
+    /* LEVEL 1: Memory Cards */
     .memory-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -235,9 +235,7 @@
       transform: rotateY(180deg);
     }
 
-    .memory-card.flipped {
-      transform: rotateY(180deg);
-    }
+    .memory-card.flipped { transform: rotateY(180deg); }
 
     .memory-card.matched .back {
       background: #55efc4;
@@ -245,7 +243,45 @@
       border-color: #00b894;
     }
 
-    /* LEVEL 3: Interactive Visual Scene Layout */
+    /* LEVEL 2 & Options */
+    .asset-img {
+      max-height: 130px;
+      max-width: 100%;
+      border-radius: 16px;
+      margin: 10px auto;
+      display: block;
+    }
+
+    .path-container {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      align-items: center;
+      margin: 20px 0;
+      padding: 15px;
+      background: #f8f9fa;
+      border-radius: 20px;
+    }
+
+    .path-btn {
+      padding: 14px 28px;
+      font-size: 1.3rem;
+      font-weight: bold;
+      border-radius: 20px;
+      border: none;
+      background: #6c5ce7;
+      color: white;
+      box-shadow: 0 6px 0 #4b38b3;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .path-btn:active {
+      transform: translateY(4px);
+      box-shadow: 0 2px 0 #4b38b3;
+    }
+
+    /* LEVEL 3: Tokri Sorting */
     .chitra-wrapper {
       display: flex;
       flex-direction: column;
@@ -268,31 +304,31 @@
       display: block;
     }
 
-    .chitra-drop-zones {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-      gap: 10px;
+    .tokri-container {
+      display: flex;
+      justify-content: space-around;
       width: 100%;
       max-width: 650px;
+      gap: 15px;
       margin-top: 10px;
     }
 
-    .chitra-zone {
-      background: rgba(255,255,255,0.9);
-      border: 2px dashed #74b9ff;
-      border-radius: 12px;
-      padding: 8px;
-      min-height: 70px;
+    .tokri-box {
+      flex: 1;
+      background: #fff8e7;
+      border: 3px dashed #fdcb6e;
+      border-radius: 18px;
+      padding: 12px;
+      min-height: 110px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
     }
 
-    .chitra-zone h5 {
-      margin: 0 0 5px 0;
-      font-size: 0.85rem;
-      color: #0984e3;
+    .tokri-box h4 {
+      margin: 0 0 10px 0;
+      color: #d63031;
+      font-size: 1rem;
     }
 
     .word-bank-box {
@@ -303,55 +339,23 @@
       max-width: 650px;
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
+      gap: 10px;
       justify-content: center;
     }
 
     .draggable-word {
-      padding: 8px 16px;
+      padding: 10px 18px;
       background: linear-gradient(135deg, #ffeaa7, #fdcb6e);
-      border-radius: 12px;
+      border-radius: 14px;
       font-weight: bold;
       cursor: grab;
       border: 2px solid #e17055;
       color: #2d3436;
       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      transition: transform 0.2s;
+      font-size: 1.1rem;
     }
 
-    .draggable-word:active { transform: scale(1.1); }
-
-    /* Level 2, 4, 5 Base Styles */
-    .asset-img {
-      max-height: 130px;
-      max-width: 100%;
-      border-radius: 16px;
-      margin: 10px auto;
-      display: block;
-    }
-
-    .path-container {
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      margin: 20px 0;
-      padding: 15px;
-      background: #f8f9fa;
-      border-radius: 20px;
-    }
-
-    .path-btn {
-      padding: 14px 24px;
-      font-size: 1.2rem;
-      font-weight: bold;
-      border-radius: 20px;
-      border: none;
-      background: #a29bfe;
-      color: white;
-      box-shadow: 0 6px 0 #6c5ce7;
-      cursor: pointer;
-    }
-
+    /* LEVEL 4: Canvas Tracing */
     #trace-canvas {
       border: 3px dashed #ff7675;
       border-radius: 20px;
@@ -360,6 +364,7 @@
       touch-action: none;
     }
 
+    /* LEVEL 5: Balloons */
     .balloon-stage {
       position: relative;
       height: 260px;
@@ -395,7 +400,6 @@
       100% { transform: translateY(-35px); }
     }
 
-    /* Scoreboard Overlay */
     .final-score-card {
       background: #ffffff;
       border-radius: 30px;
@@ -405,58 +409,47 @@
       box-shadow: 0 20px 50px rgba(0,0,0,0.2);
       border: 4px solid #fdcb6e;
     }
-
-    @media (max-width: 500px) {
-      .memory-grid { grid-template-columns: repeat(3, 1fr); }
-      .memory-card { height: 80px; }
-      .path-btn { padding: 10px 14px; font-size: 1rem; }
-    }
   </style>
 </head>
 <body>
 
-  <!-- PAGE 1: SPLASH SCREEN -->
+  <!-- SPLASH & SCREENS -->
   <div id="page-splash" class="screen-overlay" onclick="goToTitlePage()">
     <img id="splash-logo" src="assets/innovine-logo.png" alt="Logo" onerror="this.src='https://via.placeholder.com/300x120?text=App+Logo'">
   </div>
 
-  <!-- PAGE 2: CHAPTER TITLE -->
   <div id="page-title" class="screen-overlay" style="display: none;">
     <div class="title-heading">🔴 मात्रा कहाँ लगेगी? ✨</div>
     <div class="title-subheading">'े' (ए) की मात्रा का मनोरंजक अभ्यास!</div>
     <button class="green-btn" onclick="goToInstructionPage()">शुरू करें ▶</button>
   </div>
 
-  <!-- PAGE 3: INSTRUCTIONS -->
   <div id="page-instructions" class="screen-overlay" style="display: none;">
     <div class="title-heading" style="font-size: 2rem;">खेल के नियम 🎮</div>
     
-    <div class="instructions-card"><span>🧠 <b>स्तर १:</b> कार्ड्स पलटकर 'े' मात्रा के सही जोड़े ढूँढें।</span></div>
-    <div class="instructions-card"><span>🏃‍♂️ <b>स्तर २:</b> सही शब्द का चयन कर गंतव्य तक पहुँचें।</span></div>
-    <div class="instructions-card"><span>🧩 <b>स्तर ३:</b> चित्र देखकर शब्दों को सही जगह पर रखें।</span></div>
-    <div class="instructions-card"><span>✍️ <b>स्तर ४:</b> स्क्रीन पर वर्ण और मात्रा अनुरेखण करें।</span></div>
+    <div class="instructions-card"><span>🧠 <b>स्तर १:</b> कार्ड्स पलटकर सही जोड़े ढूँढें।</span></div>
+    <div class="instructions-card"><span>🔍 <b>स्तर २:</b> चित्र देखकर सही नाम पहचानें।</span></div>
+    <div class="instructions-card"><span>🧺 <b>स्तर ३:</b> 'े' की मात्रा वाले शब्द सही टोकरी में डालें।</span></div>
+    <div class="instructions-card"><span>✍️ <b>स्तर ४:</b> २ वर्णों का सुंदर अनुरेखण करें।</span></div>
     <div class="instructions-card"><span>🎈 <b>स्तर ५:</b> सही शब्द वाले गुब्बारे फोड़ें!</span></div>
 
     <br>
     <button class="green-btn" onclick="startGame()">खेलें 🎮</button>
   </div>
 
-  <!-- PAGE: FINAL SCOREBOARD -->
   <div id="page-final-score" class="screen-overlay" style="display: none;">
     <div class="final-score-card">
       <div style="font-size:4rem;">🏆🥳🎉</div>
       <div class="title-heading" style="font-size: 1.8rem; color:#6c5ce7;">शानदार विजय!</div>
       <div style="font-size: 1.2rem; color:#00b894; font-weight:bold;">आपने सभी स्तर सफलतापूर्वक पूर्ण कर लिए!</div>
-      
       <div style="background:#f8f9fa; border-radius:16px; padding:15px; margin:20px 0; font-size:1.3rem; font-weight:bold;">
         कुल स्कोर: <span id="final-score-val" style="color:#e63946;">0</span>
       </div>
-
       <button class="green-btn" onclick="resetGame()">फिर से खेलें 🔄</button>
     </div>
   </div>
 
-  <!-- HEADER SCOREBOARD -->
+  <!-- HEADER -->
   <header>
     <img src="assets/innovine-logo.png" alt="Logo" class="header-logo" onerror="this.style.display='none'">
     <div class="scoreboard">
@@ -465,12 +458,12 @@
     </div>
   </header>
 
-  <!-- MAIN GAME CONTAINER -->
+  <!-- MAIN CONTAINER -->
   <div class="game-container">
     <div>
       <div class="level-tabs">
         <button class="tab-btn active" onclick="loadLevel(1)">L1: मेमोरी भूलभुलैया</button>
-        <button class="tab-btn" onclick="loadLevel(2)">L2: रास्ते का खेल</button>
+        <button class="tab-btn" onclick="loadLevel(2)">L2: सही शब्द पहचानो</button>
         <button class="tab-btn" onclick="loadLevel(3)">L3: चित्र अवलोकन</button>
         <button class="tab-btn" onclick="loadLevel(4)">L4: वर्ण अनुरेखण</button>
         <button class="tab-btn" onclick="loadLevel(5)">L5: गुब्बारे फोड़ो</button>
@@ -478,20 +471,16 @@
       <hr style="border:0; border-top: 1px solid #eee; margin-bottom: 10px;">
       
       <div class="feedback-banner" id="feedback-msg"></div>
-
-      <div id="game-view">
-        <!-- Dynamic Game Content -->
-      </div>
+      <div id="game-view"></div>
     </div>
 
-    <!-- AUDIO ASSETS -->
+    <!-- AUDIO -->
     <audio id="audio-correct" src="assets/correct.mp3"></audio>
     <audio id="audio-wrong" src="https://assets.mixkit.co/active_storage/sfx/2870/2870-preview.mp3"></audio>
     <audio id="audio-cheer" src="https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3"></audio>
   </div>
 
   <script>
-    // NAVIGATION
     let splashTimeout = null;
 
     window.onload = function() {
@@ -514,7 +503,6 @@
       loadLevel(1);
     }
 
-    // AUDIO SYSTEM
     function playSound(type) {
       let sndId = 'audio-correct';
       if (type === 'wrong') sndId = 'audio-wrong';
@@ -535,31 +523,34 @@
       setTimeout(() => { banner.innerText = ''; }, 1500);
     }
 
-    // GAME STATE
     let currentLevel = 1;
     let currentQIndex = 0;
     let totalScore = 0;
 
-    // DATA FOR LEVELS
-    const reachPointQuestions = [
-      { img: 'assets/kela.png', prompt: 'बंदर को केले तक पहुँचाने के लिए सही शब्द चुनें:', correct: 'केला', wrong: 'कला' },
-      { img: 'assets/apple.png', prompt: 'बच्चों को सेब तक पहुँचने का सही रास्ता दिखाएं:', correct: 'सेब', wrong: 'सब' },
-      { img: 'assets/table.png', prompt: 'मेज तक पहुँचने का सही रास्ता कौन सा है?', correct: 'मेज', wrong: 'मज' },
-      { img: 'assets/ambulance.png', prompt: 'एम्बुलेंस तक पहुँचने के लिए सही नाम चुनें:', correct: 'एम्बुलेंस', wrong: 'अम्बुलेंस' },
-      { img: 'assets/ekta.png', prompt: 'एकता तक पहुँचने का सही शब्द पकड़ो:', correct: 'एकता', wrong: 'अकता' }
+    // LEVEL DATA
+    const sahiWordQuestions = [
+      { img: 'assets/kela.png', correct: 'केला', wrong: 'कला' },
+      { img: 'assets/apple.png', correct: 'सेब', wrong: 'सब' },
+      { img: 'assets/table.png', correct: 'मेज', wrong: 'मज' },
+      { img: 'assets/ambulance.png', correct: 'एम्बुलेंस', wrong: 'अम्बुलेंस' },
+      { img: 'assets/ekta.png', correct: 'एकता', wrong: 'अकता' }
     ];
 
-    // LEVEL 3 IMAGE DATA BASED ON WORD BANK
-    const chitraDropZonesData = [
-      { id: 'zone-sports', title: 'खेल का मैदान ⚽', targets: ['खेल', 'गेंद'] },
-      { id: 'zone-stall', title: 'फल/दुकान स्टॉल 🍎', targets: ['सेब', 'केले', 'मेज'] },
-      { id: 'zone-train', title: 'रेलगाड़ी क्षेत्र 🚂', targets: ['रेल', 'डिब्बे', 'स्टेशन'] },
-      { id: 'zone-tree', title: 'पेड़ का कोना 🌳', targets: ['पेड़', 'बैठे', 'बेटे', 'मेहमान'] }
+    // Park scene words with 'े' (ए) Matra vs Non 'े' Matra
+    const level3Words = [
+      { word: 'पेड़', hasE: true },
+      { word: 'बेंच', hasE: true },
+      { word: 'लैम्प पोस्ट', hasE: true },
+      { word: 'गेंद', hasE: true },
+      { word: 'बच्चे', hasE: true },
+      { word: 'सूरज', hasE: false },
+      { word: 'झूला', hasE: false },
+      { word: 'पतंग', hasE: false },
+      { word: 'तालाब', hasE: false },
+      { word: 'फूल', hasE: false }
     ];
 
-    const chitraWordBank = ['खेल', 'गेंद', 'सेब', 'केले', 'रेल', 'मेज', 'पेड़', 'मेहमान', 'बेटे', 'डिब्बे', 'स्टेशन', 'बैठे'];
-
-    const tracingPrompts = ['ए', 'े', 'केला', 'सेब', 'रेल'];
+    const tracingPrompts = ['ए', 'केला']; // Exactly 2 tracing questions
 
     const balloonQuestions = [
       { prompt: 'वह शब्द चुनें जिसमें "े" की मात्रा है:', correct: 'शेर', wrong1: 'आम', wrong2: 'घर' },
@@ -569,7 +560,6 @@
       { prompt: 'पेड़ की छाया में कौन बैठा?', correct: 'नेवला', wrong1: 'मछली', wrong2: 'बत्तख' }
     ];
 
-    // MASTER LEVEL CONTROLLER
     function loadLevel(lvl) {
       currentLevel = lvl;
       currentQIndex = 0;
@@ -583,13 +573,13 @@
       view.innerHTML = '';
 
       if (lvl === 1) renderMemoryMaze();
-      else if (lvl === 2) renderReachPoint();
-      else if (lvl === 3) renderChitraDragDrop();
+      else if (lvl === 2) renderSahiWord();
+      else if (lvl === 3) renderChitraTokri();
       else if (lvl === 4) renderTracing();
       else if (lvl === 5) renderBalloonPop();
     }
 
-    // --- LEVEL 1: Interactive Flip Memory Maze ---
+    // --- LEVEL 1: Memory Maze ---
     let flippedCards = [];
     let matchedPairs = 0;
 
@@ -615,9 +605,7 @@
     }
 
     function flipCard(cardElem, word) {
-      if (cardElem.classList.contains('flipped') || cardElem.classList.contains('matched') || flippedCards.length >= 2) {
-        return;
-      }
+      if (cardElem.classList.contains('flipped') || cardElem.classList.contains('matched') || flippedCards.length >= 2) return;
 
       cardElem.classList.add('flipped');
       flippedCards.push({ elem: cardElem, word: word });
@@ -649,32 +637,31 @@
       }
     }
 
-    // --- LEVEL 2: Reach the Point ---
-    function renderReachPoint() {
+    // --- LEVEL 2: Sahi Word Pehchano ---
+    function renderSahiWord() {
       const view = document.getElementById('game-view');
-      const q = reachPointQuestions[currentQIndex];
+      const q = sahiWordQuestions[currentQIndex];
       const opts = [q.correct, q.wrong].sort(() => Math.random() - 0.5);
 
       view.innerHTML = `
-        <div class="q-title">रास्ते का खेल - प्रश्न ${currentQIndex + 1}/5</div>
-        <p style="color:#333;">${q.prompt}</p>
+        <div class="q-title">सही शब्द पहचानो - प्रश्न ${currentQIndex + 1}/5</div>
+        <p style="color:#333; font-weight:bold;">चित्र देखकर सही नाम पर क्लिक करें:</p>
         <img src="${q.img}" class="asset-img" alt="Target" onerror="this.style.display='none'">
         <div class="path-container">
-          <button class="path-btn" onclick="checkPath('${opts[0]}', '${q.correct}')">🏃‍♂️ ${opts[0]}</button>
-          <span style="font-size:1.5rem;">➔</span>
-          <button class="path-btn" onclick="checkPath('${opts[1]}', '${q.correct}')">🏃‍♂️ ${opts[1]}</button>
+          <button class="path-btn" onclick="checkSahiWord('${opts[0]}', '${q.correct}')">${opts[0]}</button>
+          <button class="path-btn" onclick="checkSahiWord('${opts[1]}', '${q.correct}')">${opts[1]}</button>
         </div>
       `;
     }
 
-    function checkPath(selected, correct) {
+    function checkSahiWord(selected, correct) {
       if (selected === correct) {
         playSound('correct');
         addScore(10);
-        showFeedback('सही रास्ता! 🎯');
+        showFeedback('सही शब्द! 🎯');
         if (currentQIndex < 4) {
           currentQIndex++;
-          renderReachPoint();
+          renderSahiWord();
         } else {
           triggerConfetti();
           showFeedback('अद्भुत! स्तर 2 पूरा हुआ!', true);
@@ -682,83 +669,106 @@
         }
       } else {
         playSound('wrong');
-        showFeedback('गलत रास्ता! पुनः प्रयास करें', false);
+        showFeedback('गलत उत्तर! पुनः प्रयास करें', false);
       }
     }
 
-    // --- LEVEL 3: Chitra Drag & Drop ---
-    function renderChitraDragDrop() {
+    // --- LEVEL 3: Chitra Tokri Drag & Drop ---
+    function renderChitraTokri() {
       const view = document.getElementById('game-view');
+      const shuffledWords = [...level3Words].sort(() => Math.random() - 0.5);
+
       view.innerHTML = `
-        <div class="q-title">चित्र को ध्यान से देखिए और सही शब्द खींचकर सही कोने में रखिए</div>
+        <div class="q-title">चित्र अवलोकन</div>
+        <p style="color:#2d3436; font-weight:bold; font-size:1.1rem; margin-bottom:10px;">
+          चित्र को देखकर 'े' (ए) की मात्रा वाले शब्द को क्लिक करो और सही टोकरी में डालो:
+        </p>
         <div class="chitra-wrapper">
           <div class="chitra-container">
-            <img src="assets/chitra.png" class="chitra-img" alt="Chitra Scene" onerror="this.src='https://via.placeholder.com/600x300?text=Chitra+Image+Missing'">
+            <img src="assets/chitra.png" class="chitra-img" alt="Park Scene" onerror="this.src='https://via.placeholder.com/600x300?text=Park+Scene+Image'">
           </div>
 
-          <div class="word-bank-box" id="words-pool"></div>
+          <div class="word-bank-box" id="tokri-words-pool"></div>
 
-          <div class="chitra-drop-zones">
-            ${chitraDropZonesData.map(z => `
-              <div class="chitra-zone" id="${z.id}" ondragover="event.preventDefault()" ondrop="dropWord(event, '${z.id}')">
-                <h5>${z.title}</h5>
-              </div>
-            `).join('')}
+          <div class="tokri-container">
+            <div class="tokri-box" id="tokri-e" ondragover="event.preventDefault()" ondrop="dropTokriWord(event, true)">
+              <h4>🧺 'े' की मात्रा वाले शब्द</h4>
+            </div>
+            <div class="tokri-box" id="tokri-other" ondragover="event.preventDefault()" ondrop="dropTokriWord(event, false)">
+              <h4>🧺 अन्य शब्द</h4>
+            </div>
           </div>
         </div>
       `;
 
-      const pool = document.getElementById('words-pool');
-      [...chitraWordBank].sort(() => Math.random() - 0.5).forEach(w => {
-        const span = document.createElement('span');
+      const pool = document.getElementById('tokri-words-pool');
+      shuffledWords.forEach((item, idx) => {
+        const span = document.createElement('div');
         span.className = 'draggable-word';
-        span.innerText = w;
+        span.innerText = item.word;
         span.draggable = true;
-        span.id = 'drag-' + w;
+        span.id = 'drag-word-' + idx;
+        span.dataset.hasE = item.hasE;
         span.ondragstart = (e) => e.dataTransfer.setData('text', e.target.id);
+        
+        // Touch/Click Support
+        span.onclick = () => quickSelectWord(span, item.hasE);
+        
         pool.appendChild(span);
       });
     }
 
-    function dropWord(e, zoneId) {
+    function quickSelectWord(elem, hasE) {
+      if (elem.parentElement.classList.contains('tokri-box')) return;
+      const targetTokri = hasE ? document.getElementById('tokri-e') : document.getElementById('tokri-other');
+      placeWordInTokri(elem, targetTokri, true);
+    }
+
+    function dropTokriWord(e, targetHasE) {
       e.preventDefault();
       const id = e.dataTransfer.getData('text');
       const elem = document.getElementById(id);
       if (!elem) return;
 
-      const word = elem.innerText;
-      const zone = chitraDropZonesData.find(z => z.id === zoneId);
-
-      if (zone && zone.targets.includes(word)) {
-        playSound('correct');
-        document.getElementById(zoneId).appendChild(elem);
-        elem.draggable = false;
-        elem.style.background = '#55efc4';
-        elem.style.border = '2px solid #00b894';
-        addScore(10);
-        showFeedback('सही उत्तर! 👏');
-        checkLevel3Done();
+      const itemHasE = (elem.dataset.hasE === 'true');
+      if (itemHasE === targetHasE) {
+        placeWordInTokri(elem, e.currentTarget, true);
       } else {
         playSound('wrong');
-        showFeedback('गलत जगह!', false);
+        showFeedback('गलत टोकरी! ध्यान से सोचें', false);
       }
     }
 
-    function checkLevel3Done() {
-      if (document.getElementById('words-pool').children.length === 0) {
+    function placeWordInTokri(elem, tokriElem, isCorrect) {
+      if (isCorrect) {
+        playSound('correct');
+        tokriElem.appendChild(elem);
+        elem.draggable = false;
+        elem.style.background = '#55efc4';
+        elem.style.border = '2px solid #00b894';
+        elem.onclick = null;
+        addScore(10);
+        showFeedback('सही टोकरी! 👏');
+        checkLevel3TokriDone();
+      }
+    }
+
+    function checkLevel3TokriDone() {
+      const pool = document.getElementById('tokri-words-pool');
+      if (pool.children.length === 0) {
         triggerConfetti();
-        showFeedback('उत्कृष्ट! स्तर 3 पूरा हुआ!', true);
+        showFeedback('शानदार! स्तर 3 पूरा हुआ!', true);
         setTimeout(() => { loadLevel(4); }, 1200);
       }
     }
 
-    // --- LEVEL 4: Canvas Tracing ---
+    // --- LEVEL 4: Canvas Tracing (Strictly 2 Questions) ---
     function renderTracing() {
       const view = document.getElementById('game-view');
       const textToTrace = tracingPrompts[currentQIndex];
 
       view.innerHTML = `
-        <div class="q-title">वर्ण अनुरेखण (Tracing) - प्रश्न ${currentQIndex + 1}/5</div>
+        <div class="q-title">वर्ण अनुरेखण (Tracing) - प्रश्न ${currentQIndex + 1}/2</div>
         <p style="color:#666; margin-bottom:5px;">अक्षर/शब्द <b>"${textToTrace}"</b> को ट्रेस करें:</p>
         <canvas id="trace-canvas" width="300" height="160"></canvas>
         <br>
@@ -815,7 +825,7 @@
       playSound('correct');
       addScore(10);
       showFeedback('बहुत बढ़िया! ✍️');
-      if (currentQIndex < 4) {
+      if (currentQIndex < 1) { // 2 questions total (index 0 and 1)
         currentQIndex++;
         renderTracing();
       } else {
@@ -840,7 +850,7 @@
         <div class="q-title">गुब्बारे फोड़ो (Balloon Pop) - प्रश्न ${currentQIndex + 1}/5</div>
         <p style="font-size:1.1rem; color:#2d3436;">${q.prompt}</p>
         <div class="balloon-stage">
-          ${options.map((opt, idx) => `
+          ${options.map(opt => `
             <div class="balloon" onclick="handleBalloonClick(this, ${opt.correct})">
               ${opt.t}
             </div>
@@ -873,7 +883,7 @@
       }
     }
 
-    // FINAL SCOREBOARD & UTILITIES
+    // SCORE & FINISH
     function showFinalScoreboard() {
       playSound('cheer');
       triggerMassiveConfetti();
