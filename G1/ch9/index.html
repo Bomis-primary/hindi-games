@@ -476,9 +476,8 @@
 
     <!-- AUDIO -->
     <audio id="audio-correct" src="assets/correct.mp3"></audio>
-    <audio id="audio-wrong" src="https://assets.mixkit.co/active_storage/sfx/2870/2870-preview.mp3"></audio>
-    <audio id="audio-cheer" src="https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3"></audio>
-  </div>
+    <audio id="audio-wrong" src="https://wrong.mp3"></audio>
+      </div>
 
   <script>
     let splashTimeout = null;
@@ -540,11 +539,10 @@
     const level3Words = [
       { word: 'पेड़', hasE: true },
       { word: 'बेंच', hasE: true },
-      { word: 'लैम्प पोस्ट', hasE: true },
       { word: 'गेंद', hasE: true },
-      { word: 'बच्चे', hasE: true },
       { word: 'सूरज', hasE: false },
       { word: 'झूला', hasE: false },
+       { word: 'बच्चे', hasE: true },
       { word: 'पतंग', hasE: false },
       { word: 'तालाब', hasE: false },
       { word: 'फूल', hasE: false }
@@ -554,8 +552,8 @@
 
     const balloonQuestions = [
       { prompt: 'वह शब्द चुनें जिसमें "े" की मात्रा है:', correct: 'शेर', wrong1: 'आम', wrong2: 'घर' },
-      { prompt: 'इनमें से मीठे फल का नाम कौन सा है?', correct: 'सेब', wrong1: 'जल', wrong2: 'मन' },
-      { prompt: 'पटरी पर कौन सी गाड़ी दौड़ती है?', correct: 'रेल', wrong1: 'कार', wrong2: 'बस' },
+      { prompt: 'इनमें से मीठे फल का नाम कौन-सा है?', correct: 'सेब', wrong1: 'जल', wrong2: 'मन' },
+      { prompt: 'पटरी पर कौन-सी गाड़ी दौड़ती है?', correct: 'रेल', wrong1: 'कार', wrong2: 'बस' },
       { prompt: 'सुबह के समय को क्या कहते हैं?', correct: 'सवेरा', wrong1: 'रात', wrong2: 'दिन' },
       { prompt: 'पेड़ की छाया में कौन बैठा?', correct: 'नेवला', wrong1: 'मछली', wrong2: 'बत्तख' }
     ];
@@ -685,7 +683,7 @@
         </p>
         <div class="chitra-wrapper">
           <div class="chitra-container">
-            <img src="assets/chitra.png" class="chitra-img" alt="Park Scene" onerror="this.src='https://via.placeholder.com/600x300?text=Park+Scene+Image'">
+            <img src="assets/chitra1.png" class="chitra-img" alt="Park Scene" onerror="this.src='https://via.placeholder.com/600x300?text=Park+Scene+Image'">
           </div>
 
           <div class="word-bank-box" id="tokri-words-pool"></div>
