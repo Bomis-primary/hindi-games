@@ -2,16 +2,18 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>बिंदी कहाँ लगेगी? 🔴✨</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>मात्रा कैंडी क्रश 🍬✨</title>
+
+    <!-- Canvas Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
     <style>
         :root {
-            --pastel-pink: #ffb3c6;
-            --pastel-purple: #c8b6ff;
-            --pastel-yellow: #ffea00;
-            --pastel-blue: #9bf6ff;
-            --pastel-mint: #c7f9cc;
-            --card-bg: #fffbfb;
+            --bright-orange: #ff5e00;
+            --warm-yellow: #ffb703;
+            --neon-pink: #ff007f;
+            --dark-purple: #2b0938;
         }
 
         * {
@@ -19,30 +21,33 @@
             margin: 0;
             padding: 0;
             -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
         }
 
         body {
             font-family: 'Comic Sans MS', 'Segoe UI', Arial, sans-serif;
-            background: linear-gradient(135deg, #ffe5ec 0%, #e8dff5 50%, #fce1e4 100%);
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #feada6 100%);
             display: flex;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            overflow-x: hidden;
+            min-height: 100dvh;
+            overflow: hidden;
             user-select: none;
             padding: 10px;
         }
 
         .game-card {
             width: 100%;
-            max-width: 800px;
-            min-height: 85vh;
-            background: var(--card-bg);
-            border-radius: 35px;
-            padding: 25px;
-            box-shadow: 0 15px 0 #d8b4e2, 0 25px 50px rgba(0,0,0,0.08);
-            text-align: center;
-            border: 6px solid #e0c3fc;
+            max-width: 440px;
+            height: 96vh;
+            height: 96dvh;
+            max-height: 880px;
+            background: #ffffff;
+            border-radius: 30px;
+            padding: 12px;
+            box-shadow: 0 12px 0 #ff007f, 0 20px 40px rgba(0,0,0,0.25);
+            border: 6px solid #ffe600;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -51,30 +56,26 @@
             overflow: hidden;
         }
 
-        /* SCREENS OVERLAY */
+        /* SCREENS & OVERLAYS */
         .screen {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
             background: #ffffff;
-            border-radius: 28px;
+            border-radius: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             z-index: 50;
-            padding: 25px;
+            padding: 20px;
             text-align: center;
         }
 
-        /* SCREEN 1: SPLASH LOGO ONLY */
-        #splashScreen {
-            background: #ffffff;
-            z-index: 100;
-        }
+        #splashScreen { z-index: 100; }
 
         .splash-logo {
-            max-width: 75%;
-            max-height: 200px;
+            max-width: 80%;
+            max-height: 180px;
             object-fit: contain;
             animation: pulse 1.5s infinite alternate;
         }
@@ -84,102 +85,37 @@
             100% { transform: scale(1.05); }
         }
 
-        /* SCREEN 2: TITLE SCREEN */
-        #titleScreen {
-            background: linear-gradient(180deg, #fff2f7 0%, #f3e8ff 100%);
-            z-index: 90;
-        }
-
         .main-title {
-            font-size: calc(2.2rem + 1vw);
-            color: #6b2d5c;
-            margin-bottom: 15px;
-            text-shadow: 2px 2px 0px #ffd1dc;
+            font-size: 2.2rem;
+            color: var(--bright-orange);
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 0px #ffe600;
         }
 
         .subtitle {
-            font-size: 1.4rem;
-            color: #7b2cbf;
-            margin-bottom: 30px;
+            font-size: 1.2rem;
+            color: var(--neon-pink);
+            margin-bottom: 25px;
             font-weight: bold;
-        }
-
-        /* SCREEN 3: BEAUTIFIED INSTRUCTIONS SCREEN */
-        #instructionScreen {
-            background: #faf4ff;
-            z-index: 80;
-        }
-
-        .instruction-cards-container {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            width: 100%;
-            max-width: 480px;
-            margin: 20px 0 30px 0;
-        }
-
-        .rule-card {
-            background: #ffffff;
-            border: 3px solid #e0c3fc;
-            border-radius: 20px;
-            padding: 15px 20px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            box-shadow: 0 6px 0 #d8b4e2;
-            text-align: left;
-        }
-
-        .rule-icon {
-            font-size: 2.2rem;
-            background: #f3e8ff;
-            width: 55px;
-            height: 55px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            flex-shrink: 0;
-        }
-
-        .rule-text {
-            font-size: 1.3rem;
-            color: #4a1272;
-            font-weight: bold;
-            line-height: 1.3;
         }
 
         /* BUTTONS */
         .action-btn {
-            background: #70e000;
+            background: linear-gradient(135deg, #ff5e00, #ff007f);
             color: white;
-            border: none;
-            padding: 16px 45px;
-            font-size: 1.6rem;
+            border: 3px solid #fff;
+            padding: 14px 35px;
+            font-size: 1.4rem;
             font-weight: bold;
-            border-radius: 40px;
-            box-shadow: 0 8px 0 #38b000;
+            border-radius: 30px;
+            box-shadow: 0 6px 0 #b30047, 0 10px 20px rgba(255,0,127,0.4);
             cursor: pointer;
-            transition: transform 0.1s;
+            transition: all 0.1s ease;
         }
 
         .action-btn:active {
             transform: translateY(4px);
-            box-shadow: 0 4px 0 #38b000;
-        }
-
-        /* GAME HEADER */
-        .top-header {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            margin-bottom: 5px;
-        }
-
-        .header-title {
-            color: #6b2d5c;
-            font-size: calc(1.8rem + 0.5vw);
+            box-shadow: 0 2px 0 #b30047;
         }
 
         /* STATUS BAR */
@@ -188,289 +124,375 @@
             justify-content: space-between;
             align-items: center;
             width: 100%;
-            padding: 10px 20px;
-            background: #f3c4fb;
-            border-radius: 25px;
-            color: #4a1272;
-            font-size: 1.2rem;
-            font-weight: bold;
-            box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
-            margin-bottom: 15px;
+            padding: 8px 14px;
+            background: linear-gradient(135deg, #fff0f5, #ffe4e1);
+            border-radius: 20px;
+            border: 3px solid #ffb703;
+            color: var(--dark-purple);
+            font-size: 1.1rem;
+            font-weight: 900;
         }
 
-        .balloon-chances {
-            display: flex;
-            gap: 6px;
-            font-size: 1.6rem;
-        }
+        .lives-box { font-size: 1.3rem; letter-spacing: 2px; }
 
-        .balloon {
-            display: inline-block;
-            transition: transform 0.3s, opacity 0.3s;
-        }
-
-        .balloon.popped {
-            transform: scale(0);
-            opacity: 0;
-            width: 0;
-            margin: 0;
-        }
-
-        /* MAGIC BOARD AREA */
-        .magic-board {
-            background: #3c096c;
+        /* TASK BANNER */
+        .task-banner {
             width: 100%;
-            min-height: 230px;
-            border-radius: 30px;
-            border: 5px dashed var(--pastel-yellow);
+            background: linear-gradient(135deg, #70e000, #38b000);
+            border-radius: 18px;
+            padding: 6px 12px;
+            color: white;
+            font-size: 1.05rem;
+            font-weight: bold;
             display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 4px 0 #007200;
+            margin: 6px 0;
+        }
+
+        .task-badge {
+            background: #ffffff;
+            color: #38b000;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-weight: 900;
+        }
+
+        /* MATCH-3 BRIGHT CANDY GRID */
+        .grid-container {
+            width: 100%;
+            aspect-ratio: 1/1;
+            background: linear-gradient(180deg, #6a11cb 0%, #2575fc 100%);
+            border-radius: 25px;
+            border: 6px solid #ffe600;
+            padding: 8px;
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            grid-template-rows: repeat(6, 1fr);
+            gap: 5px;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.4), 0 8px 15px rgba(0,0,0,0.15);
+        }
+
+        .candy-tile {
+            background: rgba(255, 255, 255, 0.22);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.15s ease, background 0.2s;
+            position: relative;
+            box-shadow: inset 0 3px 6px rgba(255,255,255,0.4), 0 4px 6px rgba(0,0,0,0.2);
+        }
+
+        .candy-tile:hover {
+            transform: scale(1.05);
+            background: rgba(255, 255, 255, 0.35);
+        }
+
+        .candy-tile.selected {
+            background: #ffe600;
+            border: 3px solid #ffffff;
+            animation: popSelected 0.4s infinite alternate;
+            box-shadow: 0 0 15px #ffe600;
+        }
+
+        @keyframes popSelected {
+            0% { transform: scale(0.92); }
+            100% { transform: scale(1.1); }
+        }
+
+        .candy-img {
+            width: 88%;
+            height: 88%;
+            object-fit: contain;
+            pointer-events: none;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+        }
+
+        .popping { animation: candyBlast 0.35s forwards; }
+
+        @keyframes candyBlast {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.3) rotate(15deg); opacity: 0.8; }
+            100% { transform: scale(0); opacity: 0; }
+        }
+
+        /* TRACING MODAL OVERLAY */
+        #tracingModal {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(43, 9, 56, 0.92);
+            backdrop-filter: blur(5px);
+            z-index: 60;
+            display: none;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 20px 15px;
-            position: relative;
-            box-shadow: inset 0 0 25px rgba(255, 234, 0, 0.25);
-            margin: 10px 0;
+            padding: 10px;
         }
 
-        .prompt-text {
-            color: var(--pastel-blue);
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-
-        .word-container {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .letter-block {
+        .tracing-card {
             background: #ffffff;
-            border: 4px solid var(--pastel-pink);
-            color: #333;
-            font-size: calc(2.4rem + 1vw);
-            font-weight: bold;
-            width: calc(65px + 1vw);
-            height: calc(75px + 1vw);
-            border-radius: 20px;
+            border-radius: 28px;
+            padding: 16px 12px;
+            width: 96%;
+            max-width: 400px;
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: center;
-            position: relative;
-            box-shadow: 0 8px 0 var(--pastel-pink);
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 5px solid var(--warm-yellow);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            transition: transform 0.2s ease;
         }
 
-        .bindi-dot {
-            position: absolute;
-            top: -15px;
-            color: #ff0055;
-            font-size: 2.2rem;
-            opacity: 0;
-            transform: scale(0);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .letter-block.has-bindi .bindi-dot {
-            opacity: 1;
-            transform: scale(1);
-        }
-
-        .letter-block.glow-success {
-            background: var(--pastel-yellow) !important;
-            border-color: #fff !important;
-            color: #2b0938 !important;
-            box-shadow: 0 0 25px var(--pastel-yellow) !important;
-            transform: scale(1.1);
-        }
-
-        /* PROPER FULL WORD DISPLAY ON SUCCESS */
-        .full-word-display {
-            margin-top: 15px;
-            font-size: 2rem;
-            font-weight: bold;
-            color: var(--pastel-yellow);
-            background: rgba(255, 255, 255, 0.15);
-            padding: 6px 30px;
-            border-radius: 20px;
-            letter-spacing: 2px;
-            opacity: 0;
-            transform: translateY(10px);
-            transition: all 0.4s ease-out;
-        }
-
-        .full-word-display.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* OPTIONS AREA */
-        .options-grid {
-            display: flex;
-            gap: 12px;
-            width: 100%;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-top: 10px;
-        }
-
-        .option-btn {
-            background: #ffffff;
-            border: 5px solid var(--pastel-purple);
-            color: #4a1272;
-            font-size: calc(1.8rem + 0.8vw);
-            font-weight: bold;
-            padding: 10px 20px;
-            border-radius: 25px;
-            cursor: pointer;
-            box-shadow: 0 8px 0 #b39ddb;
-            flex: 1;
-            min-width: 90px;
-            max-width: 180px;
-            transition: transform 0.1s, box-shadow 0.1s, border-color 0.3s;
-        }
-
-        .option-btn:active {
-            transform: translateY(6px);
-            box-shadow: 0 2px 0 #b39ddb;
-        }
-
-        .option-btn.wrong-shake {
+        .shake-animation {
             animation: shake 0.4s ease-in-out;
-            border-color: #ff4d6d !important;
-            box-shadow: 0 8px 0 #c9184a !important;
+            border-color: #ff0055 !important;
         }
 
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
-            20%, 60% { transform: translateX(-12px); }
-            40%, 80% { transform: translateX(12px); }
+            20% { transform: translateX(-12px); }
+            40% { transform: translateX(12px); }
+            60% { transform: translateX(-8px); }
+            80% { transform: translateX(8px); }
         }
 
-        /* PARTICLE ANIMATION */
-        .star-particle {
-            position: absolute;
-            pointer-events: none;
-            animation: starExplode 0.8s forwards ease-out;
+        .tracing-prompt {
+            font-size: 1.1rem;
+            color: var(--bright-orange);
+            font-weight: 900;
+            margin-bottom: 4px;
         }
 
-        @keyframes starExplode {
-            0% { transform: translate(0, 0) scale(1); opacity: 1; }
-            100% { transform: translate(var(--x), var(--y)) scale(0); opacity: 0; }
+        .tracing-word {
+            font-size: 2.4rem;
+            font-weight: 900;
+            color: var(--dark-purple);
+            margin-bottom: 6px;
+            letter-spacing: 2px;
         }
+
+        .hint-box {
+            background: #fff3cd;
+            color: #856404;
+            border: 2px dashed #ffebaa;
+            border-radius: 12px;
+            padding: 6px 10px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: none;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* CANVAS CONTAINER */
+        .canvas-container {
+            position: relative;
+            width: 300px;
+            max-width: 100%;
+            height: 220px;
+            background: #fff8f0;
+            border: 4px dashed var(--neon-pink);
+            border-radius: 20px;
+            margin-bottom: 10px;
+        }
+
+        #tracingCanvas {
+            width: 100%;
+            height: 100%;
+            touch-action: none;
+            border-radius: 16px;
+            cursor: crosshair;
+        }
+
+        /* MCQ FALLBACK CONTAINER */
+        .mcq-container {
+            display: none;
+            flex-direction: row;
+            gap: 15px;
+            margin: 15px 0;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .mcq-btn {
+            background: #ffb703;
+            color: var(--dark-purple);
+            font-size: 2rem;
+            font-weight: 900;
+            padding: 10px 25px;
+            border-radius: 18px;
+            border: 3px solid #ff5e00;
+            box-shadow: 0 5px 0 #d48800;
+            cursor: pointer;
+        }
+
+        .mcq-btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 #d48800;
+        }
+
+        .success-banner {
+            display: none;
+            font-size: 1.7rem;
+            color: #38b000;
+            font-weight: 900;
+            margin: 15px 0;
+            animation: popSuccess 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popSuccess {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* INSTRUCTIONS STYLING */
+        .instruction-title { font-size: 2rem; color: var(--bright-orange); margin-bottom: 15px; font-weight: 900; }
+        .instruction-list { display: flex; flex-direction: column; gap: 12px; width: 100%; margin-bottom: 20px; }
+        .step-card {
+            background: #fff8f0; border: 2px dashed #ffb703; border-left: 6px solid var(--neon-pink);
+            border-radius: 15px; padding: 10px 14px; display: flex; align-items: center; gap: 12px; text-align: left;
+        }
+        .step-num {
+            background: linear-gradient(135deg, #ff5e00, #ff007f); color: white; width: 32px; height: 32px;
+            min-width: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;
+        }
+        .step-text { font-size: 0.95rem; color: #333; line-height: 1.3; font-weight: 600; }
+        .highlight-tag { background: #ffe3e0; color: var(--neon-pink); padding: 2px 6px; border-radius: 6px; font-weight: bold; }
     </style>
 </head>
 <body>
 
     <div class="game-card">
 
-        <!-- SCREEN 1: SPLASH LOGO ONLY (5 SECONDS) -->
+        <!-- SPLASH -->
         <div id="splashScreen" class="screen">
             <img src="assets/innovine-logo.png" alt="Innovine Logo" class="splash-logo" onerror="autoAdvanceSplash();">
-            <p style="margin-top: 20px; color: #aaa; font-weight: bold; font-size: 1.1rem;">लोड हो रहा है...</p>
+            <p style="margin-top: 20px; color: #888; font-weight: bold;">मात्रा कैंडी क्रश शुरू हो रहा है...</p>
         </div>
 
-        <!-- SCREEN 2: TITLE SCREEN (NO LOGO) -->
+        <!-- TITLE -->
         <div id="titleScreen" class="screen" style="display: none;">
-            <h1 class="main-title">🔴 बिंदी कहाँ लगेगी? ✨</h1>
-            <p class="subtitle">अं (ं) की मात्रा का मज़ेदार खेल!</p>
+            <h1 class="main-title">🍬 मात्रा कैंडी क्रश 🍬</h1>
+            <p class="subtitle">कैंडीज़ मिलाओ और मात्रा लिखो!</p>
             <button class="action-btn" onclick="goToInstructions()">शुरू करें ▶</button>
         </div>
 
-        <!-- SCREEN 3: BEAUTIFIED INSTRUCTIONS SCREEN (NO LOGO) -->
+        <!-- INSTRUCTIONS -->
         <div id="instructionScreen" class="screen" style="display: none;">
-            <h2 style="font-size: 2.2rem; color: #4a1272;">कैसे खेलें? 🎮</h2>
-            
-            <div class="instruction-cards-container">
-                <div class="rule-card">
-                    <div class="rule-icon">👆</div>
-                    <div class="rule-text">सही अक्षर को पहचानो और छुओ।</div>
+            <h2 class="instruction-title">कैसे खेलें? 🎮</h2>
+            <div class="instruction-list">
+                <div class="step-card">
+                    <div class="step-num">1</div>
+                    <div class="step-text">पास वाली 2 कैंडिज़ पर क्लिक करके आपस में बदलो <span class="highlight-tag">Swap</span>।</div>
                 </div>
-                <div class="rule-card">
-                    <div class="rule-icon">🔴</div>
-                    <div class="rule-text">अक्षर के ऊपर 'ं' बिंदी बैठ जाएगी!</div>
+                <div class="step-card">
+                    <div class="step-num">2</div>
+                    <div class="step-text">एक जैसी 3 या अधिक कैंडिज़ बनाकर <span class="highlight-tag">Match</span> बनाओ 🍬।</div>
                 </div>
-                <div class="rule-card">
-                    <div class="rule-icon">🎈</div>
-                    <div class="rule-text">३ गुब्बारे फटने से पहले खेलो।</div>
+                <div class="step-card">
+                    <div class="step-num">3</div>
+                    <div class="step-text">हर 2 मैच के बाद सही मात्रा (<span class="highlight-tag">ँ</span> या <span class="highlight-tag">ः</span>) सही से लिखो! ✏️</div>
                 </div>
             </div>
-
             <button class="action-btn" onclick="startGameDirectly()">खेलें 🎮</button>
         </div>
 
-        <!-- MAIN GAME AREA (NO LOGO) -->
-        <div class="top-header">
-            <h1 class="header-title">🔴 बिंदी कहाँ लगेगी? ✨</h1>
-        </div>
-
+        <!-- TOP STATUS BAR -->
         <div class="status-bar">
-            <span id="progressText">सवाल: १/१०</span>
-            <div class="balloon-chances" id="balloonBox">
-                <span class="balloon">🎈</span>
-                <span class="balloon">🎈</span>
-                <span class="balloon">🎈</span>
+            <span id="progressText">सवाल: 0/10</span>
+            <div class="lives-box" id="livesBox">🍬🍬🍬</div>
+            <span id="scoreText">⭐: 0</span>
+        </div>
+
+        <!-- TASK BANNER -->
+        <div class="task-banner">
+            <span>🎯 लक्ष्य: 2 मैच बनाओ!</span>
+            <span class="task-badge" id="matchProgress">0 / 2</span>
+        </div>
+
+        <!-- GAME BOARD -->
+        <div class="grid-container" id="board"></div>
+
+        <!-- TRACING QUESTION MODAL -->
+        <div id="tracingModal">
+            <div class="tracing-card" id="tracingCard">
+                <div class="tracing-prompt">शब्द पूरा करने के लिए मात्रा लिखो:</div>
+                <div class="tracing-word" id="wordPrompt">चा__द</div>
+                
+                <div class="hint-box" id="hintBox">💡 हिंट: रेखा साफ़ कर दी गई है, दोबारा ध्यान से ट्रेस करें!</div>
+
+                <div class="success-banner" id="successBanner">🎉 सही उत्तर! चाँद।</div>
+
+                <div class="canvas-container" id="canvasBox">
+                    <canvas id="tracingCanvas" width="300" height="220"></canvas>
+                </div>
+
+                <!-- MCQ FALLBACK OPTIONS FOR GRADE 1 -->
+                <div class="mcq-container" id="mcqBox">
+                    <button class="mcq-btn" onclick="submitMcqAnswer('ँ')">ँ</button>
+                    <button class="mcq-btn" onclick="submitMcqAnswer('ः')">ः</button>
+                </div>
+
+                <button class="action-btn" id="submitBtn" style="padding: 10px 25px; font-size: 1.2rem;" onclick="submitTracingAnswer()">सबमिट करें ✔</button>
             </div>
-            <span id="scoreText">⭐ अंक: ० / ১০০</span>
         </div>
 
-        <div class="magic-board" id="magicBoard">
-            <!-- SIMPLIFIED QUESTION PROMPT -->
-            <div class="prompt-text">सही अक्षर पर बिंदी लगाओ।</div>
-            <div class="word-container" id="wordBox"></div>
-            <!-- COMPLETED WORD DISPLAY -->
-            <div class="full-word-display" id="fullWordDisplay"></div>
-        </div>
-
-        <div style="width: 100%;">
-            <div class="options-grid" id="optionsBox"></div>
-        </div>
-
-        <!-- END GAME OVERLAY -->
+        <!-- END OVERLAY -->
         <div id="endOverlay" class="screen" style="display: none;">
-            <h1 id="endTitle" style="font-size: 2.8rem; color: #5e503f; margin-bottom: 15px;">🎉 बहुत बढ़िया! 🥳</h1>
-            <p id="finalScore" style="font-size: 1.4rem; color: #333; margin-bottom: 25px;">आपने बनाए कुल १०० अंक!</p>
+            <h1 id="endTitle" style="font-size: 2.2rem; color: var(--bright-orange); margin-bottom: 15px;">🎉 स्वीट विक्ट्री! 🥳</h1>
+            <p id="finalScore" style="font-size: 1.3rem; color: #333; margin-bottom: 25px;">आपने पूरे 100 अंक बनाए!</p>
             <button class="action-btn" onclick="startNewGame()">फिर से खेलें 🔄</button>
         </div>
 
     </div>
 
 <script>
-    // Audio Paths
     const sndCorrect = new Audio('assets/correct.mp3');
     const sndWrong = new Audio('assets/wrong.mp3');
     const sndClaps = new Audio('assets/freesound_community-claps-44774.mp3');
 
-    // Questions Pool
+    function playAudio(audioObj) {
+        audioObj.currentTime = 0;
+        audioObj.play().catch(() => {});
+    }
+
     const masterQuestions = [
-        { display: ["प", "खा"], correctLetter: "प", fullWord: "पंखा" },
-        { display: ["ब", "द", "र"], correctLetter: "ब", fullWord: "बंदर" },
-        { display: ["प", "त", "ग"], correctLetter: "त", fullWord: "पतंग" },
-        { display: ["म", "दि", "र"], correctLetter: "म", fullWord: "मंदिर" },
-        { display: ["ज", "ग", "ल"], correctLetter: "ज", fullWord: "जंगल" },
-        { display: ["च", "दा"], correctLetter: "च", fullWord: "चंदा" },
-        { display: ["अ", "गू", "र"], correctLetter: "अ", fullWord: "अंगूर" },
-        { display: ["ह", "स"], correctLetter: "ह", fullWord: "हंस" },
-        { display: ["स", "त", "रा"], correctLetter: "स", fullWord: "संतरा" },
-        { display: ["म", "ग", "ल", "वा", "र"], correctLetter: "म", fullWord: "मंगलवार" }
+        { wordPrompt: "चा__द",   targetMatra: "ँ", fullWord: "चाँद", hint: "💡 'चंद्रबिंदु' (ँ) पर दोबारा साफ़-साफ़ ट्रेस करें।" },
+        { wordPrompt: "नम__",    targetMatra: "ः", fullWord: "नमः", hint: "💡 विसर्ग (ः) की दोनों बिंदुओं पर ही ट्रेस करें।" },
+        { wordPrompt: "सा__प",   targetMatra: "ँ", fullWord: "साँप", hint: "💡 चंद्रबिंदु (ँ) के आकार पर ही उंगली चलाएँ।" },
+        { wordPrompt: "प्रात__", targetMatra: "ः", fullWord: "प्रातः", hint: "💡 विसर्ग (ः) की दो बिंदुओं को साफ़ ट्रेस करें।" },
+        { wordPrompt: "कुआ__",   targetMatra: "ँ", fullWord: "कुआँ", hint: "💡 'चंद्रबिंदु' (ँ) पर दोबारा उंगली चलाएँ।" },
+        { wordPrompt: "छ__",     targetMatra: "ः", fullWord: "छः", hint: "💡 विसर्ग (ः) की दो बिंदुओं पर ठीक से ट्रेस करें।" },
+        { wordPrompt: "आ__ख",    targetMatra: "ँ", fullWord: "आँख", hint: "💡 चंद्रबिंदु (ँ) पर फिर से ध्यान से उंगली फेरें।" },
+        { wordPrompt: "पुन__",   targetMatra: "ः", fullWord: "पुनः", hint: "💡 विसर्ग (ः) की दो बिंदुओं पर उंगली चलाएँ।" },
+        { wordPrompt: "मा__",    targetMatra: "ँ", fullWord: "माँ", hint: "💡 चंद्रबिंदु (ँ) को दोबारा ध्यान से ट्रेस करें।" },
+        { wordPrompt: "दु__ख",   targetMatra: "ः", fullWord: "दुःख", hint: "💡 विसर्ग (ः) की दो बिंदुओं को साफ़-साफ़ ट्रेस करें।" }
     ];
 
-    let gameQuestions = [];
-    let currentIdx = 0;
-    let score = 0;
-    let balloonsLeft = 3;
-    let splashTimer = null;
+    const CANDY_SVGS = [
+        `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><radialGradient id="g1" cx="30%" cy="30%" r="70%"><stop offset="0%" stop-color="%23ff99c8"/><stop offset="50%" stop-color="%23ff0055"/><stop offset="100%" stop-color="%2380002a"/></radialGradient></defs><circle cx="50" cy="50" r="42" fill="url(%23g1)"/><ellipse cx="38" cy="32" rx="12" ry="6" fill="%23ffffff" opacity="0.6" transform="rotate(-30 38 32)"/></svg>`,
+        `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><radialGradient id="g2" cx="35%" cy="35%" r="65%"><stop offset="0%" stop-color="%23ffee55"/><stop offset="60%" stop-color="%23ff9100"/><stop offset="100%" stop-color="%23995500"/></radialGradient></defs><path d="M50 8 Q88 55 50 92 Q12 55 50 8 Z" fill="url(%23g2)"/><ellipse cx="42" cy="38" rx="8" ry="16" fill="%23ffffff" opacity="0.55" transform="rotate(-20 42 38)"/></svg>`,
+        `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><radialGradient id="g3" cx="30%" cy="30%" r="70%"><stop offset="0%" stop-color="%23e0f7fa"/><stop offset="40%" stop-color="%2300b4d8"/><stop offset="100%" stop-color="%2303045e"/></radialGradient></defs><circle cx="50" cy="50" r="42" fill="url(%23g3)"/><circle cx="36" cy="34" r="10" fill="%23ffffff" opacity="0.75"/></svg>`,
+        `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><linearGradient id="g4" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="%23b5e7a0"/><stop offset="50%" stop-color="%2338b000"/><stop offset="100%" stop-color="%23004b23"/></linearGradient></defs><rect x="16" y="16" width="68" height="68" rx="22" fill="url(%23g4)"/><rect x="24" y="24" width="22" height="22" rx="8" fill="%23ffffff" opacity="0.45"/></svg>`,
+        `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><radialGradient id="g5" cx="35%" cy="35%" r="65%"><stop offset="0%" stop-color="%23f72585"/><stop offset="60%" stop-color="%237209b7"/><stop offset="100%" stop-color="%233a0ca3"/></radialGradient></defs><circle cx="50" cy="50" r="42" fill="url(%23g5)"/><path d="M 30 50 A 20 20 0 0 1 70 50" stroke="%23ffffff" stroke-width="6" stroke-linecap="round" fill="none" opacity="0.6"/></svg>`
+    ];
 
-    // --- SCREEN FLOW LOGIC ---
+    let splashTimer = null;
+    let score = 0;
+    let questionsSolved = 0;
+    let matchCountForCurrentQuestion = 0;
+    let lives = 3;
+    let tracingAttempts = 0;
+
     window.onload = function() {
-        // Auto transition from Screen 1 (Splash) to Screen 2 (Title) after 5 seconds
-        splashTimer = setTimeout(() => {
-            autoAdvanceSplash();
-        }, 5000);
+        splashTimer = setTimeout(autoAdvanceSplash, 5000);
+        setupTracingCanvas();
     };
 
     function autoAdvanceSplash() {
@@ -489,184 +511,389 @@
         startNewGame();
     }
 
-    // --- UTILITIES ---
-    function shuffle(arr) {
-        let array = [...arr];
-        for (let i = array.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [array[i], array[j]] = [array[j], array[i]];
+    const width = 6;
+    const board = document.getElementById('board');
+    let candyTiles = [];
+    let firstSelectedTile = null;
+
+    function createBoard() {
+        board.innerHTML = '';
+        candyTiles = [];
+        
+        for (let i = 0; i < width * width; i++) {
+            const tile = document.createElement('div');
+            tile.classList.add('candy-tile');
+            tile.setAttribute('data-id', i);
+
+            let randomCandy;
+            do {
+                randomCandy = Math.floor(Math.random() * CANDY_SVGS.length);
+            } while (
+                (i % width >= 2 && 
+                 candyTiles[i - 1].getAttribute('data-type') == randomCandy && 
+                 candyTiles[i - 2].getAttribute('data-type') == randomCandy) ||
+                (i >= width * 2 && 
+                 candyTiles[i - width].getAttribute('data-type') == randomCandy && 
+                 candyTiles[i - width * 2].getAttribute('data-type') == randomCandy)
+            );
+
+            tile.setAttribute('data-type', randomCandy);
+
+            const img = document.createElement('img');
+            img.src = CANDY_SVGS[randomCandy];
+            img.classList.add('candy-img');
+            tile.appendChild(img);
+
+            tile.addEventListener('click', onTileClick);
+            board.appendChild(tile);
+            candyTiles.push(tile);
         }
-        return array;
     }
 
-    function toHindiNum(num) {
-        const hindiDigits = ['०', '१', '२', '३', '४', '५', '६', '७', '८', '९'];
-        return num.toString().split('').map(d => hindiDigits[d]).join('');
+    function onTileClick(e) {
+        if (questionsSolved >= 10) return;
+
+        const clickedTile = e.currentTarget;
+
+        if (!firstSelectedTile) {
+            firstSelectedTile = clickedTile;
+            firstSelectedTile.classList.add('selected');
+        } else {
+            const id1 = parseInt(firstSelectedTile.getAttribute('data-id'));
+            const id2 = parseInt(clickedTile.getAttribute('data-id'));
+
+            // Calculate precise row and column positions to prevent grid-wrapping bugs
+            const row1 = Math.floor(id1 / width);
+            const col1 = id1 % width;
+            const row2 = Math.floor(id2 / width);
+            const col2 = id2 % width;
+
+            const isAdjacent = (Math.abs(row1 - row2) + Math.abs(col1 - col2)) === 1;
+
+            if (isAdjacent) {
+                swapTiles(firstSelectedTile, clickedTile);
+                let matched = checkMatchesAndRefill();
+                if (!matched) {
+                    setTimeout(() => swapTiles(firstSelectedTile, clickedTile), 250);
+                }
+            }
+
+            firstSelectedTile.classList.remove('selected');
+            firstSelectedTile = null;
+        }
     }
 
-    function playAudio(audioObj) {
-        audioObj.currentTime = 0;
-        audioObj.play().catch(() => {});
+    function swapTiles(tile1, tile2) {
+        const type1 = tile1.getAttribute('data-type');
+        const type2 = tile2.getAttribute('data-type');
+
+        tile1.setAttribute('data-type', type2);
+        tile1.querySelector('img').src = CANDY_SVGS[type2];
+
+        tile2.setAttribute('data-type', type1);
+        tile2.querySelector('img').src = CANDY_SVGS[type1];
     }
 
-    // --- GAME LOGIC ---
-    function startNewGame() {
-        document.getElementById('endOverlay').style.display = 'none';
+    function checkMatchesAndRefill() {
+        let hasMatch = false;
+
+        for (let i = 0; i < 36; i++) {
+            if (i % width > width - 3) continue;
+            let rowOfThree = [i, i + 1, i + 2];
+            let decidedType = candyTiles[i].getAttribute('data-type');
+
+            if (rowOfThree.every(index => candyTiles[index].getAttribute('data-type') === decidedType)) {
+                hasMatch = true;
+                rowOfThree.forEach(index => {
+                    candyTiles[index].classList.add('popping');
+                    setTimeout(() => replaceWithNewCandy(candyTiles[index]), 200);
+                });
+            }
+        }
+
+        for (let i = 0; i < 24; i++) {
+            let colOfThree = [i, i + width, i + width * 2];
+            let decidedType = candyTiles[i].getAttribute('data-type');
+
+            if (colOfThree.every(index => candyTiles[index].getAttribute('data-type') === decidedType)) {
+                hasMatch = true;
+                colOfThree.forEach(index => {
+                    candyTiles[index].classList.add('popping');
+                    setTimeout(() => replaceWithNewCandy(candyTiles[index]), 200);
+                });
+            }
+        }
+
+        if (hasMatch) {
+            matchCountForCurrentQuestion++;
+            document.getElementById('matchProgress').innerText = `${matchCountForCurrentQuestion} / 2`;
+            if (matchCountForCurrentQuestion >= 2) {
+                matchCountForCurrentQuestion = 0;
+                setTimeout(triggerTracingModal, 500);
+            }
+        }
+
+        return hasMatch;
+    }
+
+    function replaceWithNewCandy(tile) {
+        tile.classList.remove('popping');
+        let newCandyType = Math.floor(Math.random() * CANDY_SVGS.length);
+        tile.setAttribute('data-type', newCandyType);
+        tile.querySelector('img').src = CANDY_SVGS[newCandyType];
+    }
+
+    /* ENHANCED CANVAS TRACING */
+    let tCanvas, tCtx;
+    let isDrawing = false;
+    let targetPixelPositions = [];
+
+    function setupTracingCanvas() {
+        tCanvas = document.getElementById('tracingCanvas');
+        tCtx = tCanvas.getContext('2d');
+
+        function startDraw(e) {
+            e.preventDefault();
+            isDrawing = true;
+            tCtx.beginPath();
+            const pos = getPos(e);
+            tCtx.moveTo(pos.x, pos.y);
+        }
+
+        function draw(e) {
+            if (!isDrawing) return;
+            e.preventDefault();
+            const pos = getPos(e);
+            tCtx.lineTo(pos.x, pos.y);
+            tCtx.strokeStyle = '#ff007f';
+            tCtx.lineWidth = 18;
+            tCtx.lineCap = 'round';
+            tCtx.lineJoin = 'round';
+            tCtx.stroke();
+        }
+
+        function stopDraw(e) { 
+            if (isDrawing) e.preventDefault();
+            isDrawing = false; 
+        }
+
+        function getPos(e) {
+            const rect = tCanvas.getBoundingClientRect();
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            
+            const scaleX = tCanvas.width / rect.width;
+            const scaleY = tCanvas.height / rect.height;
+
+            return {
+                x: (clientX - rect.left) * scaleX,
+                y: (clientY - rect.top) * scaleY
+            };
+        }
+
+        tCanvas.addEventListener('mousedown', startDraw);
+        tCanvas.addEventListener('mousemove', draw);
+        tCanvas.addEventListener('mouseup', stopDraw);
+
+        tCanvas.addEventListener('touchstart', startDraw, {passive: false});
+        tCanvas.addEventListener('touchmove', draw, {passive: false});
+        tCanvas.addEventListener('touchend', stopDraw);
+    }
+
+    function renderGuideTemplate(matra) {
+        tCtx.clearRect(0, 0, tCanvas.width, tCanvas.height);
         
-        // Randomize questions list for every new game
-        gameQuestions = shuffle(masterQuestions);
-        
-        currentIdx = 0;
-        score = 0;
-        balloonsLeft = 3;
-        renderBalloons();
-        updateScoreBoard();
-        loadNextQuestion();
-    }
+        tCtx.font = "900 7.5rem 'Comic Sans MS', sans-serif";
+        tCtx.textAlign = "center";
+        tCtx.textBaseline = "middle";
+        tCtx.fillStyle = "rgba(255, 0, 127, 0.25)";
+        tCtx.fillText(matra, tCanvas.width / 2, tCanvas.height / 2);
 
-    function renderBalloons() {
-        const box = document.getElementById('balloonBox');
-        box.innerHTML = '';
-        for (let i = 0; i < 3; i++) {
-            if (i < balloonsLeft) {
-                box.innerHTML += `<span class="balloon">🎈</span>`;
-            } else {
-                box.innerHTML += `<span class="balloon popped">🎈</span>`;
+        const imgData = tCtx.getImageData(0, 0, tCanvas.width, tCanvas.height);
+        targetPixelPositions = [];
+
+        for (let y = 0; y < tCanvas.height; y += 4) {
+            for (let x = 0; x < tCanvas.width; x += 4) {
+                let alpha = imgData.data[(y * tCanvas.width + x) * 4 + 3];
+                if (alpha > 30) {
+                    targetPixelPositions.push({ x, y });
+                }
             }
         }
     }
 
-    function updateScoreBoard() {
-        document.getElementById('progressText').innerText = `सवाल: ${toHindiNum(currentIdx + 1)}/१०`;
-        document.getElementById('scoreText').innerText = `⭐ अंक: ${toHindiNum(score)}`;
+    function checkTracingAccuracy() {
+        if (targetPixelPositions.length === 0) return 0;
+
+        const currentImgData = tCtx.getImageData(0, 0, tCanvas.width, tCanvas.height);
+        let matchedPixels = 0;
+        let totalDrawnPixels = 0;
+
+        for (let y = 0; y < tCanvas.height; y += 4) {
+            for (let x = 0; x < tCanvas.width; x += 4) {
+                let index = (y * tCanvas.width + x) * 4;
+                let r = currentImgData.data[index];
+                let alpha = currentImgData.data[index + 3];
+
+                if (alpha > 150 && r > 180) {
+                    totalDrawnPixels++;
+                }
+            }
+        }
+
+        for (let pt of targetPixelPositions) {
+            let index = (pt.y * tCanvas.width + pt.x) * 4;
+            let r = currentImgData.data[index];
+            let alpha = currentImgData.data[index + 3];
+
+            if (alpha > 150 && r > 180) {
+                matchedPixels++;
+            }
+        }
+
+        let coverageRatio = matchedPixels / targetPixelPositions.length;
+        let extraScribbleRatio = (totalDrawnPixels - matchedPixels) / targetPixelPositions.length;
+
+        // Reject if user scribbles everywhere.
+        if (extraScribbleRatio > 1.4) {
+            return 0;
+        }
+
+        return coverageRatio;
     }
 
-    function loadNextQuestion() {
-        if (currentIdx >= gameQuestions.length) {
-            showEndGame(true);
+    function triggerTracingModal() {
+        if (questionsSolved >= 10) return;
+
+        tracingAttempts = 0;
+        const currentQ = masterQuestions[questionsSolved];
+        document.getElementById('wordPrompt').innerText = currentQ.wordPrompt;
+        document.getElementById('hintBox').style.display = 'none';
+        document.getElementById('successBanner').style.display = 'none';
+        document.getElementById('canvasBox').style.display = 'block';
+        document.getElementById('submitBtn').style.display = 'block';
+        document.getElementById('mcqBox').style.display = 'none';
+
+        renderGuideTemplate(currentQ.targetMatra);
+        document.getElementById('tracingModal').style.display = 'flex';
+    }
+
+    function submitTracingAnswer() {
+        const tracingCard = document.getElementById('tracingCard');
+        const hintBox = document.getElementById('hintBox');
+        const currentQ = masterQuestions[questionsSolved];
+
+        const coverageRatio = checkTracingAccuracy();
+
+        // FAIL TRACE (Requires minimum 50% accurate coverage).
+        if (coverageRatio < 0.50) {
+            playAudio(sndWrong);
+            tracingAttempts++;
+
+            if (navigator.vibrate) {
+                navigator.vibrate([100, 50, 100]);
+            }
+
+            tracingCard.classList.add('shake-animation');
+            setTimeout(() => tracingCard.classList.remove('shake-animation'), 450);
+
+            hintBox.innerText = currentQ.hint;
+            hintBox.style.display = 'block';
+
+            // Grade 1 Fallback MCQ Option after 2 failed attempts.
+            if (tracingAttempts >= 2) {
+                document.getElementById('canvasBox').style.display = 'none';
+                document.getElementById('submitBtn').style.display = 'none';
+                document.getElementById('mcqBox').style.display = 'flex';
+                hintBox.innerText = "💡 सही मात्रा पर बटन दबाकर उत्तर चुनें:";
+            } else {
+                setTimeout(() => {
+                    renderGuideTemplate(currentQ.targetMatra);
+                }, 300);
+            }
+
             return;
         }
 
-        updateScoreBoard();
-        const q = gameQuestions[currentIdx];
-
-        // Reset Full Word Display
-        const wordDisplay = document.getElementById('fullWordDisplay');
-        wordDisplay.classList.remove('visible');
-        wordDisplay.innerText = '';
-
-        // Render Word Container (Word in correct order)
-        const wordBox = document.getElementById('wordBox');
-        wordBox.innerHTML = '';
-        q.display.forEach((char) => {
-            wordBox.innerHTML += `
-                <div class="letter-block" data-char="${char}">
-                    <span class="bindi-dot">🔴</span>
-                    ${char}
-                </div>
-            `;
-        });
-
-        // Render Options (Randomized every time)
-        const optionsBox = document.getElementById('optionsBox');
-        optionsBox.innerHTML = '';
-        const randomizedChoices = shuffle(q.display);
-
-        randomizedChoices.forEach(choice => {
-            optionsBox.innerHTML += `
-                <button class="option-btn" onclick="checkAnswer(this, '${choice}')">${choice}</button>
-            `;
-        });
+        // SUCCESS TRACE.
+        handleAnswerSuccess(currentQ);
     }
 
-    function checkAnswer(btnElement, selectedChar) {
-        const q = gameQuestions[currentIdx];
-
-        if (selectedChar === q.correctLetter) {
-            playAudio(sndCorrect);
-            score += 10;
-            updateScoreBoard();
-
-            // 1. Animate Bindi on Word Block
-            const blocks = document.querySelectorAll('.letter-block');
-            blocks.forEach(block => {
-                if (block.getAttribute('data-char') === q.correctLetter) {
-                    block.classList.add('has-bindi', 'glow-success');
-                }
-            });
-
-            // 2. Display Full Completed Word
-            const wordDisplay = document.getElementById('fullWordDisplay');
-            wordDisplay.innerText = `✨ ${q.fullWord} ✨`;
-            wordDisplay.classList.add('visible');
-
-            createBurstAnimation();
-
-            // Prevent multi-clicks
-            document.querySelectorAll('.option-btn').forEach(btn => btn.style.pointerEvents = 'none');
-
-            setTimeout(() => {
-                currentIdx++;
-                loadNextQuestion();
-            }, 1800);
-
+    function submitMcqAnswer(selectedMatra) {
+        const currentQ = masterQuestions[questionsSolved];
+        if (selectedMatra === currentQ.targetMatra) {
+            handleAnswerSuccess(currentQ);
         } else {
-            // Incorrect
             playAudio(sndWrong);
-
-            if (navigator.vibrate) {
-                navigator.vibrate(200);
-            }
-
-            btnElement.classList.add('wrong-shake');
-            balloonsLeft--;
-            renderBalloons();
-
-            if (balloonsLeft <= 0) {
-                setTimeout(() => { showEndGame(false); }, 500);
-            } else {
-                setTimeout(() => {
-                    btnElement.classList.remove('wrong-shake');
-                }, 400);
-            }
+            const tracingCard = document.getElementById('tracingCard');
+            tracingCard.classList.add('shake-animation');
+            setTimeout(() => tracingCard.classList.remove('shake-animation'), 450);
         }
     }
 
-    function createBurstAnimation() {
-        const board = document.getElementById('magicBoard');
-        for (let i = 0; i < 20; i++) {
-            const star = document.createElement('div');
-            star.className = 'star-particle';
-            star.innerText = '✨';
-            star.style.fontSize = (Math.random() * 18 + 12) + 'px';
-            star.style.left = '50%';
-            star.style.top = '50%';
+    function handleAnswerSuccess(currentQ) {
+        playAudio(sndCorrect);
 
-            const x = (Math.random() - 0.5) * 280;
-            const y = (Math.random() - 0.5) * 180;
-
-            star.style.setProperty('--x', `${x}px`);
-            star.style.setProperty('--y', `${y}px`);
-
-            board.appendChild(star);
-            setTimeout(() => star.remove(), 800);
+        if (window.confetti) {
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
         }
+
+        document.getElementById('canvasBox').style.display = 'none';
+        document.getElementById('submitBtn').style.display = 'none';
+        document.getElementById('mcqBox').style.display = 'none';
+        document.getElementById('hintBox').style.display = 'none';
+        
+        const successBanner = document.getElementById('successBanner');
+        successBanner.innerText = `✨ सही उत्तर: ${currentQ.fullWord} ✨`;
+        successBanner.style.display = 'block';
+
+        score += 10;
+        questionsSolved++;
+        document.getElementById('matchProgress').innerText = `0 / 2`;
+        updateStatusBar();
+
+        setTimeout(() => {
+            document.getElementById('tracingModal').style.display = 'none';
+            if (questionsSolved >= 10) {
+                showEndGame(true);
+            }
+        }, 1600);
+    }
+
+    function updateStatusBar() {
+        document.getElementById('progressText').innerText = `सवाल: ${questionsSolved}/10`;
+        document.getElementById('scoreText').innerText = `⭐: ${score}`;
+        
+        let cStr = "";
+        for(let i=0; i<lives; i++) cStr += "🍬";
+        document.getElementById('livesBox').innerText = cStr;
+    }
+
+    function startNewGame() {
+        document.getElementById('endOverlay').style.display = 'none';
+        score = 0;
+        questionsSolved = 0;
+        matchCountForCurrentQuestion = 0;
+        lives = 3;
+        document.getElementById('matchProgress').innerText = `0 / 2`;
+        updateStatusBar();
+        createBoard();
     }
 
     function showEndGame(isWin) {
-        const screen = document.getElementById('endOverlay');
-        const title = document.getElementById('endTitle');
-        const scoreText = document.getElementById('finalScore');
-
-        screen.style.display = 'flex';
-
+        document.getElementById('endOverlay').style.display = 'flex';
         if (isWin) {
             playAudio(sndClaps);
-            title.innerText = "🎉 अद्भुत! जीत गए! 🥳";
-            scoreText.innerText = `बधाई हो! आपने पूरे ${toHindiNum(score)} अंक प्राप्त किए!`;
-        } else {
-            title.innerText = "ओहो! 🎈 सारे गुब्बारे फूट गए!";
-            scoreText.innerText = `आपने ${toHindiNum(score)} अंक बनाए। फिर से कोशिश करें!`;
+            document.getElementById('endTitle').innerText = "🎉 अद्भुत! जीत गए! 🥳";
+            document.getElementById('finalScore').innerText = `आपने पूरे ${score} अंक प्राप्त किए!`;
+            
+            if (window.confetti) {
+                confetti({ particleCount: 200, spread: 100, origin: { y: 0.5 } });
+            }
         }
     }
 </script>
