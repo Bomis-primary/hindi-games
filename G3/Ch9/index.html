@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalam's Quest - Chapter Revision Game</title>
+    <title>इन्नोवाइन - कलाम की यात्रा (अध्याय पुनरावृत्ति)</title>
     <style>
         * {
             box-sizing: border-box;
@@ -35,6 +35,14 @@
             overflow: hidden;
         }
 
+        /* Branding Logo */
+        .brand-logo {
+            max-width: 160px;
+            height: auto;
+            margin-bottom: 15px;
+            display: inline-block;
+        }
+
         h1 {
             color: #38bdf8;
             font-size: 2rem;
@@ -44,7 +52,7 @@
 
         p.subtitle {
             color: #94a3b8;
-            font-size: 1rem;
+            font-size: 1.1rem;
             margin-bottom: 20px;
         }
 
@@ -69,12 +77,19 @@
         .hud {
             display: flex;
             justify-content: space-between;
+            align-items: center;
             background: #0f172a;
             padding: 12px 20px;
             border-radius: 10px;
             margin-bottom: 20px;
             font-weight: bold;
             color: #fbbf24;
+            font-size: 1.05rem;
+        }
+
+        .hud-logo {
+            height: 28px;
+            width: auto;
         }
 
         /* Question Area */
@@ -86,9 +101,10 @@
             align-items: center;
             justify-content: center;
             color: #f1f5f9;
+            line-height: 1.5;
         }
 
-        /* Options */
+        /* Options Grid */
         .options-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -112,6 +128,7 @@
             cursor: pointer;
             transition: all 0.2s ease;
             text-align: left;
+            line-height: 1.4;
         }
 
         .option-btn:hover {
@@ -135,9 +152,10 @@
             min-height: 50px;
             font-size: 1rem;
             margin-bottom: 20px;
-            padding: 10px;
+            padding: 12px;
             border-radius: 8px;
             display: none;
+            line-height: 1.5;
         }
 
         .feedback.show {
@@ -176,7 +194,6 @@
             display: none !important;
         }
 
-        /* Rocket Animation Overlay */
         .rocket-launch {
             font-size: 3rem;
             margin: 15px 0;
@@ -195,104 +212,107 @@
 
     <!-- START SCREEN -->
     <div id="start-screen">
-        <h1>🚀 Kalam's Quest</h1>
-        <p class="subtitle">Chapter Revision Challenge</p>
+        <img src="assets/logo.png" alt="इन्नोवाइन लोगो" class="brand-logo" onerror="this.style.display='none'">
+        <h1>🚀 कलाम की यात्रा</h1>
+        <p class="subtitle">हिंदी पाठ पुनरावृत्ति चुनौती (Innovine)</p>
         <p style="margin-bottom: 25px; color: #cbd5e1; line-height: 1.6;">
-            Revise Dr. A.P.J. Abdul Kalam's life, achievements, values, and lessons through this interactive quiz game! 
-            Answer correctly to launch rockets and unlock your final score.
+            डॉ. ए.पी.जे. अब्दुल कलाम के जीवन, उनकी उपलब्धियों और पाठ से जुड़े प्रश्नों का उत्तर देकर अपने ज्ञान का परीक्षण करें! 
+            सही उत्तर चुनकर अंक प्राप्त करें और अपना सर्वश्रेष्ठ स्कोर बनाएं।
         </p>
-        <button class="btn" onclick="startGame()">Start Game</button>
+        <button class="btn" onclick="startGame()">खेल शुरू करें</button>
     </div>
 
     <!-- PLAY SCREEN -->
     <div id="play-screen" class="hidden">
         <div class="hud">
-            <div>Question: <span id="current-q">1</span>/<span id="total-q">5</span></div>
-            <div>Score: <span id="score">0</span> pts</div>
+            <img src="assets/logo.png" alt="Innovine" class="hud-logo" onerror="this.style.display='none'">
+            <div>प्रश्न: <span id="current-q">1</span>/<span id="total-q">5</span></div>
+            <div>अंक: <span id="score">0</span></div>
         </div>
 
         <div class="progress-container">
             <div id="progress-bar" class="progress-bar"></div>
         </div>
 
-        <div id="question" class="question-box">Question text goes here...</div>
+        <div id="question" class="question-box">प्रश्न यहाँ दिखाई देगा...</div>
 
         <div id="options" class="options-grid"></div>
 
         <div id="feedback" class="feedback"></div>
 
-        <button id="next-btn" class="btn hidden" onclick="nextQuestion()">Next Question ➔</button>
+        <button id="next-btn" class="btn hidden" onclick="nextQuestion()">अगला प्रश्न ➔</button>
     </div>
 
     <!-- RESULT SCREEN -->
     <div id="end-screen" class="hidden">
-        <h1>Mission Completed! 🌟</h1>
+        <img src="assets/logo.png" alt="इन्नोवाइन लोगो" class="brand-logo" onerror="this.style.display='none'">
+        <h1>मिशन पूरा हुआ! 🌟</h1>
         <div class="rocket-launch">🚀</div>
-        <p class="subtitle">Chapter Revision Summary</p>
+        <p class="subtitle">अध्याय पुनरावृत्ति परिणाम</p>
         <p id="final-stats" style="font-size: 1.3rem; margin-bottom: 15px; color: #fbbf24;"></p>
         <p id="revision-msg" style="margin-bottom: 25px; color: #cbd5e1; line-height: 1.6;"></p>
-        <button class="btn" onclick="startGame()">Play Again</button>
+        <button class="btn" onclick="startGame()">पुनः खेलें</button>
     </div>
 
 </div>
 
 <script>
-    // Chapter Revision Question Bank
+    // Chapter Revision Question Bank in Hindi
     const chapterQuestions = [
         {
-            question: "Where was Dr. A.P.J. Abdul Kalam born?",
+            question: "डॉ. ए.पी.जे. अब्दुल कलाम का जन्म कहाँ हुआ था?",
             options: [
-                "Rameswaram, Tamil Nadu",
-                "Thiruvananthapuram, Kerala",
-                "Bengaluru, Karnataka",
-                "Hyderabad, Telangana"
+                "रामेश्वरम, तमिलनाडु",
+                "तिरुवनंतपुरम, केरल",
+                "बेंगलुरु, कर्नाटक",
+                "हैदराबाद, तेलंगाना"
             ],
             correct: 0,
-            explanation: "Dr. Kalam was born on October 15, 1931, in the island town of Rameswaram, Tamil Nadu."
+            explanation: "डॉ. कलाम का जन्म 15 अक्टूबर 1931 को तमिलनाडु के प्रसिद्ध द्वीप शहर रामेश्वरम में हुआ था।"
         },
         {
-            question: "How did young Kalam help support his family's income during his childhood?",
+            question: "बचपन में अपने परिवार की आर्थिक मदद के लिए अब्दुल कलाम क्या काम करते थे?",
             options: [
-                "By selling flowers at the temple",
-                "By collecting and selling tamarind seeds & distributing newspapers",
-                "By working at a fishing farm",
-                "By repairing bicycles"
+                "मंदिर में फूल बेचते थे",
+                "इमली के बीज इकट्ठा करते थे और समाचार पत्र बांटते थे",
+                "मछली फार्म में काम करते थे",
+                "साइकिल की मरम्मत करते थे"
             ],
             correct: 1,
-            explanation: "Kalam earned his early income by collecting tamarind seeds and delivering newspapers after his cousin needed a helping hand."
+            explanation: "कलाम इमली के बीज इकट्ठा करके बेचते थे और अपने चचेरे भाई शमसुद्दीन की मदद के लिए अखबार बांटते थे।"
         },
         {
-            question: "What major project did Dr. Kalam lead as Project Director at ISRO?",
+            question: "इसरो (ISRO) में परियोजना निदेशक के रूप में डॉ. कलाम ने किस प्रमुख उपग्रह प्रक्षेपण यान का नेतृत्व किया?",
             options: [
-                "Chandrayaan-1",
-                "Mangalyaan",
-                "SLV-3 (Satellite Launch Vehicle)",
-                "INSAT-1A"
+                "चंद्रयान-1",
+                "मंगलयान",
+                "एस.एल.वी.-3 (SLV-3)",
+                "इनसैट-1ए"
             ],
             correct: 2,
-            explanation: "Dr. Kalam was the Project Director for India's first indigenous Satellite Launch Vehicle (SLV-3), which successfully deployed the Rohini satellite in 1980."
+            explanation: "डॉ. कलाम भारत के पहले स्वदेशी उपग्रह प्रक्षेपण यान (SLV-3) के प्रोजेक्ट डायरेक्टर थे, जिसने रोहिणी उपग्रह को कक्षा में स्थापित किया।"
         },
         {
-            question: "Why is Dr. Kalam fondly remembered as the 'Missile Man of India'?",
+            question: "डॉ. कलाम को 'मिसाइल मैन ऑफ इंडिया' क्यों कहा जाता है?",
             options: [
-                "He invented gun powder",
-                "He developed the Agni and Prithvi missiles",
-                "He was a fighter jet pilot",
-                "He built the first submarine"
+                "उन्होंने तोपखाने की खोज की थी",
+                "उन्होंने अग्नि और पृथ्वी जैसी मिसाइलों का सफल विकास किया",
+                "वे वायुसेना के फाइटर पायलट थे",
+                "उन्होंने पहली परमाणु पनडुब्बी बनाई थी"
             ],
             correct: 1,
-            explanation: "He played a pivotal role in leading the Integrated Guided Missile Development Programme (IGMDP), developing Agni and Prithvi missiles."
+            explanation: "उन्होंने एकीकृत निर्देशित मिसाइल विकास कार्यक्रम (IGMDP) का सफल नेतृत्व किया और अग्नि तथा पृथ्वी मिसाइलों को विकसित किया।"
         },
         {
-            question: "Dr. Abdul Kalam served as the _____ President of India.",
+            question: "डॉ. अब्दुल कलाम भारत के कौन-से नंबर के राष्ट्रपति बने?",
             options: [
-                "9th",
-                "10th",
-                "11th",
-                "12th"
+                "9वें",
+                "10वें",
+                "11वें",
+                "12वें"
             ],
             correct: 2,
-            explanation: "Dr. Kalam served as the 11th President of India from 2002 to 2007, widely known as the 'People's President'."
+            explanation: "डॉ. कलाम वर्ष 2002 से 2007 तक भारत के 11वें राष्ट्रपति रहे। उन्हें 'जनता के राष्ट्रपति' (People's President) के रूप में भी जाना जाता है।"
         }
     ];
 
@@ -314,29 +334,27 @@
         selectedOption = false;
         const qData = chapterQuestions[currentQuestionIndex];
         
-        // Update HUD & Progress
         document.getElementById('current-q').innerText = currentQuestionIndex + 1;
         document.getElementById('score').innerText = score;
         const progressPercent = ((currentQuestionIndex) / chapterQuestions.length) * 100;
         document.getElementById('progress-bar').style.width = progressPercent + '%';
 
-        // Load Text
         document.getElementById('question').innerText = qData.question;
         
-        // Reset Feedback & Next Button
         const feedbackEl = document.getElementById('feedback');
         feedbackEl.className = 'feedback';
         feedbackEl.innerText = '';
         document.getElementById('next-btn').classList.add('hidden');
 
-        // Load Options
         const optionsContainer = document.getElementById('options');
         optionsContainer.innerHTML = '';
+
+        const optionPrefixes = ['क', 'ख', 'ग', 'घ'];
 
         qData.options.forEach((optText, idx) => {
             const btn = document.createElement('button');
             btn.className = 'option-btn';
-            btn.innerText = `${String.fromCharCode(65 + idx)}. ${optText}`;
+            btn.innerText = `(${optionPrefixes[idx]}) ${optText}`;
             btn.onclick = () => selectOption(idx, btn);
             optionsContainer.appendChild(btn);
         });
@@ -353,12 +371,12 @@
         if (index === qData.correct) {
             score += 20;
             button.classList.add('correct');
-            feedbackEl.innerText = "✨ Correct! " + qData.explanation;
+            feedbackEl.innerText = "✨ सही उत्तर! " + qData.explanation;
             feedbackEl.classList.add('show', 'correct-text');
         } else {
             button.classList.add('wrong');
             allButtons[qData.correct].classList.add('correct');
-            feedbackEl.innerText = "❌ Incorrect. " + qData.explanation;
+            feedbackEl.innerText = "❌ गलत उत्तर। सही उत्तर है: " + qData.explanation;
             feedbackEl.classList.add('show', 'wrong-text');
         }
 
@@ -380,15 +398,15 @@
         document.getElementById('play-screen').classList.add('hidden');
         document.getElementById('end-screen').classList.remove('hidden');
 
-        document.getElementById('final-stats').innerText = `Your Final Score: ${score} / ${chapterQuestions.length * 20}`;
+        document.getElementById('final-stats').innerText = `आपका अंतिम स्कोर: ${score} / ${chapterQuestions.length * 20}`;
         
         const msgEl = document.getElementById('revision-msg');
         if (score === 100) {
-            msgEl.innerText = "🌟 Mastered! You have exceptional knowledge of Dr. Kalam's chapter!";
+            msgEl.innerText = "🌟 उत्कृष्ट! आपको इस अध्याय की पूर्ण और सटीक जानकारी है!";
         } else if (score >= 60) {
-            msgEl.innerText = "👍 Great job! You have a solid grasp of the chapter concepts.";
+            msgEl.innerText = "👍 बहुत बढ़िया! आपकी पाठ पर अच्छी पकड़ है।";
         } else {
-            msgEl.innerText = "📚 Good attempt! Re-read the chapter to strengthen your understanding and try again.";
+            msgEl.innerText = "📚 अच्छा प्रयास! पाठ को एक बार फिर ध्यान से पढ़ें और पुनः प्रयास करें।";
         }
     }
 </script>
