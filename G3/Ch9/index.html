@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>सच्चा देशप्रेम - शैक्षिक खेल</title>
+    <title>सच्चा देशप्रेम - Catch the Correct Word</title>
     <style>
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', Arial, sans-serif;
             user-select: none;
         }
 
@@ -20,23 +20,24 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 20px;
+            padding: 10px;
         }
 
         #game-container {
             width: 100%;
             max-width: 700px;
             background: #ffffff;
-            color: #333333;
+            color: #333;
             border-radius: 20px;
             box-shadow: 0 15px 30px rgba(0,0,0,0.3);
-            padding: 30px;
+            padding: 20px;
             text-align: center;
             position: relative;
-            min-height: 450px;
+            min-height: 520px;
             display: flex;
             justify-content: center;
             align-items: center;
+            overflow: hidden;
         }
 
         /* Screen Management */
@@ -46,6 +47,7 @@
             align-items: center;
             justify-content: center;
             width: 100%;
+            height: 100%;
         }
 
         .screen.active {
@@ -69,141 +71,101 @@
         /* Titles and Text */
         h1 {
             color: #1e3c72;
-            font-size: 2.2rem;
+            font-size: 2rem;
             margin-bottom: 10px;
         }
 
         p.subtitle {
             color: #666;
-            font-size: 1.1rem;
-            margin-bottom: 25px;
+            font-size: 1rem;
+            margin-bottom: 20px;
         }
 
         /* Instructions */
         .instructions-list {
             background: #f0f4f8;
             border-radius: 12px;
-            padding: 20px 30px;
+            padding: 20px;
             text-align: left;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             width: 100%;
         }
 
         .instructions-list li {
-            font-size: 1.05rem;
-            margin-bottom: 12px;
+            font-size: 1rem;
+            margin-bottom: 10px;
             color: #444;
             line-height: 1.5;
         }
 
-        /* Game HUD */
+        /* Screen 3: Game Canvas/Area */
+        #game-canvas {
+            width: 100%;
+            height: 380px;
+            background: #f4f7f6;
+            border: 2px solid #1e3c72;
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
         .hud {
             display: flex;
             justify-content: space-between;
             width: 100%;
             background: #eef2f7;
-            padding: 12px 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
             font-weight: bold;
             color: #1e3c72;
         }
 
-        .progress-bar-bg {
-            width: 100%;
-            background: #e0e0e0;
-            height: 10px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            overflow: hidden;
-        }
-
-        .progress-bar-fill {
-            height: 100%;
-            width: 0%;
-            background: #ff9800;
-            transition: width 0.3s ease;
-        }
-
-        /* Question and Options */
-        .question-box {
-            font-size: 1.25rem;
+        .falling-word {
+            position: absolute;
+            background: #1e3c72;
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 15px;
             font-weight: bold;
-            color: #2c3e50;
-            margin-bottom: 20px;
-            min-height: 50px;
+            font-size: 0.95rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        #basket {
+            position: absolute;
+            bottom: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 25px;
+            background: #ff9800;
+            border-radius: 12px 12px 5px 5px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            color: white;
+            font-weight: bold;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 0.8rem;
         }
 
-        .options-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            width: 100%;
-            margin-bottom: 20px;
-        }
-
-        @media (max-width: 500px) {
-            .options-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .opt-btn {
-            background: #f8f9fa;
-            border: 2px solid #dcdfe6;
-            border-radius: 10px;
-            padding: 14px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-align: left;
-            color: #333;
-        }
-
-        .opt-btn:hover {
-            background: #eef5ff;
-            border-color: #1e3c72;
-        }
-
-        .opt-btn.correct {
-            background: #d4edda !important;
-            border-color: #28a745 !important;
-            color: #155724;
-        }
-
-        .opt-btn.wrong {
-            background: #f8d7da !important;
-            border-color: #dc3545 !important;
-            color: #721c24;
-        }
-
-        /* Feedback Box */
-        .feedback {
-            min-height: 40px;
-            font-size: 0.95rem;
-            margin-bottom: 15px;
-            padding: 10px;
-            border-radius: 8px;
-            display: none;
-            width: 100%;
-            text-align: left;
-        }
-
-        .feedback.show {
-            display: block;
-        }
-
-        .feedback.correct-bg {
+        .prompt-target {
             background: #e2f0d9;
             color: #2b542c;
+            padding: 8px;
+            border-radius: 6px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            width: 100%;
         }
 
-        .feedback.wrong-bg {
-            background: #f2dede;
-            color: #a94442;
+        /* Controls */
+        .controls-note {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 5px;
         }
 
         /* Buttons */
@@ -225,10 +187,6 @@
             transform: translateY(-2px);
         }
 
-        .hidden {
-            display: none !important;
-        }
-
         @keyframes fadeIn {
             from { opacity: 0; transform: scale(0.95); }
             to { opacity: 1; transform: scale(1); }
@@ -239,7 +197,7 @@
 
 <div id="game-container">
 
-    <!-- SCREEN 1: INNOVINE LOGO ONLY -->
+    <!-- SCREEN 1: LOGO SPLASH -->
     <div id="screen-logo" class="screen active">
         <img src="assets/logo.png" alt="Innovine Logo" class="splash-logo" onerror="this.onerror=null; this.src='https://via.placeholder.com/280x100?text=INNOVINE+LOGO';">
         <p class="timer-text">लोड हो रहा है... (<span id="splash-countdown">5</span>)</p>
@@ -247,50 +205,48 @@
 
     <!-- SCREEN 2: INSTRUCTIONS -->
     <div id="screen-instructions" class="screen">
-        <h1>🇮🇳 सच्चा देशप्रेम</h1>
-        <p class="subtitle">अध्याय 8 - पाठ पर आधारित क्विज़ खेल</p>
+        <h1>🧺 Catch the Correct Word</h1>
+        <p class="subtitle">अध्याय 8 - सच्चा देशप्रेम</p>
         
         <ul class="instructions-list">
-            <li>📌 <strong>लक्ष्य:</strong> अध्याय 'सच्चा देशप्रेम' के प्रश्नों के सही उत्तर दें।</li>
-            <li>🎯 <strong>अंक:</strong> प्रत्येक सही उत्तर पर आपको <strong>10 अंक</strong> मिलेंगे।</li>
-            <li>💡 <strong>सीख:</strong> सही उत्तर चुनने पर आपको पाठ से जुड़ा मुख्य सबक भी जानने को मिलेगा।</li>
+            <li>🎯 <strong>लक्ष्य:</strong> ऊपर से गिरते हुए शब्दों में से <strong>पाठ से जुड़े सही शब्दों</strong> को बास्केट में पकड़ें।</li>
+            <li>⌨️ <strong>कंट्रोल:</strong> बास्केट को चलाने के लिए <strong>Left/Right Arrow keys</strong> या टच/माउस का प्रयोग करें।</li>
+            <li>✅ <strong>सही शब्द:</strong> +10 अंक | ❌ <strong>गलत शब्द:</strong> -5 अंक</li>
         </ul>
 
-        <button class="btn" onclick="startGame()">खेल शुरू करें 🚀</button>
+        <button class="btn" onclick="startGame()">गेम शुरू करें 🚀</button>
     </div>
 
     <!-- SCREEN 3: GAME PLAY -->
     <div id="screen-game" class="screen">
         <div class="hud">
-            <div>प्रश्न: <span id="current-q">1</span>/<span id="total-q">5</span></div>
+            <div>लक्ष्य: <span id="target-count">0</span>/<span id="total-targets">5</span></div>
             <div>अंक: <span id="score">0</span></div>
         </div>
 
-        <div class="progress-bar-bg">
-            <div id="progress-bar" class="progress-bar-fill"></div>
+        <div class="prompt-target" id="prompt-target">
+            पाठ से जुड़े सही शब्द को बास्केट में पकड़ें!
         </div>
 
-        <div id="question" class="question-box">प्रश्न लोड हो रहा है...</div>
+        <div id="game-canvas">
+            <div id="basket">बास्केट 🧺</div>
+        </div>
 
-        <div id="options" class="options-grid"></div>
-
-        <div id="feedback" class="feedback"></div>
-
-        <button id="next-btn" class="btn hidden" onclick="nextQuestion()">अगला प्रश्न ➔</button>
+        <p class="controls-note">👈 बास्केट घुमाने के लिए स्क्रीन पर माउस/टच ड्रैग करें या एरो कीज़ दबाएं 👉</p>
     </div>
 
     <!-- SCREEN 4: END SCREEN -->
     <div id="screen-end" class="screen">
         <h1>🎉 खेल पूर्ण हुआ!</h1>
-        <p class="subtitle">अध्याय पुनरावृत्ति परिणाम</p>
+        <p class="subtitle">सच्चा देशप्रेम शब्द-पकड़ चुनौती</p>
         
         <div style="font-size: 1.4rem; font-weight: bold; color: #1e3c72; margin-bottom: 15px;">
-            आपका अंतिम स्कोर: <span id="final-score">0</span> / 50
+            आपका अंतिम स्कोर: <span id="final-score">0</span>
         </div>
 
-        <div id="lesson-box" style="background: #eef2f7; padding: 15px; border-radius: 10px; color: #333; margin-bottom: 25px; line-height: 1.6;">
-            <strong>आज का मुख्य सबक:</strong><br>
-            "सच्चा देशप्रेम केवल सीमाओं पर लड़ने में नहीं, बल्कि नियमों का पालन करने, दूसरों की मदद करने और सतर्क रहकर अपने कर्तव्यों को निभाने में है।"
+        <div style="background: #eef2f7; padding: 15px; border-radius: 10px; color: #333; margin-bottom: 25px; line-height: 1.6;">
+            <strong>आज की सीख:</strong><br>
+            "राष्ट्रगान का सम्मान, दूसरों की मदद और नियमों का पालन ही सच्चा देशप्रेम है।"
         </div>
 
         <button class="btn" onclick="startGame()">पुनः खेलें 🔄</button>
@@ -313,130 +269,152 @@
         }
     }, 1000);
 
-    // Screen Switcher Helper
     function switchScreen(screenId) {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.getElementById(screenId).classList.add('active');
     }
 
-    // Questions based on Chapter 8: "सच्चा देशप्रेम"
-    const questions = [
-        {
-            question: "अमन ने मेले की दुकान से कौन-सा खिलौना खरीदा?",
-            options: ["नीले रंग का हाथी", "सुंदर कार", "रंग-बिरंगी गुड़िया", "लकड़ी का घोड़ा"],
-            correct: 0,
-            explanation: "अमन ने मेले की एक दुकान से नीले रंग का सुंदर छोटा हाथी खरीदा था।"
-        },
-        {
-            question: "रास्ते में राष्ट्रगान 'जन-गण-मन' शुरू होते ही लोगों ने क्या किया?",
-            options: ["ताली बजाने लगे", "अपने-अपने घर भाग गए", "सम्मानपूर्वक वहीं खड़े हो गए", "गीत गाने लगे"],
-            correct: 2,
-            explanation: "राष्ट्रगान की धुन सुनते ही अमन, उसके मम्मी-पापा और सड़क पर चल रहे सभी लोग सम्मानपूर्वक खड़े हो गए।"
-        },
-        {
-            question: "सड़क की ओर भागता छोटा बच्चा किस चीज़ के पीछे दौड़ रहा था?",
-            options: ["गुब्बारे के पीछे", "रंगीन गेंद के पीछे", "एक कुत्ते के पीछे", "अपनी पतंग के पीछे"],
-            correct: 1,
-            explanation: "वह छोटा बच्चा एक रंगीन गेंद के पीछे भागते-भागते सड़क पर पहुँचने वाला था।"
-        },
-        {
-            question: "बच्चे को सड़क दुर्घटना से बचाने के लिए अमन ने क्या समझदारी दिखाई?",
-            options: [
-                "खुद राष्ट्रगान छोड़कर भागा",
-                "गार्ड को आवाज़ देकर सतर्क किया",
-                "बस चालक को रुकने का इशारा किया",
-                "चुपचाप खड़ा रहा"
-            ],
-            correct: 1,
-            explanation: "अमन ने अपनी जगह पर खड़े रहकर गार्ड को आवाज़ दी- 'गार्ड अंकल... बच्चा सड़क की ओर जा रहा है!'"
-        },
-        {
-            question: "गार्ड अंकल के अनुसार दूसरों की सुरक्षा और मदद करना क्या है?",
-            options: ["केवल एक खेल", "सच्चा देशप्रेम और राष्ट्र की सेवा", "एक सामान्य बात", "कानून का उल्लंघन"],
-            correct: 1,
-            explanation: "गार्ड अंकल ने समझाया कि दूसरों की जान बचाना, मदद करना और कर्तव्य निभाना भी सच्चा देशप्रेम है।"
-        }
-    ];
+    // Game Words Data
+    const correctWords = ["राष्ट्रगान", "सुरक्षा", "हाथी", "गार्ड", "कर्तव्य"];
+    const wrongWords = ["लड़ाई", "आलस्य", "कचरा", "चोरी", "लापरवाही"];
 
-    let currentQIndex = 0;
     let score = 0;
-    let optionSelected = false;
+    let caughtTargets = 0;
+    let basketX = 50; // percentage
+    let fallingWords = [];
+    let gameLoopInterval = null;
+    let spawnInterval = null;
+
+    const gameCanvas = document.getElementById('game-canvas');
+    const basket = document.getElementById('basket');
 
     function startGame() {
-        currentQIndex = 0;
         score = 0;
+        caughtTargets = 0;
+        basketX = 50;
+        fallingWords = [];
+        
+        // Clear canvas words
+        document.querySelectorAll('.falling-word').forEach(e => e.remove());
+        
         switchScreen('screen-game');
-        document.getElementById('total-q').innerText = questions.length;
-        loadQuestion();
+        document.getElementById('score').innerText = score;
+        document.getElementById('target-count').innerText = caughtTargets;
+        document.getElementById('total-targets').innerText = correctWords.length;
+
+        updateBasketPos();
+
+        // Controls
+        window.addEventListener('keydown', handleKeyDown);
+        gameCanvas.addEventListener('mousemove', handleMouseMove);
+        gameCanvas.addEventListener('touchmove', handleTouchMove);
+
+        // Game Loops
+        if (gameLoopInterval) clearInterval(gameLoopInterval);
+        if (spawnInterval) clearInterval(spawnInterval);
+
+        gameLoopInterval = setInterval(updateGame, 30);
+        spawnInterval = setInterval(spawnWord, 1800);
     }
 
-    function loadQuestion() {
-        optionSelected = false;
-        const qData = questions[currentQIndex];
+    function updateBasketPos() {
+        basket.style.left = basketX + '%';
+    }
 
-        document.getElementById('current-q').innerText = currentQIndex + 1;
-        document.getElementById('score').innerText = score;
-        
-        // Update Progress Bar
-        const progressPercent = (currentQIndex / questions.length) * 100;
-        document.getElementById('progress-bar').style.width = progressPercent + '%';
+    function handleKeyDown(e) {
+        if (e.key === 'ArrowLeft' && basketX > 10) basketX -= 8;
+        if (e.key === 'ArrowRight' && basketX < 90) basketX += 8;
+        updateBasketPos();
+    }
 
-        document.getElementById('question').innerText = qData.question;
+    function handleMouseMove(e) {
+        const rect = gameCanvas.getBoundingClientRect();
+        let relX = ((e.clientX - rect.left) / rect.width) * 100;
+        basketX = Math.max(10, Math.min(90, relX));
+        updateBasketPos();
+    }
 
-        // Reset Feedback and Next Button
-        const feedbackEl = document.getElementById('feedback');
-        feedbackEl.className = 'feedback';
-        feedbackEl.innerText = '';
-        document.getElementById('next-btn').classList.add('hidden');
+    function handleTouchMove(e) {
+        if (!e.touches[0]) return;
+        const rect = gameCanvas.getBoundingClientRect();
+        let relX = ((e.touches[0].clientX - rect.left) / rect.width) * 100;
+        basketX = Math.max(10, Math.min(90, relX));
+        updateBasketPos();
+    }
 
-        // Render Options
-        const optionsContainer = document.getElementById('options');
-        optionsContainer.innerHTML = '';
+    function spawnWord() {
+        const isCorrect = Math.random() > 0.4;
+        let text = "";
 
-        qData.options.forEach((optText, index) => {
-            const btn = document.createElement('button');
-            btn.className = 'opt-btn';
-            btn.innerText = optText;
-            btn.onclick = () => handleOptionClick(index, btn);
-            optionsContainer.appendChild(btn);
+        if (isCorrect) {
+            text = correctWords[Math.floor(Math.random() * correctWords.length)];
+        } else {
+            text = wrongWords[Math.floor(Math.random() * wrongWords.length)];
+        }
+
+        const wordEl = document.createElement('div');
+        wordEl.className = 'falling-word';
+        wordEl.innerText = text;
+
+        const startX = Math.floor(Math.random() * 75) + 10; // 10% to 85%
+        wordEl.style.left = startX + '%';
+        wordEl.style.top = '0px';
+
+        gameCanvas.appendChild(wordEl);
+
+        fallingWords.push({
+            el: wordEl,
+            x: startX,
+            y: 0,
+            text: text,
+            isCorrect: correctWords.includes(text)
         });
     }
 
-    function handleOptionClick(selectedIndex, button) {
-        if (optionSelected) return;
-        optionSelected = true;
+    function updateGame() {
+        const canvasHeight = gameCanvas.clientHeight;
 
-        const qData = questions[currentQIndex];
-        const allButtons = document.querySelectorAll('.opt-btn');
-        const feedbackEl = document.getElementById('feedback');
+        for (let i = fallingWords.length - 1; i >= 0; i--) {
+            let item = fallingWords[i];
+            item.y += 3; // speed
+            item.el.style.top = item.y + 'px';
 
-        if (selectedIndex === qData.correct) {
-            score += 10;
-            button.classList.add('correct');
-            feedbackEl.innerText = "✨ सही उत्तर! " + qData.explanation;
-            feedbackEl.classList.add('show', 'correct-bg');
-        } else {
-            button.classList.add('wrong');
-            allButtons[qData.correct].classList.add('correct');
-            feedbackEl.innerText = "❌ गलत उत्तर! सही उत्तर है: " + qData.options[qData.correct] + ". " + qData.explanation;
-            feedbackEl.classList.add('show', 'wrong-bg');
+            // Catch collision detection
+            if (item.y >= canvasHeight - 40 && item.y <= canvasHeight - 10) {
+                if (Math.abs(item.x - basketX) < 15) {
+                    // Caught!
+                    if (item.isCorrect) {
+                        score += 10;
+                        caughtTargets++;
+                        document.getElementById('target-count').innerText = Math.min(caughtTargets, correctWords.length);
+                    } else {
+                        score = Math.max(0, score - 5);
+                    }
+                    
+                    document.getElementById('score').innerText = score;
+                    item.el.remove();
+                    fallingWords.splice(i, 1);
+
+                    if (caughtTargets >= correctWords.length) {
+                        endGame();
+                    }
+                    continue;
+                }
+            }
+
+            // Missed / Fall out of screen
+            if (item.y > canvasHeight) {
+                item.el.remove();
+                fallingWords.splice(i, 1);
+            }
         }
-
-        document.getElementById('score').innerText = score;
-        document.getElementById('next-btn').classList.remove('hidden');
     }
 
-    function nextQuestion() {
-        currentQIndex++;
-        if (currentQIndex < questions.length) {
-            loadQuestion();
-        } else {
-            showEndScreen();
-        }
-    }
+    function endGame() {
+        clearInterval(gameLoopInterval);
+        clearInterval(spawnInterval);
+        window.removeEventListener('keydown', handleKeyDown);
 
-    function showEndScreen() {
-        document.getElementById('progress-bar').style.width = '100%';
         switchScreen('screen-end');
         document.getElementById('final-score').innerText = score;
     }
