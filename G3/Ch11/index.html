@@ -19,6 +19,7 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
+            height: 100dvh; /* Dynamic Viewport Height for Mobile Browsers */
             width: 100vw;
             overflow: hidden;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -484,15 +485,15 @@ class GameScene extends Phaser.Scene {
 
         this.cursors = this.input.keyboard.createCursorKeys();
 
-        // --- Touch Control Handling ---
+        // --- Touch Control Handling (Using pointer.worldX for Scaled Canvas Precision) ---
         this.input.on('pointerdown', (pointer) => {
             unlockMobileAudio();
-            this.player.x = Phaser.Math.Clamp(pointer.x, 40, 760);
+            this.player.x = Phaser.Math.Clamp(pointer.worldX, 40, 760);
         });
 
         this.input.on('pointermove', (pointer) => {
             if (pointer.isDown) {
-                this.player.x = Phaser.Math.Clamp(pointer.x, 40, 760);
+                this.player.x = Phaser.Math.Clamp(pointer.worldX, 40, 760);
             }
         });
 
