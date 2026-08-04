@@ -146,7 +146,7 @@
     .game-main{flex:1 1 auto;display:flex;flex-direction:column;justify-content:center;min-height:0;padding:clamp(12px,2.8vw,26px);overflow:auto;-webkit-overflow-scrolling:touch}
     .prompt-card{width:min(100%,790px);margin:0 auto 14px;padding:clamp(14px,2.8vw,22px);border:1px solid #eceef5;border-radius:22px;background:#fff;box-shadow:0 8px 24px rgba(37,50,74,.08);text-align:center}
     .prompt-label{display:inline-block;margin-bottom:7px;padding:5px 12px;border-radius:999px;background:#f1efff;color:var(--primary-dark);font-size:.9rem;font-weight:950}
-    .question-text{margin:0;font-size:clamp(1.12rem,3.25vw,1.72rem);line-height:1.5;font-weight:950;word-break:break-word;overflow-wrap:anywhere}
+    .question-text{margin:0;font-size:clamp(1.12rem,3.25vw,1.72rem);line-height:1.5;font-weight:950;word-break:normal;overflow-wrap:break-word;text-rendering:optimizeLegibility}
     .task-area{width:min(100%,790px);margin:0 auto}
     .feedback-line{width:min(100%,790px);min-height:50px;margin:13px auto 0;padding:10px 14px;border-radius:15px;color:var(--muted);font-size:.97rem;line-height:1.4;font-weight:850;text-align:center}
     .feedback-line.good{color:#17623b;background:var(--green-soft)}
@@ -508,15 +508,16 @@
 
       function highlightTarget(element,text){
         element.textContent='';
-        for(var i=0;i<text.length;i++){
-          var ch=text.charAt(i);
-          if(ch==='आ'){
+        var parts=String(text).split('आ');
+        for(var i=0;i<parts.length;i++){
+          if(parts[i]){
+            element.appendChild(document.createTextNode(parts[i]));
+          }
+          if(i<parts.length-1){
             var span=document.createElement('span');
             span.className='target-mark';
-            span.textContent=ch;
+            span.textContent='आ';
             element.appendChild(span);
-          }else{
-            element.appendChild(document.createTextNode(ch));
           }
         }
       }
