@@ -118,14 +118,12 @@
       backdrop-filter: blur(10px);
       padding: 12px 24px;
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-end;
       align-items: center;
       box-shadow: 0 8px 20px rgba(0,0,0,0.08);
       border-bottom-left-radius: 20px;
       border-bottom-right-radius: 20px;
     }
-
-    .header-logo { height: 42px; object-fit: contain; }
 
     .scoreboard {
       display: flex;
@@ -434,8 +432,10 @@
 
   <!-- HEADER -->
   <header>
-    <img src="assets/innovine-logo.png" alt="Innovine Logo" class="header-logo" onerror="this.style.display='none'">
-    
+    <div class="scoreboard">
+      <div class="score-box">स्तर: <span id="level-num">1</span>/5</div>
+      <div class="score-box">अंक: <span id="score-val">0</span></div>
+    </div>
   </header>
 
   <!-- MAIN CONTAINER -->
@@ -542,19 +542,22 @@
     let currentQIndex = 0;
     let totalScore = 0;
 
-    // --- DATASETS ---
+    // --- DATASETS (STRICTLY BADI 'ू' MATRA ONLY) ---
     const level1Master = [
-      { img: 'assets/chuha.png', correct: 'चूहा', options: ['चूहा', 'चिड़िया', 'बिल्ली'] },
-      { img: 'assets/kabutar.png', correct: 'कबूतर', options: ['कबूतर', 'तोता', 'मोर'] },
-      { img: 'assets/phool.png', correct: 'फूल', options: ['फूल', 'पत्ता', 'फल'] },
-      { img: 'assets/gudiya.png', correct: 'गुड़िया', options: ['गुड़िया', 'खिलौना', 'परी'] },
-              ];
+      { img: 'assets/chuha.png', correct: 'चूहा', options: ['चूहा', 'मोर', 'चील'] },
+      { img: 'assets/kabutar.png', correct: 'कबूतर', options: ['कबूतर', 'तोता', 'कागा'] },
+      { img: 'assets/phool.png', correct: 'फूल', options: ['फूल', 'पत्ता', 'पेड़'] },
+      { img: 'assets/suraj.png', correct: 'सूरज', options: ['सूरज', 'चंदा', 'तारा'] },
+      { img: 'assets/tarbooj.png', correct: 'तरबूज', options: ['तरबूज', 'आम', 'अनार'] }
+    ];
 
     const level2SentenceMaster = [
       { img: 'assets/chuha.png', pre: 'बगीचे में एक ', post: ' घूम रहा था।', correct: 'चूहा', wrong: ['चूहे', 'चीहा'] },
       { img: 'assets/phool.png', pre: 'पूजा के लिए सुंदर ', post: ' लाओ।', correct: 'फूल', wrong: ['फल', 'फुल'] },
       { img: 'assets/kabutar.png', pre: 'छत पर ', post: ' दाना चुग रहा है।', correct: 'कबूतर', wrong: ['कबुतर', 'कौआ'] },
-         ];
+      { img: 'assets/suraj.png', pre: 'आकाश में चमकता ', post: ' निकला है।', correct: 'सूरज', wrong: ['सुरज', 'सोना'] },
+      { img: 'assets/tarbooj.png', pre: 'गर्मियों में मीठा ', post: ' खाओ।', correct: 'तरबूज', wrong: ['तरबुज', 'तोल'] }
+    ];
 
     const level3Master = [
       { prompt: 'रेगिस्तान का जहाज़ कौन-सा है?', correct: 'ऊँट', options: ['ऊँट', 'उंट', 'औंट'] },
@@ -568,7 +571,7 @@
       {
         runner: '🐭', target: '🧀', title: 'चूहे को टेढ़े-मेढ़े रास्ते से पनीर तक पहुँचाएँ!',
         steps: [
-          { prompt: 'कदम 1: "ू" मात्रा वाला सही शब्द चुनें', correct: 'दूध', wrong: ['दुकान', 'दिन'] },
+          { prompt: 'कदम 1: "ू" मात्रा वाला सही शब्द चुनें', correct: 'दूध', wrong: ['दाल', 'दिन'] },
           { prompt: 'कदम 2: सही शब्द चुनें', correct: 'जूता', wrong: ['जाल', 'जल'] },
           { prompt: 'कदम 3: सही वर्तनी पहचानें', correct: 'सूरज', wrong: ['सुरज', 'सोरज'] }
         ]
@@ -576,23 +579,15 @@
       {
         runner: '🕊️', target: '🌾', title: 'कबूतर को घुमावदार रास्ते से दाने तक पहुँचाएँ!',
         steps: [
-          { prompt: 'कदम 1: "ू" मात्रा वाला शब्द चुनें', correct: 'झूला', wrong: ['झुका', 'झोपड़ी'] },
-          { prompt: 'कदम 2: सही शब्द चुनें', correct: 'खजूर', wrong: ['खिलौना', 'खाना'] },
+          { prompt: 'कदम 1: "ू" मात्रा वाला शब्द चुनें', correct: 'झूला', wrong: ['झाड़ू', 'झोपड़ी'] },
+          { prompt: 'कदम 2: सही शब्द चुनें', correct: 'खजूर', wrong: ['खीरा', 'खाना'] },
           { prompt: 'कदम 3: सही वर्तनी चुनें', correct: 'कबूतर', wrong: ['कबुतर', 'कौआ'] }
-        ]
-      },
-      {
-        runner: '🐢', target: '🌊', title: 'कछुए को घुमावदार रास्ते से तालाब पहुँचाएँ!',
-        steps: [
-          { prompt: 'कदम 1: सही मात्रा वाला शब्द', correct: 'फूल', wrong: ['फल', 'फुल'] },
-          { prompt: 'कदम 2: "ू" मात्रा वाला शब्द', correct: 'आलू', wrong: ['आम', 'अनार'] },
-          { prompt: 'कदम 3: सही शब्द चुनें', correct: 'तरबूज', wrong: ['तरबुज', 'तोल'] }
         ]
       },
       {
         runner: '🐫', target: '🏜️', title: 'ऊँट को रेगिस्तान की मंज़िल तक पहुँचाएँ!',
         steps: [
-          { prompt: 'कदम 1: "ऊ" से शुरू होने वाला शब्द', correct: 'ऊँचा', wrong: ['उजाला', 'उपवन'] },
+          { prompt: 'कदम 1: "ऊ" से शुरू होने वाला शब्द', correct: 'ऊँचा', wrong: ['उजाला', 'ऊपर'] },
           { prompt: 'कदम 2: सही शब्द पहचानें', correct: 'नाखून', wrong: ['नख', 'नाक'] },
           { prompt: 'कदम 3: सही शब्द चुनें', correct: 'खूबसूरत', wrong: ['खुबसुरत', 'खौफ'] }
         ]
@@ -672,7 +667,7 @@
         playSound('correct');
         addScore(10);
         showFeedback('बिल्कुल सही! ✨', true);
-        if (currentQIndex < 4) {
+        if (currentQIndex < currentL1Questions.length - 1) {
           currentQIndex++;
           setTimeout(renderLevel1, 600);
         } else {
@@ -717,7 +712,7 @@
         showFeedback('सही शब्द! 🎯', true);
 
         setTimeout(() => {
-          if (currentQIndex < 4) {
+          if (currentQIndex < currentL2Questions.length - 1) {
             currentQIndex++;
             renderLevel2();
           } else {
@@ -754,7 +749,7 @@
         playSound('correct');
         addScore(10);
         showFeedback('उत्कृष्ट! सही उत्तर 👍', true);
-        if (currentQIndex < 4) {
+        if (currentQIndex < currentL3Questions.length - 1) {
           currentQIndex++;
           setTimeout(renderLevel3, 600);
         } else {
@@ -874,7 +869,7 @@
         addScore(10);
         showFeedback('बिल्कुल सही शब्द! ⭐', true);
 
-        if (currentQIndex < 4) {
+        if (currentQIndex < currentL5Questions.length - 1) {
           currentQIndex++;
           setTimeout(renderLevel5, 600);
         } else {
