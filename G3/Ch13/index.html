@@ -283,10 +283,31 @@
     </div>
 
     <script>
-        // Sound Effects (Web Audio API)
+        // --- MP3 Audio Files Configuration ---
+        const audioFiles = {
+            drag: new Audio('assets/drag.mp3'),
+            correct: new Audio('assets/correct.mp3'),
+            wrong: new Audio('assets/wrong.mp3'),
+            win: new Audio('assets/win.mp3')
+        };
+
+        // Fallback Synth Engine (Web Audio API)
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
         function playSound(type) {
+            // Attempt playing MP3 first
+            if (audioFiles[type]) {
+                audioFiles[type].currentTime = 0;
+                audioFiles[type].play().catch(() => {
+                    // Fallback to Web Audio API synthesized audio if MP3 file is not found
+                    playSynthSound(type);
+                });
+            } else {
+                playSynthSound(type);
+            }
+        }
+
+        function playSynthSound(type) {
             if (audioCtx.state === 'suspended') audioCtx.resume();
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
