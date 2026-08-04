@@ -3,13 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>जादुई दरवाज़ा - चंद्रबिंदु और विसर्ग सीखें</title>
+    <title>जादुई दरवाज़ा - चंद्रबिंदु और विसर्ग</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Rozha+One&display=swap');
+
         :root {
-            --bg-color: #f0fdf4;
-            --primary-color: #8b5cf6;
-            --secondary-color: #ec4899;
-            --accent-color: #f59e0b;
+            --bg-gradient: linear-gradient(135deg, #ffdee9 0%, #b5fffc 100%);
+            --card-bg: rgba(255, 255, 255, 0.85);
+            --primary-purple: #8b5cf6;
+            --pink-accent: #ff6b8b;
+            --mint-green: #2dd4bf;
+            --yellow-glow: #fbbf24;
         }
 
         * {
@@ -19,11 +23,11 @@
             user-select: none;
             -webkit-user-select: none;
             touch-action: manipulation;
-            font-family: 'Comic Sans MS', 'Chalkboard SE', 'Segoe UI', Tahoma, sans-serif;
+            font-family: 'Fredoka', 'Segoe UI', Tahoma, sans-serif;
         }
 
         body {
-            background: linear-gradient(135deg, #a7f3d0 0%, #fbcfe8 50%, #fed7aa 100%);
+            background: var(--bg-gradient);
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -33,22 +37,24 @@
 
         #app-container {
             width: 100%;
-            max-width: 600px;
+            max-width: 500px;
             height: 100vh;
-            max-height: 900px;
-            background: rgba(255, 255, 255, 0.95);
+            max-height: 850px;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             position: relative;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
             display: flex;
             flex-direction: column;
             overflow: hidden;
         }
 
-        @media (min-height: 600px) and (min-width: 600px) {
+        @media (min-height: 600px) and (min-width: 500px) {
             #app-container {
-                height: 95vh;
-                border-radius: 24px;
-                border: 4px solid #ffffff;
+                height: 92vh;
+                border-radius: 32px;
+                border: 4px solid rgba(255, 255, 255, 0.9);
             }
         }
 
@@ -62,7 +68,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: space-between;
-            padding: 20px;
+            padding: 24px 20px;
             z-index: 10;
         }
 
@@ -78,307 +84,303 @@
         }
 
         #splash-screen img {
-            max-width: 80%;
-            max-height: 40vh;
+            max-width: 75%;
+            max-height: 35vh;
             object-fit: contain;
-            animation: pulse 2s infinite ease-in-out;
+            animation: floating 2.5s infinite ease-in-out;
         }
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+        @keyframes floating {
+            0%, 100% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-10px) scale(1.03); }
         }
 
-        /* Start / Instruction Screen */
+        /* Start Screen */
         #start-screen {
             justify-content: space-around;
             text-align: center;
-            background: linear-gradient(180deg, #e0f2fe 0%, #fef3c7 100%);
         }
 
         .game-title {
-            font-size: clamp(1.8rem, 5vw, 2.5rem);
-            color: #d97706;
-            text-shadow: 2px 2px 0px #ffffff, 4px 4px 0px #fef08a;
-            margin-top: 10px;
+            font-size: clamp(2rem, 6vw, 2.8rem);
+            color: #ec4899;
+            text-shadow: 3px 3px 0px #ffffff, 6px 6px 0px #fbcfe8;
         }
 
         .instruction-card {
             background: #ffffff;
-            border: 3px dashed #f59e0b;
-            border-radius: 20px;
+            border-radius: 24px;
             padding: 20px;
-            width: 90%;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.08);
-            font-size: clamp(1rem, 3.5vw, 1.25rem);
-            color: #334155;
-            line-height: 1.6;
+            width: 95%;
+            box-shadow: 0 10px 25px rgba(236, 72, 153, 0.12);
+            font-size: clamp(1rem, 3.5vw, 1.15rem);
+            color: #475569;
+            line-height: 1.7;
             text-align: left;
+            border: 3px solid #fbcfe8;
         }
 
         .instruction-card h3 {
-            color: #ec4899;
-            margin-bottom: 10px;
-            font-size: 1.3em;
+            color: #8b5cf6;
+            margin-bottom: 8px;
             text-align: center;
+            font-size: 1.3em;
         }
 
         .btn {
-            background: linear-gradient(to bottom, #10b981, #059669);
+            background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%);
             color: white;
             border: none;
-            padding: 14px 40px;
-            font-size: clamp(1.2rem, 4vw, 1.6rem);
-            font-weight: bold;
+            padding: 16px 48px;
+            font-size: clamp(1.3rem, 4.5vw, 1.7rem);
+            font-weight: 700;
             border-radius: 50px;
-            box-shadow: 0 6px 0 #047857, 0 10px 15px rgba(0,0,0,0.15);
+            box-shadow: 0 8px 20px rgba(255, 117, 140, 0.4);
             cursor: pointer;
-            transition: all 0.1s ease;
+            transition: all 0.2s ease;
             display: inline-flex;
             align-items: center;
             gap: 10px;
         }
 
         .btn:active {
-            transform: translateY(4px);
-            box-shadow: 0 2px 0 #047857, 0 4px 6px rgba(0,0,0,0.1);
+            transform: scale(0.95);
         }
 
-        /* Game Header */
+        /* Header */
         .game-header {
             width: 100%;
             display: flex;
             justify-content: space-between;
             align-items: center;
             background: rgba(255, 255, 255, 0.9);
-            padding: 10px 16px;
-            border-radius: 16px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            font-size: clamp(0.9rem, 3.5vw, 1.1rem);
-            font-weight: bold;
-            color: #1e293b;
+            padding: 12px 18px;
+            border-radius: 20px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.04);
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #334155;
         }
 
         .lives-container {
-            display: flex;
-            gap: 4px;
             font-size: 1.3rem;
+            letter-spacing: 2px;
         }
 
         .score-box {
-            background: #fef08a;
-            padding: 4px 12px;
+            background: #fef3c7;
+            padding: 6px 16px;
             border-radius: 20px;
-            color: #b45309;
-            border: 2px solid #f59e0b;
+            color: #d97706;
+            border: 2px solid #fde047;
         }
 
-        /* Word Container & Matra Display */
-        .word-card-container {
+        /* Word Container & Cute Slot Mechanism */
+        .word-display-area {
             flex-grow: 1;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             width: 100%;
-            margin: 10px 0;
+            margin: 15px 0;
         }
 
         .word-card {
             background: #ffffff;
-            border: 4px solid #8b5cf6;
-            border-radius: 24px;
-            padding: 20px 30px;
-            font-size: clamp(2.2rem, 8vw, 3.2rem);
-            font-weight: bold;
-            color: #4c1d95;
-            box-shadow: 0 10px 20px rgba(139, 92, 246, 0.2);
-            text-align: center;
+            border-radius: 28px;
+            padding: 30px 40px;
+            box-shadow: 0 15px 30px rgba(139, 92, 246, 0.15);
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s ease;
+            border: 3px solid #e9d5ff;
+            position: relative;
+            min-width: 240px;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
-        /* Sahi uttar dikhane par styling */
-        .word-card-correct {
-            background: #dcfce7 !important;
-            border-color: #22c55e !important;
-            color: #15803d !important;
-            transform: scale(1.1);
-            box-shadow: 0 12px 25px rgba(34, 197, 94, 0.3) !important;
-        }
-
-        .matra-top-slot {
-            display: inline-flex;
-            flex-direction: column;
+        /* Base Word Text */
+        .base-word-text {
+            font-size: clamp(2.8rem, 10vw, 3.8rem);
+            font-weight: 700;
+            color: #4c1d95;
+            letter-spacing: 2px;
+            display: flex;
             align-items: center;
             position: relative;
         }
 
-        .matra-blank-top {
-            font-size: 1.2rem;
-            color: #f59e0b;
+        /* Cute Missing Slot Badges */
+        .cute-slot-top {
+            position: absolute;
+            top: -28px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #fef08a;
+            color: #b45309;
             border: 2px dashed #f59e0b;
-            border-radius: 6px;
-            padding: 0 4px;
-            height: 24px;
-            line-height: 20px;
-            margin-bottom: -4px;
-            background: #fffbeb;
+            border-radius: 12px;
+            padding: 1px 8px;
+            font-size: 1.1rem;
+            animation: bounceTop 1.5s infinite ease-in-out;
+            box-shadow: 0 4px 8px rgba(245, 158, 11, 0.2);
         }
 
-        .matra-blank-side {
-            font-size: 1.8rem;
-            color: #f59e0b;
+        .cute-slot-side {
+            background: #fef08a;
+            color: #b45309;
             border: 2px dashed #f59e0b;
-            border-radius: 6px;
-            padding: 0 6px;
-            margin-left: 4px;
-            background: #fffbeb;
+            border-radius: 12px;
+            padding: 2px 10px;
+            font-size: 1.4rem;
+            margin-left: 8px;
+            animation: bounceSide 1.5s infinite ease-in-out;
+            box-shadow: 0 4px 8px rgba(245, 158, 11, 0.2);
+        }
+
+        @keyframes bounceTop {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-5px); }
+        }
+
+        @keyframes bounceSide {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(4px); }
+        }
+
+        /* Correct Answer Glow Card */
+        .word-card-correct {
+            background: #f0fdf4 !important;
+            border-color: #4ade80 !important;
+            box-shadow: 0 20px 35px rgba(74, 222, 128, 0.3) !important;
+            transform: scale(1.08);
+        }
+
+        .word-card-correct .base-word-text {
+            color: #15803d !important;
         }
 
         .hint-text {
-            margin-top: 15px;
-            font-size: clamp(0.9rem, 3vw, 1.1rem);
-            color: #d97706;
+            margin-top: 18px;
+            font-size: 1.05rem;
+            color: #b45309;
             background: #fffbeb;
-            padding: 6px 14px;
-            border-radius: 12px;
-            border: 1px dashed #f59e0b;
+            padding: 8px 18px;
+            border-radius: 16px;
+            border: 2px dashed #fcd34d;
             display: none;
         }
 
-        /* Doors Container */
+        /* Cute Doors Container */
         .doors-container {
             width: 100%;
             display: flex;
-            justify-content: space-around;
-            align-items: flex-end;
-            gap: 15px;
+            justify-content: center;
+            gap: 20px;
             margin-bottom: 10px;
         }
 
-        .door-wrapper {
+        .door-card {
             flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            cursor: pointer;
-        }
-
-        .door {
-            width: 100%;
-            max-width: 170px;
-            height: clamp(150px, 28vh, 220px);
-            border-radius: 80px 80px 10px 10px;
+            max-width: 180px;
+            height: clamp(160px, 26vh, 200px);
+            border-radius: 90px 90px 20px 20px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             color: white;
+            cursor: pointer;
             position: relative;
-            box-shadow: 0 8px 15px rgba(0,0,0,0.15);
-            transition: transform 0.2s ease, filter 0.2s ease;
+            box-shadow: 0 12px 25px rgba(0,0,0,0.1);
+            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
             border: 4px solid #ffffff;
         }
 
+        .door-card:active {
+            transform: scale(0.95);
+        }
+
         .door-chandr {
-            background: linear-gradient(180deg, #06b6d4 0%, #0891b2 100%);
+            background: linear-gradient(180deg, #38bdf8 0%, #0284c7 100%);
         }
 
         .door-visarg {
-            background: linear-gradient(180deg, #10b981 0%, #059669 100%);
+            background: linear-gradient(180deg, #34d399 0%, #059669 100%);
         }
 
         .door-symbol {
-            font-size: clamp(2.5rem, 8vw, 3.5rem);
-            font-weight: bold;
-            margin-bottom: 5px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            font-size: clamp(2.8rem, 9vw, 3.8rem);
+            font-weight: 700;
+            text-shadow: 0 4px 10px rgba(0,0,0,0.15);
         }
 
         .door-label {
-            font-size: clamp(0.9rem, 3vw, 1.1rem);
-            font-weight: bold;
-            background: rgba(255,255,255,0.25);
-            padding: 4px 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.25);
+            padding: 4px 12px;
             border-radius: 12px;
-        }
-
-        .door-handle {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            width: 14px;
-            height: 14px;
-            background: #fef08a;
-            border-radius: 50%;
-            border: 2px solid #b45309;
-        }
-
-        /* Controls */
-        .controls {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            margin-bottom: 5px;
+            margin-top: 4px;
         }
 
         .btn-hint {
-            background: #f59e0b;
-            color: white;
+            background: #fbbf24;
+            color: #78350f;
             border: none;
-            padding: 8px 18px;
+            padding: 8px 20px;
             font-size: 0.95rem;
             border-radius: 20px;
             cursor: pointer;
-            box-shadow: 0 4px 0 #d97706;
-            font-weight: bold;
+            font-weight: 700;
+            box-shadow: 0 4px 10px rgba(251, 191, 36, 0.3);
+            margin-bottom: 8px;
         }
 
         /* Result Screen */
         .result-card {
             background: #ffffff;
-            border-radius: 24px;
-            padding: 25px;
+            border-radius: 28px;
+            padding: 30px;
             width: 90%;
             text-align: center;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 15px;
+            gap: 16px;
+            border: 3px solid #fbcfe8;
         }
 
         .result-title {
-            font-size: clamp(1.8rem, 6vw, 2.4rem);
+            font-size: clamp(1.8rem, 6vw, 2.3rem);
             color: #ec4899;
         }
 
         .final-score {
-            font-size: clamp(1.2rem, 4vw, 1.5rem);
+            font-size: 1.3rem;
             color: #334155;
             background: #fef3c7;
-            padding: 10px 20px;
-            border-radius: 16px;
+            padding: 12px 24px;
+            border-radius: 18px;
             width: 100%;
         }
 
         /* Animations */
-        .door-correct { animation: openDoor 0.6s ease forwards; }
-        .door-wrong { animation: shake 0.4s ease forwards; }
+        .door-correct-anim { animation: openDoor 0.6s ease forwards; }
+        .door-wrong-anim { animation: shake 0.4s ease forwards; }
 
         @keyframes openDoor {
             0% { transform: scale(1); }
-            50% { transform: scale(1.1) rotate(3deg); filter: brightness(1.2); }
+            50% { transform: scale(1.1) rotate(4deg); }
             100% { transform: scale(1); }
         }
 
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
-            20%, 60% { transform: translateX(-8px); }
-            40%, 80% { transform: translateX(8px); }
+            25%, 75% { transform: translateX(-8px); }
+            50% { transform: translateX(8px); }
         }
     </style>
 </head>
@@ -388,7 +390,7 @@
         
         <!-- Splash Screen -->
         <div id="splash-screen" class="screen active-screen">
-            <img src="assets/innovine-logo.png" alt="Innovine Logo" id="logo-img">
+            <img src="assets/innovine-logo.png" alt="Innovine Logo">
         </div>
 
         <!-- Start Screen -->
@@ -400,7 +402,7 @@
                 <p>1. स्क्रीन पर दिए गए शब्द को ध्यान से पढ़ें।</p>
                 <p>2. पहचानें कि शब्द में <b>चंद्रबिंदु (ँ)</b> आएगा या <b>विसर्ग (ः)</b>।</p>
                 <p>3. सही जादुई दरवाज़े पर टैप करके ताला खोलें।</p>
-                <p>4. हर सही उत्तर के <b>10 अंक</b> हैं।</p>
+                <p>4. हर सही उत्तर के <b>10 अंक</b> मिलेंगे।</p>
             </div>
 
             <button class="btn" onclick="startGame()">
@@ -416,30 +418,24 @@
                 <div class="lives-container" id="lives-box">❤️ ❤️ ❤️</div>
             </div>
 
-            <div class="word-card-container">
-                <div class="word-card" id="target-word">---</div>
+            <div class="word-display-area">
+                <div class="word-card" id="word-card">
+                    <div class="base-word-text" id="target-word">---</div>
+                </div>
                 <div class="hint-text" id="hint-box">💡 संकेत: ...</div>
             </div>
 
-            <div class="controls">
-                <button class="btn-hint" onclick="showHint()">💡 संकेत (Hint)</button>
-            </div>
+            <button class="btn-hint" onclick="showHint()">💡 संकेत (Hint)</button>
 
             <div class="doors-container">
-                <div class="door-wrapper" onclick="checkAnswer('ँ')">
-                    <div class="door door-chandr" id="door-chandr">
-                        <div class="door-handle"></div>
-                        <div class="door-symbol">ँ</div>
-                        <div class="door-label">चंद्रबिंदु</div>
-                    </div>
+                <div class="door-card door-chandr" id="door-chandr" onclick="checkAnswer('ँ')">
+                    <div class="door-symbol">ँ</div>
+                    <div class="door-label">चंद्रबिंदु</div>
                 </div>
 
-                <div class="door-wrapper" onclick="checkAnswer('ः')">
-                    <div class="door door-visarg" id="door-visarg">
-                        <div class="door-handle"></div>
-                        <div class="door-symbol">ः</div>
-                        <div class="door-label">विसर्ग</div>
-                    </div>
+                <div class="door-card door-visarg" id="door-visarg" onclick="checkAnswer('ः')">
+                    <div class="door-symbol">ः</div>
+                    <div class="door-label">विसर्ग</div>
                 </div>
             </div>
         </div>
@@ -459,71 +455,80 @@
 
     </div>
 
-    <!-- Audio Elements -->
+    <!-- Audio Files -->
     <audio id="audio-correct" src="assets/correct.mp3" preload="auto"></audio>
     <audio id="audio-wrong" src="assets/wrong.mp3" preload="auto"></audio>
     <audio id="audio-win" src="assets/freesound_community-claps-44774.mp3" preload="auto"></audio>
 
     <script>
+        // Clean presentation without broken devanagari letters
         const QUESTIONS = [
             { 
-                displayHTML: '<span>चा</span><span class="matra-top-slot"><span class="matra-blank-top">?</span><span>ा</span></span><span>द</span>', 
+                // Chandrabindu above first letter
+                wordHTML: '<span style="position:relative;">आ<span class="cute-slot-top">✨?✨</span></span>ख', 
                 type: "ँ", 
-                fullWord: "चाँद", 
+                fullWord: "चाँद", // Target word representation
+                displayFull: "चाँद",
                 hint: "रात में आसमान में चमकता है।" 
             },
             { 
-                displayHTML: '<span>प्रात</span><span class="matra-blank-side">?</span>', 
+                wordHTML: '<span>चा<span class="cute-slot-top">✨?✨</span>द</span>', 
+                type: "ँ", 
+                displayFull: "चाँद", 
+                hint: "रात में आसमान में चमकता है।" 
+            },
+            { 
+                wordHTML: '<span>प्रात</span><span class="cute-slot-side">✨?✨</span>', 
                 type: "ः", 
-                fullWord: "प्रातः", 
+                displayFull: "प्रातः", 
                 hint: "सुबह का समय।" 
             },
             { 
-                displayHTML: '<span>दा</span><span class="matra-top-slot"><span class="matra-blank-top">?</span><span>ा</span></span><span>त</span>', 
+                wordHTML: '<span>दा<span class="cute-slot-top">✨?✨</span>त</span>', 
                 type: "ँ", 
-                fullWord: "दाँत", 
+                displayFull: "दाँत", 
                 hint: "खाना चबाने में मदद करते हैं।" 
             },
             { 
-                displayHTML: '<span>पुन</span><span class="matra-blank-side">?</span>', 
+                wordHTML: '<span>पुन</span><span class="cute-slot-side">✨?✨</span>', 
                 type: "ः", 
-                fullWord: "पुनः", 
+                displayFull: "पुनः", 
                 hint: "इसका मतलब 'दोबारा' होता है।" 
             },
             { 
-                displayHTML: '<span>आ</span><span class="matra-top-slot"><span class="matra-blank-top">?</span><span>ा</span></span><span>ख</span>', 
+                wordHTML: '<span>आ<span class="cute-slot-top">✨?✨</span>ख</span>', 
                 type: "ँ", 
-                fullWord: "आँख", 
+                displayFull: "आँख", 
                 hint: "हम इससे देखते हैं।" 
             },
             { 
-                displayHTML: '<span>नम</span><span class="matra-blank-side">?</span>', 
+                wordHTML: '<span>नम</span><span class="cute-slot-side">✨?✨</span>', 
                 type: "ः", 
-                fullWord: "नमः", 
+                displayFull: "नमः", 
                 hint: "नमस्ते या प्रणाम करना।" 
             },
             { 
-                displayHTML: '<span>मा</span><span class="matra-top-slot"><span class="matra-blank-top">?</span><span>ा</span></span>', 
+                wordHTML: '<span>मा<span class="cute-slot-top">✨?✨</span></span>', 
                 type: "ँ", 
-                fullWord: "माँ", 
+                displayFull: "माँ", 
                 hint: "हमारी सबसे प्यारी जननी।" 
             },
             { 
-                displayHTML: '<span>अत</span><span class="matra-blank-side">?</span>', 
+                wordHTML: '<span>अत</span><span class="cute-slot-side">✨?✨</span>', 
                 type: "ः", 
-                fullWord: "अतः", 
+                displayFull: "अतः", 
                 hint: "इसलिए या इस कारण।" 
             },
             { 
-                displayHTML: '<span>धुआ</span><span class="matra-top-slot"><span class="matra-blank-top">?</span><span>ा</span></span>', 
+                wordHTML: '<span>धुआ<span class="cute-slot-top">✨?✨</span></span>', 
                 type: "ँ", 
-                fullWord: "धुआँ", 
+                displayFull: "धुआँ", 
                 hint: "आग जलने पर निकलता है।" 
             },
             { 
-                displayHTML: '<span>छ</span><span class="matra-blank-side">?</span>', 
+                wordHTML: '<span>छ</span><span class="cute-slot-side">✨?✨</span>', 
                 type: "ः", 
-                fullWord: "छः", 
+                displayFull: "छः", 
                 hint: "संख्या 6 (Six)।" 
             }
         ];
@@ -532,6 +537,7 @@
         let score = 0;
         let lives = 3;
         let isProcessing = false;
+        let activeQuestions = [];
 
         function playAudio(id) {
             const audio = document.getElementById(id);
@@ -558,7 +564,8 @@
             lives = 3;
             isProcessing = false;
             
-            QUESTIONS.sort(() => Math.random() - 0.5);
+            // Randomize questions
+            activeQuestions = [...QUESTIONS].slice(1).sort(() => Math.random() - 0.5).slice(0, 10);
 
             updateHeaderUI();
             loadQuestion();
@@ -580,24 +587,24 @@
         }
 
         function loadQuestion() {
-            if (currentQuestionIndex >= 10 || currentQuestionIndex >= QUESTIONS.length) {
+            if (currentQuestionIndex >= 10 || currentQuestionIndex >= activeQuestions.length) {
                 endGame();
                 return;
             }
 
-            const q = QUESTIONS[currentQuestionIndex];
-            const wordCard = document.getElementById('target-word');
+            const q = activeQuestions[currentQuestionIndex];
+            const wordCard = document.getElementById('word-card');
+            const targetWord = document.getElementById('target-word');
             
-            // Card style reset
             wordCard.className = 'word-card';
-            wordCard.innerHTML = q.displayHTML;
+            targetWord.innerHTML = q.wordHTML;
             
             const hintBox = document.getElementById('hint-box');
             hintBox.style.display = 'none';
             hintBox.innerText = `💡 संकेत: ${q.hint}`;
 
-            document.getElementById('door-chandr').className = 'door door-chandr';
-            document.getElementById('door-visarg').className = 'door door-visarg';
+            document.getElementById('door-chandr').className = 'door-card door-chandr';
+            document.getElementById('door-visarg').className = 'door-card door-visarg';
 
             updateHeaderUI();
             isProcessing = false;
@@ -611,31 +618,31 @@
             if (isProcessing) return;
             isProcessing = true;
 
-            const q = QUESTIONS[currentQuestionIndex];
+            const q = activeQuestions[currentQuestionIndex];
             const targetDoor = selectedMatra === 'ँ' ? 
                 document.getElementById('door-chandr') : document.getElementById('door-visarg');
-            const wordCard = document.getElementById('target-word');
+            const wordCard = document.getElementById('word-card');
+            const targetWord = document.getElementById('target-word');
 
             if (selectedMatra === q.type) {
                 playAudio('audio-correct');
-                targetDoor.classList.add('door-correct');
+                targetDoor.classList.add('door-correct-anim');
                 
-                // Sahi uttar display karna aur card ko highlight karna
-                wordCard.innerHTML = `<span>${q.fullWord}</span>`;
+                // Show full correct word with celebration style
+                targetWord.innerHTML = q.displayFull;
                 wordCard.classList.add('word-card-correct');
                 
                 score += 10;
                 updateHeaderUI();
 
-                // 1.5 second tak sahi uttar dikhega phir agla sawal aayega
                 setTimeout(() => {
                     currentQuestionIndex++;
                     loadQuestion();
-                }, 1500);
+                }, 1400);
 
             } else {
                 playAudio('audio-wrong');
-                targetDoor.classList.add('door-wrong');
+                targetDoor.classList.add('door-wrong-anim');
                 lives--;
                 updateHeaderUI();
 
@@ -643,7 +650,7 @@
                     if (lives <= 0) {
                         endGame();
                     } else {
-                        targetDoor.classList.remove('door-wrong');
+                        targetDoor.classList.remove('door-wrong-anim');
                         isProcessing = false;
                     }
                 }, 800);
