@@ -1,214 +1,794 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ऋ स्वर और मात्राएँ - खेल</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f0fdf4">
+  <title>ऋ स्वर और मात्रा का खेल</title>
+  <style>
+    :root{
+      --ink:#24324a;
+      --muted:#667085;
+      --primary:#1f9d63;
+      --primary-dark:#137044;
+      --accent:#7c3aed;
+      --accent-soft:#f2ecff;
+      --yellow:#ffd166;
+      --green:#25a866;
+      --green-soft:#e9f8ef;
+      --red:#dc5151;
+      --red-soft:#fff0f0;
+      --blue-soft:#eef4ff;
+      --line:#e4e8ef;
+      --shadow:0 14px 36px rgba(36,50,74,.14);
+    }
 
-        body { 
-            font-family: 'Arial', sans-serif; 
-            text-align: center; 
-            background: linear-gradient(135deg, #f0fdf4, #dcfce7); 
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow-x: hidden;
-        }
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    html,body{width:100%;height:100%;margin:0;overflow:hidden}
+    body{
+      font-family:"Noto Sans Devanagari","Mangal","Arial Unicode MS",Arial,sans-serif;
+      color:var(--ink);
+      background:#f0fdf4;
+      touch-action:manipulation;
+    }
+    button{font:inherit}
 
-        /* 1. Splash Screen (5 Seconds Logo Display) */
-        #splash-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #ffffff;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            opacity: 1;
-            transition: opacity 0.5s ease-in-out;
-        }
+    .app{
+      position:relative;
+      width:100%;
+      height:100vh;
+      height:100dvh;
+      overflow:hidden;
+      background:
+        radial-gradient(circle at 12% 14%,rgba(255,209,102,.28),transparent 24%),
+        radial-gradient(circle at 88% 18%,rgba(124,58,237,.13),transparent 23%),
+        linear-gradient(145deg,#f6fff8 0%,#f2f7ff 55%,#fff7ed 100%);
+    }
 
-        #splash-screen img {
-            max-width: 260px;
-            height: auto;
-            margin-bottom: 20px;
-        }
+    .screen{
+      position:absolute;
+      inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:max(16px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(16px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left));
+    }
+    .screen.active{display:flex}
 
-        .loader {
-            width: 45px;
-            height: 45px;
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid #22c55e;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
+    #logo-screen{z-index:30;background:#fff}
+    #logo-screen img{display:block;width:min(62vw,310px);max-height:42vh;object-fit:contain}
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+    .ambient{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+    .float-mark{position:absolute;color:#7c3aed;opacity:.16;font-size:2rem;font-weight:900;animation:floaty 8s ease-in-out infinite}
+    .f1{left:6%;top:12%;animation-delay:-1s}.f2{right:8%;top:16%;animation-delay:-4s}.f3{left:12%;bottom:14%;animation-delay:-6s}.f4{right:12%;bottom:12%;animation-delay:-2s}.f5{left:48%;top:7%;animation-delay:-5s}
+    @keyframes floaty{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-13px) rotate(8deg)}}
 
-        /* 2. Main Game Wrapper */
-        #game-container { 
-            display: none; 
-            width: 95%;
-            max-width: 800px; 
-            margin: 20px auto; 
-            padding: 30px; 
-            background: white; 
-            border-radius: 20px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
-        }
+    .panel{
+      position:relative;
+      z-index:2;
+      width:min(92vw,760px);
+      max-height:94vh;
+      max-height:94dvh;
+      overflow:auto;
+      padding:clamp(20px,4vw,40px);
+      border-radius:28px;
+      background:rgba(255,255,255,.97);
+      box-shadow:var(--shadow);
+      text-align:center;
+      -webkit-overflow-scrolling:touch;
+    }
 
-        .top-logo {
-            max-width: 160px;
-            height: auto;
-            margin-bottom: 15px;
-        }
+    .title-badge{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-width:72px;
+      min-height:72px;
+      margin-bottom:12px;
+      border-radius:22px;
+      background:linear-gradient(145deg,var(--yellow),#ffb84c);
+      color:#5a3d00;
+      font-size:2.7rem;
+      font-weight:1000;
+      box-shadow:0 8px 0 #e7a536;
+    }
 
-        h1 {
-            color: #166534;
-            margin-bottom: 10px;
-            font-size: 32px;
-        }
+    h1,h2,p{margin-top:0}
+    h1{margin-bottom:10px;font-size:clamp(2rem,6vw,3.25rem);line-height:1.16}
+    .intro-copy{max-width:620px;margin:0 auto 18px;color:var(--muted);font-size:clamp(1rem,2.8vw,1.2rem);line-height:1.55}
+    .target{color:var(--accent);font-weight:1000}
 
-        .instruction {
-            font-size: 18px;
-            color: #4b5563;
-            margin-bottom: 25px;
-        }
+    .rules{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:18px 0 22px}
+    .rule{padding:14px 12px;border-radius:17px;background:var(--blue-soft);font-size:1rem;line-height:1.45;font-weight:850}
+    .rule strong{display:block;color:var(--primary-dark);margin-bottom:4px}
 
-        .word-grid { 
-            display: grid; 
-            grid-template-columns: repeat(3, 1fr); 
-            gap: 20px; 
-            margin-top: 20px; 
-        }
+    .primary-btn,.small-btn{
+      min-height:50px;
+      padding:11px 22px;
+      border-radius:999px;
+      cursor:pointer;
+      font-weight:950;
+      transition:transform .12s ease,box-shadow .12s ease;
+    }
+    .primary-btn{min-width:190px;border:0;background:var(--primary);color:#fff;box-shadow:0 7px 0 var(--primary-dark);font-size:1.08rem}
+    .small-btn{border:2px solid var(--accent);background:#fff;color:var(--accent);box-shadow:0 4px 0 #ddd0ff}
+    .primary-btn:active,.small-btn:active{transform:translateY(3px);box-shadow:0 2px 0 var(--primary-dark)}
+    button:focus-visible{outline:4px solid rgba(124,58,237,.25);outline-offset:3px}
 
-        .card { 
-            padding: 25px 15px; 
-            border: 2px solid #22c55e; 
-            border-radius: 12px; 
-            cursor: pointer; 
-            font-size: 26px; 
-            font-weight: bold;
-            background: white;
-            transition: all 0.2s ease;
-        }
+    #game-screen{padding:0;align-items:stretch;justify-content:stretch}
+    .game-shell{position:relative;z-index:2;display:flex;flex-direction:column;width:min(100%,960px);height:100%;margin:0 auto;background:rgba(255,255,255,.91);box-shadow:0 0 36px rgba(36,50,74,.12)}
 
-        .card:hover {
-            transform: translateY(-3px);
-            background-color: #f0fdf4;
-            box-shadow: 0 6px 12px rgba(34, 197, 94, 0.15);
-        }
+    .topbar{
+      flex:0 0 auto;
+      display:grid;
+      grid-template-columns:minmax(0,1fr) auto auto auto;
+      align-items:center;
+      gap:10px;
+      min-height:76px;
+      padding:max(12px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) 12px max(14px,env(safe-area-inset-left));
+      border-bottom:1px solid var(--line);
+      background:rgba(255,255,255,.98);
+    }
+    .level-info{min-width:0}
+    .level-name{display:block;overflow:hidden;color:var(--primary-dark);font-size:clamp(.98rem,2.5vw,1.16rem);font-weight:950;text-overflow:ellipsis;white-space:nowrap}
+    .challenge-count{display:block;margin-top:2px;color:var(--muted);font-size:.86rem;font-weight:800}
+    .score-box,.timer-box{display:flex;align-items:center;justify-content:center;min-height:48px;padding:8px 12px;border-radius:14px;background:#eef4ff;font-weight:950;white-space:nowrap}
+    .timer-box.low{color:#a61b1b;background:#ffeaea;animation:timerPulse .9s ease-in-out infinite}
+    @keyframes timerPulse{50%{transform:scale(1.04)}}
+    .sound-btn{width:46px;height:46px;border:0;border-radius:50%;background:#fff;box-shadow:0 3px 12px rgba(36,50,74,.12);cursor:pointer;font-size:1.2rem}
 
-        .btn { 
-            padding: 12px 28px; 
-            font-size: 18px; 
-            cursor: pointer; 
-            background: #16a34a; 
-            color: white; 
-            border: none; 
-            border-radius: 10px; 
-            font-weight: bold;
-            margin-top: 20px;
-        }
+    .progress-track{flex:0 0 auto;width:100%;height:8px;overflow:hidden;background:#e9ecf4}
+    .progress-fill{width:0;height:100%;background:linear-gradient(90deg,var(--primary),var(--accent));transition:width .35s ease}
 
-        .hidden { display: none; }
-    </style>
+    .game-main{flex:1 1 auto;display:flex;flex-direction:column;justify-content:center;min-height:0;padding:clamp(12px,2.8vw,26px);overflow:auto;-webkit-overflow-scrolling:touch}
+    .prompt-card{width:min(100%,790px);margin:0 auto 14px;padding:clamp(14px,2.8vw,22px);border:1px solid #eceef5;border-radius:22px;background:#fff;box-shadow:0 8px 24px rgba(36,50,74,.08);text-align:center}
+    .prompt-label{display:inline-block;margin-bottom:7px;padding:5px 12px;border-radius:999px;background:var(--accent-soft);color:var(--accent);font-size:.9rem;font-weight:950}
+    .question-text{margin:0;font-size:clamp(1.16rem,3.4vw,1.78rem);line-height:1.5;font-weight:950;word-break:normal;overflow-wrap:normal}
+    .task-area{width:min(100%,790px);margin:0 auto}
+    .feedback-line{width:min(100%,790px);min-height:50px;margin:13px auto 0;padding:10px 14px;border-radius:15px;color:var(--muted);font-size:.97rem;line-height:1.42;font-weight:850;text-align:center}
+    .feedback-line.good{color:#17623b;background:var(--green-soft)}
+    .feedback-line.bad{color:#8f2020;background:var(--red-soft)}
+    .feedback-line.info{color:#403a91;background:#f1efff}
+
+    /* Level 1: classification houses */
+    .sort-stage{display:flex;flex-direction:column;align-items:center;width:100%}
+    .word-card{display:flex;align-items:center;justify-content:center;min-width:min(74vw,270px);min-height:82px;margin:0 auto 15px;padding:12px 24px;border:4px solid #f1c869;border-radius:22px;background:#fff8dc;box-shadow:0 7px 0 #d9a83e;cursor:grab;touch-action:none;font-size:clamp(2rem,7vw,3rem);font-weight:1000;transition:transform .25s ease,opacity .25s ease;will-change:transform}
+    .word-card.dragging{z-index:5;transition:none;box-shadow:0 14px 28px rgba(36,50,74,.2)}
+    .micro{margin:0 auto 12px;color:var(--muted);font-size:.93rem;line-height:1.4;font-weight:800;text-align:center}
+    .houses{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(12px,3vw,24px);width:min(100%,690px)}
+    .house-zone{min-height:190px;padding:12px;border:3px solid #dfe4ec;border-radius:26px;background:#fff;cursor:pointer;transition:transform .16s ease,border-color .16s ease,background .16s ease;box-shadow:0 8px 18px rgba(36,50,74,.08)}
+    .house-zone.drag-over{transform:translateY(-3px);border-color:var(--accent);background:#f7f3ff}
+    .house-zone.correct-target{border-color:var(--green);background:var(--green-soft)}
+    .house-zone.wrong-target{border-color:var(--red);background:var(--red-soft);animation:shake .35s ease}
+    .house-roof{width:86px;height:50px;margin:4px auto 0;background:var(--primary);clip-path:polygon(50% 0,100% 100%,0 100%)}
+    .house-body{display:flex;align-items:center;justify-content:center;width:105px;height:82px;margin:0 auto 8px;border:4px solid var(--primary-dark);border-radius:0 0 12px 12px;background:#f0fff6;color:var(--primary-dark);font-size:2.3rem;font-weight:1000}
+    .house-zone.matra .house-roof{background:var(--accent)}
+    .house-zone.matra .house-body{border-color:#5b21b6;background:#f7f3ff;color:#5b21b6;font-size:1.25rem;padding:8px}
+    .house-label{display:block;color:var(--ink);font-size:clamp(.96rem,2.8vw,1.12rem);line-height:1.35;font-weight:950}
+
+    /* Level 2: add matra to the correct consonant */
+    .repair-stage{display:flex;flex-direction:column;align-items:center;width:100%}
+    .word-preview{min-height:64px;margin:0 auto 14px;padding:9px 22px;border:3px solid #d9e5ff;border-radius:20px;background:#f7fbff;color:var(--primary-dark);font-size:clamp(1.9rem,6vw,2.7rem);font-weight:1000;box-shadow:0 6px 0 #d3def4}
+    .letter-row{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;width:100%;margin:0 auto 15px}
+    .letter-tile{min-width:80px;min-height:72px;padding:10px 16px;border:3px solid #dce1ec;border-radius:20px;background:#fff;color:var(--ink);box-shadow:0 6px 0 #d6dbe6;cursor:pointer;font-size:clamp(1.6rem,5vw,2.2rem);font-weight:1000;transition:transform .12s ease,background .12s ease,border-color .12s ease}
+    .letter-tile:active{transform:translateY(3px);box-shadow:0 2px 0 #d6dbe6}
+    .letter-tile.correct{border-color:var(--green);background:var(--green-soft);box-shadow:none}
+    .letter-tile.wrong{border-color:var(--red);background:var(--red-soft);animation:shake .35s ease}
+    .matra-stamp{display:inline-flex;align-items:center;justify-content:center;min-width:130px;min-height:48px;margin-bottom:14px;padding:8px 18px;border-radius:999px;background:var(--accent-soft);color:var(--accent);font-size:1.05rem;font-weight:950}
+
+    @keyframes shake{25%{transform:translateX(-5px)}50%{transform:translateX(5px)}75%{transform:translateX(-3px)}}
+
+    .feedback-pop{position:fixed;left:50%;top:50%;z-index:40;display:none;align-items:center;justify-content:center;width:108px;height:108px;border-radius:50%;transform:translate(-50%,-50%);color:#fff;font-size:4rem;font-weight:1000;box-shadow:0 14px 35px rgba(36,50,74,.25);pointer-events:none}
+    .feedback-pop.show{display:flex;animation:popIn .55s ease both}
+    .feedback-pop.correct-pop{background:var(--green)}
+    .feedback-pop.wrong-pop{width:80px;height:80px;background:rgba(220,81,81,.94);font-size:3rem}
+    @keyframes popIn{0%{opacity:0;transform:translate(-50%,-50%) scale(.35)}60%{opacity:1;transform:translate(-50%,-50%) scale(1.12)}100%{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+
+    .confetti-layer{position:fixed;inset:0;z-index:39;pointer-events:none;overflow:hidden}
+    .confetti-star{position:absolute;top:50%;left:50%;font-size:24px;animation:starBurst 900ms ease-out forwards;will-change:transform,opacity}
+    @keyframes starBurst{0%{opacity:1;transform:translate(-50%,-50%) scale(.4) rotate(0)}100%{opacity:0;transform:translate(var(--tx),var(--ty)) scale(1.15) rotate(300deg)}}
+
+    .level-overlay{position:fixed;inset:0;z-index:35;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(40,45,72,.5);backdrop-filter:blur(3px)}
+    .level-overlay.show{display:flex}
+    .level-card{width:min(90vw,480px);padding:28px 22px;border-radius:26px;background:#fff;box-shadow:var(--shadow);text-align:center;animation:levelRise .45s ease both}
+    .level-card .big-icon{margin-bottom:8px;font-size:3.2rem}
+    .level-card h2{margin-bottom:8px;font-size:2rem}
+    .level-card p{margin-bottom:0;color:var(--muted);font-size:1.04rem;line-height:1.45}
+    @keyframes levelRise{from{opacity:0;transform:translateY(18px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+
+    .result-stars{margin:10px 0 14px;color:#f4b942;font-size:clamp(2rem,7vw,3.3rem);letter-spacing:4px}
+    .result-score{margin:10px auto;color:var(--primary-dark);font-size:clamp(2.5rem,9vw,4.5rem);font-weight:1000}
+    .result-summary{margin:0 auto 20px;color:var(--muted);font-size:1.06rem;line-height:1.55}
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+    @media(max-width:680px){
+      .rules{grid-template-columns:1fr}
+      .topbar{min-height:68px;gap:7px}
+      .score-box,.timer-box{min-height:43px;padding:7px 9px;font-size:.9rem}
+      .sound-btn{width:42px;height:42px}
+      .house-zone{min-height:172px;padding:9px}
+      .house-roof{width:72px;height:42px}
+      .house-body{width:90px;height:70px;font-size:2rem}
+      .house-zone.matra .house-body{font-size:1.08rem}
+    }
+
+    @media(max-width:390px){
+      .score-label,.timer-label{display:none}
+      .level-name{font-size:.92rem}
+      .question-text{font-size:1.08rem}
+      .word-card{min-height:68px;padding:8px 18px;font-size:2rem}
+      .houses{gap:8px}
+      .house-zone{min-height:155px;padding:7px 5px}
+      .house-roof{width:62px;height:37px}
+      .house-body{width:78px;height:61px;font-size:1.7rem}
+      .house-zone.matra .house-body{font-size:.94rem}
+      .house-label{font-size:.9rem}
+      .letter-tile{min-width:66px;min-height:62px;padding:8px 12px;font-size:1.65rem}
+    }
+
+    @media(max-height:610px) and (orientation:landscape){
+      .panel{max-height:96vh;padding:14px 22px}
+      .title-badge{min-width:52px;min-height:52px;margin-bottom:6px;font-size:2rem;box-shadow:0 5px 0 #e7a536}
+      h1{margin-bottom:5px;font-size:1.75rem}
+      .intro-copy{margin-bottom:8px;font-size:.94rem}
+      .rules{margin:8px 0 12px}
+      .topbar{min-height:58px;padding-top:7px;padding-bottom:7px}
+      .game-main{justify-content:flex-start;padding:8px 18px}
+      .prompt-card{margin-bottom:8px;padding:9px 15px}
+      .prompt-label{margin-bottom:3px}
+      .question-text{font-size:1.08rem}
+      .word-card{min-height:52px;margin-bottom:8px;padding:6px 18px;font-size:1.7rem;box-shadow:0 4px 0 #d9a83e}
+      .micro{margin-bottom:7px}
+      .houses{max-width:560px}
+      .house-zone{min-height:118px;padding:5px}
+      .house-roof{width:55px;height:32px}
+      .house-body{width:68px;height:51px;font-size:1.55rem;margin-bottom:3px}
+      .house-zone.matra .house-body{font-size:.8rem}
+      .house-label{font-size:.82rem}
+      .word-preview{min-height:45px;margin-bottom:7px;padding:5px 15px;font-size:1.6rem;box-shadow:0 4px 0 #d3def4}
+      .matra-stamp{min-height:36px;margin-bottom:7px;padding:5px 14px;font-size:.9rem}
+      .letter-row{gap:8px;margin-bottom:8px}
+      .letter-tile{min-width:58px;min-height:46px;padding:5px 10px;font-size:1.25rem;box-shadow:0 4px 0 #d6dbe6}
+      .feedback-line{min-height:38px;margin-top:6px;padding:6px 10px;font-size:.87rem}
+    }
+
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+  </style>
 </head>
 <body>
+  <main class="app">
+    <section class="screen active" id="logo-screen" aria-label="Innovine logo">
+      <img src="assets/innovine-logo.png" alt="" draggable="false">
+    </section>
 
-    <!-- Audio Elements (Fixing Directory Path) -->
-    <audio id="sound-clap" src="./assest/correct.mp3" preload="auto"></audio>
-    <audio id="sound-wrong" src="./assest/wrong.mp3" preload="auto"></audio>
-
-    <!-- 1. Splash Screen Section (5 Seconds) -->
-    <div id="splash-screen">
-        <img src="./assest/innovine-logo.png" alt="Innovine Logo">
-        <div class="loader"></div>
+    <div class="ambient" aria-hidden="true">
+      <span class="float-mark f1">ऋ</span>
+      <span class="float-mark f2">★</span>
+      <span class="float-mark f3">ऋ</span>
+      <span class="float-mark f4">✦</span>
+      <span class="float-mark f5">ऋ</span>
     </div>
 
-    <!-- 2. Master Game Platform -->
-    <div id="game-container">
-        <!-- Logo inside main container -->
-        <img src="./assest/innovine-logo.png" alt="Innovine Logo" class="top-logo">
-        
-        <h1>ऋ स्वर और मात्राएँ खोजें</h1>
-        
-        <!-- LEVEL 1 -->
-        <div id="level-1">
-            <p class="instruction"><strong>निर्देश:</strong> सही शब्द पर क्लिक करें जिसमें 'ऋ' की मात्रा है।</p>
-            <div class="word-grid">
-                <div class="card" onclick="checkWord(true, 'मृग')">मृग</div>
-                <div class="card" onclick="checkWord(false, 'आम')">आम</div>
-                <div class="card" onclick="checkWord(true, 'वृक्ष')">वृक्ष</div>
-                <div class="card" onclick="checkWord(true, 'नृप')">नृप</div>
-                <div class="card" onclick="checkWord(false, 'घर')">घर</div>
-                <div class="card" onclick="checkWord(true, 'कृषक')">कृषक</div>
-            </div>
-        </div>
+    <section class="screen" id="title-screen">
+      <div class="panel">
+        <div class="title-badge" aria-hidden="true">ऋ</div>
+        <h1>ऋ स्वर और ऋ की मात्रा</h1>
+        <p class="intro-copy">शब्दों को पहचानिए और सही अक्षर पर ऋ की मात्रा लगाकर दो मजेदार स्तर पूरे कीजिए।</p>
+        <button class="primary-btn" id="title-start-btn" type="button">शुरू करें</button>
+      </div>
+    </section>
 
-        <!-- FINAL GAME END WRAPPER -->
-        <div id="result-screen" class="hidden">
-            <h2 id="msg" style="color: #16a34a; font-size: 30px; margin-bottom: 15px;"></h2>
-            <button class="btn" onclick="location.reload()">फिर से खेलें</button>
+    <section class="screen" id="how-screen">
+      <div class="panel">
+        <div class="title-badge" aria-hidden="true">?</div>
+        <h1>कैसे खेलें</h1>
+        <div class="rules">
+          <div class="rule"><strong>स्तर 1</strong>शब्द कार्ड को सही घर में पहुँचाइए—ऋ से शुरू या ऋ की मात्रा वाला शब्द।</div>
+          <div class="rule"><strong>स्तर 2</strong>सही अक्षर पर टैप करके उस पर ऋ की मात्रा लगाइए और शब्द पूरा कीजिए।</div>
         </div>
+        <p class="intro-copy">हर चुनौती के लिए 60 सेकंड मिलेंगे। पहली गलती के बाद एक और मौका मिलेगा।</p>
+        <button class="primary-btn" id="play-btn" type="button">खेलें</button>
+      </div>
+    </section>
+
+    <section class="screen" id="game-screen">
+      <div class="game-shell">
+        <header class="topbar">
+          <div class="level-info">
+            <span class="level-name" id="level-name">स्तर 1</span>
+            <span class="challenge-count" id="challenge-count">चुनौती 1/10</span>
+          </div>
+          <div class="score-box"><span class="score-label">स्कोर:&nbsp;</span><span id="score-value">0</span></div>
+          <div class="timer-box" id="timer-box"><span class="timer-label">समय:&nbsp;</span><span id="timer-value">60</span>s</div>
+          <button class="sound-btn" id="sound-btn" type="button" aria-label="ध्वनि बंद करें" title="ध्वनि बंद करें">🔊</button>
+        </header>
+        <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+        <section class="game-main">
+          <div class="prompt-card">
+            <span class="prompt-label" id="prompt-label">खेल</span>
+            <h2 class="question-text" id="question-text"></h2>
+          </div>
+          <div class="task-area" id="task-area"></div>
+          <div class="feedback-line" id="feedback-line" role="status" aria-live="polite"></div>
+        </section>
+      </div>
+    </section>
+
+    <section class="screen" id="result-screen">
+      <div class="panel">
+        <div class="title-badge" aria-hidden="true">★</div>
+        <h1 id="result-title">बहुत अच्छा!</h1>
+        <div class="result-stars" id="result-stars">★★★</div>
+        <div class="result-score"><span id="final-score">0</span>/200</div>
+        <p class="result-summary" id="result-summary"></p>
+        <button class="primary-btn" id="play-again-btn" type="button">फिर से खेलें</button>
+      </div>
+    </section>
+
+    <div class="feedback-pop" id="feedback-pop"></div>
+    <div class="confetti-layer" id="confetti-layer"></div>
+
+    <div class="level-overlay" id="level-overlay" aria-hidden="true">
+      <div class="level-card">
+        <div class="big-icon" id="level-icon">⭐</div>
+        <h2 id="overlay-title">स्तर 1</h2>
+        <p id="overlay-copy"></p>
+      </div>
     </div>
 
-    <script>
-        let correctAnswersCount = 0;
-        const totalRequired = 4; 
+    <audio id="audio-correct" src="assets/correct.mp3" preload="auto"></audio>
+    <audio id="audio-wrong" src="assets/wrong.mp3" preload="auto"></audio>
+    <span class="sr-only" id="live-region" aria-live="assertive"></span>
+  </main>
 
-        const clapSnd = document.getElementById('sound-clap');
-        const wrongSnd = document.getElementById('sound-wrong');
+  <script>
+    (function(){
+      "use strict";
 
-        // Splash screen handler (Exactly 5000 milliseconds display time)
-        window.addEventListener('DOMContentLoaded', () => {
-            setTimeout(() => {
-                const splash = document.getElementById('splash-screen');
-                splash.style.opacity = 0;
-                setTimeout(() => {
-                    splash.style.display = 'none';
-                    document.getElementById('game-container').style.display = 'block';
-                }, 500);
-            }, 5000);
+      var QUESTION_TIME=60;
+      var FIRST_POINTS=10;
+      var SECOND_POINTS=5;
+      var QUESTIONS_PER_LEVEL=10;
+      var TOTAL_QUESTIONS=20;
+
+      var levels=[
+        {
+          type:"sort",
+          name:"स्तर 1: सही घर चुनो",
+          label:"शब्द पहचान",
+          icon:"🏠",
+          intro:"शब्द को सही घर में पहुँचाइए।",
+          questions:[
+            {id:"s1",word:"ऋषि",group:"root",explanation:"ऋषि शब्द ऋ से शुरू होता है।"},
+            {id:"s2",word:"मृग",group:"matra",explanation:"मृग शब्द में ऋ की मात्रा लगी है।"},
+            {id:"s3",word:"ऋतु",group:"root",explanation:"ऋतु शब्द ऋ से शुरू होता है।"},
+            {id:"s4",word:"वृक्ष",group:"matra",explanation:"वृक्ष शब्द में ऋ की मात्रा लगी है।"},
+            {id:"s5",word:"ऋण",group:"root",explanation:"ऋण शब्द ऋ से शुरू होता है।"},
+            {id:"s6",word:"कृषक",group:"matra",explanation:"कृषक शब्द में ऋ की मात्रा लगी है।"},
+            {id:"s7",word:"ऋषभ",group:"root",explanation:"ऋषभ शब्द ऋ से शुरू होता है।"},
+            {id:"s8",word:"गृह",group:"matra",explanation:"गृह शब्द में ऋ की मात्रा लगी है।"},
+            {id:"s9",word:"कृपा",group:"matra",explanation:"कृपा शब्द में ऋ की मात्रा लगी है।"},
+            {id:"s10",word:"घृणा",group:"matra",explanation:"घृणा शब्द में ऋ की मात्रा लगी है।"}
+          ]
+        },
+        {
+          type:"repair",
+          name:"स्तर 2: मात्रा मरम्मत",
+          label:"मात्रा लगाओ",
+          icon:"🛠️",
+          intro:"सही अक्षर चुनकर ऋ की मात्रा लगाइए।",
+          questions:[
+            {id:"r1",word:"मृग",parts:["म","ग"],answer:0,explanation:"म पर ऋ की मात्रा लगाने से मृग बनता है।"},
+            {id:"r2",word:"वृक्ष",parts:["व","क्ष"],answer:0,explanation:"व पर ऋ की मात्रा लगाने से वृक्ष बनता है।"},
+            {id:"r3",word:"कृषक",parts:["क","ष","क"],answer:0,explanation:"पहले क पर ऋ की मात्रा लगाने से कृषक बनता है।"},
+            {id:"r4",word:"गृह",parts:["ग","ह"],answer:0,explanation:"ग पर ऋ की मात्रा लगाने से गृह बनता है।"},
+            {id:"r5",word:"कृपा",parts:["क","पा"],answer:0,explanation:"क पर ऋ की मात्रा लगाने से कृपा बनता है।"},
+            {id:"r10",word:"पृथ्वी",parts:["प","थ्वी"],answer:0,explanation:"प पर ऋ की मात्रा लगाने से पृथ्वी बनता है।"}
+          ]
+        }
+      ];
+
+      var logoScreen=document.getElementById('logo-screen');
+      var titleScreen=document.getElementById('title-screen');
+      var howScreen=document.getElementById('how-screen');
+      var gameScreen=document.getElementById('game-screen');
+      var resultScreen=document.getElementById('result-screen');
+      var titleStartBtn=document.getElementById('title-start-btn');
+      var playBtn=document.getElementById('play-btn');
+      var playAgainBtn=document.getElementById('play-again-btn');
+      var soundBtn=document.getElementById('sound-btn');
+      var levelName=document.getElementById('level-name');
+      var challengeCount=document.getElementById('challenge-count');
+      var scoreValue=document.getElementById('score-value');
+      var timerValue=document.getElementById('timer-value');
+      var timerBox=document.getElementById('timer-box');
+      var progressFill=document.getElementById('progress-fill');
+      var promptLabel=document.getElementById('prompt-label');
+      var questionText=document.getElementById('question-text');
+      var taskArea=document.getElementById('task-area');
+      var feedbackLine=document.getElementById('feedback-line');
+      var feedbackPop=document.getElementById('feedback-pop');
+      var confettiLayer=document.getElementById('confetti-layer');
+      var levelOverlay=document.getElementById('level-overlay');
+      var levelIcon=document.getElementById('level-icon');
+      var overlayTitle=document.getElementById('overlay-title');
+      var overlayCopy=document.getElementById('overlay-copy');
+      var finalScore=document.getElementById('final-score');
+      var resultTitle=document.getElementById('result-title');
+      var resultStars=document.getElementById('result-stars');
+      var resultSummary=document.getElementById('result-summary');
+      var liveRegion=document.getElementById('live-region');
+      var audioCorrect=document.getElementById('audio-correct');
+      var audioWrong=document.getElementById('audio-wrong');
+
+      var gameLevels=[];
+      var currentLevelIndex=0;
+      var currentQuestionIndex=0;
+      var score=0;
+      var completedTasks=0;
+      var attempts=0;
+      var timeLeft=QUESTION_TIME;
+      var timerId=null;
+      var accepting=false;
+      var resolved=false;
+      var soundEnabled=true;
+      var cleanup=null;
+      var levelState=null;
+
+      function showScreen(screen){
+        var screens=document.querySelectorAll('.screen');
+        for(var i=0;i<screens.length;i++){screens[i].classList.remove('active')}
+        screen.classList.add('active');
+      }
+
+      function shuffle(array){
+        var copy=array.slice();
+        for(var i=copy.length-1;i>0;i--){
+          var j=Math.floor(Math.random()*(i+1));
+          var temp=copy[i];copy[i]=copy[j];copy[j]=temp;
+        }
+        return copy;
+      }
+
+      function makePlaythrough(){
+        gameLevels=levels.map(function(level){
+          return {type:level.type,name:level.name,label:level.label,icon:level.icon,intro:level.intro,questions:shuffle(level.questions)};
+        });
+      }
+
+      function highlightR(element,text){
+        element.textContent='';
+        var start=0;
+        var index=text.indexOf('ऋ');
+        while(index!==-1){
+          if(index>start){element.appendChild(document.createTextNode(text.slice(start,index)))}
+          var span=document.createElement('span');
+          span.className='target';
+          span.textContent='ऋ';
+          element.appendChild(span);
+          start=index+1;
+          index=text.indexOf('ऋ',start);
+        }
+        if(start<text.length){element.appendChild(document.createTextNode(text.slice(start)))}
+      }
+
+      function unlockAudio(){
+        [audioCorrect,audioWrong].forEach(function(audio){
+          try{
+            audio.volume=0;
+            var p=audio.play();
+            if(p&&typeof p.then==='function'){
+              p.then(function(){audio.pause();audio.currentTime=0;audio.volume=1}).catch(function(){audio.volume=1});
+            }
+          }catch(e){audio.volume=1}
+        });
+      }
+
+      function playAudio(audio){
+        if(!soundEnabled||!audio)return;
+        try{audio.currentTime=0;var p=audio.play();if(p&&p.catch)p.catch(function(){})}catch(e){}
+      }
+
+      function clearTimer(){if(timerId!==null){clearInterval(timerId);timerId=null}}
+
+      function startTimer(){
+        clearTimer();
+        timeLeft=QUESTION_TIME;
+        timerValue.textContent=String(timeLeft);
+        timerBox.classList.remove('low');
+        timerId=setInterval(function(){
+          timeLeft--;
+          if(timeLeft<0)timeLeft=0;
+          timerValue.textContent=String(timeLeft);
+          if(timeLeft<=10)timerBox.classList.add('low');
+          if(timeLeft===0)handleTimeout();
+        },1000);
+      }
+
+      function setFeedback(message,type){
+        feedbackLine.className='feedback-line';
+        if(type)feedbackLine.classList.add(type);
+        feedbackLine.textContent=message;
+        liveRegion.textContent=message;
+      }
+
+      function showPop(type){
+        feedbackPop.className='feedback-pop show '+(type==='correct'?'correct-pop':'wrong-pop');
+        feedbackPop.textContent=type==='correct'?'✓':'×';
+        setTimeout(function(){feedbackPop.className='feedback-pop';feedbackPop.textContent=''},type==='correct'?850:650);
+      }
+
+      function confetti(){
+        var symbols=['★','✦','★','✧'];
+        var colours=['#ffd166','#7c3aed','#25a866','#ff8fab','#4aa8ff'];
+        confettiLayer.innerHTML='';
+        for(var i=0;i<18;i++){
+          var star=document.createElement('span');
+          var angle=(Math.PI*2*i)/18;
+          var distance=95+Math.random()*145;
+          star.className='confetti-star';
+          star.textContent=symbols[i%symbols.length];
+          star.style.color=colours[i%colours.length];
+          star.style.setProperty('--tx',(Math.cos(angle)*distance).toFixed(0)+'px');
+          star.style.setProperty('--ty',(Math.sin(angle)*distance).toFixed(0)+'px');
+          confettiLayer.appendChild(star);
+        }
+        setTimeout(function(){confettiLayer.innerHTML=''},1100);
+      }
+
+      function currentLevel(){return gameLevels[currentLevelIndex]}
+      function currentQuestion(){return currentLevel().questions[currentQuestionIndex]}
+
+      function promptFor(level){
+        if(level.type==='sort')return 'शब्द को सही घर में पहुँचाइए—ऋ से शुरू होने वाला या ऋ की मात्रा वाला।';
+        return 'सही अक्षर चुनकर उस पर ऋ की मात्रा लगाइए।';
+      }
+
+      function cleanupTask(){if(typeof cleanup==='function')cleanup();cleanup=null;levelState=null}
+
+      function renderQuestion(){
+        var level=currentLevel();
+        var done=currentLevelIndex*QUESTIONS_PER_LEVEL+currentQuestionIndex;
+        cleanupTask();
+        attempts=0;
+        accepting=true;
+        resolved=false;
+        levelName.textContent=level.name;
+        challengeCount.textContent='चुनौती '+(currentQuestionIndex+1)+'/10';
+        scoreValue.textContent=String(score);
+        promptLabel.textContent=level.label;
+        highlightR(questionText,promptFor(level));
+        progressFill.style.width=((done/TOTAL_QUESTIONS)*100).toFixed(2)+'%';
+        taskArea.innerHTML='';
+        setFeedback('खेल पूरा कीजिए।','');
+
+        if(level.type==='sort')renderSort(currentQuestion());
+        else renderRepair(currentQuestion());
+        startTimer();
+      }
+
+      function resolveCorrect(visual){
+        if(resolved)return;
+        resolved=true;
+        accepting=false;
+        clearTimer();
+        if(typeof visual==='function')visual();
+        completedTasks++;
+        if(attempts===0){score+=FIRST_POINTS;setFeedback('बहुत अच्छा! पहली कोशिश में सही। +10 अंक','good')}
+        else{score+=SECOND_POINTS;setFeedback('सही! दूसरी कोशिश में +5 अंक','good')}
+        scoreValue.textContent=String(score);
+        playAudio(audioCorrect);showPop('correct');confetti();
+        setTimeout(nextQuestion,1250);
+      }
+
+      function wrongAttempt(onRetry,onReveal){
+        if(resolved||!accepting)return;
+        accepting=false;
+        attempts++;
+        playAudio(audioWrong);showPop('wrong');
+        if(attempts===1){
+          setFeedback('अभी सही नहीं। एक बार फिर कोशिश करें।','bad');
+          if(typeof onRetry==='function')onRetry();
+          setTimeout(function(){if(!resolved&&timeLeft>0)accepting=true},650);
+        }else{
+          resolved=true;
+          clearTimer();
+          if(typeof onReveal==='function')onReveal();
+          setFeedback('सही उत्तर दिखाया गया है। '+currentQuestion().explanation,'info');
+          setTimeout(nextQuestion,2700);
+        }
+      }
+
+      function renderSort(q){
+        var stage=document.createElement('div');
+        var card=document.createElement('div');
+        var instruction=document.createElement('p');
+        var houses=document.createElement('div');
+        var rootHouse=createHouse('root','ऋ से शुरू','ऋ');
+        var matraHouse=createHouse('matra','ऋ की मात्रा','मात्रा');
+        var drag={active:false,moved:false,startX:0,startY:0};
+
+        stage.className='sort-stage';
+        card.className='word-card';card.textContent=q.word;card.setAttribute('role','button');card.setAttribute('tabindex','0');
+        instruction.className='micro';instruction.textContent='शब्द कार्ड को खींचें या सही घर पर टैप करें।';
+        houses.className='houses';
+        houses.appendChild(rootHouse);houses.appendChild(matraHouse);
+        stage.appendChild(card);stage.appendChild(instruction);stage.appendChild(houses);taskArea.appendChild(stage);
+
+        function choose(group,house){
+          if(!accepting||resolved)return;
+          if(group===q.group){
+            resolveCorrect(function(){house.classList.add('correct-target');animateToHouse(card,house);rootHouse.disabled=true;matraHouse.disabled=true});
+          }else{
+            house.classList.add('wrong-target');resetCard(card);
+            wrongAttempt(function(){setTimeout(function(){house.classList.remove('wrong-target')},450)},function(){
+              rootHouse.disabled=true;matraHouse.disabled=true;
+              var correctHouse=q.group==='root'?rootHouse:matraHouse;
+              correctHouse.classList.add('correct-target');animateToHouse(card,correctHouse);
+            });
+          }
+        }
+
+        rootHouse.addEventListener('click',function(){choose('root',rootHouse)});
+        matraHouse.addEventListener('click',function(){choose('matra',matraHouse)});
+
+        function pointerDown(e){
+          if(!accepting||resolved)return;
+          drag.active=true;drag.moved=false;drag.startX=e.clientX;drag.startY=e.clientY;card.classList.add('dragging');
+          if(card.setPointerCapture){try{card.setPointerCapture(e.pointerId)}catch(err){}}
+        }
+        function pointerMove(e){
+          if(!drag.active||!accepting||resolved)return;
+          var dx=e.clientX-drag.startX;var dy=e.clientY-drag.startY;
+          if(Math.abs(dx)+Math.abs(dy)>8)drag.moved=true;
+          card.style.transform='translate('+dx+'px,'+dy+'px)';
+          markHouse(e.clientX,e.clientY,rootHouse,matraHouse);
+        }
+        function pointerUp(e){
+          if(!drag.active)return;
+          drag.active=false;card.classList.remove('dragging');rootHouse.classList.remove('drag-over');matraHouse.classList.remove('drag-over');
+          var target=houseAtPoint(e.clientX,e.clientY,rootHouse,matraHouse);
+          if(drag.moved&&target)choose(target.dataset.group,target);else resetCard(card);
+        }
+
+        card.addEventListener('pointerdown',pointerDown);
+        card.addEventListener('pointermove',pointerMove);
+        card.addEventListener('pointerup',pointerUp);
+        card.addEventListener('pointercancel',pointerUp);
+        card.addEventListener('keydown',function(e){if(e.key==='ArrowLeft')choose('root',rootHouse);else if(e.key==='ArrowRight')choose('matra',matraHouse)});
+
+        levelState={type:'sort',card:card,rootHouse:rootHouse,matraHouse:matraHouse,q:q};
+        cleanup=function(){rootHouse.disabled=true;matraHouse.disabled=true;card.removeEventListener('pointerdown',pointerDown);card.removeEventListener('pointermove',pointerMove);card.removeEventListener('pointerup',pointerUp);card.removeEventListener('pointercancel',pointerUp)};
+      }
+
+      function createHouse(group,labelText,bodyText){
+        var button=document.createElement('button');
+        var roof=document.createElement('span');
+        var body=document.createElement('span');
+        var label=document.createElement('span');
+        button.type='button';button.className='house-zone '+(group==='matra'?'matra':'');button.dataset.group=group;
+        roof.className='house-roof';body.className='house-body';body.textContent=bodyText;label.className='house-label';label.textContent=labelText;
+        button.appendChild(roof);button.appendChild(body);button.appendChild(label);return button;
+      }
+
+      function houseAtPoint(x,y,a,b){
+        var houses=[a,b];
+        for(var i=0;i<houses.length;i++){
+          var r=houses[i].getBoundingClientRect();
+          if(x>=r.left&&x<=r.right&&y>=r.top&&y<=r.bottom)return houses[i];
+        }
+        return null;
+      }
+
+      function markHouse(x,y,a,b){var target=houseAtPoint(x,y,a,b);a.classList.toggle('drag-over',target===a);b.classList.toggle('drag-over',target===b)}
+
+      function resetCard(card){
+        card.style.transition='transform .25s ease,opacity .25s ease';
+        card.style.transform='translate(0,0) scale(1)';card.style.opacity='1';
+        setTimeout(function(){card.style.transition=''},280);
+      }
+
+      function animateToHouse(card,house){
+        var cr=card.getBoundingClientRect();var hr=house.getBoundingClientRect();
+        var dx=hr.left+hr.width/2-(cr.left+cr.width/2);var dy=hr.top+hr.height*.55-(cr.top+cr.height/2);
+        card.style.transition='transform .55s ease,opacity .55s ease';
+        card.style.transform='translate('+dx.toFixed(0)+'px,'+dy.toFixed(0)+'px) scale(.48)';card.style.opacity='.18';
+      }
+
+      function renderRepair(q){
+        var stage=document.createElement('div');
+        var preview=document.createElement('div');
+        var stamp=document.createElement('div');
+        var row=document.createElement('div');
+        var buttons=[];
+
+        stage.className='repair-stage';
+        preview.className='word-preview';preview.textContent=q.parts.join('');
+        stamp.className='matra-stamp';stamp.textContent='ऋ की मात्रा लगाएँ';
+        row.className='letter-row';
+
+        q.parts.forEach(function(part,index){
+          var btn=document.createElement('button');
+          btn.type='button';btn.className='letter-tile';btn.textContent=part;
+          btn.addEventListener('click',function(){
+            if(!accepting||resolved)return;
+            if(index===q.answer){
+              resolveCorrect(function(){btn.classList.add('correct');buttons.forEach(function(b){b.disabled=true});preview.textContent=q.word});
+            }else{
+              btn.classList.add('wrong');btn.disabled=true;
+              wrongAttempt(function(){},function(){buttons.forEach(function(b,i){b.disabled=true;if(i===q.answer)b.classList.add('correct')});preview.textContent=q.word});
+            }
+          });
+          buttons.push(btn);row.appendChild(btn);
         });
 
-        function checkWord(isCorrect, wordElement) {
-            if(isCorrect) {
-                clapSnd.currentTime = 0;
-                clapSnd.play().catch(() => {});
-                
-                correctAnswersCount++;
-                alert("बिल्कुल सही! \"" + wordElement + "\" में 'ऋ' की मात्रा है।");
-            } else {
-                wrongSnd.currentTime = 0;
-                wrongSnd.play().catch(() => {});
-                
-                alert("यह गलत उत्तर है, कृपया दोबारा प्रयास करें!");
-            }
+        stage.appendChild(preview);stage.appendChild(stamp);stage.appendChild(row);taskArea.appendChild(stage);
+        levelState={type:'repair',preview:preview,buttons:buttons,q:q};
+        cleanup=function(){buttons.forEach(function(btn){btn.disabled=true})};
+      }
 
-            if(correctAnswersCount >= totalRequired) {
-                setTimeout(() => {
-                    document.getElementById('level-1').classList.add('hidden');
-                    document.getElementById('result-screen').classList.remove('hidden');
-                    document.getElementById('msg').innerHTML = "अद्भुत प्रदर्शन! 🎉<br>आपने सभी 'ऋ' मात्रा वाले शब्दों को ढूंढ लिया है।";
-                }, 500);
-            }
+      function revealCurrent(){
+        if(!levelState)return;
+        if(levelState.type==='sort'){
+          levelState.rootHouse.disabled=true;levelState.matraHouse.disabled=true;
+          var house=levelState.q.group==='root'?levelState.rootHouse:levelState.matraHouse;
+          house.classList.add('correct-target');animateToHouse(levelState.card,house);
+        }else{
+          levelState.buttons.forEach(function(btn,i){btn.disabled=true;if(i===levelState.q.answer)btn.classList.add('correct')});
+          levelState.preview.textContent=levelState.q.word;
         }
-    </script>
+      }
+
+      function handleTimeout(){
+        if(resolved)return;
+        resolved=true;accepting=false;clearTimer();revealCurrent();playAudio(audioWrong);showPop('wrong');
+        setFeedback('समय पूरा। '+currentQuestion().explanation,'info');
+        setTimeout(nextQuestion,2800);
+      }
+
+      function showLevel(level,callback){
+        levelIcon.textContent=level.icon;overlayTitle.textContent=level.name;overlayCopy.textContent=level.intro;
+        levelOverlay.classList.add('show');levelOverlay.setAttribute('aria-hidden','false');
+        setTimeout(function(){levelOverlay.classList.remove('show');levelOverlay.setAttribute('aria-hidden','true');callback()},1600);
+      }
+
+      function nextQuestion(){
+        cleanupTask();
+        currentQuestionIndex++;
+        if(currentQuestionIndex<currentLevel().questions.length){renderQuestion();return}
+        currentLevelIndex++;currentQuestionIndex=0;
+        if(currentLevelIndex<gameLevels.length)showLevel(currentLevel(),renderQuestion);else finishGame();
+      }
+
+      function startGame(){
+        unlockAudio();clearTimer();cleanupTask();makePlaythrough();
+        currentLevelIndex=0;currentQuestionIndex=0;score=0;completedTasks=0;
+        scoreValue.textContent='0';progressFill.style.width='0%';feedbackPop.className='feedback-pop';confettiLayer.innerHTML='';
+        showScreen(gameScreen);showLevel(currentLevel(),renderQuestion);
+      }
+
+      function finishGame(){
+        clearTimer();cleanupTask();progressFill.style.width='100%';finalScore.textContent=String(score);
+        if(score>=160){resultTitle.textContent='शानदार काम!';resultStars.textContent='★★★'}
+        else if(score>=100){resultTitle.textContent='बहुत अच्छा!';resultStars.textContent='★★☆'}
+        else{resultTitle.textContent='अच्छा प्रयास!';resultStars.textContent='★☆☆'}
+        resultSummary.textContent='आपने 20 में से '+completedTasks+' चुनौतियाँ स्वयं पूरी कीं। आपने ऋ से शुरू होने वाले शब्द और ऋ की मात्रा वाले शब्द पहचाने।';
+        showScreen(resultScreen);playAudio(audioCorrect);confetti();
+      }
+
+      function toggleSound(){
+        soundEnabled=!soundEnabled;
+        soundBtn.textContent=soundEnabled?'🔊':'🔇';
+        soundBtn.setAttribute('aria-label',soundEnabled?'ध्वनि बंद करें':'ध्वनि चालू करें');
+        soundBtn.setAttribute('title',soundEnabled?'ध्वनि बंद करें':'ध्वनि चालू करें');
+      }
+
+      titleStartBtn.addEventListener('click',function(){showScreen(howScreen)});
+      playBtn.addEventListener('click',startGame);
+      playAgainBtn.addEventListener('click',startGame);
+      soundBtn.addEventListener('click',toggleSound);
+      setTimeout(function(){showScreen(titleScreen)},5000);
+    }());
+  </script>
 </body>
 </html>
