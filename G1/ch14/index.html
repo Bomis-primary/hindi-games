@@ -25,7 +25,7 @@
         }
 
         body {
-            font-family: 'Comic Sans MS', 'Segoe UI', Arial, sans-serif;
+            font-family: 'Nirmala UI', 'Mangal', 'Noto Sans Devanagari', 'Segoe UI', Arial, sans-serif;
             background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #feada6 100%);
             display: flex;
             align-items: center;
@@ -291,8 +291,9 @@
         /* LARGER CANVAS CONTAINER */
         .canvas-container {
             position: relative;
-            width: 320px;  /* Expanded Width */
-            height: 240px; /* Expanded Height */
+            width: min(320px, 100%);
+            aspect-ratio: 4 / 3;
+            height: auto;
             background: #fff8f0;
             border: 4px dashed var(--neon-pink);
             border-radius: 20px;
@@ -342,14 +343,13 @@
 
         <!-- SPLASH -->
         <div id="splashScreen" class="screen">
-            <img src="assets/innovine-logo.png" alt="Innovine Logo" class="splash-logo" onerror="autoAdvanceSplash();">
-            <p style="margin-top: 20px; color: #888; font-weight: bold;">मात्रा कैंडी क्रश शुरू हो रहा है...</p>
+            <img src="assets/innovine-logo.png" alt="Innovine Logo" class="splash-logo">
         </div>
 
         <!-- TITLE -->
         <div id="titleScreen" class="screen" style="display: none;">
             <h1 class="main-title">🍬 मात्रा कैंडी क्रश 🍬</h1>
-            <p class="subtitle">कैंडीज़ मिलाओ और मात्रा लिखो!</p>
+            <p class="subtitle">कैंडीज़ मिलाओ और मात्रा लिखो।</p>
             <button class="action-btn" onclick="goToInstructions()">शुरू करें ▶</button>
         </div>
 
@@ -359,15 +359,15 @@
             <div class="instruction-list">
                 <div class="step-card">
                     <div class="step-num">1</div>
-                    <div class="step-text">पास वाली 2 कैंडिज़ पर क्लिक करके आपस में बदलो <span class="highlight-tag">Swap</span></div>
+                    <div class="step-text">पास वाली 2 कैंडिज़ पर क्लिक करके आपस में बदलो <span class="highlight-tag">Swap</span>।</div>
                 </div>
                 <div class="step-card">
                     <div class="step-num">2</div>
-                    <div class="step-text">एक जैसी 3 या अधिक कैंडिज़ बनाकर <span class="highlight-tag">Match</span> बनाओ 🍬</div>
+                    <div class="step-text">एक जैसी 3 या अधिक कैंडिज़ बनाकर <span class="highlight-tag">Match</span> बनाओ। 🍬</div>
                 </div>
                 <div class="step-card">
                     <div class="step-num">3</div>
-                    <div class="step-text">हर 2 मैच के बाद सही मात्रा (<span class="highlight-tag">ँ</span> या <span class="highlight-tag">ः</span>) सही से लिखो! ✏️</div>
+                    <div class="step-text">हर 2 मैच के बाद सही मात्रा (<span class="highlight-tag">ँ</span> या <span class="highlight-tag">ः</span>) सही से लिखो। ✏️</div>
                 </div>
             </div>
             <button class="action-btn" onclick="startGameDirectly()">खेलें 🎮</button>
@@ -382,7 +382,7 @@
 
         <!-- TASK BANNER -->
         <div class="task-banner">
-            <span>🎯 लक्ष्य: 2 मैच बनाओ!</span>
+            <span>🎯 लक्ष्य: 2 मैच बनाओ।</span>
             <span class="task-badge" id="matchProgress">0 / 2</span>
         </div>
 
@@ -392,12 +392,12 @@
         <!-- TRACING QUESTION MODAL -->
         <div id="tracingModal">
             <div class="tracing-card" id="tracingCard">
-                <div class="tracing-prompt">शब्द पूरा करने के लिए मात्रा लिखो:</div>
+                <div class="tracing-prompt">शब्द पूरा करने के लिए मात्रा लिखो।</div>
                 <div class="tracing-word" id="wordPrompt">चा__द</div>
                 
-                <div class="hint-box" id="hintBox">💡 हिंट: रेखा साफ़ कर दी गई है, दोबारा ध्यान से ट्रेस करें!</div>
+                <div class="hint-box" id="hintBox">💡 हिंट: रेखा साफ़ कर दी गई है। दोबारा ध्यान से ट्रेस करें।</div>
 
-                <div class="success-banner" id="successBanner">🎉 सही उत्तर! चाँद</div>
+                <div class="success-banner" id="successBanner">🎉 सही उत्तर! चाँद।</div>
 
                 <div class="canvas-container" id="canvasBox">
                     <!-- ENLARGED CANVAS RESOLUTION -->
@@ -411,7 +411,7 @@
         <!-- END OVERLAY -->
         <div id="endOverlay" class="screen" style="display: none;">
             <h1 id="endTitle" style="font-size: 2.2rem; color: var(--bright-orange); margin-bottom: 15px;">🎉 स्वीट विक्ट्री! 🥳</h1>
-            <p id="finalScore" style="font-size: 1.3rem; color: #333; margin-bottom: 25px;">आपने पूरे 100 अंक बनाए!</p>
+            <p id="finalScore" style="font-size: 1.3rem; color: #333; margin-bottom: 25px;">आपने पूरे 100 अंक बनाए।</p>
             <button class="action-btn" onclick="startNewGame()">फिर से खेलें 🔄</button>
         </div>
 
@@ -428,16 +428,16 @@
     }
 
     const masterQuestions = [
-        { wordPrompt: "चा__द",  targetMatra: "ँ", fullWord: "चाँद", hint: "💡 गलत ट्रेस हुआ! कैनवास साफ़ कर दिया गया है, 'चंद्रबिंदु' (ँ) पर दोबारा ट्रेस करें।" },
-        { wordPrompt: "नम__",   targetMatra: "ः", fullWord: "नमः", hint: "💡 गलत ट्रेस हुआ! विसर्ग (ः) की दो बिंदुओं के ऊपर दोबारा ट्रेस करें।" },
-        { wordPrompt: "सा__प",  targetMatra: "ँ", fullWord: "साँप", hint: "💡 फिर से कोशिश करें! चंद्रबिंदु (ँ) के ऊपर ध्यान से उंगली फेरें।" },
-        { wordPrompt: "प्रात__", targetMatra: "ः", fullWord: "प्रातः", hint: "💡 गलत ट्रेस हुआ! विसर्ग (ः) की दोनों बिंदुओं पर साफ़-साफ़ ट्रेस करें।" },
-        { wordPrompt: "कुआ__",  targetMatra: "ँ", fullWord: "कुआँ", hint: "💡 कैनवास साफ़ किया गया है, 'चंद्रबिंदु' (ँ) पर दोबारा उंगली चलाएँ।" },
-        { wordPrompt: "छ__",    targetMatra: "ः", fullWord: "छः", hint: "💡 विसर्ग (ः) की दोनों बिंदुओं पर ठीक से ट्रेस करें।" },
-        { wordPrompt: "आ__ख",   targetMatra: "ँ", fullWord: "आँख", hint: "💡 गलत ट्रेस हुआ! चंद्रबिंदु (ँ) पर फिर से ध्यान से उंगली फेरें।" },
-        { wordPrompt: "पुन__",  targetMatra: "ः", fullWord: "पुनः", hint: "💡 विसर्ग (ः) की दो बिंदुओं पर उंगली चलाएँ।" },
-        { wordPrompt: "मा__",   targetMatra: "ँ", fullWord: "माँ", hint: "💡 कैनवास रीसेट हो गया है, चंद्रबिंदु (ँ) को दोबारा ट्रेस करें।" },
-        { wordPrompt: "दु__ख",  targetMatra: "ः", fullWord: "दुःख", hint: "💡 बीच में विसर्ग (ः) की दो बिंदुओं को साफ़-साफ़ ट्रेस करें।" }
+        { wordPrompt: "चा__द",  targetMatra: "ँ", fullWord: "चाँद", hint: "💡 गलत ट्रेस हुआ! कैनवास साफ़ कर दिया गया है। 'चंद्रबिंदु' (ँ) पर दोबारा ट्रेस करें।" },
+        { wordPrompt: "नम__",   targetMatra: "ः", fullWord: "नमः", hint: "💡 गलत ट्रेस हुआ! विसर्ग (ः) के दो बिंदुओं पर दोबारा ट्रेस करें।" },
+        { wordPrompt: "सा__प",  targetMatra: "ँ", fullWord: "साँप", hint: "💡 फिर से कोशिश करें! चंद्रबिंदु (ँ) के ऊपर ध्यान से उँगली फेरें।" },
+        { wordPrompt: "प्रात__", targetMatra: "ः", fullWord: "प्रातः", hint: "💡 गलत ट्रेस हुआ! विसर्ग (ः) के दोनों बिंदुओं पर साफ़-साफ़ ट्रेस करें।" },
+        { wordPrompt: "कुआ__",  targetMatra: "ँ", fullWord: "कुआँ", hint: "💡 कैनवास साफ़ किया गया है। 'चंद्रबिंदु' (ँ) पर दोबारा उँगली चलाएँ।" },
+        { wordPrompt: "छ__",    targetMatra: "ः", fullWord: "छः", hint: "💡 विसर्ग (ः) के दोनों बिंदुओं पर ठीक से ट्रेस करें।" },
+        { wordPrompt: "आ__ख",   targetMatra: "ँ", fullWord: "आँख", hint: "💡 गलत ट्रेस हुआ! चंद्रबिंदु (ँ) पर फिर से ध्यान से उँगली फेरें।" },
+        { wordPrompt: "पुन__",  targetMatra: "ः", fullWord: "पुनः", hint: "💡 विसर्ग (ः) के दो बिंदुओं पर उँगली चलाएँ।" },
+        { wordPrompt: "मा__",   targetMatra: "ँ", fullWord: "माँ", hint: "💡 कैनवास रीसेट हो गया है। चंद्रबिंदु (ँ) को दोबारा ट्रेस करें।" },
+        { wordPrompt: "दु__ख",  targetMatra: "ः", fullWord: "दुःख", hint: "💡 बीच में विसर्ग (ः) के दोनों बिंदुओं को साफ़-साफ़ ट्रेस करें।" }
     ];
 
     const CANDY_SVGS = [
@@ -453,6 +453,11 @@
     let questionsSolved = 0;
     let matchCountForCurrentQuestion = 0;
     let lives = 3;
+    let activeQuestions = [];
+    let traceAttempts = 0;
+    let boardLocked = false;
+    let tracingPending = false;
+    let targetToleranceMask = null;
 
     window.onload = function() {
         splashTimer = setTimeout(autoAdvanceSplash, 5000);
@@ -515,30 +520,45 @@
     }
 
     function onTileClick(e) {
-        if (questionsSolved >= 10) return;
+        if (questionsSolved >= 10 || boardLocked || tracingPending) return;
 
         const clickedTile = e.currentTarget;
 
         if (!firstSelectedTile) {
             firstSelectedTile = clickedTile;
             firstSelectedTile.classList.add('selected');
-        } else {
-            const id1 = parseInt(firstSelectedTile.getAttribute('data-id'));
-            const id2 = parseInt(clickedTile.getAttribute('data-id'));
-
-            const validMoves = [id1 - 1, id1 + 1, id1 - width, id1 + width];
-            
-            if (validMoves.includes(id2)) {
-                swapTiles(firstSelectedTile, clickedTile);
-                let matched = checkMatchesAndRefill();
-                if (!matched) {
-                    setTimeout(() => swapTiles(firstSelectedTile, clickedTile), 250);
-                }
-            }
-
-            firstSelectedTile.classList.remove('selected');
-            firstSelectedTile = null;
+            return;
         }
+
+        const tile1 = firstSelectedTile;
+        const id1 = parseInt(tile1.getAttribute('data-id'));
+        const id2 = parseInt(clickedTile.getAttribute('data-id'));
+
+        const row1 = Math.floor(id1 / width);
+        const col1 = id1 % width;
+        const row2 = Math.floor(id2 / width);
+        const col2 = id2 % width;
+        const isAdjacent = Math.abs(row1 - row2) + Math.abs(col1 - col2) === 1;
+
+        if (isAdjacent) {
+            boardLocked = true;
+            swapTiles(tile1, clickedTile);
+            const matched = checkMatchesAndRefill();
+
+            if (!matched) {
+                setTimeout(() => {
+                    swapTiles(tile1, clickedTile);
+                    boardLocked = false;
+                }, 250);
+            } else {
+                setTimeout(() => {
+                    if (!tracingPending) boardLocked = false;
+                }, 350);
+            }
+        }
+
+        tile1.classList.remove('selected');
+        firstSelectedTile = null;
     }
 
     function swapTiles(tile1, tile2) {
@@ -587,6 +607,7 @@
             document.getElementById('matchProgress').innerText = `${matchCountForCurrentQuestion} / 2`;
             if (matchCountForCurrentQuestion >= 2) {
                 matchCountForCurrentQuestion = 0;
+                tracingPending = true;
                 setTimeout(triggerTracingModal, 500);
             }
         }
@@ -611,103 +632,190 @@
         tCtx = tCanvas.getContext('2d');
 
         function startDraw(e) {
+            e.preventDefault();
             isDrawing = true;
-            tCtx.beginPath();
             const pos = getPos(e);
+
+            // A tap also leaves a visible dot. This helps young learners
+            // trace the two dots of विसर्ग (ः).
+            tCtx.beginPath();
+            tCtx.arc(pos.x, pos.y, 8, 0, Math.PI * 2);
+            tCtx.fillStyle = '#ff007f';
+            tCtx.fill();
+
+            tCtx.beginPath();
             tCtx.moveTo(pos.x, pos.y);
+
+            if (tCanvas.setPointerCapture && e.pointerId !== undefined) {
+                tCanvas.setPointerCapture(e.pointerId);
+            }
         }
 
         function draw(e) {
             if (!isDrawing) return;
+            e.preventDefault();
             const pos = getPos(e);
             tCtx.lineTo(pos.x, pos.y);
             tCtx.strokeStyle = '#ff007f';
-            tCtx.lineWidth = 16; /* Thicker stroke for bigger canvas */
+            tCtx.lineWidth = 16;
             tCtx.lineCap = 'round';
             tCtx.lineJoin = 'round';
             tCtx.stroke();
         }
 
-        function stopDraw() { isDrawing = false; }
+        function stopDraw(e) {
+            if (e) e.preventDefault();
+            isDrawing = false;
+        }
 
         function getPos(e) {
             const rect = tCanvas.getBoundingClientRect();
-            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-            
-            // Adjust mouse/touch position according to scaled canvas size
             const scaleX = tCanvas.width / rect.width;
             const scaleY = tCanvas.height / rect.height;
 
             return {
-                x: (clientX - rect.left) * scaleX,
-                y: (clientY - rect.top) * scaleY
+                x: (e.clientX - rect.left) * scaleX,
+                y: (e.clientY - rect.top) * scaleY
             };
         }
 
-        tCanvas.addEventListener('mousedown', startDraw);
-        tCanvas.addEventListener('mousemove', draw);
-        tCanvas.addEventListener('mouseup', stopDraw);
-
-        tCanvas.addEventListener('touchstart', startDraw);
-        tCanvas.addEventListener('touchmove', draw);
-        tCanvas.addEventListener('touchend', stopDraw);
+        tCanvas.addEventListener('pointerdown', startDraw);
+        tCanvas.addEventListener('pointermove', draw);
+        tCanvas.addEventListener('pointerup', stopDraw);
+        tCanvas.addEventListener('pointercancel', stopDraw);
+        tCanvas.addEventListener('pointerleave', stopDraw);
     }
 
     function renderGuideTemplate(matra) {
         tCtx.clearRect(0, 0, tCanvas.width, tCanvas.height);
-        
-        // Larger font scaled for 320x240 canvas
-        tCtx.font = "900 8.5rem 'Comic Sans MS', sans-serif";
-        tCtx.textAlign = "center";
-        tCtx.textBaseline = "middle";
-        tCtx.fillStyle = "rgba(255, 0, 127, 0.25)";
-        tCtx.fillText(matra, tCanvas.width / 2, tCanvas.height / 2);
 
-        // Sample target pixels
-        const imgData = tCtx.getImageData(0, 0, tCanvas.width, tCanvas.height);
+        const guideCanvas = document.createElement('canvas');
+        guideCanvas.width = tCanvas.width;
+        guideCanvas.height = tCanvas.height;
+        const guideCtx = guideCanvas.getContext('2d');
+
+        const cx = guideCanvas.width / 2;
+        guideCtx.strokeStyle = '#000000';
+        guideCtx.fillStyle = '#000000';
+        guideCtx.lineWidth = 18;
+        guideCtx.lineCap = 'round';
+        guideCtx.lineJoin = 'round';
+
+        // Draw fixed child-friendly shapes instead of relying on a font.
+        // A standalone chandrabindu can otherwise show a dotted circle
+        // differently on different devices and browsers.
+        if (matra === 'ँ') {
+            guideCtx.beginPath();
+            guideCtx.arc(cx, 145, 60, Math.PI * 1.12, Math.PI * 1.88);
+            guideCtx.stroke();
+
+            guideCtx.beginPath();
+            guideCtx.arc(cx, 55, 13, 0, Math.PI * 2);
+            guideCtx.fill();
+        } else {
+            guideCtx.beginPath();
+            guideCtx.arc(cx, 82, 19, 0, Math.PI * 2);
+            guideCtx.fill();
+
+            guideCtx.beginPath();
+            guideCtx.arc(cx, 158, 19, 0, Math.PI * 2);
+            guideCtx.fill();
+        }
+
+        const guideData = guideCtx.getImageData(0, 0, guideCanvas.width, guideCanvas.height);
         targetPixelPositions = [];
+        targetToleranceMask = new Uint8Array(tCanvas.width * tCanvas.height);
 
-        for (let y = 0; y < tCanvas.height; y += 4) {
-            for (let x = 0; x < tCanvas.width; x += 4) {
-                let alpha = imgData.data[(y * tCanvas.width + x) * 4 + 3];
+        for (let y = 0; y < tCanvas.height; y += 3) {
+            for (let x = 0; x < tCanvas.width; x += 3) {
+                const alpha = guideData.data[(y * tCanvas.width + x) * 4 + 3];
                 if (alpha > 30) {
                     targetPixelPositions.push({ x, y });
+
+                    // Create a forgiving zone around the guide.
+                    for (let dy = -12; dy <= 12; dy++) {
+                        for (let dx = -12; dx <= 12; dx++) {
+                            if (dx * dx + dy * dy > 144) continue;
+                            const nx = x + dx;
+                            const ny = y + dy;
+                            if (nx >= 0 && nx < tCanvas.width && ny >= 0 && ny < tCanvas.height) {
+                                targetToleranceMask[ny * tCanvas.width + nx] = 1;
+                            }
+                        }
+                    }
                 }
             }
         }
+
+        // Draw a light guide that is not counted as the child's stroke.
+        tCtx.save();
+        tCtx.globalAlpha = 0.22;
+        tCtx.drawImage(guideCanvas, 0, 0);
+        tCtx.restore();
     }
 
     function checkTracingAccuracy() {
-        if (targetPixelPositions.length === 0) return 0;
+        if (targetPixelPositions.length === 0 || !targetToleranceMask) {
+            return { coverage: 0, precision: 0 };
+        }
 
         const currentImgData = tCtx.getImageData(0, 0, tCanvas.width, tCanvas.height);
-        let matchedPixels = 0;
+        const userMask = new Uint8Array(tCanvas.width * tCanvas.height);
+        let userSamples = 0;
+        let onTargetSamples = 0;
 
-        for (let pt of targetPixelPositions) {
-            let index = (pt.y * tCanvas.width + pt.x) * 4;
-            let r = currentImgData.data[index];
-            let g = currentImgData.data[index + 1];
-            let alpha = currentImgData.data[index + 3];
+        for (let y = 0; y < tCanvas.height; y += 3) {
+            for (let x = 0; x < tCanvas.width; x += 3) {
+                const index = (y * tCanvas.width + x) * 4;
+                const r = currentImgData.data[index];
+                const g = currentImgData.data[index + 1];
+                const b = currentImgData.data[index + 2];
+                const alpha = currentImgData.data[index + 3];
 
-            if (alpha > 150 && r > 180 && g < 100) {
-                matchedPixels++;
+                if (alpha > 180 && r > 220 && g < 80 && b > 80) {
+                    userMask[y * tCanvas.width + x] = 1;
+                    userSamples++;
+                    if (targetToleranceMask[y * tCanvas.width + x]) {
+                        onTargetSamples++;
+                    }
+                }
             }
         }
 
-        return matchedPixels / targetPixelPositions.length;
+        let coveredTargets = 0;
+        for (const pt of targetPixelPositions) {
+            let covered = false;
+            for (let dy = -8; dy <= 8 && !covered; dy += 2) {
+                for (let dx = -8; dx <= 8; dx += 2) {
+                    const nx = pt.x + dx;
+                    const ny = pt.y + dy;
+                    if (nx < 0 || nx >= tCanvas.width || ny < 0 || ny >= tCanvas.height) continue;
+                    if (userMask[ny * tCanvas.width + nx]) {
+                        covered = true;
+                        break;
+                    }
+                }
+            }
+            if (covered) coveredTargets++;
+        }
+
+        return {
+            coverage: coveredTargets / targetPixelPositions.length,
+            precision: userSamples === 0 ? 0 : onTargetSamples / userSamples
+        };
     }
 
     function triggerTracingModal() {
         if (questionsSolved >= 10) return;
 
-        const currentQ = masterQuestions[questionsSolved];
+        const currentQ = activeQuestions[questionsSolved];
         document.getElementById('wordPrompt').innerText = currentQ.wordPrompt;
         document.getElementById('hintBox').style.display = 'none';
         document.getElementById('successBanner').style.display = 'none';
         document.getElementById('canvasBox').style.display = 'block';
         document.getElementById('submitBtn').style.display = 'block';
 
+        traceAttempts = 0;
         renderGuideTemplate(currentQ.targetMatra);
         document.getElementById('tracingModal').style.display = 'flex';
     }
@@ -715,12 +823,19 @@
     function submitTracingAnswer() {
         const tracingCard = document.getElementById('tracingCard');
         const hintBox = document.getElementById('hintBox');
-        const currentQ = masterQuestions[questionsSolved];
+        const currentQ = activeQuestions[questionsSolved];
 
-        const coverageRatio = checkTracingAccuracy();
+        const tracingResult = checkTracingAccuracy();
+
+        // Grade 1-friendly: the path may be imperfect, but it must cover
+        // enough of the guide and stay mostly near the correct shape.
+        const isAccurate =
+            tracingResult.coverage >= 0.38 &&
+            tracingResult.precision >= 0.52;
 
         // FAIL TRACE
-        if (coverageRatio < 0.30) {
+        if (!isAccurate) {
+            traceAttempts++;
             playAudio(sndWrong);
 
             if (navigator.vibrate) {
@@ -730,7 +845,9 @@
             tracingCard.classList.add('shake-animation');
             setTimeout(() => tracingCard.classList.remove('shake-animation'), 450);
 
-            hintBox.innerText = currentQ.hint;
+            hintBox.innerText = traceAttempts < 2
+                ? "💡 एक बार फिर ध्यान से ट्रेस करो।"
+                : currentQ.hint;
             hintBox.style.display = 'block';
 
             /* FIX: AUTO-CLEAR CANVAS ON WRONG TRACE */
@@ -743,6 +860,7 @@
 
         // SUCCESS TRACE
         playAudio(sndCorrect);
+        setTimeout(() => playAudio(sndClaps), 120);
 
         if (window.confetti) {
             confetti({
@@ -757,7 +875,7 @@
         hintBox.style.display = 'none';
         
         const successBanner = document.getElementById('successBanner');
-        successBanner.innerText = `✨ सही उत्तर: ${currentQ.fullWord} ✨`;
+        successBanner.innerText = `✨ सही उत्तर: ${currentQ.fullWord}। ✨`;
         successBanner.style.display = 'block';
 
         score += 10;
@@ -767,6 +885,8 @@
 
         setTimeout(() => {
             document.getElementById('tracingModal').style.display = 'none';
+            tracingPending = false;
+            boardLocked = false;
             if (questionsSolved >= 10) {
                 showEndGame(true);
             }
@@ -788,6 +908,10 @@
         questionsSolved = 0;
         matchCountForCurrentQuestion = 0;
         lives = 3;
+        traceAttempts = 0;
+        boardLocked = false;
+        tracingPending = false;
+        activeQuestions = [...masterQuestions].sort(() => Math.random() - 0.5);
         document.getElementById('matchProgress').innerText = `0 / 2`;
         updateStatusBar();
         createBoard();
@@ -797,8 +921,8 @@
         document.getElementById('endOverlay').style.display = 'flex';
         if (isWin) {
             playAudio(sndClaps);
-            document.getElementById('endTitle').innerText = "🎉 अद्भुत! जीत गए! 🥳";
-            document.getElementById('finalScore').innerText = `आपने पूरे ${score} अंक प्राप्त किए!`;
+            document.getElementById('endTitle').innerText = "🎉 अद्भुत! जीत गए। 🥳";
+            document.getElementById('finalScore').innerText = `आपने पूरे ${score} अंक बनाए।`;
             
             if (window.confetti) {
                 confetti({ particleCount: 200, spread: 100, origin: { y: 0.5 } });
