@@ -3,393 +3,393 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reach for the Stars - Kalam's Journey</title>
+    <title>Kalam's Quest - Chapter Revision Game</title>
     <style>
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            user-select: none;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #1a1a2e;
-            color: #fff;
+            background: #0f172a;
+            color: #f8fafc;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            padding: 20px;
         }
 
-        #game-container {
-            width: 800px;
-            height: 500px;
-            background: linear-gradient(to bottom, #0f2027, #203a43, #2c5364);
-            position: relative;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            overflow: hidden;
-            border: 2px solid #00d2ff;
-        }
-
-        /* Screen Management */
-        .screen {
-            position: absolute;
-            top: 0;
-            left: 0;
+        #game-card {
             width: 100%;
-            height: 100%;
-            display: none;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            max-width: 700px;
+            background: #1e293b;
+            border-radius: 16px;
+            border: 2px solid #38bdf8;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
             padding: 30px;
             text-align: center;
-            background: rgba(15, 32, 39, 0.95);
+            position: relative;
+            overflow: hidden;
         }
 
-        .screen.active {
-            display: flex;
-        }
-
-        /* Titles & Text */
         h1 {
-            font-size: 2.5rem;
-            color: #00d2ff;
-            margin-bottom: 15px;
-            text-shadow: 0 0 10px rgba(0, 210, 255, 0.5);
+            color: #38bdf8;
+            font-size: 2rem;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
         }
 
-        p {
-            font-size: 1.1rem;
-            line-height: 1.6;
-            color: #e0e0e0;
+        p.subtitle {
+            color: #94a3b8;
+            font-size: 1rem;
             margin-bottom: 20px;
-            max-width: 600px;
         }
 
-        /* Buttons */
-        .btn {
-            padding: 12px 30px;
-            font-size: 1.2rem;
+        /* Progress Bar */
+        .progress-container {
+            width: 100%;
+            background: #334155;
+            height: 12px;
+            border-radius: 6px;
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #38bdf8, #818cf8);
+            transition: width 0.4s ease;
+        }
+
+        /* Stats HUD */
+        .hud {
+            display: flex;
+            justify-content: space-between;
+            background: #0f172a;
+            padding: 12px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
             font-weight: bold;
-            color: #1a1a2e;
-            background: #00d2ff;
+            color: #fbbf24;
+        }
+
+        /* Question Area */
+        .question-box {
+            font-size: 1.25rem;
+            margin-bottom: 20px;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #f1f5f9;
+        }
+
+        /* Options */
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 500px) {
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .option-btn {
+            background: #334155;
+            color: #fff;
+            border: 2px solid transparent;
+            padding: 14px;
+            font-size: 1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+        }
+
+        .option-btn:hover {
+            background: #475569;
+            border-color: #38bdf8;
+            transform: translateY(-2px);
+        }
+
+        .option-btn.correct {
+            background: #166534 !important;
+            border-color: #22c55e !important;
+        }
+
+        .option-btn.wrong {
+            background: #991b1b !important;
+            border-color: #ef4444 !important;
+        }
+
+        /* Feedback Box */
+        .feedback {
+            min-height: 50px;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            padding: 10px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .feedback.show {
+            display: block;
+        }
+
+        .feedback.correct-text {
+            background: rgba(34, 197, 94, 0.15);
+            color: #4ade80;
+        }
+
+        .feedback.wrong-text {
+            background: rgba(239, 68, 68, 0.15);
+            color: #f87171;
+        }
+
+        /* Controls */
+        .btn {
+            background: #38bdf8;
+            color: #0f172a;
             border: none;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
             border-radius: 25px;
             cursor: pointer;
-            transition: transform 0.2s, background 0.2s, box-shadow 0.2s;
-            margin: 10px;
+            transition: transform 0.2s, background 0.2s;
         }
 
         .btn:hover {
-            background: #00e5ff;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 210, 255, 0.4);
+            background: #7dd3fc;
+            transform: scale(1.05);
         }
 
-        /* Instructions Styling */
-        .instructions-list {
-            text-align: left;
-            margin-bottom: 25px;
-            max-width: 500px;
+        .hidden {
+            display: none !important;
         }
 
-        .instructions-list li {
-            font-size: 1.1rem;
-            margin-bottom: 10px;
-            list-style-type: none;
+        /* Rocket Animation Overlay */
+        .rocket-launch {
+            font-size: 3rem;
+            margin: 15px 0;
+            animation: bounce 1s infinite alternate;
         }
 
-        /* Canvas / Game Screen */
-        #game-canvas {
-            display: block;
-            width: 100%;
-            height: 100%;
-        }
-
-        /* HUD Overlay */
-        #hud {
-            position: absolute;
-            top: 15px;
-            left: 20px;
-            right: 20px;
-            display: flex;
-            justify-content: space-between;
-            font-size: 1.3rem;
-            font-weight: bold;
-            color: #00d2ff;
-            pointer-events: none;
-            z-index: 5;
-        }
-
-        .quote {
-            font-style: italic;
-            color: #ffca28;
-            margin-top: 15px;
-            font-size: 0.95rem;
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-10px); }
         }
     </style>
 </head>
 <body>
 
-<div id="game-container">
+<div id="game-card">
 
-    <!-- 1. START SCREEN -->
-    <div id="start-screen" class="screen active">
-        <h1>Dreams That Keep You Awake</h1>
-        <p>Inspired by the story of Dr. A.P.J. Abdul Kalam. Help young Kalam collect books and missiles while navigating past obstacles on his path to success!</p>
-        <div>
-            <button class="btn" onclick="showScreen('instructions-screen')">How to Play</button>
-            <button class="btn" onclick="startGame()">Start Game</button>
-        </div>
-        <div class="quote">"Dream is not that which you see while sleeping; it is something that does not let you sleep."</div>
+    <!-- START SCREEN -->
+    <div id="start-screen">
+        <h1>🚀 Kalam's Quest</h1>
+        <p class="subtitle">Chapter Revision Challenge</p>
+        <p style="margin-bottom: 25px; color: #cbd5e1; line-height: 1.6;">
+            Revise Dr. A.P.J. Abdul Kalam's life, achievements, values, and lessons through this interactive quiz game! 
+            Answer correctly to launch rockets and unlock your final score.
+        </p>
+        <button class="btn" onclick="startGame()">Start Game</button>
     </div>
 
-    <!-- 2. INSTRUCTIONS SCREEN -->
-    <div id="instructions-screen" class="screen">
-        <h1>Instructions</h1>
-        <ul class="instructions-list">
-            <li>🚀 <strong>Controls:</strong> Press <strong>SPACEBAR</strong> or <strong>CLICK</strong> to Jump up.</li>
-            <li>📚 <strong>Goal:</strong> Collect Books (+10 pts) and Rockets (+25 pts) to boost your score.</li>
-            <li>⚡ <strong>Avoid:</strong> Don't collide with Storm Clouds or birds!</li>
-            <li>🎯 Keep working hard and never give up after setbacks.</li>
-        </ul>
-        <button class="btn" onclick="showScreen('start-screen')">Back</button>
-        <button class="btn" onclick="startGame()">Play Now</button>
+    <!-- PLAY SCREEN -->
+    <div id="play-screen" class="hidden">
+        <div class="hud">
+            <div>Question: <span id="current-q">1</span>/<span id="total-q">5</span></div>
+            <div>Score: <span id="score">0</span> pts</div>
+        </div>
+
+        <div class="progress-container">
+            <div id="progress-bar" class="progress-bar"></div>
+        </div>
+
+        <div id="question" class="question-box">Question text goes here...</div>
+
+        <div id="options" class="options-grid"></div>
+
+        <div id="feedback" class="feedback"></div>
+
+        <button id="next-btn" class="btn hidden" onclick="nextQuestion()">Next Question ➔</button>
     </div>
 
-    <!-- 3. GAME PLAY SCREEN -->
-    <div id="game-screen" class="screen" style="padding: 0; background: transparent;">
-        <div id="hud">
-            <div>Score: <span id="score-display">0</span></div>
-            <div>High Score: <span id="highscore-display">0</span></div>
-        </div>
-        <canvas id="game-canvas" width="800" height="500"></canvas>
-    </div>
-
-    <!-- 4. END GAME SCREEN -->
-    <div id="gameover-screen" class="screen">
-        <h1>Failure is a Lesson!</h1>
-        <p>Setbacks are just steps toward success. Keep trying!</p>
-        <p>Your Score: <strong id="final-score" style="color: #00d2ff; font-size: 1.5rem;">0</strong></p>
-        <div>
-            <button class="btn" onclick="startGame()">Try Again</button>
-            <button class="btn" onclick="showScreen('start-screen')">Main Menu</button>
-        </div>
+    <!-- RESULT SCREEN -->
+    <div id="end-screen" class="hidden">
+        <h1>Mission Completed! 🌟</h1>
+        <div class="rocket-launch">🚀</div>
+        <p class="subtitle">Chapter Revision Summary</p>
+        <p id="final-stats" style="font-size: 1.3rem; margin-bottom: 15px; color: #fbbf24;"></p>
+        <p id="revision-msg" style="margin-bottom: 25px; color: #cbd5e1; line-height: 1.6;"></p>
+        <button class="btn" onclick="startGame()">Play Again</button>
     </div>
 
 </div>
 
 <script>
-    // Navigation Control
-    function showScreen(screenId) {
-        document.querySelectorAll('.screen').forEach(screen => {
-            screen.classList.remove('active');
-        });
-        document.getElementById(screenId).classList.add('active');
-    }
+    // Chapter Revision Question Bank
+    const chapterQuestions = [
+        {
+            question: "Where was Dr. A.P.J. Abdul Kalam born?",
+            options: [
+                "Rameswaram, Tamil Nadu",
+                "Thiruvananthapuram, Kerala",
+                "Bengaluru, Karnataka",
+                "Hyderabad, Telangana"
+            ],
+            correct: 0,
+            explanation: "Dr. Kalam was born on October 15, 1931, in the island town of Rameswaram, Tamil Nadu."
+        },
+        {
+            question: "How did young Kalam help support his family's income during his childhood?",
+            options: [
+                "By selling flowers at the temple",
+                "By collecting and selling tamarind seeds & distributing newspapers",
+                "By working at a fishing farm",
+                "By repairing bicycles"
+            ],
+            correct: 1,
+            explanation: "Kalam earned his early income by collecting tamarind seeds and delivering newspapers after his cousin needed a helping hand."
+        },
+        {
+            question: "What major project did Dr. Kalam lead as Project Director at ISRO?",
+            options: [
+                "Chandrayaan-1",
+                "Mangalyaan",
+                "SLV-3 (Satellite Launch Vehicle)",
+                "INSAT-1A"
+            ],
+            correct: 2,
+            explanation: "Dr. Kalam was the Project Director for India's first indigenous Satellite Launch Vehicle (SLV-3), which successfully deployed the Rohini satellite in 1980."
+        },
+        {
+            question: "Why is Dr. Kalam fondly remembered as the 'Missile Man of India'?",
+            options: [
+                "He invented gun powder",
+                "He developed the Agni and Prithvi missiles",
+                "He was a fighter jet pilot",
+                "He built the first submarine"
+            ],
+            correct: 1,
+            explanation: "He played a pivotal role in leading the Integrated Guided Missile Development Programme (IGMDP), developing Agni and Prithvi missiles."
+        },
+        {
+            question: "Dr. Abdul Kalam served as the _____ President of India.",
+            options: [
+                "9th",
+                "10th",
+                "11th",
+                "12th"
+            ],
+            correct: 2,
+            explanation: "Dr. Kalam served as the 11th President of India from 2002 to 2007, widely known as the 'People's President'."
+        }
+    ];
 
-    // Game Variables
-    const canvas = document.getElementById('game-canvas');
-    const ctx = canvas.getContext('2d');
-    
-    let isGameRunning = false;
+    let currentQuestionIndex = 0;
     let score = 0;
-    let highScore = 0;
-    let frameCount = 0;
-    let animationId;
+    let selectedOption = false;
 
-    // Player Object
-    const player = {
-        x: 100,
-        y: 350,
-        width: 40,
-        height: 40,
-        velocityY: 0,
-        gravity: 0.6,
-        jumpStrength: -10,
-        groundY: 380,
-        isGrounded: true
-    };
-
-    let obstacles = [];
-    let collectibles = [];
-
-    // Keydown Controls
-    window.addEventListener('keydown', (e) => {
-        if (e.code === 'Space' && isGameRunning) {
-            jump();
-        }
-    });
-
-    canvas.addEventListener('mousedown', () => {
-        if (isGameRunning) jump();
-    });
-
-    function jump() {
-        if (player.isGrounded) {
-            player.velocityY = player.jumpStrength;
-            player.isGrounded = false;
-        }
-    }
-
-    // Start / Restart Game
     function startGame() {
-        showScreen('game-screen');
-        isGameRunning = true;
+        currentQuestionIndex = 0;
         score = 0;
-        frameCount = 0;
-        player.y = player.groundY;
-        player.velocityY = 0;
-        player.isGrounded = true;
-        obstacles = [];
-        collectibles = [];
-        document.getElementById('score-display').innerText = score;
-
-        cancelAnimationFrame(animationId);
-        gameLoop();
+        document.getElementById('start-screen').classList.add('hidden');
+        document.getElementById('end-screen').classList.add('hidden');
+        document.getElementById('play-screen').classList.remove('hidden');
+        document.getElementById('total-q').innerText = chapterQuestions.length;
+        loadQuestion();
     }
 
-    // Main Game Loop
-    function gameLoop() {
-        if (!isGameRunning) return;
+    function loadQuestion() {
+        selectedOption = false;
+        const qData = chapterQuestions[currentQuestionIndex];
+        
+        // Update HUD & Progress
+        document.getElementById('current-q').innerText = currentQuestionIndex + 1;
+        document.getElementById('score').innerText = score;
+        const progressPercent = ((currentQuestionIndex) / chapterQuestions.length) * 100;
+        document.getElementById('progress-bar').style.width = progressPercent + '%';
 
-        update();
-        render();
+        // Load Text
+        document.getElementById('question').innerText = qData.question;
+        
+        // Reset Feedback & Next Button
+        const feedbackEl = document.getElementById('feedback');
+        feedbackEl.className = 'feedback';
+        feedbackEl.innerText = '';
+        document.getElementById('next-btn').classList.add('hidden');
 
-        frameCount++;
-        animationId = requestAnimationFrame(gameLoop);
-    }
+        // Load Options
+        const optionsContainer = document.getElementById('options');
+        optionsContainer.innerHTML = '';
 
-    // Update Game State
-    function update() {
-        // Player Gravity
-        player.velocityY += player.gravity;
-        player.y += player.velocityY;
-
-        if (player.y >= player.groundY) {
-            player.y = player.groundY;
-            player.velocityY = 0;
-            player.isGrounded = true;
-        }
-
-        // Spawn Obstacles (Storm Clouds)
-        if (frameCount % 120 === 0) {
-            obstacles.push({
-                x: canvas.width,
-                y: player.groundY - (Math.random() > 0.5 ? 0 : 60),
-                width: 40,
-                height: 40,
-                speed: 5
-            });
-        }
-
-        // Spawn Collectibles (Books / Rockets)
-        if (frameCount % 90 === 0) {
-            const isRocket = Math.random() > 0.7;
-            collectibles.push({
-                x: canvas.width,
-                y: player.groundY - 50 - Math.random() * 80,
-                width: 25,
-                height: 25,
-                type: isRocket ? 'rocket' : 'book',
-                points: isRocket ? 25 : 10,
-                speed: 4
-            });
-        }
-
-        // Move & Check Collisions for Obstacles
-        for (let i = obstacles.length - 1; i >= 0; i--) {
-            let obs = obstacles[i];
-            obs.x -= obs.speed;
-
-            // Collision Detection with Player
-            if (
-                player.x < obs.x + obs.width &&
-                player.x + player.width > obs.x &&
-                player.y < obs.y + obs.height &&
-                player.y + player.height > obs.y
-            ) {
-                gameOver();
-            }
-
-            if (obs.x + obs.width < 0) obstacles.splice(i, 1);
-        }
-
-        // Move & Check Collisions for Collectibles
-        for (let i = collectibles.length - 1; i >= 0; i--) {
-            let item = collectibles[i];
-            item.x -= item.speed;
-
-            if (
-                player.x < item.x + item.width &&
-                player.x + player.width > item.x &&
-                player.y < item.y + item.height &&
-                player.y + player.height > item.y
-            ) {
-                score += item.points;
-                document.getElementById('score-display').innerText = score;
-                collectibles.splice(i, 1);
-                continue;
-            }
-
-            if (item.x + item.width < 0) collectibles.splice(i, 1);
-        }
-    }
-
-    // Render Graphics
-    function render() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        // Ground Line
-        ctx.strokeStyle = '#00d2ff';
-        ctx.lineWidth = 3;
-        ctx.beginPath();
-        ctx.moveTo(0, player.groundY + player.height);
-        ctx.lineTo(canvas.width, player.groundY + player.height);
-        ctx.stroke();
-
-        // Draw Player (Represented by a stylized figure / bicycle)
-        ctx.fillStyle = '#ffca28';
-        ctx.fillRect(player.x, player.y, player.width, player.height);
-        // Player label
-        ctx.fillStyle = '#000';
-        ctx.font = '12px sans-serif';
-        ctx.fillText('Kalam', player.x + 3, player.y + 24);
-
-        // Draw Obstacles (Dark Clouds)
-        ctx.fillStyle = '#e74c3c';
-        obstacles.forEach(obs => {
-            ctx.beginPath();
-            ctx.arc(obs.x + 20, obs.y + 20, 20, 0, Math.PI * 2);
-            ctx.fill();
-        });
-
-        // Draw Collectibles
-        collectibles.forEach(item => {
-            if (item.type === 'book') {
-                ctx.fillStyle = '#2ecc71';
-                ctx.fillRect(item.x, item.y, item.width, item.height);
-            } else {
-                ctx.fillStyle = '#9b59b6';
-                ctx.beginPath();
-                ctx.arc(item.x + 12, item.y + 12, 12, 0, Math.PI * 2);
-                ctx.fill();
-            }
+        qData.options.forEach((optText, idx) => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.innerText = `${String.fromCharCode(65 + idx)}. ${optText}`;
+            btn.onclick = () => selectOption(idx, btn);
+            optionsContainer.appendChild(btn);
         });
     }
 
-    // Game Over Handler
-    function gameOver() {
-        isGameRunning = false;
-        if (score > highScore) {
-            highScore = score;
-            document.getElementById('highscore-display').innerText = highScore;
+    function selectOption(index, button) {
+        if (selectedOption) return;
+        selectedOption = true;
+
+        const qData = chapterQuestions[currentQuestionIndex];
+        const allButtons = document.querySelectorAll('.option-btn');
+        const feedbackEl = document.getElementById('feedback');
+
+        if (index === qData.correct) {
+            score += 20;
+            button.classList.add('correct');
+            feedbackEl.innerText = "✨ Correct! " + qData.explanation;
+            feedbackEl.classList.add('show', 'correct-text');
+        } else {
+            button.classList.add('wrong');
+            allButtons[qData.correct].classList.add('correct');
+            feedbackEl.innerText = "❌ Incorrect. " + qData.explanation;
+            feedbackEl.classList.add('show', 'wrong-text');
         }
-        document.getElementById('final-score').innerText = score;
-        showScreen('gameover-screen');
+
+        document.getElementById('score').innerText = score;
+        document.getElementById('next-btn').classList.remove('hidden');
+    }
+
+    function nextQuestion() {
+        currentQuestionIndex++;
+        if (currentQuestionIndex < chapterQuestions.length) {
+            loadQuestion();
+        } else {
+            showEndScreen();
+        }
+    }
+
+    function showEndScreen() {
+        document.getElementById('progress-bar').style.width = '100%';
+        document.getElementById('play-screen').classList.add('hidden');
+        document.getElementById('end-screen').classList.remove('hidden');
+
+        document.getElementById('final-stats').innerText = `Your Final Score: ${score} / ${chapterQuestions.length * 20}`;
+        
+        const msgEl = document.getElementById('revision-msg');
+        if (score === 100) {
+            msgEl.innerText = "🌟 Mastered! You have exceptional knowledge of Dr. Kalam's chapter!";
+        } else if (score >= 60) {
+            msgEl.innerText = "👍 Great job! You have a solid grasp of the chapter concepts.";
+        } else {
+            msgEl.innerText = "📚 Good attempt! Re-read the chapter to strengthen your understanding and try again.";
+        }
     }
 </script>
 
