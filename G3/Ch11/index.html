@@ -2,11 +2,15 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>एक अनोखा तरबूज़ - Square Watermelon Game</title>
     <!-- Phaser 3 CDN -->
     <script src="https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.min.js"></script>
     <style>
+        * {
+            box-sizing: border-box;
+            touch-action: none; /* स्क्रॉलिंग रोकने के लिए */
+        }
         body {
             margin: 0;
             padding: 0;
@@ -15,29 +19,32 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
+            width: 100vw;
+            overflow: hidden;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         #game-container {
-            width: 800px;
-            height: 600px;
+            width: 100%;
+            height: 100%;
+            max-width: 800px;
+            max-height: 600px;
             box-shadow: 0px 0px 25px rgba(0,0,0,0.8);
-            border-radius: 10px;
-            overflow: hidden;
             position: relative;
         }
         
-        /* Quiz Modal Overlay */
+        /* Responsive Quiz Modal Overlay */
         #quiz-modal {
             display: none;
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 480px;
+            width: 90%;
+            max-width: 480px;
             background: #ffffff;
             border: 4px solid #0055ff;
             border-radius: 12px;
-            padding: 24px;
+            padding: 20px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.6);
             text-align: center;
             z-index: 100;
@@ -45,10 +52,10 @@
         #quiz-modal h3 {
             margin-top: 0;
             color: #0055ff;
-            font-size: 22px;
+            font-size: 20px;
         }
         #quiz-modal p {
-            font-size: 17px;
+            font-size: 16px;
             color: #333;
             margin-bottom: 15px;
             line-height: 1.4;
@@ -61,13 +68,13 @@
             background-color: #f8f9fa;
             border: 2px solid #0055ff;
             border-radius: 8px;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: bold;
             color: #0055ff;
             cursor: pointer;
             transition: all 0.2s ease;
         }
-        .quiz-btn:hover {
+        .quiz-btn:hover, .quiz-btn:active {
             background-color: #0055ff;
             color: #ffffff;
         }
@@ -75,10 +82,10 @@
         /* On-Screen Feedback Message Box */
         #quiz-feedback {
             display: none;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: bold;
-            padding: 12px;
-            margin-top: 15px;
+            padding: 10px;
+            margin-top: 12px;
             border-radius: 8px;
             animation: fadeIn 0.3s ease-in-out;
         }
@@ -100,11 +107,12 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 450px;
+            width: 90%;
+            max-width: 450px;
             background: #ffffff;
             border: 4px solid #d32f2f;
             border-radius: 12px;
-            padding: 24px;
+            padding: 20px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.7);
             text-align: center;
             z-index: 110;
@@ -112,10 +120,10 @@
         #gameover-modal h2 {
             margin-top: 0;
             color: #d32f2f;
-            font-size: 28px;
+            font-size: 24px;
         }
         #gameover-modal p {
-            font-size: 20px;
+            font-size: 18px;
             color: #333;
             margin: 15px 0 25px 0;
             font-weight: bold;
@@ -128,11 +136,12 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 450px;
+            width: 90%;
+            max-width: 450px;
             background: #ffffff;
             border: 4px solid #2e7d32;
             border-radius: 12px;
-            padding: 24px;
+            padding: 20px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.7);
             text-align: center;
             z-index: 110;
@@ -140,10 +149,10 @@
         #win-modal h2 {
             margin-top: 0;
             color: #2e7d32;
-            font-size: 28px;
+            font-size: 24px;
         }
         #win-modal p {
-            font-size: 20px;
+            font-size: 18px;
             color: #333;
             margin: 15px 0 25px 0;
             font-weight: bold;
@@ -156,12 +165,12 @@
             color: #ffffff;
             border: none;
             border-radius: 8px;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: bold;
             cursor: pointer;
             transition: background-color 0.2s ease;
         }
-        .action-btn:hover {
+        .action-btn:hover, .action-btn:active {
             background-color: #003db3;
         }
 
@@ -204,11 +213,25 @@ const audioCache = {
     wrong_snd: new Audio('assets/wrong.mp3')
 };
 
+// Unlock Audio on First Mobile Touch
+let audioUnlocked = false;
+function unlockMobileAudio() {
+    if (audioUnlocked) return;
+    for (let key in audioCache) {
+        audioCache[key].play().then(() => {
+            audioCache[key].pause();
+            audioCache[key].currentTime = 0;
+        }).catch(() => {});
+    }
+    audioUnlocked = true;
+}
+window.addEventListener('touchstart', unlockMobileAudio, { once: true });
+window.addEventListener('click', unlockMobileAudio, { once: true });
+
 // --- Sound Player Helper (Phaser Sound + Audio Fallback) ---
 function playSound(soundKey, scene) {
     let played = false;
     
-    // 1. Try playing via Phaser Sound Manager
     if (scene && scene.sound && scene.sound.get(soundKey)) {
         try {
             scene.sound.play(soundKey);
@@ -218,12 +241,11 @@ function playSound(soundKey, scene) {
         }
     }
     
-    // 2. Fallback to HTML5 Audio Element
     if (!played && audioCache[soundKey]) {
         try {
             audioCache[soundKey].currentTime = 0;
             audioCache[soundKey].play().catch(() => {
-                playSynthSound(soundKey); // Synthetic Sound Fallback
+                playSynthSound(soundKey);
             });
         } catch (e) {
             playSynthSound(soundKey);
@@ -231,32 +253,37 @@ function playSound(soundKey, scene) {
     }
 }
 
-// Synthetic Sound Fallback (In case MP3 assets fail to load)
+// Synthetic Sound Fallback
 function playSynthSound(type) {
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    const now = ctx.currentTime;
+    try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        if (ctx.state === 'suspended') {
+            ctx.resume();
+        }
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        const now = ctx.currentTime;
 
-    if (type === 'correct_snd') {
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(523.25, now);
-        osc.frequency.setValueAtTime(659.25, now + 0.1);
-        gain.gain.setValueAtTime(0.15, now);
-        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
-        osc.start(now);
-        osc.stop(now + 0.25);
-    } else if (type === 'wrong_snd') {
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(180, now);
-        osc.frequency.setValueAtTime(120, now + 0.1);
-        gain.gain.setValueAtTime(0.15, now);
-        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
-        osc.start(now);
-        osc.stop(now + 0.25);
-    }
+        if (type === 'correct_snd') {
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(523.25, now);
+            osc.frequency.setValueAtTime(659.25, now + 0.1);
+            gain.gain.setValueAtTime(0.15, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+            osc.start(now);
+            osc.stop(now + 0.25);
+        } else if (type === 'wrong_snd') {
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(180, now);
+            osc.frequency.setValueAtTime(120, now + 0.1);
+            gain.gain.setValueAtTime(0.15, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+            osc.start(now);
+            osc.stop(now + 0.25);
+        }
+    } catch(e) {}
 }
 
 // --- 10 Chapter Questions Data ---
@@ -339,7 +366,6 @@ class LogoScene extends Phaser.Scene {
             ease: 'Power2'
         });
 
-        // 5-second display delay
         this.time.delayedCall(5000, () => {
             this.cameras.main.fadeOut(500, 0, 0, 0);
             this.cameras.main.once('camerafadeoutcomplete', () => {
@@ -358,36 +384,37 @@ class InstructionScene extends Phaser.Scene {
     create() {
         this.cameras.main.setBackgroundColor('#1a2634');
 
-        this.add.text(400, 70, 'एक अनोखा तरबूज़', {
-            fontSize: '34px', color: '#4da6ff', fontStyle: 'bold'
+        this.add.text(400, 60, 'एक अनोखा तरबूज़', {
+            fontSize: '32px', color: '#4da6ff', fontStyle: 'bold'
         }).setOrigin(0.5);
 
-        this.add.text(400, 120, 'खेलने के नियम (Rules & Instructions)', {
-            fontSize: '22px', color: '#ffffff', fontStyle: 'bold'
+        this.add.text(400, 110, 'खेलने के नियम (Rules & Instructions)', {
+            fontSize: '20px', color: '#ffffff', fontStyle: 'bold'
         }).setOrigin(0.5);
 
         const rulesText = 
-            "1. ⬅️ ➡️ Arrow Keys से चौकोर सांचे को चलाएं।\n\n" +
+            "1. 📱 स्क्रीन पर Touch / Slide करके सांचा चलाएं।\n\n" +
             "2. 🍉 तरबूज़ पकड़ने पर +10 अंक मिलेंगे।\n\n" +
             "3. ❓ खेल शुरू होते ही पहला प्रश्न आएगा!\n\n" +
             "4. ✅ सही उत्तर: +20 अंक | ❌ गलत उत्तर: -30 अंक\n\n" +
             "5. 🏆 300 अंक हासिल करने पर आप जीत जाएँगे!";
 
         const bgRect = this.add.graphics();
-        bgRect.fillStyle(0x0a192f, 0.85); // Blue background fill
-        bgRect.lineStyle(3, 0x0055ff, 1);  // Blue border
-        bgRect.fillRoundedRect(80, 160, 640, 290, 15);
-        bgRect.strokeRoundedRect(80, 160, 640, 290, 15);
+        bgRect.fillStyle(0x0a192f, 0.85);
+        bgRect.lineStyle(3, 0x0055ff, 1);
+        bgRect.fillRoundedRect(60, 150, 680, 300, 15);
+        bgRect.strokeRoundedRect(60, 150, 680, 300, 15);
 
-        this.add.text(110, 185, rulesText, {
+        this.add.text(90, 175, rulesText, {
             fontSize: '18px', color: '#f0f0f0', lineSpacing: 8
         });
 
         const startBtn = this.add.text(400, 500, '👉 खेल शुरू करें (Start Game)', {
-            fontSize: '22px', color: '#ffffff', backgroundColor: '#0055ff', padding: { x: 20, y: 10 }
+            fontSize: '22px', color: '#ffffff', backgroundColor: '#0055ff', padding: { x: 20, y: 12 }
         }).setOrigin(0.5).setInteractive({ useHandCursor: true });
 
         startBtn.on('pointerdown', () => {
+            unlockMobileAudio();
             globalScore = 0;
             globalLives = 3;
             this.scene.start('GameScene', { triggerFirstQuiz: true });
@@ -408,7 +435,6 @@ class GameScene extends Phaser.Scene {
     }
 
     preload() {
-        // Load Audio Assets via Phaser
         this.load.audio('correct_snd', 'assets/correct.mp3');
         this.load.audio('wrong_snd', 'assets/wrong.mp3');
 
@@ -447,7 +473,7 @@ class GameScene extends Phaser.Scene {
         this.add.image(400, 300, 'bg');
 
         this.scoreText = this.add.text(20, 20, 'Score: ' + globalScore + ' / 300', { fontSize: '22px', color: '#000', fontStyle: 'bold' });
-        this.livesText = this.add.text(670, 20, 'Lives: ❤️ ' + globalLives, { fontSize: '22px', color: '#d32f2f', fontStyle: 'bold' });
+        this.livesText = this.add.text(650, 20, 'Lives: ❤️ ' + globalLives, { fontSize: '22px', color: '#d32f2f', fontStyle: 'bold' });
 
         this.player = this.physics.add.sprite(400, 520, 'square_mold');
         this.player.setCollideWorldBounds(true);
@@ -457,6 +483,18 @@ class GameScene extends Phaser.Scene {
         this.obstacles = this.physics.add.group();
 
         this.cursors = this.input.keyboard.createCursorKeys();
+
+        // --- Touch Control Handling ---
+        this.input.on('pointerdown', (pointer) => {
+            unlockMobileAudio();
+            this.player.x = Phaser.Math.Clamp(pointer.x, 40, 760);
+        });
+
+        this.input.on('pointermove', (pointer) => {
+            if (pointer.isDown) {
+                this.player.x = Phaser.Math.Clamp(pointer.x, 40, 760);
+            }
+        });
 
         this.spawnTimerMelon = this.time.addEvent({
             delay: 1200,
@@ -495,6 +533,7 @@ class GameScene extends Phaser.Scene {
     }
 
     update() {
+        // Keyboard Controls Fallback
         if (this.cursors.left.isDown) {
             this.player.setVelocityX(-420);
         } else if (this.cursors.right.isDown) {
@@ -530,13 +569,11 @@ class GameScene extends Phaser.Scene {
         globalScore += 10;
         this.scoreText.setText('Score: ' + globalScore + ' / 300');
 
-        // Check Win Condition
         if (globalScore >= 300) {
             this.triggerWin();
             return;
         }
 
-        // Trigger Quiz every 50 points
         if (globalScore >= this.nextQuizThreshold) {
             this.nextQuizThreshold += 50;
             this.triggerQuiz();
@@ -653,11 +690,15 @@ class GameScene extends Phaser.Scene {
     }
 }
 
-// --- Phaser Config ---
+// --- Phaser Config (Mobile Friendly Auto-Scale) ---
 const config = {
     type: Phaser.AUTO,
-    width: 800,
-    height: 600,
+    scale: {
+        mode: Phaser.Scale.FIT,
+        autoCenter: Phaser.Scale.CENTER_BOTH,
+        width: 800,
+        height: 600
+    },
     parent: 'game-container',
     physics: {
         default: 'arcade',
