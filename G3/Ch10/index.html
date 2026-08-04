@@ -218,7 +218,6 @@
     <!-- 1. Intro Screen (ONLY LOGO) -->
     <div id="intro-screen" class="screen active" onclick="goToInstructions()">
       <img src="assets/logo.png" alt="Innovine Logo" class="only-logo" onerror="this.src='https://via.placeholder.com/250x100?text=Innovine+Logo'">
-      
     </div>
 
     <!-- 2. Instructions Screen (5-Second Countdown) -->
@@ -251,6 +250,15 @@
   </div>
 
   <script>
+    // Sound Effects Setup
+    const soundCorrect = new Audio('assets/correct.mp3');
+    const soundWrong = new Audio('assets/wrong.mp3');
+
+    function playAudio(audioObj) {
+      audioObj.currentTime = 0;
+      audioObj.play().catch(e => console.log("Audio play error: ", e));
+    }
+
     let currentQuestion = 0;
     let score = 0;
     let timerInterval;
@@ -395,6 +403,9 @@
     function handleAnswer(isCorrect) {
       if (isCorrect) {
         score++;
+        playAudio(soundCorrect);
+      } else {
+        playAudio(soundWrong);
       }
 
       currentQuestion++;
