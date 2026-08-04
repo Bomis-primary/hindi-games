@@ -56,7 +56,7 @@
             display: flex;
         }
 
-        /* Splash Screen - Clean Logo Only */
+        /* Splash Screen */
         #screen-splash {
             background: #ffffff;
             display: flex;
@@ -238,7 +238,7 @@
 
     <!-- Screen 2: Instructions -->
     <div id="screen-instructions" class="screen">
-      
+        <img src="assets/logo.png" alt="Innovine Logo" class="instruction-logo">
 
         <h2>खेल के नियम</h2>
         <p class="subtitle" style="color:#666; margin-top:3px; font-weight: 500;">अध्याय 9 - बड़े सपनों वाला बच्चा</p>
@@ -285,7 +285,16 @@
 </div>
 
 <script>
-    // 1. Splash Screen Timer (5 Seconds displaying logo only)
+    // Sound Effects Setup
+    const soundCorrect = new Audio('assets/correct.mp3');
+    const soundWrong = new Audio('assets/wrong.mp3');
+
+    function playSound(audioObj) {
+        audioObj.currentTime = 0;
+        audioObj.play().catch(e => console.log("Audio play prevented: ", e));
+    }
+
+    // Splash Screen Timer (5 Seconds)
     setTimeout(() => {
         switchScreen('screen-instructions');
     }, 5000);
@@ -322,7 +331,6 @@
     const gameCanvas = document.getElementById('game-canvas');
     const catcher = document.getElementById('catcher');
 
-    // Fisher-Yates Shuffle algorithm to randomize questions on each replay
     function shuffleArray(array) {
         let shuffled = [...array];
         for (let i = shuffled.length - 1; i > 0; i--) {
@@ -338,7 +346,6 @@
     }
 
     function startGame() {
-        // Randomly pick 5 questions from the pool of 15
         currentGameQuestions = shuffleArray(masterQuestionPool).slice(0, 5);
 
         currentLevel = 0;
@@ -462,6 +469,7 @@
                         filledLetters[nextNeededIndex] = item.text;
                         document.getElementById('slot-' + nextNeededIndex).innerText = item.text;
                         score += 10;
+                        playSound(soundCorrect);
                         showFeedback("⚡ सही अक्षर! +10", true);
 
                         if (filledLetters.findIndex(val => val === '') === -1) {
@@ -469,6 +477,7 @@
                         }
                     } else {
                         score = Math.max(0, score - 5);
+                        playSound(soundWrong);
                         showFeedback("❌ गलत अक्षर! -5", false);
                     }
 
