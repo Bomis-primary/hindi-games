@@ -19,7 +19,7 @@
         }
         #game-container {
             width: 800px;
-            height: 610px;
+            height: 600px;
             box-shadow: 0px 0px 25px rgba(0,0,0,0.8);
             border-radius: 10px;
             overflow: hidden;
@@ -35,7 +35,7 @@
             transform: translate(-50%, -50%);
             width: 480px;
             background: #ffffff;
-            border: 4px solid #0055ff; /* Blue Border */
+            border: 4px solid #0055ff;
             border-radius: 12px;
             padding: 24px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.6);
@@ -44,7 +44,7 @@
         }
         #quiz-modal h3 {
             margin-top: 0;
-            color: #0055ff; /* Blue Title */
+            color: #0055ff;
             font-size: 22px;
         }
         #quiz-modal p {
@@ -59,7 +59,7 @@
             padding: 12px;
             margin: 8px 0;
             background-color: #f8f9fa;
-            border: 2px solid #0055ff; /* Blue Button Border */
+            border: 2px solid #0055ff;
             border-radius: 8px;
             font-size: 16px;
             font-weight: bold;
@@ -120,7 +120,36 @@
             margin: 15px 0 25px 0;
             font-weight: bold;
         }
-        .restart-btn {
+
+        /* Win Modal Styling */
+        #win-modal {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 450px;
+            background: #ffffff;
+            border: 4px solid #2e7d32;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+            text-align: center;
+            z-index: 110;
+        }
+        #win-modal h2 {
+            margin-top: 0;
+            color: #2e7d32;
+            font-size: 28px;
+        }
+        #win-modal p {
+            font-size: 20px;
+            color: #333;
+            margin: 15px 0 25px 0;
+            font-weight: bold;
+        }
+
+        .action-btn {
             display: inline-block;
             padding: 12px 25px;
             background-color: #0055ff;
@@ -132,7 +161,7 @@
             cursor: pointer;
             transition: background-color 0.2s ease;
         }
-        .restart-btn:hover {
+        .action-btn:hover {
             background-color: #003db3;
         }
 
@@ -157,12 +186,19 @@
     <div id="gameover-modal">
         <h2>🎮 खेल समाप्त! (Game Over)</h2>
         <p id="final-score-text">आपका कुल अंक: 0</p>
-        <button id="restart-btn" class="restart-btn">🔄 पुनः प्रयास करें (Try Again)</button>
+        <button id="restart-btn" class="action-btn">🔄 पुनः प्रयास करें (Try Again)</button>
+    </div>
+
+    <!-- On-Screen Win Modal -->
+    <div id="win-modal">
+        <h2>🎉 बधाई हो! आप जीत गए! (You Win!)</h2>
+        <p id="win-score-text">आपने 300 अंक प्राप्त कर लिए हैं!</p>
+        <button id="win-restart-btn" class="action-btn">🔄 दोबारा खेलें (Play Again)</button>
     </div>
 </div>
 
 <script>
-// --- Chapter Questions Data ---
+// --- 10 Chapter Questions Data ---
 const chapterQuestions = [
     {
         question: "गोलू और दादाजी तरबूज़ को कौन-सा नया आकार देना चाहते थे?",
@@ -175,13 +211,43 @@ const chapterQuestions = [
         correct: 0
     },
     {
-        question: "सांचे में बंद करने के बाद भी पौधों को बढ़ने के लिए क्या चाहिए?",
+        question: "सांचे में बंद करने के बाद भी पौधों को बढ़ने के लिए क्या आवश्यक है?",
         options: ["केवल पानी", "केवल हवा", "हवा, पानी और धूप", "कुछ भी नहीं"],
         correct: 2
     },
     {
         question: "चौकोर तरबूज़ बनाने का मुख्य व्यावहारिक लाभ क्या है?",
         options: ["वे ज़्यादा मीठे होते हैं", "उन्हें रखना और ले जाना आसान होता है", "वे जल्दी पकते हैं", "उनका रंग बदल जाता है"],
+        correct: 1
+    },
+    {
+        question: "तरबूज़ को सांचे में किस अवस्था में रखा जाता है?",
+        options: ["पकने के बाद", "जब तरबूज़ छोटा और कच्चा होता है", "फूल आने से पहले", "पेड़ से तोड़ने के बाद"],
+        correct: 1
+    },
+    {
+        question: "पारदर्शी (transparent) सांचे का प्रयोग क्यों किया गया?",
+        options: ["ताकि धूप अंदर पहुँच सके", "ताकि वह सुंदर दिखे", "ताकि वह हल्का हो", "ताकि पानी बाहर न निकले"],
+        correct: 0
+    },
+    {
+        question: "गोलू के साथ खेत में प्रयोग कौन कर रहा था?",
+        options: ["उसका दोस्त", "उसके दादाजी", "उसके अध्यापक", "उसका भाई"],
+        correct: 1
+    },
+    {
+        question: "चौकोर तरबूज़ की मांग बाज़ार में क्यों अधिक होती है?",
+        options: ["फ्रिज में आसानी से समा जाने के कारण", "इसका स्वाद अलग होने के कारण", "यह सस्ता होने के कारण", "यह भारी होने के कारण"],
+        correct: 0
+    },
+    {
+        question: "कहानी 'एक अनोखा तरबूज़' से हमें क्या प्रेरणा मिलती है?",
+        options: ["खेती न करने की", "नवाचार और नए विचारों को अपनाने की", "केवल गोल फल उगाने की", "समय बर्बाद करने की"],
+        correct: 1
+    },
+    {
+        question: "सांचा किस सामग्री का बना होना चाहिए ताकि तरबूज़ को मजबूत आकार मिले?",
+        options: ["कागज़ का", "मजबूत पारदर्शी प्लास्टिक या कांच का", "कपड़े का", "पत्तियों का"],
         correct: 1
     }
 ];
@@ -212,7 +278,7 @@ class LogoScene extends Phaser.Scene {
             ease: 'Power2'
         });
 
-        // 5-second logo display time
+        // 5-second display delay
         this.time.delayedCall(5000, () => {
             this.cameras.main.fadeOut(500, 0, 0, 0);
             this.cameras.main.once('camerafadeoutcomplete', () => {
@@ -222,7 +288,7 @@ class LogoScene extends Phaser.Scene {
     }
 }
 
-// --- Scene 2: Instructions Screen (Blue Theme Box) ---
+// --- Scene 2: Instructions Screen ---
 class InstructionScene extends Phaser.Scene {
     constructor() {
         super({ key: 'InstructionScene' });
@@ -244,11 +310,10 @@ class InstructionScene extends Phaser.Scene {
             "2. 🍉 तरबूज़ पकड़ने पर +10 अंक मिलेंगे।\n\n" +
             "3. ❓ खेल शुरू होते ही पहला प्रश्न आएगा!\n\n" +
             "4. ✅ सही उत्तर: +20 अंक | ❌ गलत उत्तर: -30 अंक\n\n" +
-            "5. 🎯 हर 50 अंक पर नया प्रश्न पूछा जाएगा।";
+            "5. 🏆 300 अंक हासिल करने पर आप जीत जाएँगे!";
 
-        // Changed box color to BLUE (#0055ff / dark transparent blue background)
         const bgRect = this.add.graphics();
-        bgRect.fillStyle(0x0a192f, 0.85); // Dark blue box fill
+        bgRect.fillStyle(0x0a192f, 0.85); // Blue background fill
         bgRect.lineStyle(3, 0x0055ff, 1);  // Blue border
         bgRect.fillRoundedRect(80, 160, 640, 290, 15);
         bgRect.strokeRoundedRect(80, 160, 640, 290, 15);
@@ -300,7 +365,6 @@ class GameScene extends Phaser.Scene {
         melGfx.strokeCircle(20, 20, 20);
         melGfx.generateTexture('watermelon', 40, 40);
 
-        // Mold Sprite with Blue Outline
         const moldGfx = this.make.graphics({ x: 0, y: 0, add: false });
         moldGfx.lineStyle(4, 0x0055FF, 1);
         moldGfx.fillStyle(0xFFFFFF, 0.4);
@@ -317,7 +381,7 @@ class GameScene extends Phaser.Scene {
     create() {
         this.add.image(400, 300, 'bg');
 
-        this.scoreText = this.add.text(20, 20, 'Score: ' + globalScore, { fontSize: '22px', color: '#000', fontStyle: 'bold' });
+        this.scoreText = this.add.text(20, 20, 'Score: ' + globalScore + ' / 300', { fontSize: '22px', color: '#000', fontStyle: 'bold' });
         this.livesText = this.add.text(670, 20, 'Lives: ❤️ ' + globalLives, { fontSize: '22px', color: '#d32f2f', fontStyle: 'bold' });
 
         this.player = this.physics.add.sprite(400, 520, 'square_mold');
@@ -346,16 +410,17 @@ class GameScene extends Phaser.Scene {
         this.physics.add.overlap(this.player, this.watermelons, this.catchWatermelon, null, this);
         this.physics.add.overlap(this.player, this.obstacles, this.hitObstacle, null, this);
 
-        // Restart button click handler for Game Over modal
+        // Restart buttons handlers
         document.getElementById('restart-btn').onclick = () => {
             document.getElementById('gameover-modal').style.display = 'none';
-            globalScore = 0;
-            globalLives = 3;
-            this.nextQuizThreshold = 50;
-            this.scene.restart({ triggerFirstQuiz: true });
+            this.resetGame();
         };
 
-        // Trigger First Question immediately when starting
+        document.getElementById('win-restart-btn').onclick = () => {
+            document.getElementById('win-modal').style.display = 'none';
+            this.resetGame();
+        };
+
         if (this.shouldTriggerFirstQuiz) {
             this.shouldTriggerFirstQuiz = false;
             this.time.delayedCall(300, () => {
@@ -397,7 +462,13 @@ class GameScene extends Phaser.Scene {
     catchWatermelon(player, melon) {
         melon.destroy();
         globalScore += 10;
-        this.scoreText.setText('Score: ' + globalScore);
+        this.scoreText.setText('Score: ' + globalScore + ' / 300');
+
+        // Check Win Condition
+        if (globalScore >= 300) {
+            this.triggerWin();
+            return;
+        }
 
         // Trigger Quiz every 50 points
         if (globalScore >= this.nextQuizThreshold) {
@@ -427,6 +498,18 @@ class GameScene extends Phaser.Scene {
         
         finalScoreText.innerText = "आपका कुल अंक (Total Score): " + globalScore;
         gameOverModal.style.display = 'block';
+    }
+
+    triggerWin() {
+        this.physics.pause();
+        this.spawnTimerMelon.paused = true;
+        this.spawnTimerObstacle.paused = true;
+
+        const winModal = document.getElementById('win-modal');
+        const winScoreText = document.getElementById('win-score-text');
+
+        winScoreText.innerText = "अद्भुत! आपने " + globalScore + " अंक प्राप्त करके खेल जीत लिया है!";
+        winModal.style.display = 'block';
     }
 
     triggerQuiz() {
@@ -466,12 +549,16 @@ class GameScene extends Phaser.Scene {
                     feedbackDiv.innerText = "❌ गलत उत्तर! (-30 अंक)";
                 }
 
-                this.scoreText.setText('Score: ' + globalScore);
+                this.scoreText.setText('Score: ' + globalScore + ' / 300');
                 feedbackDiv.style.display = 'block';
 
                 setTimeout(() => {
                     modal.style.display = 'none';
-                    this.resumeGame();
+                    if (globalScore >= 300) {
+                        this.triggerWin();
+                    } else {
+                        this.resumeGame();
+                    }
                 }, 1500);
             };
 
@@ -485,6 +572,13 @@ class GameScene extends Phaser.Scene {
         this.physics.resume();
         this.spawnTimerMelon.paused = false;
         this.spawnTimerObstacle.paused = false;
+    }
+
+    resetGame() {
+        globalScore = 0;
+        globalLives = 3;
+        this.nextQuizThreshold = 50;
+        this.scene.restart({ triggerFirstQuiz: true });
     }
 }
 
