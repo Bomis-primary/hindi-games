@@ -326,10 +326,28 @@
     </div>
 
     <script>
-        // Web Audio API Sound System
+        // --- Audio Assets Configuration ---
+        const audioFiles = {
+            correct: new Audio('assets/correct.mp3'),
+            wrong: new Audio('assets/wrong.mp3')
+        };
+
+        // Fallback Web Audio API System (In case MP3 files are missing or blocked)
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
         function playSound(type) {
+            // Play MP3 if defined
+            if (audioFiles[type]) {
+                audioFiles[type].currentTime = 0;
+                audioFiles[type].play().catch(() => {
+                    playSynthSound(type); // Fallback to synthetic sound if MP3 fails
+                });
+            } else {
+                playSynthSound(type);
+            }
+        }
+
+        function playSynthSound(type) {
             if (audioCtx.state === 'suspended') {
                 audioCtx.resume();
             }
@@ -337,7 +355,6 @@
             const gain = audioCtx.createGain();
             osc.connect(gain);
             gain.connect(audioCtx.destination);
-
             const now = audioCtx.currentTime;
 
             if (type === 'select') {
