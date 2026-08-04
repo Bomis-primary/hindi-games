@@ -145,6 +145,31 @@
             background: #e9d5ff;
         }
 
+        /* LEVEL 2: DIFFERENT COLOUR THEME */
+        .wheel-container.level-two-theme .center-hub {
+            background: #0f9f96;
+            box-shadow: 0 4px 10px rgba(15, 159, 150, 0.28);
+        }
+
+        .wheel-container.level-two-theme .spoke-node {
+            background: #ecfeff;
+            border-color: #2dd4bf;
+            color: #134e4a;
+        }
+
+        .wheel-container.level-two-theme .spoke-node:hover,
+        .wheel-container.level-two-theme .spoke-node:focus-visible {
+            background: #ccfbf1;
+        }
+
+        .target-box.level-two-target {
+            color: #0f766e;
+        }
+
+        .target-box.level-two-target #target-word-text {
+            color: #0f9f96 !important;
+        }
+
         .target-box {
             font-size: 24px;
             margin: 20px;
@@ -258,21 +283,21 @@
         <!-- LEVEL 1: CYCLIC CHAKRA BUILDING -->
         <div id="wheel-level">
             <p style="color: #64748b; font-weight: 500;">बीच वाले अक्षर को बाहर के अक्षरों से जोड़कर सही शब्द पर क्लिक करें!</p>
-            <div class="target-box">बनाएँ: <span id="target-word-text" style="color:#a855f7; font-size:28px;">सीख</span></div>
+            <div class="target-box" id="target-box">बनाएँ: <span id="target-word-text" style="color:#a855f7; font-size:28px;">सीख</span></div>
             
-            <div class="wheel-container">
-                <div class="center-hub">सी</div>
-                <!-- Spoke options rendered programmatically around the perimeter -->
-                <div class="spoke-node" style="top:0; left:110px;" onclick="checkWheelNode('ख')">ख</div>
-                <div class="spoke-node" style="top:50px; right:10px;" onclick="checkWheelNode('टी')">टी</div>
-                <div class="spoke-node" style="top:170px; right:10px;" onclick="checkWheelNode('पी')">पी</div>
-                <div class="spoke-node" style="top:220px; left:110px;" onclick="checkWheelNode('धा')">धा</div>
-                <div class="spoke-node" style="top:170px; left:10px;" onclick="checkWheelNode('ना')">ना</div>
-                <div class="spoke-node" style="top:50px; left:10px;" onclick="checkWheelNode('मा')">मा</div>
+            <div class="wheel-container" id="wheel-container">
+                <div class="center-hub" id="wheel-center">सी</div>
+                <!-- Spoke options are updated for every question. -->
+                <button class="spoke-node" id="wheel-node-0" type="button" style="top:0; left:110px;">ख</button>
+                <button class="spoke-node" id="wheel-node-1" type="button" style="top:50px; right:10px;">टी</button>
+                <button class="spoke-node" id="wheel-node-2" type="button" style="top:170px; right:10px;">पी</button>
+                <button class="spoke-node" id="wheel-node-3" type="button" style="top:220px; left:110px;">धा</button>
+                <button class="spoke-node" id="wheel-node-4" type="button" style="top:170px; left:10px;">ना</button>
+                <button class="spoke-node" id="wheel-node-5" type="button" style="top:50px; left:10px;">मा</button>
             </div>
         </div>
 
-        <!-- LEVEL 2: BUTTERFLY WING SORTING -->
+        <!-- LEVEL 3: BUTTERFLY WING SORTING -->
         <div id="butterfly-level">
             <p style="color: #64748b; font-weight: 500; margin-bottom: 15px;">शब्दों को सही पंख पर ड्रैग करके छोड़ें (Drag & Drop)!</p>
             
@@ -301,13 +326,22 @@
 
     <script>
         // Data derived directly from Chapter 5 PDF
-        const wheelTargets = [
-            { node: "ख", word: "सीख" }, //
-            { node: "टी", word: "सीटी" }, //[cite: 2]
-            { node: "पी", word: "सीपी" }, //[cite: 2]
-            { node: "धा", word: "सीधा" }, //[cite: 2]
-            { node: "ना", word: "सीना" }, //[cite: 2]
-            { node: "मा", word: "सीमा" }  //[cite: 2]
+        const levelOneWheelTargets = [
+            { center: "सी", node: "ख", word: "सीख", options: ["ख", "टी", "पी", "धा", "ना", "मा"] },
+            { center: "सी", node: "टी", word: "सीटी", options: ["ख", "टी", "पी", "धा", "ना", "मा"] },
+            { center: "सी", node: "पी", word: "सीपी", options: ["ख", "टी", "पी", "धा", "ना", "मा"] },
+            { center: "सी", node: "धा", word: "सीधा", options: ["ख", "टी", "पी", "धा", "ना", "मा"] },
+            { center: "सी", node: "ना", word: "सीना", options: ["ख", "टी", "पी", "धा", "ना", "मा"] },
+            { center: "सी", node: "मा", word: "सीमा", options: ["ख", "टी", "पी", "धा", "ना", "मा"] }
+        ];
+
+        const levelTwoWheelTargets = [
+            { center: "दी", node: "प", word: "दीप", options: ["प", "पक", "या", "दी", "वार", "मक"] },
+            { center: "दी", node: "पक", word: "दीपक", options: ["प", "पक", "या", "दी", "वार", "मक"] },
+            { center: "दी", node: "या", word: "दीया", options: ["प", "पक", "या", "दी", "वार", "मक"] },
+            { center: "दी", node: "दी", word: "दीदी", options: ["प", "पक", "या", "दी", "वार", "मक"] },
+            { center: "दी", node: "वार", word: "दीवार", options: ["प", "पक", "या", "दी", "वार", "मक"] },
+            { center: "दी", node: "मक", word: "दीमक", options: ["प", "पक", "या", "दी", "वार", "मक"] }
         ];
 
         // Separation lists based on direct page categories[cite: 2]
@@ -318,6 +352,7 @@
 
         let gameScore = 0;
         let wheelIndex = 0;
+        let activeWheelTargets = levelOneWheelTargets;
         let activeDraggedItem = null;
         let pendingSortCount = sortingWords.length;
 
@@ -343,22 +378,72 @@
             track.play().catch(() => {});
         }
 
+        function shuffleArray(items) {
+            const copy = [...items];
+            for (let i = copy.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [copy[i], copy[j]] = [copy[j], copy[i]];
+            }
+            return copy;
+        }
+
+        function shuffleOutOfSequence(items) {
+            const original = items.map(item => typeof item === 'string' ? item : item.word).join('|');
+            let mixed = shuffleArray(items);
+            let mixedKey = mixed.map(item => typeof item === 'string' ? item : item.word).join('|');
+            if (mixedKey === original && mixed.length > 1) {
+                mixed = mixed.slice(1).concat(mixed[0]);
+            }
+            return mixed;
+        }
+
         // --- LEVEL 1 ENGINE ---
         function initWheelLevel() {
+            activeWheelTargets = levelOneWheelTargets;
             wheelIndex = 0;
+            document.getElementById('stage-indicator').innerText = "स्तर १: शब्द चक्र बनाओ";
+            document.getElementById('wheel-container').classList.remove('level-two-theme');
+            document.getElementById('target-box').classList.remove('level-two-target');
+            updateWheelTarget();
+        }
+
+        function startSecondWheelLevel() {
+            // Level 2 intentionally starts in a random order on every playthrough.
+            activeWheelTargets = shuffleOutOfSequence(levelTwoWheelTargets);
+            wheelIndex = 0;
+            document.getElementById('stage-indicator').innerText = "स्तर २: कठिन शब्द चक्र";
+            document.getElementById('wheel-container').classList.add('level-two-theme');
+            document.getElementById('target-box').classList.add('level-two-target');
             updateWheelTarget();
         }
 
         function updateWheelTarget() {
-            if (wheelIndex >= wheelTargets.length) {
-                setTimeout(startButterflyLevel, 1000);
+            if (wheelIndex >= activeWheelTargets.length) {
+                if (activeWheelTargets === levelOneWheelTargets) {
+                    setTimeout(startSecondWheelLevel, 1000);
+                } else {
+                    setTimeout(startButterflyLevel, 1000);
+                }
                 return;
             }
-            document.getElementById('target-word-text').innerText = wheelTargets[wheelIndex].word;
+
+            const current = activeWheelTargets[wheelIndex];
+            document.getElementById('target-word-text').innerText = current.word;
+            document.getElementById('wheel-center').innerText = current.center;
+
+            const visibleOptions = current.center === "दी"
+                ? shuffleOutOfSequence(current.options)
+                : current.options;
+
+            visibleOptions.forEach((option, index) => {
+                const node = document.getElementById(`wheel-node-${index}`);
+                node.innerText = option;
+                node.onclick = () => checkWheelNode(option);
+            });
         }
 
         function checkWheelNode(clickedNode) {
-            const expected = wheelTargets[wheelIndex].node;
+            const expected = activeWheelTargets[wheelIndex].node;
             if (clickedNode === expected) {
                 triggerAudio(true);
                 gameScore += 10;
@@ -372,11 +457,11 @@
             }
         }
 
-        // --- LEVEL 2 ENGINE ---
+        // --- LEVEL 3 ENGINE ---
         function startButterflyLevel() {
             document.getElementById('wheel-level').style.display = 'none';
             document.getElementById('butterfly-level').style.display = 'block';
-            document.getElementById('stage-indicator').innerText = "स्तर २: तितली पंख सॉर्टर";
+            document.getElementById('stage-indicator').innerText = "स्तर ३: तितली पंख सॉर्टर";
 
             const pool = document.getElementById('sorting-pool');
             pool.innerHTML = "";
