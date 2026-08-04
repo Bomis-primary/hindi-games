@@ -3,17 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>जादुई दरवाज़ा - चंद्रबिंदु और विसर्ग</title>
+    <title>जादुई दरवाज़ा</title>
+    <!-- Canvas Confetti Library for Fireworks -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Rozha+One&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&display=swap');
 
         :root {
-            --bg-gradient: linear-gradient(135deg, #ffdee9 0%, #b5fffc 100%);
-            --card-bg: rgba(255, 255, 255, 0.85);
-            --primary-purple: #8b5cf6;
-            --pink-accent: #ff6b8b;
-            --mint-green: #2dd4bf;
-            --yellow-glow: #fbbf24;
+            --bg-gradient: linear-gradient(135deg, #ffecd2 0%, #fcb69f 50%, #ffdde1 100%);
+            --card-bg: #ffffff;
+            --pink-accent: #ff758c;
+            --purple-accent: #a855f7;
+            --yellow-glow: #fde047;
+            --sky-blue: #38bdf8;
+            --mint-green: #34d399;
         }
 
         * {
@@ -23,7 +26,7 @@
             user-select: none;
             -webkit-user-select: none;
             touch-action: manipulation;
-            font-family: 'Fredoka', 'Segoe UI', Tahoma, sans-serif;
+            font-family: 'Fredoka', 'Segoe UI', sans-serif;
         }
 
         body {
@@ -37,24 +40,24 @@
 
         #app-container {
             width: 100%;
-            max-width: 500px;
+            max-width: 480px;
             height: 100vh;
             max-height: 850px;
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             position: relative;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            box-shadow: 0 20px 40px rgba(255, 117, 140, 0.2);
             display: flex;
             flex-direction: column;
             overflow: hidden;
         }
 
-        @media (min-height: 600px) and (min-width: 500px) {
+        @media (min-height: 600px) and (min-width: 480px) {
             #app-container {
                 height: 92vh;
-                border-radius: 32px;
-                border: 4px solid rgba(255, 255, 255, 0.9);
+                border-radius: 36px;
+                border: 6px solid rgba(255, 255, 255, 0.9);
             }
         }
 
@@ -76,7 +79,7 @@
             display: flex !important;
         }
 
-        /* Splash Screen */
+        /* Screen 1: Splash Screen */
         #splash-screen {
             background: #ffffff;
             justify-content: center;
@@ -84,98 +87,145 @@
         }
 
         #splash-screen img {
-            max-width: 75%;
-            max-height: 35vh;
+            max-width: 70%;
+            max-height: 30vh;
             object-fit: contain;
-            animation: floating 2.5s infinite ease-in-out;
+            animation: pulseGlow 2s infinite ease-in-out;
         }
 
-        @keyframes floating {
-            0%, 100% { transform: translateY(0px) scale(1); }
-            50% { transform: translateY(-10px) scale(1.03); }
+        @keyframes pulseGlow {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(255, 117, 140, 0.3)); }
+            50% { transform: scale(1.06); filter: drop-shadow(0 0 20px rgba(255, 117, 140, 0.6)); }
         }
 
-        /* Start Screen */
-        #start-screen {
+        /* Screen 2: Title Screen */
+        #title-screen {
+            justify-content: center;
+            gap: 40px;
+            text-align: center;
+            background: linear-gradient(180deg, #fff0f3 0%, #ffe3e8 100%);
+        }
+
+        .title-badge {
+            font-size: 5rem;
+            animation: cuteFloat 3s infinite ease-in-out;
+            margin-bottom: -10px;
+        }
+
+        .main-game-title {
+            font-size: clamp(2.4rem, 8vw, 3.2rem);
+            color: #ff477e;
+            text-shadow: 4px 4px 0px #ffffff, 8px 8px 0px #fbb1bd;
+            letter-spacing: 1px;
+            line-height: 1.2;
+        }
+
+        .sub-title {
+            font-size: 1.2rem;
+            color: #70529d;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 8px 20px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-top: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        /* Screen 3: How to Play (Grade 1 Easy Hindi) */
+        #rules-screen {
             justify-content: space-around;
             text-align: center;
         }
 
-        .game-title {
-            font-size: clamp(2rem, 6vw, 2.8rem);
-            color: #ec4899;
-            text-shadow: 3px 3px 0px #ffffff, 6px 6px 0px #fbcfe8;
-        }
-
-        .instruction-card {
+        .screen-heading {
+            font-size: 1.8rem;
+            color: #ff477e;
             background: #ffffff;
-            border-radius: 24px;
-            padding: 20px;
+            padding: 10px 24px;
+            border-radius: 30px;
+            box-shadow: 0 6px 15px rgba(255, 71, 126, 0.15);
+        }
+
+        .simple-rules-card {
+            background: #ffffff;
+            border-radius: 28px;
+            padding: 24px 20px;
             width: 95%;
-            box-shadow: 0 10px 25px rgba(236, 72, 153, 0.12);
-            font-size: clamp(1rem, 3.5vw, 1.15rem);
-            color: #475569;
-            line-height: 1.7;
+            box-shadow: 0 12px 25px rgba(0,0,0,0.06);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            border: 3px solid #ffccd5;
+        }
+
+        .rule-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
             text-align: left;
-            border: 3px solid #fbcfe8;
+            font-size: 1.25rem;
+            color: #4a4e69;
+            font-weight: 600;
         }
 
-        .instruction-card h3 {
-            color: #8b5cf6;
-            margin-bottom: 8px;
-            text-align: center;
-            font-size: 1.3em;
+        .rule-icon {
+            font-size: 2rem;
+            background: #fff0f3;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
         }
 
+        /* Cute Buttons */
         .btn {
             background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%);
             color: white;
             border: none;
-            padding: 16px 48px;
-            font-size: clamp(1.3rem, 4.5vw, 1.7rem);
+            padding: 16px 44px;
+            font-size: clamp(1.3rem, 5vw, 1.6rem);
             font-weight: 700;
             border-radius: 50px;
-            box-shadow: 0 8px 20px rgba(255, 117, 140, 0.4);
+            box-shadow: 0 10px 25px rgba(255, 117, 140, 0.4);
             cursor: pointer;
             transition: all 0.2s ease;
             display: inline-flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            border: 3px solid #ffffff;
         }
 
         .btn:active {
-            transform: scale(0.95);
+            transform: scale(0.92);
         }
 
-        /* Header */
+        /* Screen 4: Gameplay */
         .game-header {
             width: 100%;
             display: flex;
             justify-content: space-between;
             align-items: center;
             background: rgba(255, 255, 255, 0.9);
-            padding: 12px 18px;
-            border-radius: 20px;
+            padding: 10px 16px;
+            border-radius: 24px;
             box-shadow: 0 6px 15px rgba(0,0,0,0.04);
             font-size: 1.1rem;
             font-weight: 700;
-            color: #334155;
+            color: #5c5470;
         }
 
-        .lives-container {
-            font-size: 1.3rem;
-            letter-spacing: 2px;
-        }
-
-        .score-box {
-            background: #fef3c7;
+        .score-badge {
+            background: #fef08a;
             padding: 6px 16px;
             border-radius: 20px;
-            color: #d97706;
+            color: #854d0e;
             border: 2px solid #fde047;
         }
 
-        /* Word Container & Cute Slot Mechanism */
         .word-display-area {
             flex-grow: 1;
             display: flex;
@@ -183,28 +233,26 @@
             justify-content: center;
             align-items: center;
             width: 100%;
-            margin: 15px 0;
         }
 
         .word-card {
             background: #ffffff;
-            border-radius: 28px;
+            border-radius: 32px;
             padding: 30px 40px;
-            box-shadow: 0 15px 30px rgba(139, 92, 246, 0.15);
+            box-shadow: 0 16px 32px rgba(168, 85, 247, 0.15);
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 3px solid #e9d5ff;
+            border: 4px solid #f3e8ff;
             position: relative;
-            min-width: 240px;
+            min-width: 250px;
             transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
-        /* Base Word Text */
         .base-word-text {
-            font-size: clamp(2.8rem, 10vw, 3.8rem);
+            font-size: clamp(3rem, 11vw, 4.2rem);
             font-weight: 700;
-            color: #4c1d95;
+            color: #581c87;
             letter-spacing: 2px;
             display: flex;
             align-items: center;
@@ -214,65 +262,65 @@
         /* Cute Missing Slot Badges */
         .cute-slot-top {
             position: absolute;
-            top: -28px;
+            top: -32px;
             left: 50%;
             transform: translateX(-50%);
             background: #fef08a;
-            color: #b45309;
-            border: 2px dashed #f59e0b;
-            border-radius: 12px;
-            padding: 1px 8px;
-            font-size: 1.1rem;
-            animation: bounceTop 1.5s infinite ease-in-out;
-            box-shadow: 0 4px 8px rgba(245, 158, 11, 0.2);
+            color: #a16207;
+            border: 3px dashed #f59e0b;
+            border-radius: 16px;
+            padding: 2px 10px;
+            font-size: 1.2rem;
+            animation: cuteBounce 1.5s infinite ease-in-out;
+            box-shadow: 0 4px 10px rgba(245, 158, 11, 0.2);
         }
 
         .cute-slot-side {
             background: #fef08a;
-            color: #b45309;
-            border: 2px dashed #f59e0b;
-            border-radius: 12px;
-            padding: 2px 10px;
-            font-size: 1.4rem;
-            margin-left: 8px;
-            animation: bounceSide 1.5s infinite ease-in-out;
-            box-shadow: 0 4px 8px rgba(245, 158, 11, 0.2);
+            color: #a16207;
+            border: 3px dashed #f59e0b;
+            border-radius: 16px;
+            padding: 2px 12px;
+            font-size: 1.5rem;
+            margin-left: 10px;
+            animation: cuteSlide 1.5s infinite ease-in-out;
+            box-shadow: 0 4px 10px rgba(245, 158, 11, 0.2);
         }
 
-        @keyframes bounceTop {
+        @keyframes cuteBounce {
             0%, 100% { transform: translateX(-50%) translateY(0); }
-            50% { transform: translateX(-50%) translateY(-5px); }
+            50% { transform: translateX(-50%) translateY(-6px); }
         }
 
-        @keyframes bounceSide {
+        @keyframes cuteSlide {
             0%, 100% { transform: translateX(0); }
-            50% { transform: translateX(4px); }
+            50% { transform: translateX(6px); }
         }
 
-        /* Correct Answer Glow Card */
         .word-card-correct {
             background: #f0fdf4 !important;
             border-color: #4ade80 !important;
-            box-shadow: 0 20px 35px rgba(74, 222, 128, 0.3) !important;
-            transform: scale(1.08);
+            box-shadow: 0 20px 40px rgba(74, 222, 128, 0.4) !important;
+            transform: scale(1.1);
         }
 
         .word-card-correct .base-word-text {
-            color: #15803d !important;
+            color: #166534 !important;
         }
 
         .hint-text {
-            margin-top: 18px;
-            font-size: 1.05rem;
-            color: #b45309;
-            background: #fffbeb;
-            padding: 8px 18px;
-            border-radius: 16px;
-            border: 2px dashed #fcd34d;
+            margin-top: 16px;
+            font-size: 1.1rem;
+            color: #9a3412;
+            background: #fff7ed;
+            padding: 10px 20px;
+            border-radius: 20px;
+            border: 2px dashed #fdba74;
             display: none;
+            font-weight: 600;
         }
 
-        /* Cute Doors Container */
+        /* Cute Doors */
         .doors-container {
             width: 100%;
             display: flex;
@@ -283,23 +331,22 @@
 
         .door-card {
             flex: 1;
-            max-width: 180px;
-            height: clamp(160px, 26vh, 200px);
-            border-radius: 90px 90px 20px 20px;
+            max-width: 170px;
+            height: clamp(150px, 25vh, 190px);
+            border-radius: 80px 80px 24px 24px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             color: white;
             cursor: pointer;
-            position: relative;
             box-shadow: 0 12px 25px rgba(0,0,0,0.1);
             transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
             border: 4px solid #ffffff;
         }
 
         .door-card:active {
-            transform: scale(0.95);
+            transform: scale(0.92);
         }
 
         .door-chandr {
@@ -311,76 +358,82 @@
         }
 
         .door-symbol {
-            font-size: clamp(2.8rem, 9vw, 3.8rem);
+            font-size: clamp(3rem, 10vw, 4rem);
             font-weight: 700;
             text-shadow: 0 4px 10px rgba(0,0,0,0.15);
         }
 
         .door-label {
-            font-size: 1rem;
-            font-weight: 600;
-            background: rgba(255, 255, 255, 0.25);
-            padding: 4px 12px;
-            border-radius: 12px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            background: rgba(255, 255, 255, 0.3);
+            padding: 4px 14px;
+            border-radius: 14px;
             margin-top: 4px;
         }
 
         .btn-hint {
-            background: #fbbf24;
-            color: #78350f;
+            background: #fde047;
+            color: #713f12;
             border: none;
-            padding: 8px 20px;
-            font-size: 0.95rem;
+            padding: 8px 22px;
+            font-size: 1rem;
             border-radius: 20px;
             cursor: pointer;
             font-weight: 700;
-            box-shadow: 0 4px 10px rgba(251, 191, 36, 0.3);
+            box-shadow: 0 4px 12px rgba(253, 224, 71, 0.4);
             margin-bottom: 8px;
         }
 
-        /* Result Screen */
+        /* Screen 5: Result Screen */
         .result-card {
             background: #ffffff;
-            border-radius: 28px;
-            padding: 30px;
+            border-radius: 32px;
+            padding: 32px 24px;
             width: 90%;
             text-align: center;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            box-shadow: 0 16px 36px rgba(0,0,0,0.08);
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 16px;
-            border: 3px solid #fbcfe8;
+            gap: 20px;
+            border: 4px solid #ffccd5;
         }
 
         .result-title {
-            font-size: clamp(1.8rem, 6vw, 2.3rem);
-            color: #ec4899;
+            font-size: clamp(2rem, 7vw, 2.5rem);
+            color: #ff477e;
         }
 
         .final-score {
-            font-size: 1.3rem;
+            font-size: 1.4rem;
             color: #334155;
-            background: #fef3c7;
-            padding: 12px 24px;
-            border-radius: 18px;
+            background: #fef08a;
+            padding: 14px 28px;
+            border-radius: 20px;
             width: 100%;
+            font-weight: 700;
         }
 
         /* Animations */
+        @keyframes cuteFloat {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-12px) rotate(3deg); }
+        }
+
         .door-correct-anim { animation: openDoor 0.6s ease forwards; }
         .door-wrong-anim { animation: shake 0.4s ease forwards; }
 
         @keyframes openDoor {
             0% { transform: scale(1); }
-            50% { transform: scale(1.1) rotate(4deg); }
+            50% { transform: scale(1.12) rotate(4deg); }
             100% { transform: scale(1); }
         }
 
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
-            25%, 75% { transform: translateX(-8px); }
-            50% { transform: translateX(8px); }
+            25%, 75% { transform: translateX(-10px); }
+            50% { transform: translateX(10px); }
         }
     </style>
 </head>
@@ -388,44 +441,68 @@
 
     <div id="app-container">
         
-        <!-- Splash Screen -->
+        <!-- Screen 1: Splash Screen -->
         <div id="splash-screen" class="screen active-screen">
             <img src="assets/innovine-logo.png" alt="Innovine Logo">
         </div>
 
-        <!-- Start Screen -->
-        <div id="start-screen" class="screen">
-            <h1 class="game-title">🔑 जादुई दरवाज़ा</h1>
-            
-            <div class="instruction-card">
-                <h3>कैसे खेलें?</h3>
-                <p>1. स्क्रीन पर दिए गए शब्द को ध्यान से पढ़ें।</p>
-                <p>2. पहचानें कि शब्द में <b>चंद्रबिंदु (ँ)</b> आएगा या <b>विसर्ग (ः)</b>।</p>
-                <p>3. सही जादुई दरवाज़े पर टैप करके ताला खोलें।</p>
-                <p>4. हर सही उत्तर के <b>10 अंक</b> मिलेंगे।</p>
+        <!-- Screen 2: Title Screen (Only Game Name & Start Button) -->
+        <div id="title-screen" class="screen">
+            <div style="display: flex; flex-direction: column; align-items: center;">
+                <div class="title-badge">🔑✨</div>
+                <h1 class="main-game-title">जादुई दरवाज़ा</h1>
+                <div class="sub-title">चंद्रबिंदु और विसर्ग खेल</div>
             </div>
 
-            <button class="btn" onclick="startGame()">
-                <span>खेलो</span> ▶
+            <button class="btn" onclick="goToRules()">
+                <span>आगे बढ़ो</span> ➔
             </button>
         </div>
 
-        <!-- Game Screen -->
+        <!-- Screen 3: Rules Screen (Simple Grade 1 Hindi) -->
+        <div id="rules-screen" class="screen">
+            <h2 class="screen-heading">खेल कैसे खेलें? 🎮</h2>
+            
+            <div class="simple-rules-card">
+                <div class="rule-item">
+                    <div class="rule-icon">👀</div>
+                    <div>शब्द को ध्यान से देखो</div>
+                </div>
+                <div class="rule-item">
+                    <div class="rule-icon">🤔</div>
+                    <div>सोचो (ँ) आएगा या (ः)</div>
+                </div>
+                <div class="rule-item">
+                    <div class="rule-icon">🚪</div>
+                    <div>सही दरवाज़े को छुओ</div>
+                </div>
+                <div class="rule-item">
+                    <div class="rule-icon">⭐</div>
+                    <div>अंक जीतो और मज़ा करो!</div>
+                </div>
+            </div>
+
+            <button class="btn" onclick="startGame()">
+                <span>खेल शुरू करें</span> ▶
+            </button>
+        </div>
+
+        <!-- Screen 4: Game Play Screen -->
         <div id="game-screen" class="screen">
             <div class="game-header">
                 <div>सवाल: <span id="q-count">1</span>/10</div>
-                <div class="score-box">अंक: <span id="score-val">0</span></div>
-                <div class="lives-container" id="lives-box">❤️ ❤️ ❤️</div>
+                <div class="score-badge">⭐ अंक: <span id="score-val">0</span></div>
+                <div id="lives-box" style="font-size: 1.3rem;">❤️ ❤️ ❤️</div>
             </div>
 
             <div class="word-display-area">
                 <div class="word-card" id="word-card">
                     <div class="base-word-text" id="target-word">---</div>
                 </div>
-                <div class="hint-text" id="hint-box">💡 संकेत: ...</div>
+                <div class="hint-text" id="hint-box">💡 मदद: ...</div>
             </div>
 
-            <button class="btn-hint" onclick="showHint()">💡 संकेत (Hint)</button>
+            <button class="btn-hint" onclick="showHint()">💡 मदद (Hint)</button>
 
             <div class="doors-container">
                 <div class="door-card door-chandr" id="door-chandr" onclick="checkAnswer('ँ')">
@@ -440,96 +517,88 @@
             </div>
         </div>
 
-        <!-- Result Screen -->
+        <!-- Screen 5: Result Screen -->
         <div id="result-screen" class="screen" style="justify-content: center;">
             <div class="result-card">
                 <h2 class="result-title" id="result-title">शाबाश! 🎉</h2>
                 <div class="final-score" id="final-score-text">
-                    आपका कुल स्कोर: <b>100 / 100</b>
+                    कुल अंक: <b>100 / 100</b>
                 </div>
                 <button class="btn" onclick="restartGame()">
-                    🔄 फिर से खेलें
+                    🔄 फिर से खेलो
                 </button>
             </div>
         </div>
 
     </div>
 
-    <!-- Audio Files -->
+    <!-- Audio Effects -->
     <audio id="audio-correct" src="assets/correct.mp3" preload="auto"></audio>
     <audio id="audio-wrong" src="assets/wrong.mp3" preload="auto"></audio>
     <audio id="audio-win" src="assets/freesound_community-claps-44774.mp3" preload="auto"></audio>
 
     <script>
-        // Clean presentation without broken devanagari letters
+        // Grade-1 Simple Questions with Cute Missing Slot Badges
         const QUESTIONS = [
-            { 
-                // Chandrabindu above first letter
-                wordHTML: '<span style="position:relative;">आ<span class="cute-slot-top">✨?✨</span></span>ख', 
-                type: "ँ", 
-                fullWord: "चाँद", // Target word representation
-                displayFull: "चाँद",
-                hint: "रात में आसमान में चमकता है।" 
-            },
             { 
                 wordHTML: '<span>चा<span class="cute-slot-top">✨?✨</span>द</span>', 
                 type: "ँ", 
                 displayFull: "चाँद", 
-                hint: "रात में आसमान में चमकता है।" 
+                hint: "रात में आसमान में दिखता है" 
             },
             { 
                 wordHTML: '<span>प्रात</span><span class="cute-slot-side">✨?✨</span>', 
                 type: "ः", 
                 displayFull: "प्रातः", 
-                hint: "सुबह का समय।" 
+                hint: "सुबह का समय" 
             },
             { 
                 wordHTML: '<span>दा<span class="cute-slot-top">✨?✨</span>त</span>', 
                 type: "ँ", 
                 displayFull: "दाँत", 
-                hint: "खाना चबाने में मदद करते हैं।" 
+                hint: "खाना चबाने के काम आता है" 
             },
             { 
                 wordHTML: '<span>पुन</span><span class="cute-slot-side">✨?✨</span>', 
                 type: "ः", 
                 displayFull: "पुनः", 
-                hint: "इसका मतलब 'दोबारा' होता है।" 
+                hint: "फिर से या दोबारा" 
             },
             { 
                 wordHTML: '<span>आ<span class="cute-slot-top">✨?✨</span>ख</span>', 
                 type: "ँ", 
                 displayFull: "आँख", 
-                hint: "हम इससे देखते हैं।" 
+                hint: "हम इससे देखते हैं" 
             },
             { 
                 wordHTML: '<span>नम</span><span class="cute-slot-side">✨?✨</span>', 
                 type: "ः", 
                 displayFull: "नमः", 
-                hint: "नमस्ते या प्रणाम करना।" 
+                hint: "नमस्ते करना" 
             },
             { 
                 wordHTML: '<span>मा<span class="cute-slot-top">✨?✨</span></span>', 
                 type: "ँ", 
                 displayFull: "माँ", 
-                hint: "हमारी सबसे प्यारी जननी।" 
+                hint: "प्यारी मम्मी" 
             },
             { 
                 wordHTML: '<span>अत</span><span class="cute-slot-side">✨?✨</span>', 
                 type: "ः", 
                 displayFull: "अतः", 
-                hint: "इसलिए या इस कारण।" 
+                hint: "इसलिए" 
             },
             { 
                 wordHTML: '<span>धुआ<span class="cute-slot-top">✨?✨</span></span>', 
                 type: "ँ", 
                 displayFull: "धुआँ", 
-                hint: "आग जलने पर निकलता है।" 
+                hint: "आग से निकलता है" 
             },
             { 
                 wordHTML: '<span>छ</span><span class="cute-slot-side">✨?✨</span>', 
                 type: "ः", 
                 displayFull: "छः", 
-                hint: "संख्या 6 (Six)।" 
+                hint: "नंबर 6" 
             }
         ];
 
@@ -547,15 +616,20 @@
             }
         }
 
+        // Screen Transitions
         window.addEventListener('load', () => {
             setTimeout(() => {
-                showScreen('start-screen');
-            }, 5000);
+                showScreen('title-screen');
+            }, 3000); // 3-second splash screen
         });
 
         function showScreen(screenId) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
             document.getElementById(screenId).classList.add('active-screen');
+        }
+
+        function goToRules() {
+            showScreen('rules-screen');
         }
 
         function startGame() {
@@ -565,7 +639,7 @@
             isProcessing = false;
             
             // Randomize questions
-            activeQuestions = [...QUESTIONS].slice(1).sort(() => Math.random() - 0.5).slice(0, 10);
+            activeQuestions = [...QUESTIONS].sort(() => Math.random() - 0.5);
 
             updateHeaderUI();
             loadQuestion();
@@ -573,7 +647,7 @@
         }
 
         function restartGame() {
-            startGame();
+            showScreen('title-screen');
         }
 
         function updateHeaderUI() {
@@ -601,7 +675,7 @@
             
             const hintBox = document.getElementById('hint-box');
             hintBox.style.display = 'none';
-            hintBox.innerText = `💡 संकेत: ${q.hint}`;
+            hintBox.innerText = `💡 मदद: ${q.hint}`;
 
             document.getElementById('door-chandr').className = 'door-card door-chandr';
             document.getElementById('door-visarg').className = 'door-card door-visarg';
@@ -612,6 +686,18 @@
 
         function showHint() {
             document.getElementById('hint-box').style.display = 'block';
+        }
+
+        // Confetti Burst Effect
+        function triggerConfetti() {
+            if (typeof confetti === 'function') {
+                confetti({
+                    particleCount: 60,
+                    spread: 70,
+                    origin: { y: 0.6 },
+                    colors: ['#ff758c', '#38bdf8', '#34d399', '#fde047', '#a855f7']
+                });
+            }
         }
 
         function checkAnswer(selectedMatra) {
@@ -626,9 +712,9 @@
 
             if (selectedMatra === q.type) {
                 playAudio('audio-correct');
-                targetDoor.classList.add('door-correct-anim');
+                triggerConfetti(); // 🎉 Confetti celebration!
                 
-                // Show full correct word with celebration style
+                targetDoor.classList.add('door-correct-anim');
                 targetWord.innerHTML = q.displayFull;
                 wordCard.classList.add('word-card-correct');
                 
@@ -638,7 +724,7 @@
                 setTimeout(() => {
                     currentQuestionIndex++;
                     loadQuestion();
-                }, 1400);
+                }, 1500);
 
             } else {
                 playAudio('audio-wrong');
@@ -664,12 +750,14 @@
 
             if (score >= 70) {
                 playAudio('audio-win');
+                triggerConfetti();
+                setTimeout(triggerConfetti, 300);
                 resultTitle.innerText = "शाबाश! आपने कर दिखाया! 🎉";
             } else {
-                resultTitle.innerText = "अच्छा प्रयास! फिर से कोशिश करें! 💪";
+                resultTitle.innerText = "अच्छा प्रयास! फिर खेलो! 💪";
             }
 
-            finalScoreText.innerHTML = `आपका कुल स्कोर: <b>${score} / 100</b><br><small style="font-size: 0.9rem; color: #64748b;">हल किए गए प्रश्न: ${currentQuestionIndex}/10</small>`;
+            finalScoreText.innerHTML = `कुल अंक: <b>${score} / 100</b>`;
         }
     </script>
 </body>
