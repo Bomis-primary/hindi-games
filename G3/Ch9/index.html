@@ -1,1 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reach for the Stars - Kalam's Journey</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
 
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #1a1a2e;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        #game-container {
+            width: 800px;
+            height: 500px;
+            background: linear-gradient(to bottom, #0f2027, #203a43, #2c5364);
+            position: relative;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            border: 2px solid #00d2ff;
+        }
+
+        /* Screen Management */
+        .screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+            text-align: center;
+            background: rgba(15, 32, 39, 0.95);
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        /* Titles & Text */
+        h1 {
+            font-size: 2.5rem;
+            color: #00d2ff;
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px rgba(0, 210, 255, 0.5);
+        }
+
+        p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #e0e0e0;
+            margin-bottom: 20px;
+            max-width: 600px;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 30px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #1a1a2e;
+            background: #00d2ff;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.2s, box-shadow 0.2s;
+            margin: 10px;
+        }
+
+        .btn:hover {
+            background: #00e5ff;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 210, 255, 0.4);
+        }
+
+        /* Instructions Styling */
+        .instructions-list {
+            text-align: left;
+            margin-bottom: 25px;
+            max-width: 500px;
+        }
+
+        .instructions-list li {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            list-style-type: none;
+        }
+
+        /* Canvas / Game Screen */
+        #game-canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* HUD Overlay */
+        #hud {
+            position: absolute;
+            top: 15px;
+            left: 20px;
+            right: 20px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #00d2ff;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .quote {
+            font-style: italic;
+            color: #ffca28;
+            margin-top: 15px;
+            font-size: 0.95rem;
+        }
+    </style>
+</head>
+<body>
+
+<div id="game-container">
+
+    <!-- 1. START SCREEN -->
+    <div id="start-screen" class="screen active">
+        <h1>Dreams That Keep You Awake</h1>
+        <p>Inspired by the story of Dr. A.P.J. Abdul Kalam. Help young Kalam collect books and missiles while navigating past obstacles on his path to success!</p>
+        <div>
+            <button class="btn" onclick="showScreen('instructions-screen')">How to Play</button>
+            <button class="btn" onclick="startGame()">Start Game</button>
+        </div>
+        <div class="quote">"Dream is not that which you see while sleeping; it is something that does not let you sleep."</div>
+    </div>
+
+    <!-- 2. INSTRUCTIONS SCREEN -->
+    <div id="instructions-screen" class="screen">
+        <h1>Instructions</h1>
+        <ul class="instructions-list">
+            <li>🚀 <strong>Controls:</strong> Press <strong>SPACEBAR</strong> or <strong>CLICK</strong> to Jump up.</li>
+            <li>📚 <strong>Goal:</strong> Collect Books (+10 pts) and Rockets (+25 pts) to boost your score.</li>
+            <li>⚡ <strong>Avoid:</strong> Don't collide with Storm Clouds or birds!</li>
+            <li>🎯 Keep working hard and never give up after setbacks.</li>
+        </ul>
+        <button class="btn" onclick="showScreen('start-screen')">Back</button>
+        <button class="btn" onclick="startGame()">Play Now</button>
+    </div>
+
+    <!-- 3. GAME PLAY SCREEN -->
+    <div id="game-screen" class="screen" style="padding: 0; background: transparent;">
+        <div id="hud">
+            <div>Score: <span id="score-display">0</span></div>
+            <div>High Score: <span id="highscore-display">0</span></div>
+        </div>
+        <canvas id="game-canvas" width="800" height="500"></canvas>
+    </div>
+
+    <!-- 4. END GAME SCREEN -->
+    <div id="gameover-screen" class="screen">
+        <h1>Failure is a Lesson!</h1>
+        <p>Setbacks are just steps toward success. Keep trying!</p>
+        <p>Your Score: <strong id="final-score" style="color: #00d2ff; font-size: 1.5rem;">0</strong></p>
+        <div>
+            <button class="btn" onclick="startGame()">Try Again</button>
+            <button class="btn" onclick="showScreen('start-screen')">Main Menu</button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // Navigation Control
+    function showScreen(screenId) {
+        document.querySelectorAll('.screen').forEach(screen => {
+            screen.classList.remove('active');
+        });
+        document.getElementById(screenId).classList.add('active');
+    }
+
+    // Game Variables
+    const canvas = document.getElementById('game-canvas');
+    const ctx = canvas.getContext('2d');
+    
+    let isGameRunning = false;
+    let score = 0;
+    let highScore = 0;
+    let frameCount = 0;
+    let animationId;
+
+    // Player Object
+    const player = {
+        x: 100,
+        y: 350,
+        width: 40,
+        height: 40,
+        velocityY: 0,
+        gravity: 0.6,
+        jumpStrength: -10,
+        groundY: 380,
+        isGrounded: true
+    };
+
+    let obstacles = [];
+    let collectibles = [];
+
+    // Keydown Controls
+    window.addEventListener('keydown', (e) => {
+        if (e.code === 'Space' && isGameRunning) {
+            jump();
+        }
+    });
+
+    canvas.addEventListener('mousedown', () => {
+        if (isGameRunning) jump();
+    });
+
+    function jump() {
+        if (player.isGrounded) {
+            player.velocityY = player.jumpStrength;
+            player.isGrounded = false;
+        }
+    }
+
+    // Start / Restart Game
+    function startGame() {
+        showScreen('game-screen');
+        isGameRunning = true;
+        score = 0;
+        frameCount = 0;
+        player.y = player.groundY;
+        player.velocityY = 0;
+        player.isGrounded = true;
+        obstacles = [];
+        collectibles = [];
+        document.getElementById('score-display').innerText = score;
+
+        cancelAnimationFrame(animationId);
+        gameLoop();
+    }
+
+    // Main Game Loop
+    function gameLoop() {
+        if (!isGameRunning) return;
+
+        update();
+        render();
+
+        frameCount++;
+        animationId = requestAnimationFrame(gameLoop);
+    }
+
+    // Update Game State
+    function update() {
+        // Player Gravity
+        player.velocityY += player.gravity;
+        player.y += player.velocityY;
+
+        if (player.y >= player.groundY) {
+            player.y = player.groundY;
+            player.velocityY = 0;
+            player.isGrounded = true;
+        }
+
+        // Spawn Obstacles (Storm Clouds)
+        if (frameCount % 120 === 0) {
+            obstacles.push({
+                x: canvas.width,
+                y: player.groundY - (Math.random() > 0.5 ? 0 : 60),
+                width: 40,
+                height: 40,
+                speed: 5
+            });
+        }
+
+        // Spawn Collectibles (Books / Rockets)
+        if (frameCount % 90 === 0) {
+            const isRocket = Math.random() > 0.7;
+            collectibles.push({
+                x: canvas.width,
+                y: player.groundY - 50 - Math.random() * 80,
+                width: 25,
+                height: 25,
+                type: isRocket ? 'rocket' : 'book',
+                points: isRocket ? 25 : 10,
+                speed: 4
+            });
+        }
+
+        // Move & Check Collisions for Obstacles
+        for (let i = obstacles.length - 1; i >= 0; i--) {
+            let obs = obstacles[i];
+            obs.x -= obs.speed;
+
+            // Collision Detection with Player
+            if (
+                player.x < obs.x + obs.width &&
+                player.x + player.width > obs.x &&
+                player.y < obs.y + obs.height &&
+                player.y + player.height > obs.y
+            ) {
+                gameOver();
+            }
+
+            if (obs.x + obs.width < 0) obstacles.splice(i, 1);
+        }
+
+        // Move & Check Collisions for Collectibles
+        for (let i = collectibles.length - 1; i >= 0; i--) {
+            let item = collectibles[i];
+            item.x -= item.speed;
+
+            if (
+                player.x < item.x + item.width &&
+                player.x + player.width > item.x &&
+                player.y < item.y + item.height &&
+                player.y + player.height > item.y
+            ) {
+                score += item.points;
+                document.getElementById('score-display').innerText = score;
+                collectibles.splice(i, 1);
+                continue;
+            }
+
+            if (item.x + item.width < 0) collectibles.splice(i, 1);
+        }
+    }
+
+    // Render Graphics
+    function render() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Ground Line
+        ctx.strokeStyle = '#00d2ff';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(0, player.groundY + player.height);
+        ctx.lineTo(canvas.width, player.groundY + player.height);
+        ctx.stroke();
+
+        // Draw Player (Represented by a stylized figure / bicycle)
+        ctx.fillStyle = '#ffca28';
+        ctx.fillRect(player.x, player.y, player.width, player.height);
+        // Player label
+        ctx.fillStyle = '#000';
+        ctx.font = '12px sans-serif';
+        ctx.fillText('Kalam', player.x + 3, player.y + 24);
+
+        // Draw Obstacles (Dark Clouds)
+        ctx.fillStyle = '#e74c3c';
+        obstacles.forEach(obs => {
+            ctx.beginPath();
+            ctx.arc(obs.x + 20, obs.y + 20, 20, 0, Math.PI * 2);
+            ctx.fill();
+        });
+
+        // Draw Collectibles
+        collectibles.forEach(item => {
+            if (item.type === 'book') {
+                ctx.fillStyle = '#2ecc71';
+                ctx.fillRect(item.x, item.y, item.width, item.height);
+            } else {
+                ctx.fillStyle = '#9b59b6';
+                ctx.beginPath();
+                ctx.arc(item.x + 12, item.y + 12, 12, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        });
+    }
+
+    // Game Over Handler
+    function gameOver() {
+        isGameRunning = false;
+        if (score > highScore) {
+            highScore = score;
+            document.getElementById('highscore-display').innerText = highScore;
+        }
+        document.getElementById('final-score').innerText = score;
+        showScreen('gameover-screen');
+    }
+</script>
+
+</body>
+</html>
