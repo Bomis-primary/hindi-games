@@ -3,542 +3,569 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ओ ( ो ) मात्रा का खेल</title>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <title>ओ ( ो ) मात्रा का खेल 🦚✨</title>
     
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
+        :root {
+            --primary: #ea580c;
+            --secondary: #f97316;
+            --accent: #fef3c7;
+            --card-bg: #ffffff;
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             user-select: none;
             -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background: linear-gradient(135deg, #fef3c7, #fed7aa);
-            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ffedd5 0%, #fed7aa 100%);
             display: flex;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
+            min-height: 100vh;
             padding: 10px;
         }
 
-        /* SPLASH SCREEN */
-        #splash-screen {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100vw; height: 100vh;
-            background-color: #ffffff;
+        .game-card {
+            width: 100%;
+            max-width: 440px;
+            height: 92vh;
+            max-height: 740px;
+            background: var(--card-bg);
+            border-radius: 28px;
+            padding: 20px;
+            box-shadow: 0 20px 40px rgba(234, 88, 12, 0.2);
+            border: 6px solid #fdba74;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 99999;
-            padding: 20px;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
         }
+
+        /* SHAKE ANIMATION FOR WRONG ANSWERS */
+        .shake {
+            animation: shakeAnim 0.4s ease-in-out;
+        }
+
+        @keyframes shakeAnim {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-12px); }
+            40%, 80% { transform: translateX(12px); }
+        }
+
+        .screen {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 25px;
+            text-align: center;
+            z-index: 10;
+        }
+
+        #splashScreen { z-index: 50; background: #ffffff; }
 
         .logo-img {
-            max-width: 320px;
-            width: 80%;
+            max-width: 250px;
             height: auto;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
+            animation: pulse 1.5s infinite alternate;
         }
 
-        /* GAME CONTAINER */
-        #game-container {
-            display: none;
-            width: 100%;
-            max-width: 650px;
-            background: #ffffff;
-            border-radius: 24px;
-            padding: 25px 20px;
-            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
-            text-align: center;
+        @keyframes pulse {
+            0% { transform: scale(0.96); }
+            100% { transform: scale(1.04); }
+        }
+
+        .loader-bar {
+            width: 80%;
+            height: 12px;
+            background: #f1f5f9;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid #fdba74;
+        }
+
+        .loader-fill {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #ea580c, #f97316);
+            transition: width 10s linear;
         }
 
         .game-title {
-            color: #ea580c;
-            font-size: 24px;
+            font-size: 2rem;
+            color: var(--primary);
             margin-bottom: 15px;
-        }
-
-        .score-bar {
-            display: flex;
-            justify-content: space-between;
-            background-color: #fff7ed;
-            border: 2px solid #fdba74;
-            padding: 10px 18px;
-            border-radius: 12px;
-            font-weight: bold;
-            color: #c2410c;
-            font-size: 16px;
-            margin-bottom: 15px;
-            gap: 5px;
-        }
-
-        .chances-text {
-            color: #dc2626;
-            font-weight: bold;
-            margin-bottom: 15px;
-            font-size: 16px;
-            min-height: 24px;
-        }
-
-        .btn-action {
-            background: #ea580c;
-            color: #ffffff;
-            border: none;
-            padding: 12px 26px;
-            font-size: 18px;
-            font-weight: bold;
-            border-radius: 14px;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(234, 88, 12, 0.35);
-            transition: transform 0.1s, background 0.2s;
-            touch-action: manipulation;
-        }
-
-        .btn-action:active { transform: scale(0.96); }
-
-        /* MAGIC CARD CONTAINER */
-        .magic-card-container {
-            margin: 20px 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .magic-card {
-            width: 130px;
-            height: 170px;
-            background: linear-gradient(135deg, #ea580c, #f97316);
-            color: #ffffff;
-            border-radius: 16px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 55px;
-            box-shadow: 0 8px 20px rgba(234, 88, 12, 0.3);
-            cursor: pointer;
-            transition: transform 0.6s ease;
-            transform-style: preserve-3d;
-        }
-
-        .magic-card.flip {
-            transform: rotateY(180deg);
-        }
-
-        /* QUESTION CARDS */
-        .question-card {
-            background: #f8fafc;
-            border: 3px solid #cbd5e1;
-            border-radius: 20px;
-            padding: 20px 15px;
-            margin-bottom: 15px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .q-img {
-            max-width: 150px;
-            max-height: 150px;
-            object-fit: contain;
-            border-radius: 12px;
-        }
-
-        .word-display {
-            font-size: 36px;
-            font-weight: bold;
-            color: #1e293b;
-            letter-spacing: 2px;
-            background: #ffffff;
-            padding: 10px 25px;
-            border-radius: 16px;
-            border: 2px dashed #ea580c;
-            word-break: break-word;
-        }
-
-        /* OPTIONS */
-        .options-container {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-            flex-wrap: wrap;
-            width: 100%;
-        }
-
-        .option-btn {
-            background: #ffffff;
-            border: 2px solid #ea580c;
-            color: #ea580c;
-            font-size: 22px;
-            font-weight: bold;
-            padding: 10px 20px;
-            border-radius: 14px;
-            cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-            touch-action: manipulation;
-            min-width: 70px;
-        }
-
-        .option-btn:active {
-            transform: scale(0.95);
-            background: #fff7ed;
-        }
-
-        /* FINAL SCORE */
-        #scoreboard {
-            display: none;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .final-score {
-            font-size: 48px;
-            color: #ea580c;
-            margin: 15px 0;
             font-weight: 800;
         }
 
-        /* MOBILE RESPONSIVE STYLES */
-        @media (max-width: 480px) {
-            #game-container {
-                padding: 15px 12px;
-                border-radius: 18px;
-            }
+        .instruction-card {
+            background: #fff7ed;
+            border: 3px dashed #fdba74;
+            border-radius: 20px;
+            padding: 15px;
+            text-align: left;
+            margin: 15px 0;
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #431407;
+        }
 
-            .game-title {
-                font-size: 20px;
-            }
+        .action-btn {
+            background: linear-gradient(135deg, #ea580c, #f97316);
+            color: white;
+            border: 3px solid #fff;
+            padding: 14px 35px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 30px;
+            box-shadow: 0 6px 0 #c2410c;
+            cursor: pointer;
+        }
 
-            .score-bar {
-                font-size: 13px;
-                padding: 8px 10px;
-            }
+        .action-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #c2410c;
+        }
 
-            .word-display {
-                font-size: 28px;
-                padding: 8px 16px;
-            }
+        /* TOP BAR */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fff7ed;
+            padding: 10px 15px;
+            border-radius: 20px;
+            border: 2px solid #fdba74;
+            font-weight: bold;
+            color: #c2410c;
+            font-size: 0.95rem;
+        }
 
-            .option-btn {
-                font-size: 18px;
-                padding: 8px 16px;
-                flex: 1 1 calc(50% - 12px);
-                max-width: 150px;
-            }
+        .lives-container {
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+        }
 
-            .btn-action {
-                font-size: 16px;
-                padding: 10px 20px;
-                width: 100%;
-            }
+        .stage-box {
+            background: #fafafa;
+            border-radius: 25px;
+            padding: 15px;
+            text-align: center;
+            border: 3px dashed var(--primary);
+            flex-grow: 1;
+            margin: 12px 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-            .q-img {
-                max-width: 120px;
-                max-height: 120px;
-            }
+        .stage-title {
+            font-size: 1.1rem;
+            color: var(--primary);
+            font-weight: 800;
+        }
 
-            .magic-card {
-                width: 110px;
-                height: 150px;
-                font-size: 45px;
-            }
+        .hint-btn {
+            background: #fff7ed;
+            border: 2px solid #fdba74;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: #c2410c;
+            cursor: pointer;
+        }
+
+        .hint-text-box {
+            display: none;
+            background: #ea580c;
+            color: white;
+            padding: 8px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            margin-top: 5px;
+            font-weight: bold;
+            width: 100%;
+        }
+
+        .q-img {
+            max-width: 140px;
+            max-height: 140px;
+            object-fit: contain;
+            margin: 8px 0;
+            border-radius: 16px;
+            background: #fff;
+            padding: 5px;
+            border: 2px solid #fed7aa;
+        }
+
+        .word-prompt-box {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #1e293b;
+            background: #fff;
+            padding: 10px 15px;
+            border-radius: 16px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border: 2px dashed #ea580c;
+            width: 100%;
+            margin-bottom: 8px;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            width: 100%;
+        }
+
+        .opt-btn {
+            background: #ffffff;
+            color: #ea580c;
+            font-size: 1.3rem;
+            font-weight: bold;
+            padding: 12px;
+            border-radius: 18px;
+            border: 2px solid #ea580c;
+            box-shadow: 0 4px 0 #ea580c;
+            cursor: pointer;
+            transition: background 0.1s;
+        }
+
+        .opt-btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0 #ea580c;
+            background: #fff7ed;
         }
     </style>
 </head>
 <body>
 
-    <!-- 1. SPLASH SCREEN -->
-    <div id="splash-screen">
-        <img src="assets/innovine-logo.png" alt="Innovine Solutions Logo" class="logo-img" onerror="this.src='https://via.placeholder.com/300x120?text=Innovine+Solutions'">
-        <button class="btn-action" onclick="startGame()">खेल शुरू करें (Start Game)</button>
-    </div>
-
-    <!-- 2. MAIN GAME CONTAINER -->
-    <div id="game-container">
-        <h1 class="game-title" id="level-title">लेवल 1: जादुई कार्ड 🃏</h1>
-        
-        <div class="score-bar">
-            <span>स्तर: <span id="lvl-num">1</span>/3</span>
-            <span>प्रश्न: <span id="q-num">1</span>/5</span>
-            <span>अंक: <span id="score-val">0</span></span>
+    <div class="game-card" id="gameCard">
+        <!-- 1. SPLASH SCREEN (DISAPPEARS EXACTLY AFTER 10 SECONDS) -->
+        <div class="screen" id="splashScreen">
+            <img src="assets/innovine-logo.png" alt="Innovine Logo" class="logo-img" onerror="this.src='https://via.placeholder.com/250x100?text=Innovine+Solutions'">
+            <div class="loader-bar">
+                <div class="loader-fill" id="loaderFill"></div>
+            </div>
+            <p style="margin-top: 15px; color: #ea580c; font-weight: bold;">लोड हो रहा है...</p>
         </div>
 
-        <div class="chances-text" id="status-msg"></div>
+        <!-- 2. GAME TITLE SCREEN -->
+        <div class="screen" id="titleScreen" style="display: none;">
+            <h1 class="game-title">ओ ( ो ) मात्रा 🦚<br>शब्द ज्ञान 🪄</h1>
+            <p style="font-size: 1.1rem; color: #64748b; margin-bottom: 30px;">मज़ेदार खेल-खेल में हिंदी सीखें!</p>
+            <button class="action-btn" onclick="showInstructions()">आगे बढ़ें ➔</button>
+        </div>
 
-        <!-- LEVEL 1: MAGIC CARD -->
-        <div id="level1-area">
-            <div class="magic-card-container" id="card-wrapper">
-                <div class="magic-card" id="magic-card-icon" onclick="revealCard()">❓</div>
-                <p style="color:#64748b; font-weight:bold; margin-top:12px;" id="card-instruction">प्रश्न देखने के लिए कार्ड पर क्लिक करें!</p>
+        <!-- 3. INSTRUCTION SCREEN -->
+        <div class="screen" id="instructionScreen" style="display: none;">
+            <h2 style="color: var(--primary);">कैसे खेलें? 📜</h2>
+            <div class="instruction-card">
+                <p>1️⃣ कुल <b>10 प्रश्न</b> हैं (प्रत्येक सही उत्तर = 10 अंक)।</p>
+                <p>2️⃣ आपके पास कुल <b>3 लाइफ (💖)</b> हैं।</p>
+                <p>3️⃣ सहायता के लिए <b>💡 संकेत</b> बटन का प्रयोग करें।</p>
+                <p>4️⃣ गलत उत्तर देने पर लाइफ कम होगी!</p>
             </div>
-            <button class="btn-action" id="reveal-card-btn" onclick="revealCard()">कार्ड पलटें (Flip Card)</button>
+            <button class="action-btn" onclick="startGame()">खेल शुरू करें! 🎮</button>
+        </div>
+
+        <!-- 4. MAIN GAME PLAY AREA -->
+        <div class="top-bar">
+            <span id="levelText">प्रश्न: 1/10</span>
+            <span class="lives-container" id="livesDisplay">💖💖💖</span>
+            <span id="scoreText">⭐ अंक: 0</span>
+        </div>
+
+        <div class="stage-box" id="gameStage">
+            <div class="stage-title" id="stageTitle">लेवल 1: चित्र पहचानो! 🖼️</div>
             
-            <div id="l1-question" style="display: none; margin-top: 15px;">
-                <div class="question-card">
-                    <p style="color:#475569; font-weight:bold;">सही मात्रा चुनें:</p>
-                    <div class="word-display" id="l1-word"></div>
-                </div>
-                <div class="options-container" id="l1-options"></div>
-            </div>
+            <button class="hint-btn" onclick="toggleHint()">💡 संकेत (Hint)</button>
+            <div class="hint-text-box" id="hintBox"></div>
+
+            <img id="questionImg" class="q-img" src="" alt="Question Image" style="display: none;">
+            
+            <div class="word-prompt-box" id="questionPrompt">...</div>
+
+            <div class="options-grid" id="optionsGrid"></div>
         </div>
 
-        <!-- LEVEL 2: PICTURE IDENTIFICATION -->
-        <div id="level2-area" style="display: none;">
-            <div class="question-card">
-                <img id="l2-img" class="q-img" src="" alt="Question Image">
-                <p style="color:#475569; font-weight:bold;">चित्र देखकर सही नाम चुनें:</p>
-            </div>
-            <div class="options-container" id="l2-options"></div>
+        <!-- 5. END OVERLAY (SUCCESS) -->
+        <div class="screen" id="endOverlay" style="display: none;">
+            <h1 style="font-size: 2.2rem; color: var(--primary); margin-bottom: 10px;">🎉 बहुत बढ़िया! 🥳</h1>
+            <p style="font-size: 1.2rem; color: #334155; margin-bottom: 20px;">आपने खेल सफलतापूर्वक पूरा कर लिया है!</p>
+            <h2 id="finalScore" style="color: #ea580c; font-size: 2rem; margin-bottom: 25px;">अंक: 100 / 100</h2>
+            <button class="action-btn" onclick="restartGame()">फिर से खेलें 🔄</button>
         </div>
 
-        <!-- LEVEL 3: MISSING WORD FILL -->
-        <div id="level3-area" style="display: none;">
-            <div class="question-card">
-                <p style="color:#475569; font-weight:bold;" id="l3-instruction"></p>
-                <div class="word-display" id="l3-sentence"></div>
-            </div>
-            <div class="options-container" id="l3-options"></div>
-        </div>
-
-        <!-- FINAL SCOREBOARD -->
-        <div id="scoreboard">
-            <h2>अद्भुत प्रदर्शन! 🎉</h2>
-            <p style="font-size: 18px; color: #475569; margin-top: 5px;">आपने तीनों लेवल पूरे कर लिए हैं!</p>
-            <div class="final-score" id="final-score-text">0</div>
-            <button class="btn-action" onclick="location.reload()">फिर से खेलें (Play Again)</button>
+        <!-- 6. GAME OVER OVERLAY -->
+        <div class="screen" id="gameOverOverlay" style="display: none;">
+            <h1 style="font-size: 2.2rem; color: #dc2626; margin-bottom: 10px;">💔 खेल समाप्त!</h1>
+            <p style="font-size: 1.2rem; color: #334155; margin-bottom: 20px;">आपकी सभी लाइफ खत्म हो गईं!</p>
+            <h2 id="gameOverScore" style="color: #ea580c; font-size: 1.8rem; margin-bottom: 25px;">अंक: 0</h2>
+            <button class="action-btn" onclick="restartGame()">पुनः प्रयास करें 🔄</button>
         </div>
     </div>
 
-    <!-- AUDIO ELEMENTS (USING CORRECT.MP3 FOR CORRECT ANSWERS) -->
-    <audio id="snd-correct" src="assets/correct.mp3" preload="auto"></audio>
-    <audio id="snd-wrong" src="assets/wrong.mp3" preload="auto"></audio>
+    <!-- AUDIO ASSETS -->
+    <audio id="sndCorrect" src="assets/correct.mp3" preload="auto"></audio>
+    <audio id="sndWrong" src="assets/wrong.mp3" preload="auto"></audio>
 
     <script>
-        // AUDIO PLAYBACK HANDLERS
-        function playCorrectSound() {
-            const audio = document.getElementById('snd-correct');
-            audio.pause();
-            audio.currentTime = 0;
-            audio.play().catch(e => console.log('Correct Sound Audio Play Error:', e));
-        }
+        // QUESTION BANK FOR CHAPTER 11 ('ओ' मात्रा)
+        const questions = [
+            // LEVEL 1: IMAGE BASED QUESTIONS (Q1 - Q5)
+            { 
+                levelTitle: "लेवल 1: चित्र पहचानो! 🖼️",
+                img: "assets/mor.png", 
+                prompt: "चित्र का सही नाम चुनें:", 
+                hint: "यह भारत का राष्ट्रीय पक्षी है।", 
+                correct: "मोर", 
+                options: ["मोर", "शोर", "चोर", "लोटा"] 
+            },
+            { 
+                levelTitle: "लेवल 1: चित्र पहचानो! 🖼️",
+                img: "assets/dhol.png", 
+                prompt: "चित्र का सही नाम चुनें:", 
+                hint: "यह संगीत समारोहों में बजाया जाता है।", 
+                correct: "ढोल", 
+                options: ["गोल", "ढोल", "बोल", "मोल"] 
+            },
+            { 
+                levelTitle: "लेवल 1: चित्र पहचानो! 🖼️",
+                img: "assets/ghoda.png", 
+                prompt: "चित्र का सही नाम चुनें:", 
+                hint: "यह बहुत तेज़ दौड़ने वाला पशु है।", 
+                correct: "घोड़ा", 
+                options: ["तोता", "घोड़ा", "छोटा", "जोड़ा"] 
+            },
+            { 
+                levelTitle: "लेवल 1: चित्र पहचानो! 🖼️",
+                img: "assets/gobi.png", 
+                prompt: "चित्र का सही नाम चुनें:", 
+                hint: "यह एक हरी/सफ़ेद सब्ज़ी है।", 
+                correct: "गोभी", 
+                options: ["टोपी", "धोबी", "गोभी", "बोतल"] 
+            },
+            { 
+                levelTitle: "लेवल 1: चित्र पहचानो! 🖼️",
+                img: "assets/topi.png", 
+                prompt: "चित्र का सही नाम चुनें:", 
+                hint: "इसे सिर पर पहना जाता है।", 
+                correct: "टोपी", 
+                options: ["टोपी", "रोटी", "कोटी", "मोती"] 
+            },
 
-        function playWrongSound() {
-            const audio = document.getElementById('snd-wrong');
-            audio.pause();
-            audio.currentTime = 0;
-            audio.play().catch(e => console.log('Wrong Sound Audio Play Error:', e));
-        }
+            // LEVEL 2: WORD & SENTENCE BASED QUESTIONS (Q6 - Q10)
+            { 
+                levelTitle: "लेवल 2: सही शब्द व मात्रा ✍️",
+                img: "assets/khargosh .png", 
+                prompt: "चित्र देखकर सही नाम चुनिए:", 
+                hint: "यह तेज़ दौड़ने वाला छोटा जानवर है।", 
+                correct: "खरगोश", 
+                options: ["खरगोश", "अखरोट", "समोसा", "कोयल"] 
+            },
+            { 
+                levelTitle: "लेवल 2: सही शब्द व मात्रा ✍️",
+                img: null, 
+                prompt: "म + ो + र = ?", 
+                hint: "नाचता हुआ सुंदर पक्षी।", 
+                correct: "मोर", 
+                options: ["मार", "मोर", "मेरा", "मौर"] 
+            },
+            { 
+                levelTitle: "लेवल 2: सही शब्द व मात्रा ✍️",
+                img: null, 
+                prompt: "कपड़े धोने वाले को क्या कहते हैं?", 
+                hint: "कपड़े साफ़ करने वाला।", 
+                correct: "धोबी", 
+                options: ["धोबी", "गोपी", "टोपी", "जोकर"] 
+            },
+            { 
+                levelTitle: "लेवल 2: सही शब्द व मात्रा ✍️",
+                img: null, 
+                prompt: "त + ो + त + ा = ?", 
+                hint: "हरे रंग का पक्षी जो मिर्च खाता है।", 
+                correct: "तोता", 
+                options: ["ताजा", "तोता", "लोटा", "पोता"] 
+            },
+            { 
+                levelTitle: "लेवल 2: सही शब्द व मात्रा ✍️",
+                img: null, 
+                prompt: "मीठी बोली बोलने वाली ____।", 
+                hint: "कुहू-कुहू गाने वाली पक्षी।", 
+                correct: "कोयल", 
+                options: ["बोतल", "समोसा", "कोयल", "ढोलक"] 
+            }
+        ];
 
-        // GAME STATE VARIABLES
-        let currentLevel = 1;
-        let currentQIndex = 0;
+        let currentQ = 0;
         let score = 0;
-        let attemptsLeft = 2;
+        let lives = 3;
 
-        /* LEVEL DATA */
-        const l1Questions = [
-            { prefix: "म", matra: "ो", suffix: "र", options: ["ो", "ा", "ी", "े"] },
-            { prefix: "त", matra: "ो", suffix: "ता", options: ["ि", "ो", "ू", "ै"] },
-            { prefix: "ढ", matra: "ो", suffix: "ल", options: ["ो", "ै", "ा", "ु"] },
-            { prefix: "ग", matra: "ो", suffix: "भी", options: ["ी", "ो", "े", "ा"] },
-            { prefix: "ब", matra: "ो", suffix: "तल", options: ["ो", "ा", "े", "ी"] }
-        ];
+        // SOUND FUNCTION
+        function playAudio(id) {
+            const audio = document.getElementById(id);
+            if (audio) {
+                audio.currentTime = 0;
+                audio.play().catch(e => console.log("Audio playback error:", e));
+            }
+        }
 
-        const l2Questions = [
-            { img: "assets/mor.png", answer: "मोर", options: ["मोर", "सोना", "लोटा"] },
-            { img: "assets/dhol.png", answer: "ढोल", options: ["चोर", "ढोल", "गोल"] },
-            { img: "assets/ghoda.png", answer: "घोड़ा", options: ["घोड़ा", "छोटा", "कोयला"] },
-            { img: "assets/gobi.png", answer: "गोभी", options: ["टोपी", "धोबी", "गोभी"] },
-            { img: "assets/topi.png", answer: "टोपी", options: ["टोपी", "रोटी", "बोतल"] }
-        ];
+        // TRIGGER EFFECTS FOR WRONG ANSWERS
+        function triggerWrongEffects() {
+            playAudio('sndWrong');
 
-        const l3Questions = [
-            { text: "नाचता हुआ _____", ans: "मोर", options: ["मोर", "सोहन", "लोटा"] },
-            { text: "कपड़े धोता _____", ans: "धोबी", options: ["धोबी", "कोयल", "जोकर"] },
-            { text: "_____ के नीचे छिप गया।", ans: "सोफ़े", options: ["सोफ़े", "समोसा", "रोटी"] },
-            { text: "रसोई में गरम-गरम _____ रखे थे।", ans: "समोसे", options: ["बोतल", "समोसे", "गोभी"] },
-            { text: "छोटा _____ घर में घुसा।", ans: "खरगोश", options: ["खरगोश", "घोड़ा", "ढोल"] }
-        ];
+            if (navigator.vibrate) {
+                navigator.vibrate(200);
+            }
+
+            const card = document.getElementById('gameCard');
+            card.classList.add('shake');
+            setTimeout(() => card.classList.remove('shake'), 400);
+
+            lives--;
+            updateLivesDisplay();
+
+            if (lives <= 0) {
+                setTimeout(() => {
+                    document.getElementById('gameOverOverlay').style.display = 'flex';
+                    document.getElementById('gameOverScore').innerText = `अंक: ${score}`;
+                }, 400);
+            }
+        }
+
+        function updateLivesDisplay() {
+            let heartsStr = "";
+            for (let i = 0; i < 3; i++) {
+                heartsStr += (i < lives) ? "💖" : "🖤";
+            }
+            document.getElementById('livesDisplay').innerText = heartsStr;
+        }
+
+        function toggleHint() {
+            const hintBox = document.getElementById('hintBox');
+            if (hintBox.style.display === 'block') {
+                hintBox.style.display = 'none';
+            } else {
+                hintBox.innerText = `💡 संकेत: ${questions[currentQ].hint}`;
+                hintBox.style.display = 'block';
+            }
+        }
+
+        // 10-SECOND SPLASH SCREEN TIMER LOGIC
+        window.onload = function() {
+            const loader = document.getElementById('loaderFill');
+            loader.style.width = '100%';
+
+            // Exactly 10 seconds (10000 ms) timer
+            setTimeout(() => {
+                document.getElementById('splashScreen').style.display = 'none';
+                document.getElementById('titleScreen').style.display = 'flex';
+            }, 10000);
+        };
+
+        function showInstructions() {
+            document.getElementById('titleScreen').style.display = 'none';
+            document.getElementById('instructionScreen').style.display = 'flex';
+        }
 
         function startGame() {
-            // Pre-load audio elements
-            document.getElementById('snd-correct').load();
-            document.getElementById('snd-wrong').load();
+            // Pre-load audio to unblock media playing on mobile browsers
+            document.getElementById('sndCorrect').load();
+            document.getElementById('sndWrong').load();
 
-            document.getElementById('splash-screen').style.display = 'none';
-            document.getElementById('game-container').style.display = 'block';
-            setupLevel();
+            document.getElementById('instructionScreen').style.display = 'none';
+            loadQuestion();
         }
 
-        function updateScoreBar() {
-            document.getElementById('lvl-num').innerText = currentLevel;
-            document.getElementById('q-num').innerText = currentQIndex + 1;
-            document.getElementById('score-val').innerText = score;
-        }
+        function loadQuestion() {
+            document.getElementById('hintBox').style.display = 'none';
+            const q = questions[currentQ];
 
-        function resetStatusMsg() {
-            attemptsLeft = 2;
-            document.getElementById('status-msg').innerText = "";
-        }
+            document.getElementById('levelText').innerText = `प्रश्न: ${currentQ + 1}/10`;
+            document.getElementById('scoreText').innerText = `⭐ अंक: ${score}`;
+            document.getElementById('stageTitle').innerText = q.levelTitle;
+            updateLivesDisplay();
 
-        function setupLevel() {
-            updateScoreBar();
-            resetStatusMsg();
-
-            if (currentLevel === 1) {
-                document.getElementById('level-title').innerText = "लेवल 1: जादुई कार्ड 🃏";
-                document.getElementById('level1-area').style.display = 'block';
-                document.getElementById('level2-area').style.display = 'none';
-                document.getElementById('level3-area').style.display = 'none';
-                document.getElementById('card-wrapper').style.display = 'flex';
-                document.getElementById('reveal-card-btn').style.display = 'inline-block';
-                document.getElementById('l1-question').style.display = 'none';
-                document.getElementById('magic-card-icon').innerText = '❓';
-            } else if (currentLevel === 2) {
-                document.getElementById('level-title').innerText = "लेवल 2: चित्र पहचान कर नाम चुनें 🖼️";
-                document.getElementById('level1-area').style.display = 'none';
-                document.getElementById('level2-area').style.display = 'block';
-                document.getElementById('level3-area').style.display = 'none';
-                loadL2Question();
-            } else if (currentLevel === 3) {
-                document.getElementById('level-title').innerText = "लेवल 3: सही शब्द से वाक्य पूरा करें ✍️";
-                document.getElementById('level1-area').style.display = 'none';
-                document.getElementById('level2-area').style.display = 'none';
-                document.getElementById('level3-area').style.display = 'block';
-                loadL3Question();
-            }
-        }
-
-        /* ---------------- LEVEL 1 LOGIC (CARD FLIP) ---------------- */
-        function revealCard() {
-            const card = document.getElementById('magic-card-icon');
-            const btn = document.getElementById('reveal-card-btn');
-            
-            card.classList.add('flip');
-            btn.disabled = true;
-
-            setTimeout(() => {
-                card.innerText = '✨';
-                document.getElementById('card-wrapper').style.display = 'none';
-                btn.style.display = 'none';
-                document.getElementById('l1-question').style.display = 'block';
-                loadL1Question();
-                btn.disabled = false;
-                card.classList.remove('flip');
-            }, 500);
-        }
-
-        function loadL1Question() {
-            resetStatusMsg();
-            const q = l1Questions[currentQIndex];
-            document.getElementById('l1-word').innerHTML = `${q.prefix}<span style="color:#ea580c; border-bottom:3px solid #ea580c;">?</span>${q.suffix}`;
-            
-            const optsBox = document.getElementById('l1-options');
-            optsBox.innerHTML = '';
-            q.options.forEach(opt => {
-                const btn = document.createElement('button');
-                btn.className = 'option-btn';
-                btn.innerText = opt;
-                btn.onclick = () => handleAnswerAttempt(opt === q.matra);
-                optsBox.appendChild(btn);
-            });
-        }
-
-        /* ---------------- LEVEL 2 LOGIC ---------------- */
-        function loadL2Question() {
-            resetStatusMsg();
-            const q = l2Questions[currentQIndex];
-            document.getElementById('l2-img').src = q.img;
-            
-            const optsBox = document.getElementById('l2-options');
-            optsBox.innerHTML = '';
-            q.options.forEach(opt => {
-                const btn = document.createElement('button');
-                btn.className = 'option-btn';
-                btn.innerText = opt;
-                btn.onclick = () => handleAnswerAttempt(opt === q.answer);
-                optsBox.appendChild(btn);
-            });
-        }
-
-        /* ---------------- LEVEL 3 LOGIC ---------------- */
-        function loadL3Question() {
-            resetStatusMsg();
-            const q = l3Questions[currentQIndex];
-            document.getElementById('l3-instruction').innerText = "वाक्य पूरा करने के लिए सही शब्द चुनें:";
-            document.getElementById('l3-sentence').innerText = q.text;
-
-            const optsBox = document.getElementById('l3-options');
-            optsBox.innerHTML = '';
-            q.options.forEach(opt => {
-                const btn = document.createElement('button');
-                btn.className = 'option-btn';
-                btn.innerText = opt;
-                btn.onclick = () => handleAnswerAttempt(opt === q.ans);
-                optsBox.appendChild(btn);
-            });
-        }
-
-        /* ---------------- COMMON 2-CHANCE & SOUND LOGIC ---------------- */
-        function handleAnswerAttempt(isCorrect) {
-            if (isCorrect) {
-                playCorrectSound();
-                score += (attemptsLeft === 2) ? 10 : 5;
-                updateScoreBar();
-                document.getElementById('status-msg').style.color = '#16a34a';
-                document.getElementById('status-msg').innerText = "सही उत्तर! 👏";
-                setTimeout(nextQuestion, 1000);
+            // Set image if available
+            const imgEl = document.getElementById('questionImg');
+            if (q.img) {
+                imgEl.src = q.img;
+                imgEl.style.display = 'inline-block';
             } else {
-                playWrongSound();
-                attemptsLeft--;
-
-                if (attemptsLeft > 0) {
-                    document.getElementById('status-msg').style.color = '#dc2626';
-                    document.getElementById('status-msg').innerText = `⚠️ गलत उत्तर! 1 मौका बाकी है।`;
-                } else {
-                    document.getElementById('status-msg').style.color = '#dc2626';
-                    document.getElementById('status-msg').innerText = `❌ दोनों मौके समाप्त! अगला प्रश्न...`;
-                    setTimeout(nextQuestion, 1200);
-                }
-            }
-        }
-
-        /* NEXT QUESTION & LEVEL CONTROLLER */
-        function nextQuestion() {
-            currentQIndex++;
-            if (currentQIndex >= 5) {
-                currentQIndex = 0;
-                currentLevel++;
-                if (currentLevel > 3) {
-                    showFinalScore();
-                    return;
-                }
+                imgEl.style.display = 'none';
             }
 
-            setupLevel();
-        }
+            document.getElementById('questionPrompt').innerText = q.prompt;
 
-        function showFinalScore() {
-            document.getElementById('level-title').style.display = 'none';
-            document.querySelector('.score-bar').style.display = 'none';
-            document.getElementById('status-msg').style.display = 'none';
-            document.getElementById('level1-area').style.display = 'none';
-            document.getElementById('level2-area').style.display = 'none';
-            document.getElementById('level3-area').style.display = 'none';
+            // Load options
+            const grid = document.getElementById('optionsGrid');
+            grid.innerHTML = '';
             
-            document.getElementById('scoreboard').style.display = 'flex';
-            document.getElementById('final-score-text').innerText = score;
+            // Randomize options order
+            const shuffledOptions = [...q.options].sort(() => Math.random() - 0.5);
 
-            if (typeof confetti === 'function') {
-                confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
+            shuffledOptions.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'opt-btn';
+                btn.innerText = opt;
+                btn.onclick = () => checkAnswer(opt);
+                grid.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selected) {
+            if (lives <= 0) return;
+
+            const q = questions[currentQ];
+            if (selected === q.correct) {
+                playAudio('sndCorrect');
+                if (typeof confetti === 'function') {
+                    confetti({ particleCount: 50, spread: 60, origin: { y: 0.7 } });
+                }
+                score += 10;
+                nextQuestion();
+            } else {
+                triggerWrongEffects();
             }
+        }
+
+        function nextQuestion() {
+            currentQ++;
+            if (currentQ < questions.length) {
+                setTimeout(loadQuestion, 400);
+            } else {
+                playAudio('sndCorrect');
+                if (typeof confetti === 'function') {
+                    confetti({ particleCount: 150, spread: 90, origin: { y: 0.6 } });
+                }
+                document.getElementById('endOverlay').style.display = 'flex';
+                document.getElementById('finalScore').innerText = `अंक: ${score} / 100`;
+            }
+        }
+
+        function restartGame() {
+            currentQ = 0;
+            score = 0;
+            lives = 3;
+            document.getElementById('endOverlay').style.display = 'none';
+            document.getElementById('gameOverOverlay').style.display = 'none';
+            document.getElementById('titleScreen').style.display = 'flex';
         }
     </script>
 </body>
