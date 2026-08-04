@@ -36,7 +36,6 @@
             overflow: hidden;
         }
 
-        /* CUTEST GAME CARD */
         .game-card {
             width: 100%;
             max-width: 410px;
@@ -55,7 +54,6 @@
             backdrop-filter: blur(10px);
         }
 
-        /* SHAKE ANIMATION */
         .shake {
             animation: cuteShake 0.4s ease-in-out;
         }
@@ -109,7 +107,7 @@
             height: 100%;
             background: linear-gradient(90deg, #ff7675, #74b9ff, #a29bfe);
             border-radius: 20px;
-            transition: width 5s linear;
+            transition: width 3s linear;
         }
 
         .game-title {
@@ -151,7 +149,6 @@
             box-shadow: 0 2px 0 #d63031;
         }
 
-        /* HUD TOP BAR */
         .top-bar {
             display: flex;
             justify-content: space-between;
@@ -217,7 +214,6 @@
             box-shadow: 0 4px 10px rgba(253, 121, 168, 0.3);
         }
 
-        /* COLOR BINS GRID */
         .color-bins-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -247,7 +243,6 @@
             transform: scale(0.95);
         }
 
-        /* CUTEST CONVEYOR BELT */
         .conveyor-area {
             width: 100%;
             height: 125px;
@@ -277,8 +272,9 @@
             100% { background-position: 60px 0; }
         }
 
-        .item-object {
-            font-size: 3.8rem;
+        .item-object-img {
+            max-height: 80px;
+            width: auto;
             position: absolute;
             top: 10px;
             filter: drop-shadow(0 8px 8px rgba(0,0,0,0.15));
@@ -309,7 +305,7 @@
 
         <!-- 1. SPLASH SCREEN -->
         <div class="screen" id="splashScreen">
-            <img src="assets/innovine-logo.png" alt="Innovine Logo" class="logo-img" onerror="this.src='https://via.placeholder.com/200x80?text=Innovine+Logo'">
+            <img src="assets/innovine-logo.png" alt="Innovine Logo" class="logo-img">
             <div class="loader-bar">
                 <div class="loader-fill" id="loaderFill"></div>
             </div>
@@ -328,7 +324,7 @@
             <h2 style="color: #6c5ce7; font-size: 1.8rem; margin-bottom: 10px;">कैसे खेलें? 📜</h2>
             <div class="instruction-card">
                 <p>1️⃣ कन्वेयर बेल्ट पर सुंदर वस्तुएँ आएँगी।</p>
-                <p>2️⃣ ऊपर सही <b>रंग की बोगी/डिब्बे</b> पर क्लिक करें!</p>
+                <p>2️⃣ सही <b>रंग के डिब्बे</b> पर क्लिक करें!</p>
                 <p>3️⃣ कुल <b>10 वस्तुएँ</b> (100 अंक) हैं।</p>
                 <p>4️⃣ आपके पास <b>3 क्यूट लाइफ़्स (💖)</b> हैं। मदद के लिए <b>💡 संकेत</b> दबाएँ!</p>
             </div>
@@ -355,7 +351,7 @@
             <div style="width: 100%;">
                 <div class="item-label" id="itemName">वस्तु का नाम</div>
                 <div class="conveyor-area">
-                    <div class="item-object" id="itemEmoji">🎈</div>
+                    <img id="itemImg" class="item-object-img" src="" alt="वस्तु">
                     <div class="conveyor-track"></div>
                 </div>
             </div>
@@ -371,7 +367,7 @@
 
         <!-- 6. GAME OVER OVERLAY -->
         <div class="screen" id="gameOverOverlay" style="display: none;">
-            <h1 style="font-size: 2.3rem; color: #ff7675; margin-bottom: 10px;">💔 अरे वाह! फिर कोशिश करें!</h1>
+            <h1 style="font-size: 2.3rem; color: #ff7675; margin-bottom: 10px;">💔 फिर कोशिश करें!</h1>
             <p style="font-size: 1.2rem; color: #2d3436; margin-bottom: 20px;">आपकी सभी लाइफ़ खत्म हो गईं!</p>
             <h2 id="gameOverScore" style="color: #6c5ce7; font-size: 2rem; margin-bottom: 30px;">अंक: 0</h2>
             <button class="action-btn" onclick="restartGame()">फिर से प्रयास करें 🔄</button>
@@ -386,16 +382,16 @@
 
 <script>
     const questions = [
-        { name: "गुब्बारा", emoji: "🎈", correctColor: "लाल", hint: "यह टमाटर और सेब के रंग जैसा होता है", options: ["लाल", "हरा", "नीला", "पीला"] },
-        { name: "पत्ता", emoji: "🍃", correctColor: "हरा", hint: "यह पेड़-पौधों का रंग होता है", options: ["हरा", "लाल", "सफ़ेद", "गुलाबी"] },
-        { name: "मक्का", emoji: "🌽", correctColor: "पीला", hint: "सूरजमुखी और केले का रंग", options: ["पीला", "नीला", "बैगनी", "भूरा"] },
-        { name: "पानी की बूंद", emoji: "💧", correctColor: "नीला", hint: "आसमान और समुद्र का रंग", options: ["नीला", "नारंगी", "लाल", "हरा"] },
-        { name: "बादल", emoji: "☁️", correctColor: "सफ़ेद", hint: "दूध और बर्फ का रंग", options: ["सफ़ेद", "गहरा नीला", "बैगनी", "पीला"] },
-        { name: "बैंगन", emoji: "🍆", correctColor: "बैगनी", hint: "सब्जियों के राजा का रंग (Purple)", options: ["बैगनी", "गुलाबी", "भूरा", "लाल"] },
-        { name: "चॉकलेट", emoji: "🍫", correctColor: "भूरा", hint: "लकड़ी और मिट्टी का रंग (Brown)", options: ["भूरा", "नारंगी", "सफ़ेद", "नीला"] },
-        { name: "प्याज़", emoji: "🧅", correctColor: "गुलाबी", hint: "कमल के फूल और कॉटन कैंडी का रंग", options: ["गुलाबी", "हरा", "गहरा नीला", "पीला"] },
-        { name: "कद्दू", emoji: "🎃", correctColor: "नारंगी", hint: "संतरे और गाजर का रंग (Orange)", options: ["नारंगी", "बैगनी", "सफ़ेद", "भूरा"] },
-        { name: "ब्लूबेरी", emoji: "🫐", correctColor: "गहरा नीला", hint: "रात के आसमान का रंग (Dark Blue)", options: ["गहरा नीला", "लाल", "गुलाबी", "हरा"] }
+        { name: "टमाटर", image: "assets/tomato.png", correctColor: "लाल", hint: "यह टमाटर और सेब के रंग जैसा होता है", options: ["लाल", "हरा", "नीला", "पीला"] },
+        { name: "पत्ता", image: "assets/leaf.png", correctColor: "हरा", hint: "यह पेड़-पौधों का रंग होता है", options: ["हरा", "लाल", "सफ़ेद", "गुलाबी"] },
+        { name: "केला", image: "assets/banana.png", correctColor: "पीला", hint: "सूरजमुखी और केले का रंग", options: ["पीला", "नीला", "बैंगनी", "भूरा"] },
+        { name: "समुद्र", image: "assets/sea.png", correctColor: "नीला", hint: "आसमान और समुद्र का रंग", options: ["नीला", "नारंगी", "लाल", "हरा"] },
+        { name: "बर्फ", image: "assets/snow.png", correctColor: "सफ़ेद", hint: "दूध और बर्फ का रंग", options: ["सफ़ेद", "काला", "बैंगनी", "पीला"] },
+        { name: "लट्टू", image: "assets/top.png", correctColor: "बैंगनी", hint: "यह एक सुंदर बैंगनी खिलौना है", options: ["बैंगनी", "गुलाबी", "भूरा", "लाल"] },
+        { name: "चॉकलेट", image: "assets/chocolate.png", correctColor: "भूरा", hint: "लकड़ी और मिट्टी का रंग (Brown)", options: ["भूरा", "नारंगी", "सफ़ेद", "नीला"] },
+        { name: "कैंडी", image: "assets/candy.png", correctColor: "गुलाबी", hint: "कमल के फूल और कॉटन कैंडी का रंग", options: ["गुलाबी", "हरा", "काला", "पीला"] },
+        { name: "संतरा", image: "assets/orange.png", correctColor: "नारंगी", hint: "संतरे और गाजर का रंग (Orange)", options: ["नारंगी", "बैंगनी", "सफ़ेद", "भूरा"] },
+        { name: "पत्थर", image: "assets/stone.png", correctColor: "काला", hint: "रात के अंधेरे और कोयले का रंग", options: ["काला", "लाल", "गुलाबी", "हरा"] }
     ];
 
     const colorCodes = {
@@ -404,11 +400,11 @@
         "नीला": "#339af0",
         "पीला": "#fcc419",
         "सफ़ेद": "#adb5bd",
-        "बैगनी": "#cc5de8",
+        "बैंगनी": "#cc5de8",
         "भूरा": "#8d6e63",
         "गुलाबी": "#ff8787",
         "नारंगी": "#ff922b",
-        "गहरा नीला": "#3b5bdb"
+        "काला": "#343a40"
     };
 
     let currentQ = 0;
@@ -465,7 +461,7 @@
         setTimeout(() => {
             document.getElementById('splashScreen').style.display = 'none';
             document.getElementById('titleScreen').style.display = 'flex';
-        }, 5000);
+        }, 3000);
     };
 
     function showInstructions() {
@@ -486,7 +482,7 @@
         updateLivesDisplay();
 
         document.getElementById('itemName').innerText = q.name;
-        document.getElementById('itemEmoji').innerText = q.emoji;
+        document.getElementById('itemImg').src = q.image;
 
         const grid = document.getElementById('binsGrid');
         grid.innerHTML = '';
@@ -509,7 +505,14 @@
 
         if (selectedColor === q.correctColor) {
             playAudio('sndCorrect');
-            confetti({ particleCount: 60, spread: 70, origin: { y: 0.7 } });
+            
+            // 🎊 हर सही उत्तर पर Confetti Blast 🎊
+            confetti({
+                particleCount: 70,
+                spread: 60,
+                origin: { y: 0.7 }
+            });
+
             score += 10;
             nextQuestion();
         } else {
@@ -523,7 +526,14 @@
             loadQuestion();
         } else {
             playAudio('sndClaps');
-            confetti({ particleCount: 160, spread: 100, origin: { y: 0.6 } });
+            
+            // 🎆 गेम खत्म होने पर बड़ा Celebration Confetti Blast 🎆
+            confetti({
+                particleCount: 180,
+                spread: 100,
+                origin: { y: 0.6 }
+            });
+            
             document.getElementById('endOverlay').style.display = 'flex';
             document.getElementById('finalScore').innerText = `अंक: ${score} / 100`;
         }
