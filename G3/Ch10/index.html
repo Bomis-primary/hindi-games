@@ -1,1 +1,270 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>तेनालीराम की चतुराई - खेल</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
 
+    body {
+      background: linear-gradient(135deg, #fefae0, #f4a261);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #2b2d42;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 700px;
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Screen States */
+    .screen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 380px;
+    }
+
+    .active {
+      display: flex;
+    }
+
+    /* Intro Screen */
+    .logo {
+      max-width: 180px;
+      height: auto;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      color: #e76f51;
+      margin-bottom: 15px;
+      font-size: 2rem;
+    }
+
+    p {
+      font-size: 1.1rem;
+      color: #4a5568;
+      line-height: 1.5;
+      margin-bottom: 15px;
+    }
+
+    .btn {
+      background-color: #2a9d8f;
+      color: white;
+      padding: 12px 30px;
+      border: none;
+      border-radius: 25px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: transform 0.2s, background-color 0.2s;
+      margin-top: 15px;
+    }
+
+    .btn:hover {
+      background-color: #218377;
+      transform: scale(1.05);
+    }
+
+    /* Instructions Screen */
+    .timer-circle {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: #e76f51;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+
+    /* Game Screen */
+    .game-story {
+      background: #f8f9fa;
+      padding: 15px;
+      border-left: 5px solid #2a9d8f;
+      border-radius: 5px;
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .courtiers-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 11fr));
+      gap: 15px;
+      width: 100%;
+      margin-top: 15px;
+    }
+
+    .courtier-card {
+      background: #edf2f4;
+      padding: 15px;
+      border-radius: 12px;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .courtier-card:hover {
+      border-color: #2a9d8f;
+      background: #e2eafc;
+    }
+
+    .hand-icon {
+      font-size: 2.5rem;
+      margin-top: 10px;
+    }
+
+    .black-hands {
+      color: #2b2d42; /* Dark/Black hands */
+    }
+
+    .clean-hands {
+      color: #ffb703; /* Clean hands */
+    }
+
+    /* Results */
+    .result-icon {
+      font-size: 4rem;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- 1. Intro Screen -->
+    <div id="intro-screen" class="screen active">
+      <img src="assets/logo.png" alt="Innovine Logo" class="logo" onerror="this.style.display='none'">
+      <h1>तेनालीराम की चतुराई</h1>
+      <p>विजयनगर साम्राज्य के राजकोष में चोरी हो गई है!</p>
+      <button class="btn" onclick="startInstructions()">खेल शुरू करें</button>
+    </div>
+
+    <!-- 2. Instructions Screen (5 Seconds Timer) -->
+    <div id="instruction-screen" class="screen">
+      <h1>निर्देश (Instructions)</h1>
+      <p>तेनालीराम ने चोर को पकड़ने के लिए एक मिट्टी की मूर्ति पर <strong>काले रंग (काजल)</strong> की परत लगाई है।</p>
+      <p>जिसने मूर्ति को छुआ, उसके हाथ <strong>काले</strong> हो गए। लेकिन असली चोर डर के मारे मूर्ति को नहीं छुएगा और उसके हाथ <strong>साफ</strong> रहेंगे!</p>
+      <p><strong>लक्ष्य:</strong> साफ हाथ वाले दरबारी (चोर) की पहचान करें!</p>
+      <div class="timer-circle" id="timer">5</div>
+    </div>
+
+    <!-- 3. Gameplay Screen -->
+    <div id="game-screen" class="screen">
+      <div class="game-story">
+        <p><strong>दृश्य:</strong> सभी दरबारी एक-एक करके मूर्ति को छूकर बाहर आ रहे हैं। तेनालीराम ध्यान से सभी के हाथों को देख रहे हैं...</p>
+      </div>
+      <h3>असली चोर कौन है? सही दरबारी पर क्लिक करें:</h3>
+      
+      <div class="courtiers-grid" id="courtiers-container">
+        <!-- Generated dynamically via JS -->
+      </div>
+    </div>
+
+    <!-- 4. End Game Screen -->
+    <div id="end-screen" class="screen">
+      <div id="result-icon" class="result-icon"></div>
+      <h1 id="result-title"></h1>
+      <p id="result-desc"></p>
+      <button class="btn" onclick="resetGame()">फिर से खेलें</button>
+    </div>
+  </div>
+
+  <script>
+    let timerInterval;
+
+    function showScreen(screenId) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(screenId).classList.add('active');
+    }
+
+    function startInstructions() {
+      showScreen('instruction-screen');
+      let timeLeft = 5;
+      const timerElement = document.getElementById('timer');
+      timerElement.textContent = timeLeft;
+
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        timerElement.textContent = timeLeft;
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval);
+          setupGame();
+        }
+      }, 1000);
+    }
+
+    function setupGame() {
+      showScreen('game-screen');
+      const container = document.getElementById('courtiers-container');
+      container.innerHTML = '';
+
+      // Generate random positioning for the thief (1 out of 4)
+      const thiefIndex = Math.floor(Math.random() * 4);
+
+      for (let i = 0; i < 4; i++) {
+        const isThief = i === thiefIndex;
+        const card = document.createElement('div');
+        card.className = 'courtier-card';
+        
+        card.innerHTML = `
+          <strong>दरबारी ${i + 1}</strong>
+          <div class="hand-icon ${isThief ? 'clean-hands' : 'black-hands'}">
+            🖐️
+          </div>
+          <small>${isThief ? '(हाथ साफ हैं)' : '(हाथ काले हैं)'}</small>
+        `;
+
+        card.onclick = () => handleChoice(isThief);
+        container.appendChild(card);
+      }
+    }
+
+    function handleChoice(isThief) {
+      const title = document.getElementById('result-title');
+      const desc = document.getElementById('result-desc');
+      const icon = document.getElementById('result-icon');
+
+      if (isThief) {
+        icon.textContent = '🎉';
+        title.textContent = 'शाबाश! चोर पकड़ा गया!';
+        desc.textContent = 'आप तेनालीराम की तरह बुद्धिमान हैं! चोर ने डर के मारे मूर्ति को नहीं छुआ था, इसलिए उसके हाथ साफ रह गए।';
+      } else {
+        icon.textContent = '❌';
+        title.textContent = 'ओह नहीं! गलत जवाब!';
+        desc.textContent = 'इस दरबारी ने मूर्ति को छुआ था, इसलिए इसके हाथ काले हैं। यह निर्दोष है! चोर वही था जिसके हाथ साफ थे।';
+      }
+
+      showScreen('end-screen');
+    }
+
+    function resetGame() {
+      showScreen('intro-screen');
+    }
+  </script>
+</body>
+</html>
