@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ओ ( ो ) मात्रा का खेल - 3 लेवल्स</title>
+    <title>ओ ( ो ) मात्रा का खेल </title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     
     <style>
@@ -74,7 +74,15 @@
             font-weight: bold;
             color: #c2410c;
             font-size: 16px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
+        }
+
+        .chances-text {
+            color: #dc2626;
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 16px;
+            min-height: 24px;
         }
 
         .btn-action {
@@ -96,9 +104,9 @@
         /* SPIN WHEEL */
         .wheel-box {
             position: relative;
-            width: 250px;
-            height: 250px;
-            margin: 0 auto 20px auto;
+            width: 240px;
+            height: 240px;
+            margin: 0 auto 15px auto;
         }
 
         #wheel {
@@ -111,13 +119,13 @@
 
         .wheel-pointer {
             position: absolute;
-            top: -15px;
+            top: -12px;
             left: 50%;
             transform: translateX(-50%);
             width: 0; height: 0;
-            border-left: 15px solid transparent;
-            border-right: 15px solid transparent;
-            border-top: 25px solid #dc2626;
+            border-left: 12px solid transparent;
+            border-right: 12px solid transparent;
+            border-top: 22px solid #dc2626;
             z-index: 10;
         }
 
@@ -127,16 +135,16 @@
             border: 3px solid #cbd5e1;
             border-radius: 20px;
             padding: 20px 15px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
         }
 
         .q-img {
-            max-width: 160px;
-            max-height: 160px;
+            max-width: 150px;
+            max-height: 150px;
             object-fit: contain;
             border-radius: 12px;
         }
@@ -212,15 +220,17 @@
             <span>अंक (Score): <span id="score-val">0</span></span>
         </div>
 
+        <div class="chances-text" id="status-msg"></div>
+
         <!-- LEVEL 1: SPIN THE WHEEL -->
         <div id="level1-area">
             <div class="wheel-box">
                 <div class="wheel-pointer"></div>
-                <canvas id="wheel" width="250" height="250"></canvas>
+                <canvas id="wheel" width="240" height="240"></canvas>
             </div>
             <button class="btn-action" id="spin-btn" onclick="spinWheel()">चकरी घुमाएँ (Spin Wheel)</button>
             
-            <div id="l1-question" style="display: none; margin-top: 20px;">
+            <div id="l1-question" style="display: none; margin-top: 15px;">
                 <div class="question-card">
                     <p style="color:#475569; font-weight:bold;">सही मात्रा चुनें:</p>
                     <div class="word-display" id="l1-word"></div>
@@ -256,28 +266,29 @@
         </div>
     </div>
 
-    <!-- AUDIO ELEMENTS USING ASSETS DIRECTORY -->
-    <audio id="snd-correct" src="assets/correct.mp3" preload="auto"></audio>
+    <!-- AUDIO ELEMENTS USING ASSETS FOLDER -->
+    <audio id="snd-clap" src="assets/clap.mp3" preload="auto"></audio>
     <audio id="snd-wrong" src="assets/wrong.mp3" preload="auto"></audio>
 
     <script>
-        // SOUND FUNCTIONS WITH ASSETS
-        function playCorrect() {
-            const audio = document.getElementById('snd-correct');
+        // SOUND FUNCTIONS
+        function playClapSound() {
+            const audio = document.getElementById('snd-clap');
             audio.currentTime = 0;
-            audio.play().catch(e => console.log('Audio play failed:', e));
+            audio.play().catch(e => console.log('Audio play error:', e));
         }
 
-        function playWrong() {
+        function playWrongSound() {
             const audio = document.getElementById('snd-wrong');
             audio.currentTime = 0;
-            audio.play().catch(e => console.log('Audio play failed:', e));
+            audio.play().catch(e => console.log('Audio play error:', e));
         }
 
         // GAME STATE
         let currentLevel = 1;
         let currentQIndex = 0;
         let score = 0;
+        let attemptsLeft = 2; // Maximum 2 chances per question
 
         /* LEVEL DATA */
         const l1Questions = [
@@ -317,8 +328,15 @@
             document.getElementById('score-val').innerText = score;
         }
 
+        function resetStatusMsg() {
+            attemptsLeft = 2;
+            document.getElementById('status-msg').innerText = "";
+        }
+
         function setupLevel() {
             updateScoreBar();
+            resetStatusMsg();
+
             if (currentLevel === 1) {
                 document.getElementById('level-title').innerText = "लेवल 1: चकरी घुमाओ और मात्रा भरो 🎡";
                 document.getElementById('level1-area').style.display = 'block';
@@ -339,7 +357,7 @@
             }
         }
 
-        /* ---------------- LEVEL 1: SPIN WHEEL LOGIC ---------------- */
+        /* ---------------- LEVEL 1 LOGIC ---------------- */
         function drawWheel() {
             const canvas = document.getElementById('wheel');
             const ctx = canvas.getContext('2d');
@@ -349,18 +367,18 @@
 
             for (let i = 0; i < numSegments; i++) {
                 ctx.beginPath();
-                ctx.arc(125, 125, 120, i * angle, (i + 1) * angle);
-                ctx.lineTo(125, 125);
+                ctx.arc(120, 120, 115, i * angle, (i + 1) * angle);
+                ctx.lineTo(120, 120);
                 ctx.fillStyle = colors[i];
                 ctx.fill();
                 ctx.stroke();
 
                 ctx.save();
-                ctx.translate(125, 125);
+                ctx.translate(120, 120);
                 ctx.rotate(i * angle + angle / 2);
                 ctx.fillStyle = "#ffffff";
-                ctx.font = "bold 20px sans-serif";
-                ctx.fillText(`Q ${i + 1}`, 50, 5);
+                ctx.font = "bold 18px sans-serif";
+                ctx.fillText(`Q ${i + 1}`, 45, 5);
                 ctx.restore();
             }
         }
@@ -381,6 +399,7 @@
         }
 
         function loadL1Question() {
+            resetStatusMsg();
             const q = l1Questions[currentQIndex];
             document.getElementById('l1-word').innerHTML = `${q.prefix}<span style="color:#ea580c; border-bottom:3px solid #ea580c;">?</span>${q.suffix}`;
             
@@ -390,25 +409,14 @@
                 const btn = document.createElement('button');
                 btn.className = 'option-btn';
                 btn.innerText = opt;
-                btn.onclick = () => checkL1(opt, q.matra);
+                btn.onclick = () => handleAnswerAttempt(opt === q.matra);
                 optsBox.appendChild(btn);
             });
         }
 
-        function checkL1(selected, correct) {
-            if (selected === correct) {
-                playCorrect();
-                score += 10;
-                nextQuestion();
-            } else {
-                playWrong();
-                score = Math.max(0, score - 2);
-            }
-            updateScoreBar();
-        }
-
-        /* ---------------- LEVEL 2: PICTURE LOGIC ---------------- */
+        /* ---------------- LEVEL 2 LOGIC ---------------- */
         function loadL2Question() {
+            resetStatusMsg();
             const q = l2Questions[currentQIndex];
             document.getElementById('l2-img').src = q.img;
             
@@ -418,27 +426,16 @@
                 const btn = document.createElement('button');
                 btn.className = 'option-btn';
                 btn.innerText = opt;
-                btn.onclick = () => checkL2(opt, q.answer);
+                btn.onclick = () => handleAnswerAttempt(opt === q.answer);
                 optsBox.appendChild(btn);
             });
         }
 
-        function checkL2(selected, correct) {
-            if (selected === correct) {
-                playCorrect();
-                score += 10;
-                nextQuestion();
-            } else {
-                playWrong();
-                score = Math.max(0, score - 2);
-            }
-            updateScoreBar();
-        }
-
-        /* ---------------- LEVEL 3: CHAPTER 11 LOGIC ---------------- */
+        /* ---------------- LEVEL 3 LOGIC ---------------- */
         function loadL3Question() {
+            resetStatusMsg();
             const q = l3Questions[currentQIndex];
-            document.getElementById('l3-instruction').innerText = "वाक्य/वाक्यांश पूरा करें:";
+            document.getElementById('l3-instruction').innerText = "वाक्य पूरा करने के लिए सही शब्द चुनें:";
             document.getElementById('l3-sentence').innerText = q.text;
 
             const optsBox = document.getElementById('l3-options');
@@ -447,21 +444,33 @@
                 const btn = document.createElement('button');
                 btn.className = 'option-btn';
                 btn.innerText = opt;
-                btn.onclick = () => checkL3(opt, q.ans);
+                btn.onclick = () => handleAnswerAttempt(opt === q.ans);
                 optsBox.appendChild(btn);
             });
         }
 
-        function checkL3(selected, correct) {
-            if (selected === correct) {
-                playCorrect();
-                score += 10;
-                nextQuestion();
+        /* ---------------- COMMON 2-CHANCE LOGIC ---------------- */
+        function handleAnswerAttempt(isCorrect) {
+            if (isCorrect) {
+                playClapSound();
+                score += (attemptsLeft === 2) ? 10 : 5; // First try gives 10, second try gives 5
+                updateScoreBar();
+                document.getElementById('status-msg').style.color = '#16a34a';
+                document.getElementById('status-msg').innerText = "सही उत्तर! 👏";
+                setTimeout(nextQuestion, 1000);
             } else {
-                playWrong();
-                score = Math.max(0, score - 2);
+                playWrongSound();
+                attemptsLeft--;
+
+                if (attemptsLeft > 0) {
+                    document.getElementById('status-msg').style.color = '#dc2626';
+                    document.getElementById('status-msg').innerText = `⚠️ गलत उत्तर! 1 मौका बाकी है।`;
+                } else {
+                    document.getElementById('status-msg').style.color = '#dc2626';
+                    document.getElementById('status-msg').innerText = `❌ दोनों मौके समाप्त! अगला प्रश्न...`;
+                    setTimeout(nextQuestion, 1200);
+                }
             }
-            updateScoreBar();
         }
 
         /* NEXT QUESTION & LEVEL CONTROLLER */
@@ -476,17 +485,16 @@
                 }
             }
 
-            setTimeout(() => {
-                if (currentLevel === 1) {
-                    document.getElementById('l1-question').style.display = 'none';
-                }
-                setupLevel();
-            }, 600);
+            if (currentLevel === 1) {
+                document.getElementById('l1-question').style.display = 'none';
+            }
+            setupLevel();
         }
 
         function showFinalScore() {
             document.getElementById('level-title').style.display = 'none';
             document.querySelector('.score-bar').style.display = 'none';
+            document.getElementById('status-msg').style.display = 'none';
             document.getElementById('level1-area').style.display = 'none';
             document.getElementById('level2-area').style.display = 'none';
             document.getElementById('level3-area').style.display = 'none';
