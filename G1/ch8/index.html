@@ -17,15 +17,15 @@
     body {
       margin: 0;
       padding: 0;
-      font-family: 'Fredoka', 'Comic Sans MS', 'Chalkboard SE', sans-serif;
-      background: linear-gradient(135deg, #74ebd5 0%, #9ace6e 100%);
+      font-family: 'Fredoka', 'Comic Sans MS', sans-serif;
+      background: linear-gradient(135deg, #a8edd8 0%, #fed6e3 100%);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
     }
 
-    /* Screen Overlays */
+    /* Overlays */
     .screen-overlay {
       position: fixed;
       top: 0;
@@ -39,7 +39,8 @@
       align-items: center;
       z-index: 9999;
       text-align: center;
-      padding: 20px;
+      padding: 24px;
+      transition: opacity 0.3s ease;
     }
 
     #page-splash { 
@@ -50,12 +51,12 @@
     #splash-logo {
       max-width: 280px;
       width: 70%;
-      animation: bounce 2s infinite ease-in-out;
+      animation: floatLogo 2.5s infinite ease-in-out;
     }
 
-    @keyframes bounce {
-      0%, 100% { transform: translateY(0) scale(1); }
-      50% { transform: translateY(-15px) scale(1.05); }
+    @keyframes floatLogo {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
     }
 
     .title-heading {
@@ -63,7 +64,6 @@
       color: #2d3436;
       font-weight: 800;
       margin-bottom: 12px;
-      text-shadow: 2px 2px 0px #fff;
     }
 
     .title-subheading {
@@ -76,36 +76,35 @@
     .green-btn {
       background: linear-gradient(135deg, #00b894, #00cec9);
       color: white;
-      font-size: 1.3rem;
+      font-size: 1.25rem;
       font-weight: bold;
-      padding: 14px 40px;
+      padding: 14px 42px;
       border-radius: 50px;
       border: none;
       cursor: pointer;
-      box-shadow: 0 8px 20px rgba(0, 184, 148, 0.4);
-      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 8px 20px rgba(0, 184, 148, 0.3);
+      transition: all 0.2s ease;
     }
 
     .green-btn:hover {
-      transform: scale(1.05);
-      box-shadow: 0 10px 25px rgba(0, 184, 148, 0.6);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 24px rgba(0, 184, 148, 0.4);
     }
 
-    .green-btn:active { transform: scale(0.95); }
+    .green-btn:active { transform: scale(0.96); }
 
     .instructions-card {
       background: #ffffff;
       border-left: 6px solid #0984e3;
       border-radius: 16px;
-      padding: 12px 20px;
-      margin: 8px 0;
+      padding: 14px 20px;
+      margin: 10px 0;
       width: 95%;
-      max-width: 500px;
+      max-width: 520px;
       display: flex;
       align-items: center;
-      gap: 12px;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.06);
-      font-size: 1rem;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+      font-size: 1.05rem;
       font-weight: 600;
       color: #2d3436;
       text-align: left;
@@ -114,29 +113,29 @@
     header {
       width: 100%;
       max-width: 900px;
-      background: rgba(255, 255, 255, 0.92);
-      backdrop-filter: blur(10px);
-      padding: 12px 24px;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+      padding: 14px 28px;
       display: flex;
       justify-content: flex-end;
       align-items: center;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-      border-bottom-left-radius: 20px;
-      border-bottom-right-radius: 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+      border-bottom-left-radius: 24px;
+      border-bottom-right-radius: 24px;
     }
 
     .scoreboard {
       display: flex;
-      gap: 12px;
+      gap: 16px;
       font-size: 1rem;
       font-weight: bold;
     }
 
     .score-box {
       background: #ffffff;
-      padding: 8px 16px;
+      padding: 8px 20px;
       border-radius: 20px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
       color: #2d3436;
       border: 2px solid #74b9ff;
     }
@@ -144,11 +143,11 @@
     .game-container {
       width: 95%;
       max-width: 900px;
-      margin: 15px auto;
+      margin: 20px auto;
       background: rgba(255, 255, 255, 0.95);
       border-radius: 28px;
-      padding: 20px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+      padding: 24px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.08);
       text-align: center;
       flex: 1;
       display: flex;
@@ -159,69 +158,69 @@
     .level-tabs {
       display: flex;
       justify-content: center;
-      gap: 8px;
-      margin-bottom: 12px;
+      gap: 10px;
+      margin-bottom: 16px;
       flex-wrap: wrap;
     }
 
     .tab-btn {
-      padding: 8px 14px;
+      padding: 10px 18px;
       border: none;
-      background: #dfe6e9;
+      background: #f1f2f6;
       border-radius: 16px;
       font-weight: bold;
       color: #636e72;
       cursor: pointer;
-      font-size: 0.88rem;
-      transition: all 0.3s;
+      font-size: 0.95rem;
+      transition: all 0.25s ease;
     }
 
     .tab-btn.active {
       background: linear-gradient(135deg, #0984e3, #74b9ff);
       color: white;
-      transform: scale(1.05);
-      box-shadow: 0 4px 12px rgba(9, 132, 227, 0.3);
+      box-shadow: 0 4px 14px rgba(9, 132, 227, 0.3);
     }
 
     .q-title {
-      font-size: 1.35rem;
+      font-size: 1.4rem;
       color: #2d3436;
-      margin-bottom: 8px;
-      font-weight: bold;
+      margin-bottom: 12px;
+      font-weight: 700;
     }
 
     .feedback-banner {
-      height: 30px;
-      font-size: 1.2rem;
+      height: 32px;
+      font-size: 1.25rem;
       font-weight: bold;
       color: #00b894;
-      margin-bottom: 8px;
-      transition: all 0.3s ease;
+      margin-bottom: 12px;
+      transition: opacity 0.2s ease;
     }
 
     .asset-img {
-      max-height: 140px;
+      max-height: 150px;
       max-width: 100%;
-      border-radius: 18px;
-      margin: 10px auto;
+      border-radius: 20px;
+      margin: 12px auto;
       display: block;
       object-fit: contain;
-      box-shadow: 0 6px 15px rgba(0,0,0,0.08);
       background: #f8f9fa;
-      padding: 6px;
+      padding: 10px;
+      box-shadow: inset 0 0 0 2px #edf2f7;
     }
 
     .options-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-      gap: 14px;
-      max-width: 520px;
-      margin: 15px auto;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 20px;
+      max-width: 600px;
+      margin: 20px auto;
+      padding: 0 10px;
     }
 
     .opt-btn {
-      padding: 14px 16px;
-      font-size: 1.2rem;
+      padding: 16px 20px;
+      font-size: 1.25rem;
       font-weight: bold;
       border-radius: 20px;
       border: none;
@@ -229,7 +228,7 @@
       color: white;
       box-shadow: 0 6px 0 #574b90;
       cursor: pointer;
-      transition: all 0.15s ease-in-out;
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
     }
 
     .opt-btn:hover {
@@ -242,76 +241,64 @@
       box-shadow: 0 2px 0 #574b90;
     }
 
-    /* LEVEL 2 STYLES */
+    /* Level 2 Styles */
     .l2-sentence-card {
       background: #f8f9fa;
-      border: 3px solid #74b9ff;
+      border: 2px solid #74b9ff;
       border-radius: 24px;
-      padding: 18px;
-      max-width: 520px;
-      margin: 10px auto;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+      padding: 24px;
+      max-width: 580px;
+      margin: 12px auto;
     }
 
     .sentence-box {
-      font-size: 1.35rem;
+      font-size: 1.4rem;
       font-weight: bold;
       color: #2d3436;
-      margin: 15px 0;
+      margin: 18px 0;
       line-height: 1.6;
     }
 
     .blank-space {
       display: inline-block;
-      min-width: 90px;
+      min-width: 100px;
       border-bottom: 3px dashed #e63946;
       color: #e63946;
-      padding: 0 8px;
-      transition: all 0.3s;
+      padding: 0 10px;
     }
 
-    /* LEVEL 4 STYLES */
+    /* Level 4 Styles */
     .destination-board {
-      background: linear-gradient(180deg, #ffeaa7 0%, #fab1a0 100%);
+      background: linear-gradient(180deg, #fff9e6 0%, #ffeaa7 100%);
       border-radius: 24px;
-      padding: 16px;
-      max-width: 580px;
-      margin: 5px auto;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-      border: 3px solid #e17055;
-      position: relative;
+      padding: 20px;
+      max-width: 640px;
+      margin: 10px auto;
+      border: 2px solid #ffeaa7;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.04);
     }
 
     .svg-track-container {
       position: relative;
       width: 100%;
-      height: 150px;
-      margin: 10px 0;
+      height: 140px;
+      margin: 12px 0;
     }
 
     .svg-path {
       fill: none;
       stroke: #d63031;
-      stroke-width: 8;
+      stroke-width: 6;
       stroke-dasharray: 8, 8;
       stroke-linecap: round;
     }
 
-    .runner-avatar {
+    .runner-avatar, .target-avatar {
       position: absolute;
-      font-size: 2.5rem;
-      transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+      font-size: 2.6rem;
+      transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
       transform: translate(-50%, -50%);
       z-index: 10;
-      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
-    }
-
-    .target-avatar {
-      position: absolute;
-      font-size: 2.7rem;
-      transform: translate(-50%, -50%);
-      z-index: 5;
-      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
     }
 
     .step-node {
@@ -328,8 +315,6 @@
       font-size: 1rem;
       transform: translate(-50%, -50%);
       z-index: 6;
-      transition: all 0.3s;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
 
     .step-node.active {
@@ -340,61 +325,54 @@
 
     .path-choices-l4 {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin-top: 10px;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 16px;
+      margin-top: 20px;
+      padding: 0 10px;
     }
 
     .choice-btn-l4 {
       background: #ffffff;
-      border: 3px solid #0984e3;
+      border: 2px solid #0984e3;
       border-radius: 18px;
-      padding: 12px 8px;
-      font-size: 1.15rem;
+      padding: 14px 16px;
+      font-size: 1.2rem;
       font-weight: bold;
       color: #2d3436;
       cursor: pointer;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-      transition: all 0.2s;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      transition: all 0.2s ease;
     }
 
-    .choice-btn-l4:active { transform: scale(0.95); }
+    .choice-btn-l4:hover {
+      background: #0984e3;
+      color: #ffffff;
+    }
 
     .final-score-card {
       background: #ffffff;
       border-radius: 28px;
-      padding: 30px 20px;
-      max-width: 440px;
+      padding: 36px 24px;
+      max-width: 460px;
       width: 90%;
-      box-shadow: 0 15px 40px rgba(0,0,0,0.15);
-      border: 4px solid #00b894;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+      border: 3px solid #00b894;
     }
 
-    /* Animations */
-    .correct-anim {
-      animation: popSuccess 0.4s ease-out;
+    /* Dynamic Transitions */
+    .view-fade {
+      animation: fadeIn 0.3s ease-in-out;
     }
 
-    .wrong-anim {
-      animation: shakeError 0.4s ease-out;
-    }
-
-    @keyframes popSuccess {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.08); }
-      100% { transform: scale(1); }
-    }
-
-    @keyframes shakeError {
-      0%, 100% { transform: translateX(0); }
-      20%, 60% { transform: translateX(-8px); }
-      40%, 80% { transform: translateX(8px); }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
 <body>
 
-  <!-- SPLASH & SCREENS -->
+  <!-- SPLASH & OVERLAYS -->
   <div id="page-splash" class="screen-overlay" onclick="goToTitlePage()">
     <img id="splash-logo" src="assets/innovine-logo.png" alt="Innovine Logo" onerror="this.src='https://via.placeholder.com/280x100?text=Innovine+Logo'">
   </div>
@@ -407,13 +385,11 @@
 
   <div id="page-instructions" class="screen-overlay" style="display: none;">
     <div class="title-heading" style="font-size: 1.8rem;">खेल के नियम 🎮</div>
-    
     <div class="instructions-card"><span>🔍 <b>स्तर १:</b> चित्र देखकर सही नाम चुनें।</span></div>
     <div class="instructions-card"><span>✍️ <b>स्तर २:</b> वाक्य देखकर सही शब्द भरें।</span></div>
     <div class="instructions-card"><span>🧩 <b>स्तर ३:</b> प्रश्नों के उत्तर देकर सही शब्द पहचानें।</span></div>
     <div class="instructions-card"><span>🚀 <b>स्तर ४:</b> घुमावदार रास्ते पर सही उत्तर चुनकर मंज़िल तक पहुँचें!</span></div>
     <div class="instructions-card"><span>⭐ <b>स्तर ५:</b> 'ू' (बड़ी ऊ) मात्रा वाले सही शब्द की पहचान करें।</span></div>
-
     <br>
     <button class="green-btn" onclick="startGame()">खेलें 🎮</button>
   </div>
@@ -423,7 +399,7 @@
       <div style="font-size:3.8rem;">🏆🥳🎉</div>
       <div class="title-heading" style="font-size: 1.7rem; color:#6c5ce7;">शानदार प्रदर्शन!</div>
       <div style="font-size: 1.15rem; color:#00b894; font-weight:bold;">आपने सभी ५ स्तर सफलतापूर्वक पूर्ण कर लिए!</div>
-      <div style="background:#f8f9fa; border-radius:16px; padding:14px; margin:18px 0; font-size:1.3rem; font-weight:bold;">
+      <div style="background:#f8f9fa; border-radius:16px; padding:16px; margin:20px 0; font-size:1.3rem; font-weight:bold;">
         कुल अंक: <span id="final-score-val" style="color:#e63946;">0</span>
       </div>
       <button class="green-btn" onclick="resetGame()">पुनः खेलें 🔄</button>
@@ -448,10 +424,10 @@
         <button class="tab-btn" onclick="loadLevel(4)">L4: मंज़िल का रास्ता</button>
         <button class="tab-btn" onclick="loadLevel(5)">L5: सही शब्द पहचानो</button>
       </div>
-      <hr style="border:0; border-top: 2px dashed #dfe6e9; margin-bottom: 12px;">
+      <hr style="border:0; border-top: 2px dashed #dfe6e9; margin-bottom: 16px;">
       
       <div class="feedback-banner" id="feedback-msg"></div>
-      <div id="game-view"></div>
+      <div id="game-view" class="view-fade"></div>
     </div>
 
     <!-- AUDIO assets -->
@@ -463,7 +439,7 @@
     let splashTimeout = null;
 
     window.onload = function() {
-      splashTimeout = setTimeout(goToTitlePage, 6000);
+      splashTimeout = setTimeout(goToTitlePage, 5000);
     };
 
     function goToTitlePage() {
@@ -519,19 +495,11 @@
 
     function showFeedback(msg, isSuccess = true) {
       const banner = document.getElementById('feedback-msg');
-      const card = document.getElementById('game-container-card');
       if (!banner) return;
-      
       banner.innerText = msg;
       banner.style.color = isSuccess ? '#00b894' : '#d63031';
-      
-      if (card) {
-        card.classList.remove('correct-anim', 'wrong-anim');
-        void card.offsetWidth; // Trigger reflow
-        card.classList.add(isSuccess ? 'correct-anim' : 'wrong-anim');
-      }
-
-      setTimeout(() => { banner.innerText = ''; }, 1600);
+      banner.style.opacity = '1';
+      setTimeout(() => { banner.style.opacity = '0'; }, 1500);
     }
 
     function shuffleArray(arr) {
@@ -542,18 +510,16 @@
     let currentQIndex = 0;
     let totalScore = 0;
 
-    // --- DATASETS (STRICTLY BADI 'ू' MATRA ONLY) ---
     const level1Master = [
       { img: 'assets/chuha.png', correct: 'चूहा', options: ['चूहा', 'मोर', 'चील'] },
       { img: 'assets/kabutar.png', correct: 'कबूतर', options: ['कबूतर', 'तोता', 'कागा'] },
-      { img: 'assets/phool.png', correct: 'फूल', options: ['फूल', 'पत्ता', 'पेड़'] },
-          ];
+      { img: 'assets/phool.png', correct: 'फूल', options: ['फूल', 'पत्ता', 'पेड़'] }
+    ];
 
     const level2SentenceMaster = [
       { img: 'assets/chuha.png', pre: 'बगीचे में एक ', post: ' घूम रहा था।', correct: 'चूहा', wrong: ['चूहे', 'चीहा'] },
       { img: 'assets/phool.png', pre: 'पूजा के लिए सुंदर ', post: ' लाओ।', correct: 'फूल', wrong: ['फल', 'फुल'] },
-      { img: 'assets/kabutar.png', pre: 'छत पर ', post: ' दाना चुग रहा है।', correct: 'कबूतर', wrong: ['कबुतर', 'कौआ'] },
-      
+      { img: 'assets/kabutar.png', pre: 'छत पर ', post: ' दाना चुग रहा है।', correct: 'कबूतर', wrong: ['कबुतर', 'कौआ'] }
     ];
 
     const level3Master = [
@@ -566,7 +532,7 @@
 
     const level4DestinationMaster = [
       {
-        runner: '🐭', target: '🧀', title: 'चूहे को टेढ़े-मेढ़े रास्ते से पनीर तक पहुँचाएँ!',
+        runner: '🐭', target: '🧀', title: 'चूहे को रास्ते से पनीर तक पहुँचाएँ!',
         steps: [
           { prompt: 'कदम 1: "ू" मात्रा वाला सही शब्द चुनें', correct: 'दूध', wrong: ['दाल', 'दिन'] },
           { prompt: 'कदम 2: सही शब्द चुनें', correct: 'जूता', wrong: ['जाल', 'जल'] },
@@ -574,7 +540,7 @@
         ]
       },
       {
-        runner: '🕊️', target: '🌾', title: 'कबूतर को घुमावदार रास्ते से दाने तक पहुँचाएँ!',
+        runner: '🕊️', target: '🌾', title: 'कबूतर को रास्ते से दाने तक पहुँचाएँ!',
         steps: [
           { prompt: 'कदम 1: "ू" मात्रा वाला शब्द चुनें', correct: 'झूला', wrong: ['खीरा', 'झोपड़ी'] },
           { prompt: 'कदम 2: सही शब्द चुनें', correct: 'खजूर', wrong: ['खीरा', 'खाना'] },
@@ -606,6 +572,13 @@
     let currentL5Questions = [];
     let l4StepIndex = 0; 
 
+    function triggerViewAnimation() {
+      const view = document.getElementById('game-view');
+      view.classList.remove('view-fade');
+      void view.offsetWidth;
+      view.classList.add('view-fade');
+    }
+
     function loadLevel(lvl) {
       currentLevel = lvl;
       currentQIndex = 0;
@@ -616,19 +589,18 @@
         btn.classList.toggle('active', idx + 1 === lvl);
       });
 
-      const view = document.getElementById('game-view');
-      view.innerHTML = '';
+      triggerViewAnimation();
 
       if (lvl === 1) {
-        currentL1Questions = shuffleArray(level1Master).slice(0, 5);
+        currentL1Questions = shuffleArray(level1Master);
         renderLevel1();
       }
       else if (lvl === 2) {
-        currentL2Questions = shuffleArray(level2SentenceMaster).slice(0, 5);
+        currentL2Questions = shuffleArray(level2SentenceMaster);
         renderLevel2();
       }
       else if (lvl === 3) {
-        currentL3Questions = shuffleArray(level3Master).slice(0, 5);
+        currentL3Questions = shuffleArray(level3Master);
         renderLevel3();
       }
       else if (lvl === 4) {
@@ -636,25 +608,23 @@
         renderLevel4();
       }
       else if (lvl === 5) {
-        currentL5Questions = shuffleArray(level5IdentifyMaster).slice(0, 5);
+        currentL5Questions = shuffleArray(level5IdentifyMaster);
         renderLevel5();
       }
     }
 
-    // --- LEVEL 1 ---
+    /* LEVEL 1 */
     function renderLevel1() {
       const view = document.getElementById('game-view');
       const q = currentL1Questions[currentQIndex];
       const opts = shuffleArray(q.options);
 
       view.innerHTML = `
-        <div class="q-title">शब्द चुनो - प्रश्न ${currentQIndex + 1}/5</div>
-        <p style="color:#2d3436; font-weight:bold; margin: 4px 0;">चित्र देखकर सही शब्द पर क्लिक करें:</p>
+        <div class="q-title">शब्द चुनो</div>
+        <p style="color:#636e72; font-weight:bold; margin: 4px 0;">चित्र देखकर सही शब्द पर क्लिक करें:</p>
         <img src="${q.img}" class="asset-img" alt="Quiz Image" onerror="this.src='https://via.placeholder.com/150?text=Item'">
         <div class="options-grid">
-          ${opts.map(opt => `
-            <button class="opt-btn" onclick="checkLevel1('${opt}', '${q.correct}')">${opt}</button>
-          `).join('')}
+          ${opts.map(opt => `<button class="opt-btn" onclick="checkLevel1('${opt}', '${q.correct}')">${opt}</button>`).join('')}
         </div>
       `;
     }
@@ -666,11 +636,11 @@
         showFeedback('बिल्कुल सही! ✨', true);
         if (currentQIndex < currentL1Questions.length - 1) {
           currentQIndex++;
-          setTimeout(renderLevel1, 600);
+          setTimeout(() => { triggerViewAnimation(); renderLevel1(); }, 500);
         } else {
           triggerConfetti();
           showFeedback('शानदार! स्तर 1 पूरा हुआ!', true);
-          setTimeout(() => { loadLevel(2); }, 1400);
+          setTimeout(() => { loadLevel(2); }, 1200);
         }
       } else {
         playSound('wrong');
@@ -678,23 +648,21 @@
       }
     }
 
-    // --- LEVEL 2 ---
+    /* LEVEL 2 */
     function renderLevel2() {
       const view = document.getElementById('game-view');
       const q = currentL2Questions[currentQIndex];
       const opts = shuffleArray([q.correct, ...q.wrong]);
 
       view.innerHTML = `
-        <div class="q-title">वाक्य पूरा करो - प्रश्न ${currentQIndex + 1}/5</div>
+        <div class="q-title">वाक्य पूरा करो</div>
         <div class="l2-sentence-card">
           <img src="${q.img}" class="asset-img" alt="Sentence Image" onerror="this.src='https://via.placeholder.com/150?text=Item'">
           <div class="sentence-box">
             ${q.pre}<span class="blank-space" id="blank-target">?</span>${q.post}
           </div>
           <div class="options-grid" style="margin-top:15px;">
-            ${opts.map(opt => `
-              <button class="opt-btn" style="background:#0984e3; box-shadow:0 6px 0 #0768b5;" onclick="checkLevel2('${opt}', '${q.correct}')">${opt}</button>
-            `).join('')}
+            ${opts.map(opt => `<button class="opt-btn" style="background:#0984e3; box-shadow:0 6px 0 #0768b5;" onclick="checkLevel2('${opt}', '${q.correct}')">${opt}</button>`).join('')}
           </div>
         </div>
       `;
@@ -711,11 +679,12 @@
         setTimeout(() => {
           if (currentQIndex < currentL2Questions.length - 1) {
             currentQIndex++;
+            triggerViewAnimation();
             renderLevel2();
           } else {
             triggerConfetti();
             showFeedback('शाबाश! स्तर 2 पूरा हुआ!', true);
-            setTimeout(() => { loadLevel(3); }, 1400);
+            setTimeout(() => { loadLevel(3); }, 1200);
           }
         }, 800);
       } else {
@@ -724,19 +693,17 @@
       }
     }
 
-    // --- LEVEL 3 ---
+    /* LEVEL 3 */
     function renderLevel3() {
       const view = document.getElementById('game-view');
       const q = currentL3Questions[currentQIndex];
       const opts = shuffleArray(q.options);
 
       view.innerHTML = `
-        <div class="q-title">प्रश्नोत्तर और सही शब्द - प्रश्न ${currentQIndex + 1}/5</div>
+        <div class="q-title">प्रश्नोत्तर और सही शब्द</div>
         <p style="font-size:1.2rem; color:#2d3436; font-weight:bold; margin: 15px 0;">${q.prompt}</p>
         <div class="options-grid" style="margin-top:20px;">
-          ${opts.map(opt => `
-            <button class="opt-btn" style="background:#00b894; box-shadow:0 6px 0 #00897b;" onclick="checkLevel3('${opt}', '${q.correct}')">${opt}</button>
-          `).join('')}
+          ${opts.map(opt => `<button class="opt-btn" style="background:#00b894; box-shadow:0 6px 0 #00897b;" onclick="checkLevel3('${opt}', '${q.correct}')">${opt}</button>`).join('')}
         </div>
       `;
     }
@@ -748,11 +715,11 @@
         showFeedback('उत्कृष्ट! सही उत्तर 👍', true);
         if (currentQIndex < currentL3Questions.length - 1) {
           currentQIndex++;
-          setTimeout(renderLevel3, 600);
+          setTimeout(() => { triggerViewAnimation(); renderLevel3(); }, 500);
         } else {
           triggerConfetti();
           showFeedback('बहुत बढ़िया! स्तर 3 पूरा हुआ!', true);
-          setTimeout(() => { loadLevel(4); }, 1400);
+          setTimeout(() => { loadLevel(4); }, 1200);
         }
       } else {
         playSound('wrong');
@@ -760,13 +727,13 @@
       }
     }
 
-    // --- LEVEL 4 ---
+    /* LEVEL 4 */
     const curvePoints = [
-      { x: 10, y: 80 },  // Start
-      { x: 32, y: 25 },  // Step 1
-      { x: 55, y: 90 },  // Step 2
-      { x: 78, y: 30 },  // Step 3
-      { x: 92, y: 75 }   // Target
+      { x: 10, y: 80 },
+      { x: 32, y: 25 },
+      { x: 55, y: 90 },
+      { x: 78, y: 30 },
+      { x: 92, y: 75 }
     ];
 
     function renderLevel4() {
@@ -777,8 +744,8 @@
       const pos = curvePoints[l4StepIndex];
 
       view.innerHTML = `
-        <div class="q-title">मंज़िल का रास्ता (मिशन ${currentQIndex + 1}/${currentL4Questions.length})</div>
-        <p style="font-size:1.1rem; color:#2d3436; font-weight:bold; margin-bottom:5px;">${mission.title}</p>
+        <div class="q-title">मंज़िल का रास्ता</div>
+        <p style="font-size:1.1rem; color:#636e72; font-weight:bold; margin-bottom:8px;">${mission.title}</p>
         
         <div class="destination-board">
           <div class="svg-track-container">
@@ -794,12 +761,10 @@
             <div class="target-avatar" style="left: ${curvePoints[4].x}%; top: ${curvePoints[4].y}%;">${mission.target}</div>
           </div>
 
-          <p style="color:#d63031; font-weight:bold; background:#fff; padding:8px; border-radius:12px; margin: 8px 0; box-shadow:0 2px 6px rgba(0,0,0,0.05);">${currentStep.prompt}</p>
+          <p style="color:#d63031; font-weight:bold; background:#fff; padding:10px; border-radius:14px; margin: 12px 0;">${currentStep.prompt}</p>
 
           <div class="path-choices-l4">
-            ${choices.map(choice => `
-              <button class="choice-btn-l4" onclick="stepDestination('${choice}', '${currentStep.correct}')">${choice}</button>
-            `).join('')}
+            ${choices.map(choice => `<button class="choice-btn-l4" onclick="stepDestination('${choice}', '${currentStep.correct}')">${choice}</button>`).join('')}
           </div>
         </div>
       `;
@@ -813,6 +778,7 @@
 
         if (l4StepIndex < 3) {
           showFeedback('सही उत्तर! आगे बढ़िए 🏃‍♂️', true);
+          triggerViewAnimation();
           renderLevel4();
         } else {
           const runner = document.getElementById('runner-char');
@@ -822,40 +788,38 @@
           }
 
           triggerConfetti();
-          showFeedback('बधाई हो! आप अपनी मंज़िल तक पहुँच गए! 🎉', true);
+          showFeedback('मंज़िल तक पहुँच गए! 🎉', true);
           
           setTimeout(() => {
             if (currentQIndex < currentL4Questions.length - 1) {
               currentQIndex++;
               l4StepIndex = 0;
+              triggerViewAnimation();
               renderLevel4();
             } else {
               triggerConfetti();
               showFeedback('शानदार! स्तर 4 पूरा हुआ!', true);
-              setTimeout(() => { loadLevel(5); }, 1400);
+              setTimeout(() => { loadLevel(5); }, 1200);
             }
-          }, 1400);
+          }, 1200);
         }
-
       } else {
         playSound('wrong');
         showFeedback('गलत रास्ता! सही शब्द चुनें', false);
       }
     }
 
-    // --- LEVEL 5 ---
+    /* LEVEL 5 */
     function renderLevel5() {
       const view = document.getElementById('game-view');
       const q = currentL5Questions[currentQIndex];
       const opts = shuffleArray([q.correct, ...q.wrong]);
 
       view.innerHTML = `
-        <div class="q-title">सही शब्द पहचानो - प्रश्न ${currentQIndex + 1}/5</div>
-        <p style="font-size:1.2rem; color:#2d3436; font-weight:bold; margin-bottom:18px;">${q.prompt}</p>
+        <div class="q-title">सही शब्द पहचानो</div>
+        <p style="font-size:1.2rem; color:#2d3436; font-weight:bold; margin-bottom:20px;">${q.prompt}</p>
         <div class="options-grid">
-          ${opts.map(opt => `
-            <button class="opt-btn" style="background:#e67e22; box-shadow:0 6px 0 #d35400;" onclick="checkLevel5('${opt}', '${q.correct}')">${opt}</button>
-          `).join('')}
+          ${opts.map(opt => `<button class="opt-btn" style="background:#e67e22; box-shadow:0 6px 0 #d35400;" onclick="checkLevel5('${opt}', '${q.correct}')">${opt}</button>`).join('')}
         </div>
       `;
     }
@@ -868,7 +832,7 @@
 
         if (currentQIndex < currentL5Questions.length - 1) {
           currentQIndex++;
-          setTimeout(renderLevel5, 600);
+          setTimeout(() => { triggerViewAnimation(); renderLevel5(); }, 500);
         } else {
           showFinalScoreboard();
         }
@@ -878,7 +842,6 @@
       }
     }
 
-    // --- SCORE & CONFETTI ---
     function showFinalScoreboard() {
       triggerMassiveConfetti();
       document.getElementById('final-score-val').innerText = totalScore;
