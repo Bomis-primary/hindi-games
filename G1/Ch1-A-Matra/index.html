@@ -40,7 +40,7 @@
     }
 
     body {
-      font-family: "Noto Sans Devanagari", "Mangal", "Arial Unicode MS", Arial, sans-serif;
+      font-family: "Noto Sans Devanagari", "Nirmala UI", "Mangal", "Kohinoor Devanagari", "Arial Unicode MS", Arial, sans-serif;
       color: var(--ink);
       background: var(--cream);
       touch-action: manipulation;
@@ -834,6 +834,54 @@
     }
 
     @media (max-width: 620px) {
+      /* Keep the activity directly below the header on phones. */
+      .game-main {
+        justify-content: flex-start;
+        padding: 10px 10px max(12px, env(safe-area-inset-bottom));
+      }
+
+      .prompt-card {
+        margin-bottom: 10px;
+        padding: 12px 10px;
+        border-radius: 18px;
+      }
+
+      .prompt-label {
+        margin-bottom: 5px;
+        padding: 4px 10px;
+        font-size: 0.82rem;
+      }
+
+      .question-text {
+        font-size: clamp(1.08rem, 4.9vw, 1.38rem);
+        line-height: 1.58;
+      }
+
+      .word-display,
+      .word-card {
+        min-height: 60px;
+        margin-bottom: 11px;
+        padding: 8px 18px;
+        font-size: clamp(1.9rem, 10vw, 2.55rem);
+      }
+
+      .micro-instruction {
+        margin-bottom: 9px;
+        font-size: 0.9rem;
+      }
+
+      .piece-tray,
+      .build-tray {
+        gap: 8px;
+      }
+
+      .feedback-line {
+        min-height: 40px;
+        margin-top: 8px;
+        padding: 8px 10px;
+        font-size: 0.9rem;
+      }
+
       .rules { grid-template-columns: 1fr; }
       .rule { padding: 9px 10px; }
       .topbar { min-height: 68px; gap: 7px; }
@@ -848,23 +896,36 @@
 
     @media (max-width: 480px) {
       .topbar {
-        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 42px;
         grid-template-areas:
           "level level sound"
           "score timer timer";
-        row-gap: 7px;
-        min-height: 104px;
+        row-gap: 6px;
+        min-height: 92px;
+        padding-top: max(8px, env(safe-area-inset-top));
+        padding-bottom: 8px;
       }
 
       .score-box,
       .timer-box {
         width: 100%;
         min-width: 0;
+        min-height: 40px;
+        padding: 6px 8px;
+      }
+
+      .sound-btn {
+        width: 40px;
+        height: 40px;
+      }
+
+      .challenge-count {
+        font-size: 0.8rem;
       }
 
       .game-main {
-        padding-left: 10px;
-        padding-right: 10px;
+        justify-content: flex-start;
+        padding: 8px 10px max(12px, env(safe-area-inset-bottom));
       }
 
       .ambient.a7,
@@ -883,6 +944,13 @@
       .basket-badge { min-width: 56px; min-height: 34px; font-size: 0.96rem; }
       .picture-clue { width: 98px; height: 98px; font-size: 3rem; }
       .picture-clue svg { width: 70px; height: 70px; }
+    }
+
+    @media (max-width: 620px) and (max-height: 760px) {
+      .prompt-card { padding-top: 9px; padding-bottom: 9px; }
+      .word-display, .word-card { min-height: 54px; margin-bottom: 8px; }
+      .letter-piece { min-height: 56px; }
+      .feedback-line { margin-top: 6px; }
     }
 
     @media (max-height: 610px) and (orientation: landscape) {
@@ -1242,17 +1310,26 @@
       }
 
       function setHighlightedA(element, text) {
-        var characters = String(text).split('');
+        /*
+          Do not split Hindi text character-by-character. Devanagari matras and
+          halants are combining marks; separating them into individual DOM text
+          nodes can make mobile browsers show dotted circles. Split only around
+          the independent vowel अ so every remaining Hindi word stays intact.
+        */
+        var parts = String(text).split('अ');
         var i;
         element.textContent = '';
-        for (i = 0; i < characters.length; i += 1) {
-          if (characters[i] === 'अ') {
+
+        for (i = 0; i < parts.length; i += 1) {
+          if (parts[i]) {
+            element.appendChild(document.createTextNode(parts[i]));
+          }
+
+          if (i < parts.length - 1) {
             var span = document.createElement('span');
             span.className = 'swar-a';
-            span.textContent = characters[i];
+            span.textContent = 'अ';
             element.appendChild(span);
-          } else {
-            element.appendChild(document.createTextNode(characters[i]));
           }
         }
       }
