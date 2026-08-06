@@ -35,6 +35,23 @@
             padding: 20px;
             box-sizing: border-box;
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .screen {
+            display: none;
+        }
+
+        .active-screen {
+            display: block;
+        }
+
+        /* Splash / Logo Screen */
+        .logo-img {
+            max-width: 180px;
+            height: auto;
+            margin-bottom: 20px;
         }
 
         h1 {
@@ -43,6 +60,26 @@
             font-size: 1.8rem;
         }
 
+        p {
+            color: #555;
+            line-height: 1.5;
+        }
+
+        /* Instructions Screen */
+        .instructions-list {
+            text-align: left;
+            background: #eef2f5;
+            padding: 15px 20px 15px 35px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .instructions-list li {
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        /* Gameplay Screen */
         .stats-bar {
             display: flex;
             justify-content: space-between;
@@ -57,7 +94,7 @@
         .item-card {
             border: 2px dashed var(--secondary);
             border-radius: 12px;
-            padding: 25px;
+            padding: 20px;
             margin-bottom: 20px;
             background: #fafafa;
         }
@@ -87,7 +124,6 @@
         }
 
         .btn {
-            flex: 1;
             padding: 12px 20px;
             font-size: 1.1rem;
             border: none;
@@ -102,12 +138,29 @@
             transform: scale(0.98);
         }
 
+        .btn-primary {
+            background-color: var(--primary);
+            width: 100%;
+        }
+
         .btn-need {
+            flex: 1;
             background-color: var(--need-color);
         }
 
         .btn-want {
+            flex: 1;
             background-color: var(--want-color);
+        }
+
+        .sound-toggle {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
         }
 
         .feedback {
@@ -116,30 +169,36 @@
             font-weight: bold;
             font-size: 1.1rem;
         }
-
-        .restart-btn {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
-            font-size: 1rem;
-            cursor: pointer;
-            margin-top: 15px;
-            display: none;
-        }
-
-        .result-screen {
-            display: none;
-        }
     </style>
 </head>
 <body>
 
 <div class="game-container">
-    <h1>🛍️ पहले क्या लूँ? (Smart Shopper)</h1>
+    <button class="sound-toggle" onclick="toggleAudio()" id="soundBtn">🔊</button>
 
-    <div id="gameplay">
+    <!-- Screen 1: Logo & Welcome -->
+    <div id="screenLogo" class="screen active-screen">
+        <img src="assets/logo.png" alt="Innovine Logo" class="logo-img" onerror="this.src='https://via.placeholder.com/180x80?text=Innovine'">
+        <h1>पहले क्या लूँ?</h1>
+        <p>स्मार्ट ख़रीददार बनें और समझदारी से फ़ैसले लें!</p>
+        <button class="btn btn-primary" onclick="showInstructions()">आगे बढ़ें ➡️</button>
+    </div>
+
+    <!-- Screen 2: Instructions -->
+    <div id="screenInstructions" class="screen">
+        <h2>खेल के नियम 📜</h2>
+        <ul class="instructions-list">
+            <li>आपको <b>₹100</b> जेब खर्च मिलेगा।</li>
+            <li>बाज़ार की वस्तुओं को देखकर चुनें कि वह <b>ज़रूरत (Need)</b> है या <b>इच्छा (Want)</b>।</li>
+            <li><b>ज़रूरत (Need):</b> ऐसी चीज़ें जिनके बिना काम न चले (उदा. किताब, बैग)।</li>
+            <li><b>इच्छा (Want):</b> शौक या मज़ा लेने की चीज़ें (उदा. खिलौने, टॉफ़ी)।</li>
+            <li>इच्छाओं को टालकर बचाए गए पैसे आपकी <b>गुल्लक</b> में जमा होंगे!</li>
+        </ul>
+        <button class="btn btn-primary" onclick="startGame()">खेल शुरू करें 🎮</button>
+    </div>
+
+    <!-- Screen 3: Gameplay -->
+    <div id="screenGameplay" class="screen">
         <div class="stats-bar">
             <span>बजट: ₹<span id="budget">100</span></span>
             <span>गुल्लक: ₹<span id="savings">0</span></span>
@@ -152,7 +211,7 @@
             <div class="item-price">कीमत: ₹<span id="itemPrice">30</span></div>
         </div>
 
-        <p>यह वस्तु क्या है? सही वर्गीकरण चुनिए:</p>
+        <p>यह वस्तु क्या है? सही विकल्प चुनें:</p>
 
         <div class="btn-group">
             <button class="btn btn-need" onclick="makeChoice('need')">✅ ज़रूरत (Need)</button>
@@ -162,18 +221,65 @@
         <div class="feedback" id="feedback"></div>
     </div>
 
-    <div class="result-screen" id="resultScreen">
+    <!-- Screen 4: Results -->
+    <div id="screenResult" class="screen">
         <h2>खेल पूरा हुआ! 🎉</h2>
         <p id="finalScore"></p>
         <p id="finalSavings"></p>
         <p id="evaluationMsg"></p>
-        <button class="restart-btn" id="restartBtn" style="display:inline-block;" onclick="restartGame()">पुनः खेलें 🔄</button>
+        <button class="btn btn-primary" onclick="startGame()">पुनः खेलें 🔄</button>
     </div>
 </div>
 
 <script>
-    // Item dataset built from Ch5.pdf context
+    // Web Audio API Sound Synthesizer (No external assets required for SFX)
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    let audioCtx = null;
+    let audioMuted = false;
+
+    function initAudio() {
+        if (!audioCtx) {
+            audioCtx = new AudioContext();
+        }
+    }
+
+    function playTone(freq, type, duration) {
+        if (audioMuted) return;
+        initAudio();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.value = freq;
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+        osc.stop(audioCtx.currentTime + duration);
+    }
+
+    function playSound(type) {
+        if (type === 'correct') {
+            playTone(523.25, 'sine', 0.15); // C5
+            setTimeout(() => playTone(659.25, 'sine', 0.2), 100); // E5
+        } else if (type === 'wrong') {
+            playTone(220, 'square', 0.2); // A3
+            setTimeout(() => playTone(185, 'square', 0.3), 150); // F#3
+        } else if (type === 'win') {
+            playTone(523.25, 'triangle', 0.1);
+            setTimeout(() => playTone(659.25, 'triangle', 0.1), 100);
+            setTimeout(() => playTone(783.99, 'triangle', 0.3), 200);
+        }
+    }
+
+    function toggleAudio() {
+        audioMuted = !audioMuted;
+        document.getElementById('soundBtn').innerText = audioMuted ? '🔇' : '🔊';
+    }
+
+    // Dataset based on Chapter 5 (Expanded to 15 total items)
     const masterItemsBank = [
+        // Original 10 Items
         { name: 'किताब (Book)', category: 'need', price: 30, icon: '📖' },
         { name: 'रोबोट (Robot Toy)', category: 'want', price: 50, icon: '🤖' },
         { name: 'गुब्बारा (Balloon)', category: 'want', price: 10, icon: '🎈' },
@@ -183,7 +289,14 @@
         { name: 'दूध (Milk)', category: 'need', price: 25, icon: '🥛' },
         { name: 'साबुन (Soap)', category: 'need', price: 15, icon: '🧼' },
         { name: 'चॉकलेट (Chocolate)', category: 'want', price: 15, icon: '🍫' },
-        { name: 'पेंसिल/स्टेशनरी (Stationery)', category: 'need', price: 10, icon: '✏️' }
+        { name: 'पेंसिल/स्टेशनरी (Stationery)', category: 'need', price: 10, icon: '✏️' },
+
+        // 5 New Items added from textbook context
+        { name: 'मटका / पानी का बर्तन (Earthen Pot)', category: 'need', price: 35, icon: '🏺' },
+        { name: 'चावल (Rice)', category: 'need', price: 30, icon: '🌾' },
+        { name: 'बिस्कुट का पैकेट (Biscuit Packet)', category: 'want', price: 15, icon: '🍪' },
+        { name: 'सजावटी फूल (Decorative Flowers)', category: 'want', price: 20, icon: '💐' },
+        { name: 'पानी की बोतल (Water Bottle)', category: 'need', price: 25, icon: '🍾' }
     ];
 
     let items = [];
@@ -192,15 +305,26 @@
     let savings = 0;
     let score = 0;
 
+    function showScreen(screenId) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
+        document.getElementById(screenId).classList.add('active-screen');
+    }
+
+    function showInstructions() {
+        initAudio();
+        showScreen('screenInstructions');
+    }
+
     function startGame() {
+        initAudio();
+        // Pick 6 random items each round from the 15-item bank
         items = [...masterItemsBank].sort(() => Math.random() - 0.5).slice(0, 6);
         currentIndex = 0;
         budget = 100;
         savings = 0;
         score = 0;
 
-        document.getElementById('gameplay').style.display = 'block';
-        document.getElementById('resultScreen').style.display = 'none';
+        showScreen('screenGameplay');
         updateStats();
         loadNextItem();
     }
@@ -229,6 +353,7 @@
         const feedbackEl = document.getElementById('feedback');
 
         if (userChoice === currentItem.category) {
+            playSound('correct');
             score += 10;
             if (userChoice === 'need') {
                 if (budget >= currentItem.price) {
@@ -240,12 +365,12 @@
                     feedbackEl.innerText = 'सही पहचान! पर आपके पास पर्याप्त बजट नहीं था।';
                 }
             } else {
-                // If it's a want, saving the money to piggy bank
                 savings += currentItem.price;
                 feedbackEl.style.color = 'green';
-                feedbackEl.innerText = 'शाबाश! आपने इच्छा टालकर ' + currentItem.price + ' रुपये गुल्लक में बचाए।';
+                feedbackEl.innerText = 'शाबाश! आपने इच्छा टालकर ₹' + currentItem.price + ' गुल्लक में बचाए।';
             }
         } else {
+            playSound('wrong');
             feedbackEl.style.color = 'red';
             feedbackEl.innerText = 'गलत! ' + currentItem.name + ' एक ' + (currentItem.category === 'need' ? 'ज़रूरत' : 'इच्छा') + ' है।';
         }
@@ -256,8 +381,8 @@
     }
 
     function endGame() {
-        document.getElementById('gameplay').style.display = 'none';
-        document.getElementById('resultScreen').style.display = 'block';
+        playSound('win');
+        showScreen('screenResult');
 
         document.getElementById('finalScore').innerText = 'कुल अंक: ' + score;
         document.getElementById('finalSavings').innerText = 'गुल्लक में बचाए गए रुपये: ₹' + savings;
@@ -269,13 +394,6 @@
             evalEl.innerText = 'अच्छा प्रयास! अगली बार ज़रूरतों को पहले चुनने का प्रयास करें! 💡';
         }
     }
-
-    function restartGame() {
-        startGame();
-    }
-
-    // Start on load
-    startGame();
 </script>
 </body>
 </html>
