@@ -9,7 +9,7 @@
     <style>
         * {
             box-sizing: border-box;
-            touch-action: none; /* स्क्रॉलिंग रोकने के लिए */
+            touch-action: none; /* Prevent scrolling during gameplay */
         }
         body {
             margin: 0;
@@ -40,12 +40,12 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 90%;
-            max-width: 480px;
+            width: 92%;
+            max-width: 520px;
             background: #ffffff;
-            border: 4px solid #0055ff;
-            border-radius: 12px;
-            padding: 20px;
+            border: 5px solid #0055ff;
+            border-radius: 16px;
+            padding: 24px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.6);
             text-align: center;
             z-index: 100;
@@ -53,23 +53,24 @@
         #quiz-modal h3 {
             margin-top: 0;
             color: #0055ff;
-            font-size: 20px;
+            font-size: 24px; /* Increased font size */
         }
         #quiz-modal p {
-            font-size: 16px;
-            color: #333;
-            margin-bottom: 15px;
-            line-height: 1.4;
+            font-size: 20px; /* Increased font size */
+            font-weight: 600;
+            color: #222;
+            margin-bottom: 18px;
+            line-height: 1.5;
         }
         .quiz-btn {
             display: block;
             width: 100%;
-            padding: 12px;
-            margin: 8px 0;
+            padding: 14px 16px;
+            margin: 10px 0;
             background-color: #f8f9fa;
             border: 2px solid #0055ff;
-            border-radius: 8px;
-            font-size: 15px;
+            border-radius: 10px;
+            font-size: 18px; /* Increased font size */
             font-weight: bold;
             color: #0055ff;
             cursor: pointer;
@@ -83,10 +84,10 @@
         /* On-Screen Feedback Message Box */
         #quiz-feedback {
             display: none;
-            font-size: 16px;
+            font-size: 18px; /* Increased font size */
             font-weight: bold;
-            padding: 10px;
-            margin-top: 12px;
+            padding: 12px;
+            margin-top: 14px;
             border-radius: 8px;
             animation: fadeIn 0.3s ease-in-out;
         }
@@ -109,11 +110,11 @@
             left: 50%;
             transform: translate(-50%, -50%);
             width: 90%;
-            max-width: 450px;
+            max-width: 480px;
             background: #ffffff;
-            border: 4px solid #d32f2f;
-            border-radius: 12px;
-            padding: 20px;
+            border: 5px solid #d32f2f;
+            border-radius: 16px;
+            padding: 24px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.7);
             text-align: center;
             z-index: 110;
@@ -121,12 +122,12 @@
         #gameover-modal h2 {
             margin-top: 0;
             color: #d32f2f;
-            font-size: 24px;
+            font-size: 28px; /* Increased font size */
         }
         #gameover-modal p {
-            font-size: 18px;
+            font-size: 22px; /* Increased font size */
             color: #333;
-            margin: 15px 0 25px 0;
+            margin: 18px 0 25px 0;
             font-weight: bold;
         }
 
@@ -138,11 +139,11 @@
             left: 50%;
             transform: translate(-50%, -50%);
             width: 90%;
-            max-width: 450px;
+            max-width: 480px;
             background: #ffffff;
-            border: 4px solid #2e7d32;
-            border-radius: 12px;
-            padding: 20px;
+            border: 5px solid #2e7d32;
+            border-radius: 16px;
+            padding: 24px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.7);
             text-align: center;
             z-index: 110;
@@ -150,23 +151,23 @@
         #win-modal h2 {
             margin-top: 0;
             color: #2e7d32;
-            font-size: 24px;
+            font-size: 28px; /* Increased font size */
         }
         #win-modal p {
-            font-size: 18px;
+            font-size: 22px; /* Increased font size */
             color: #333;
-            margin: 15px 0 25px 0;
+            margin: 18px 0 25px 0;
             font-weight: bold;
         }
 
         .action-btn {
             display: inline-block;
-            padding: 12px 25px;
+            padding: 14px 28px;
             background-color: #0055ff;
             color: #ffffff;
             border: none;
-            border-radius: 8px;
-            font-size: 16px;
+            border-radius: 10px;
+            font-size: 18px; /* Increased font size */
             font-weight: bold;
             cursor: pointer;
             transition: background-color 0.2s ease;
@@ -214,6 +215,11 @@ const audioCache = {
     wrong_snd: new Audio('assets/wrong.mp3')
 };
 
+// Preload audio elements
+for (let key in audioCache) {
+    audioCache[key].preload = 'auto';
+}
+
 // Unlock Audio on First Mobile Touch
 let audioUnlocked = false;
 function unlockMobileAudio() {
@@ -229,7 +235,7 @@ function unlockMobileAudio() {
 window.addEventListener('touchstart', unlockMobileAudio, { once: true });
 window.addEventListener('click', unlockMobileAudio, { once: true });
 
-// --- Sound Player Helper (Phaser Sound + Audio Fallback) ---
+// --- Sound Player Helper (Instant Playback & Immediate Synthesis) ---
 function playSound(soundKey, scene) {
     let played = false;
     
@@ -245,16 +251,19 @@ function playSound(soundKey, scene) {
     if (!played && audioCache[soundKey]) {
         try {
             audioCache[soundKey].currentTime = 0;
-            audioCache[soundKey].play().catch(() => {
-                playSynthSound(soundKey);
-            });
+            const playPromise = audioCache[soundKey].play();
+            if (playPromise !== undefined) {
+                playPromise.catch(() => {
+                    playSynthSound(soundKey);
+                });
+            }
         } catch (e) {
             playSynthSound(soundKey);
         }
     }
 }
 
-// Synthetic Sound Fallback
+// Synthetic Sound Fallback (Short, crisp sound design for immediate feedback)
 function playSynthSound(type) {
     try {
         const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -269,20 +278,20 @@ function playSynthSound(type) {
 
         if (type === 'correct_snd') {
             osc.type = 'sine';
-            osc.frequency.setValueAtTime(523.25, now);
-            osc.frequency.setValueAtTime(659.25, now + 0.1);
+            osc.frequency.setValueAtTime(523.25, now); // C5
+            osc.frequency.setValueAtTime(659.25, now + 0.08); // E5
             gain.gain.setValueAtTime(0.15, now);
-            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
             osc.start(now);
-            osc.stop(now + 0.25);
+            osc.stop(now + 0.18);
         } else if (type === 'wrong_snd') {
             osc.type = 'sawtooth';
-            osc.frequency.setValueAtTime(180, now);
-            osc.frequency.setValueAtTime(120, now + 0.1);
+            osc.frequency.setValueAtTime(160, now);
+            osc.frequency.setValueAtTime(110, now + 0.08);
             gain.gain.setValueAtTime(0.15, now);
-            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
             osc.start(now);
-            osc.stop(now + 0.25);
+            osc.stop(now + 0.18);
         }
     } catch(e) {}
 }
@@ -363,12 +372,12 @@ class LogoScene extends Phaser.Scene {
         this.tweens.add({
             targets: logo,
             alpha: 1,
-            duration: 1000,
+            duration: 800,
             ease: 'Power2'
         });
 
-        this.time.delayedCall(5000, () => {
-            this.cameras.main.fadeOut(500, 0, 0, 0);
+        this.time.delayedCall(2500, () => {
+            this.cameras.main.fadeOut(400, 0, 0, 0);
             this.cameras.main.once('camerafadeoutcomplete', () => {
                 this.scene.start('InstructionScene');
             });
@@ -385,12 +394,12 @@ class InstructionScene extends Phaser.Scene {
     create() {
         this.cameras.main.setBackgroundColor('#1a2634');
 
-        this.add.text(400, 60, 'एक अनोखा तरबूज़', {
-            fontSize: '32px', color: '#4da6ff', fontStyle: 'bold'
+        this.add.text(400, 50, 'एक अनोखा तरबूज़', {
+            fontSize: '38px', color: '#4da6ff', fontStyle: 'bold'
         }).setOrigin(0.5);
 
-        this.add.text(400, 110, 'खेलने के नियम (Rules & Instructions)', {
-            fontSize: '20px', color: '#ffffff', fontStyle: 'bold'
+        this.add.text(400, 105, 'खेलने के नियम (Rules & Instructions)', {
+            fontSize: '24px', color: '#ffffff', fontStyle: 'bold'
         }).setOrigin(0.5);
 
         const rulesText = 
@@ -403,15 +412,15 @@ class InstructionScene extends Phaser.Scene {
         const bgRect = this.add.graphics();
         bgRect.fillStyle(0x0a192f, 0.85);
         bgRect.lineStyle(3, 0x0055ff, 1);
-        bgRect.fillRoundedRect(60, 150, 680, 300, 15);
-        bgRect.strokeRoundedRect(60, 150, 680, 300, 15);
+        bgRect.fillRoundedRect(50, 140, 700, 320, 15);
+        bgRect.strokeRoundedRect(50, 140, 700, 320, 15);
 
-        this.add.text(90, 175, rulesText, {
-            fontSize: '18px', color: '#f0f0f0', lineSpacing: 8
+        this.add.text(80, 165, rulesText, {
+            fontSize: '22px', color: '#f0f0f0', lineSpacing: 10
         });
 
-        const startBtn = this.add.text(400, 500, '👉 खेल शुरू करें (Start Game)', {
-            fontSize: '22px', color: '#ffffff', backgroundColor: '#0055ff', padding: { x: 20, y: 12 }
+        const startBtn = this.add.text(400, 510, '👉 खेल शुरू करें (Start Game)', {
+            fontSize: '26px', color: '#ffffff', backgroundColor: '#0055ff', padding: { x: 25, y: 14 }
         }).setOrigin(0.5).setInteractive({ useHandCursor: true });
 
         startBtn.on('pointerdown', () => {
@@ -473,8 +482,9 @@ class GameScene extends Phaser.Scene {
     create() {
         this.add.image(400, 300, 'bg');
 
-        this.scoreText = this.add.text(20, 20, 'Score: ' + globalScore + ' / 300', { fontSize: '22px', color: '#000', fontStyle: 'bold' });
-        this.livesText = this.add.text(650, 20, 'Lives: ❤️ ' + globalLives, { fontSize: '22px', color: '#d32f2f', fontStyle: 'bold' });
+        // Font sizes increased for Score and Lives display
+        this.scoreText = this.add.text(20, 20, 'Score: ' + globalScore + ' / 300', { fontSize: '26px', color: '#000', fontStyle: 'bold' });
+        this.livesText = this.add.text(620, 20, 'Lives: ❤️ ' + globalLives, { fontSize: '26px', color: '#d32f2f', fontStyle: 'bold' });
 
         this.player = this.physics.add.sprite(400, 520, 'square_mold');
         this.player.setCollideWorldBounds(true);
@@ -485,7 +495,7 @@ class GameScene extends Phaser.Scene {
 
         this.cursors = this.input.keyboard.createCursorKeys();
 
-        // --- Touch Control Handling (Using pointer.worldX for Scaled Canvas Precision) ---
+        // --- Touch Control Handling ---
         this.input.on('pointerdown', (pointer) => {
             unlockMobileAudio();
             this.player.x = Phaser.Math.Clamp(pointer.worldX, 40, 760);
@@ -668,7 +678,7 @@ class GameScene extends Phaser.Scene {
                     } else {
                         this.resumeGame();
                     }
-                }, 1500);
+                }, 1200);
             };
 
             optionsDiv.appendChild(btn);
