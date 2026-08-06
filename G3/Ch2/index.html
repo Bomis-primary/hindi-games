@@ -388,12 +388,14 @@
 
 <div id="game-container">
 
+    <!-- SPLASH SCREEN (LOGO DISPLAY) -->
     <div id="splash-screen" class="screen active">
         <div class="logo-box">
             <img src="assets/logo.png" alt="Innovine Logo" class="innovine-logo-img">
         </div>
     </div>
 
+    <!-- WELCOME SCREEN -->
     <div id="welcome-screen" class="screen">
         <h1 class="title">सेतु निर्माण (Bridge Builder)</h1>
         <p class="subtitle">पाठ 2: लकड़हारा और पेड़ - व्याकरण एवं पाठ बोध</p>
@@ -404,6 +406,7 @@
         <button class="btn" onclick="startGame()">खेल शुरू करें</button>
     </div>
 
+    <!-- GAMEPLAY SCREEN -->
     <div id="game-screen" class="screen">
         <div class="game-header">
             <div class="stat-box" id="score-display">अंक: 0</div>
@@ -433,6 +436,7 @@
         </div>
     </div>
 
+    <!-- END SCREEN -->
     <div id="end-screen" class="screen">
         <div class="end-card">
             <h2>शानदार सफलता! 🎉</h2>
@@ -461,12 +465,12 @@
         }
     }
 
-    // --- Question Bank (पाठ्यपुस्तक पर आधारित सटीक उत्तर) ---
+    // --- Question Bank ---
     const questionBank = [
         {
             q: "\"हमें सोच-समझकर निर्णय लेना चाहिए।\" – यह किस पेड़ ने कहा?",
             options: ["नीम", "पीपल", "आम", "बरगद"],
-            answer: 3 // अभ्यास प्रश्न के बहुविकल्पीय उत्तर (घ) के अनुसार बरगद सही है
+            answer: 3
         },
         {
             q: "लकड़हारे की कुल्हाड़ी का क्या टूट गया था?",
@@ -526,12 +530,12 @@
         document.getElementById(toId).classList.add('active');
     }
 
-    // Move Screen 1 (Logo) to Screen 2 (Instruction) after 5 seconds
+    // Auto-transition from Splash Screen (Logo) to Welcome Screen after 5 seconds
     setTimeout(() => {
         switchScreen('splash-screen', 'welcome-screen');
     }, 5000);
 
-    // --- Core Logic ---
+    // --- Core Game Logic ---
     function updateChancesUI() {
         let hearts = "";
         for (let i = 0; i < attemptsLeft; i++) {
