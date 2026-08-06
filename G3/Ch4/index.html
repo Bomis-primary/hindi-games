@@ -2,7 +2,7 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>जगमग जगमग - बिंदु जोड़ो (Connect the Dots)</title>
     <style>
         :root {
@@ -22,6 +22,7 @@
             padding: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -31,21 +32,30 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            min-height: 100dvh; /* Dynamic viewport height for mobile browsers */
             overflow: hidden;
         }
 
         #game-container {
             width: 100%;
             max-width: 900px;
-            height: 95vh;
-            max-height: 720px;
+            height: 100vh;
+            height: 100dvh;
+            max-height: 800px;
             background: var(--card-bg);
-            border-radius: 20px;
             box-shadow: var(--shadow);
             position: relative;
             overflow: hidden;
             display: flex;
             flex-direction: column;
+        }
+
+        @media (min-width: 769px) {
+            #game-container {
+                height: 95vh;
+                max-height: 720px;
+                border-radius: 20px;
+            }
         }
 
         .screen {
@@ -58,10 +68,10 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 15px;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.5s ease;
+            transition: opacity 0.4s ease;
         }
 
         .screen.active {
@@ -78,10 +88,10 @@
 
         .logo-box {
             background: white;
-            padding: 20px 35px;
+            padding: 15px 25px;
             border-radius: 20px;
             box-shadow: var(--shadow);
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             animation: pulse 2s infinite;
             display: flex;
             justify-content: center;
@@ -90,7 +100,8 @@
         }
 
         .logo-box img {
-            max-width: 260px;
+            max-width: 200px;
+            width: 100%;
             height: auto;
             display: block;
         }
@@ -105,47 +116,44 @@
         #welcome-screen {
             background: linear-gradient(to bottom, #fff8e1, #ffe0b2);
             text-align: center;
+            overflow-y: auto;
         }
 
         .title {
-            font-size: 2.2rem;
+            font-size: clamp(1.5rem, 5vw, 2.2rem);
             color: var(--primary-dark);
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         .subtitle {
-            font-size: 1.1rem;
+            font-size: clamp(0.9rem, 3.5vw, 1.1rem);
             color: #555;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .btn {
             background-color: var(--primary);
             color: white;
             border: none;
-            padding: 14px 34px;
-            font-size: 1.2rem;
+            padding: 14px 32px;
+            font-size: 1.1rem;
             font-weight: bold;
             border-radius: 30px;
             cursor: pointer;
             box-shadow: 0 4px 12px rgba(211, 47, 47, 0.4);
             transition: all 0.2s ease;
-        }
-
-        .btn:hover {
-            background-color: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(211, 47, 47, 0.5);
+            touch-action: manipulation;
         }
 
         .btn:active {
-            transform: translateY(0);
+            transform: scale(0.96);
+            background-color: var(--primary-dark);
         }
 
         /* Screen 3: Game Screen */
         #game-screen {
             justify-content: flex-start;
-            padding: 15px;
+            padding: 10px;
             background: #fffdf5;
         }
 
@@ -155,95 +163,115 @@
             justify-content: space-between;
             align-items: center;
             background: #ffffff;
-            padding: 10px 20px;
+            padding: 10px 12px;
             border-radius: 12px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.08);
             margin-bottom: 10px;
+            flex-shrink: 0;
         }
 
         .stat-box {
-            font-size: 1rem;
+            font-size: clamp(0.8rem, 3vw, 1rem);
             font-weight: bold;
             color: var(--primary-dark);
         }
 
         .game-area {
             display: flex;
-            flex-direction: row;
-            gap: 20px;
+            flex-direction: column;
+            gap: 10px;
             width: 100%;
-            height: calc(100% - 60px);
+            height: calc(100% - 55px);
             align-items: center;
-            justify-content: center;
+            justify-content: space-between;
+            overflow-y: auto;
+        }
+
+        @media (min-width: 769px) {
+            .game-area {
+                flex-direction: row;
+                gap: 20px;
+                justify-content: center;
+                align-items: center;
+                overflow-y: visible;
+            }
         }
 
         .canvas-container {
             position: relative;
-            width: 380px;
-            height: 380px;
+            width: 100%;
+            max-width: 340px;
+            aspect-ratio: 1 / 1;
             background: #2c1a32;
             border-radius: 16px;
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.5);
             display: flex;
             justify-content: center;
             align-items: center;
+            flex-shrink: 0;
         }
 
         canvas {
             border-radius: 16px;
+            width: 100%;
+            height: 100%;
+            touch-action: none;
         }
 
         /* Question Box */
         .question-card {
             background: white;
-            width: 380px;
+            width: 100%;
+            max-width: 380px;
             border-radius: 15px;
-            padding: 20px;
+            padding: 14px;
             box-shadow: var(--shadow);
             display: flex;
             flex-direction: column;
-            gap: 12px;
-            height: 380px;
+            gap: 8px;
             justify-content: space-between;
+            flex-grow: 1;
+            margin-bottom: 5px;
         }
 
         .question-card h3 {
-            font-size: 1.1rem;
+            font-size: clamp(0.95rem, 3.8vw, 1.1rem);
             color: #2c3e50;
-            line-height: 1.4;
+            line-height: 1.35;
         }
 
         .instruction-tag {
             background: #ffe0b2;
             color: #e65100;
             font-weight: bold;
-            padding: 6px 12px;
+            padding: 4px 10px;
             border-radius: 20px;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             display: inline-block;
-            margin-bottom: 5px;
+            margin-bottom: 4px;
         }
 
         .options-grid {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
         }
 
         .opt-btn {
             background: #fff8e1;
             border: 2px solid #ffe0b2;
-            padding: 12px 14px;
+            padding: 10px 12px;
             border-radius: 10px;
-            font-size: 0.95rem;
+            font-size: clamp(0.85rem, 3.5vw, 0.95rem);
             font-weight: 600;
             color: #d84315;
             cursor: pointer;
             text-align: left;
-            transition: all 0.2s;
+            transition: background-color 0.2s, border-color 0.2s;
+            touch-action: manipulation;
         }
 
-        .opt-btn:hover {
+        .opt-btn:active {
             background: #ffe0b2;
             border-color: #f57c00;
         }
@@ -252,11 +280,12 @@
         #end-screen {
             background: linear-gradient(to bottom, #fff8e1, #ffe0b2);
             text-align: center;
+            overflow-y: auto;
         }
 
         .end-card {
             background: white;
-            padding: 35px;
+            padding: 25px 20px;
             border-radius: 20px;
             box-shadow: var(--shadow);
             max-width: 420px;
@@ -265,29 +294,14 @@
 
         .end-card h2 {
             color: var(--primary-dark);
-            font-size: 2rem;
-            margin-bottom: 12px;
+            font-size: clamp(1.5rem, 5vw, 2rem);
+            margin-bottom: 10px;
         }
 
         .end-stat {
-            font-size: 1.15rem;
-            margin: 8px 0;
+            font-size: 1.05rem;
+            margin: 6px 0;
             color: #444;
-        }
-
-        @media (max-width: 768px) {
-            .game-area {
-                flex-direction: column;
-                gap: 10px;
-                overflow-y: auto;
-            }
-            .canvas-container, .question-card {
-                width: 320px;
-                height: 320px;
-            }
-            .logo-box img {
-                max-width: 200px;
-            }
         }
     </style>
 </head>
@@ -297,17 +311,16 @@
     <!-- Splash Screen -->
     <div id="splash-screen" class="screen active">
         <div class="logo-box">
-            <img src="assets/logo.png" alt="Logo">
+            <img src="assets/logo.png" alt="Logo" onerror="this.style.display='none'">
         </div>
-    
     </div>
 
     <!-- Welcome Screen -->
     <div id="welcome-screen" class="screen">
         <h1 class="title">बिंदु जोड़ो - जगमग दीया 🪔</h1>
         <p class="subtitle">पाठ 4: जगमग जगमग (सोहनलाल द्विवेदी)</p>
-        <div style="font-size: 4rem; margin-bottom: 15px;">🪔✨</div>
-        <p style="margin-bottom: 20px; max-width: 80%; color: #555;">
+        <div style="font-size: 3.5rem; margin-bottom: 10px;">🪔✨</div>
+        <p style="margin-bottom: 20px; max-width: 90%; color: #555; font-size: 0.95rem;">
             प्रश्नों के सही उत्तर देकर बिंदुओं (Dots) को क्रम से जोड़िए और दिवाली का जगमगाता दीया प्रकट कीजिए!
         </p>
         <button class="btn" onclick="startGame()">खेल शुरू करें</button>
@@ -329,7 +342,7 @@
             <div class="question-card">
                 <div>
                     <span class="instruction-tag" id="target-dot-tag">अगला बिंदु: 2</span>
-                    <h3 id="question-text" style="margin-top: 5px;">प्रश्न यहाँ प्रदर्शित होगा...</h3>
+                    <h3 id="question-text">प्रश्न यहाँ प्रदर्शित होगा...</h3>
                 </div>
                 <div class="options-grid" id="options-container"></div>
             </div>
@@ -340,10 +353,10 @@
     <div id="end-screen" class="screen">
         <div class="end-card">
             <h2>शुभ दीपावली! 🪔✨</h2>
-            <p style="font-size: 1.1rem; margin-bottom: 15px;">आपने सभी बिंदु जोड़कर दीया जगमगा दिया है!</p>
+            <p style="font-size: 1rem; margin-bottom: 12px;">आपने सभी बिंदु जोड़कर दीया जगमगा दिया है!</p>
             <div class="end-stat" id="final-score">कुल अंक: 0</div>
             <div class="end-stat" id="final-time">कुल समय: 00:00</div>
-            <button class="btn" style="margin-top: 20px;" onclick="restartGame()">पुनः खेलें</button>
+            <button class="btn" style="margin-top: 15px;" onclick="restartGame()">पुनः खेलें</button>
         </div>
     </div>
 </div>
@@ -355,6 +368,9 @@
 
     function initAudio() {
         if (!audioCtx) audioCtx = new AudioCtx();
+        if (audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
     }
 
     function playSound(type) {
@@ -403,21 +419,19 @@
         }
     }
 
-    // 10 Detailed Dot Coordinates defining a complete Diya & Flame shape on 360x360 canvas
     const dotPoints = [
-        { id: 1, x: 180, y: 55, label: "1" },   // Flame Apex
-        { id: 2, x: 215, y: 110, label: "2" },  // Flame Right Outer
-        { id: 3, x: 195, y: 160, label: "3" },  // Flame Right Base
-        { id: 4, x: 310, y: 175, label: "4" },  // Diya Top-Right Rim
-        { id: 5, x: 260, y: 285, label: "5" },  // Diya Bottom-Right Curve
-        { id: 6, x: 180, y: 300, label: "6" },  // Diya Bottom Base Center
-        { id: 7, x: 100, y: 285, label: "7" },  // Diya Bottom-Left Curve
-        { id: 8, x: 50,  y: 175, label: "8" },  // Diya Top-Left Rim
-        { id: 9, x: 165, y: 160, label: "9" },  // Flame Left Base
-        { id: 10, x: 145, y: 110, label: "10" } // Flame Left Outer
+        { id: 1, x: 180, y: 55, label: "1" },
+        { id: 2, x: 215, y: 110, label: "2" },
+        { id: 3, x: 195, y: 160, label: "3" },
+        { id: 4, x: 310, y: 175, label: "4" },
+        { id: 5, x: 260, y: 285, label: "5" },
+        { id: 6, x: 180, y: 300, label: "6" },
+        { id: 7, x: 100, y: 285, label: "7" },
+        { id: 8, x: 50,  y: 175, label: "8" },
+        { id: 9, x: 165, y: 160, label: "9" },
+        { id: 10, x: 145, y: 110, label: "10" }
     ];
 
-    // Questions corresponding to connecting dot i to i+1
     const questionBank = [
         {
             q: "कविता 'जगमग जगमग' के रचयिता कौन हैं?",
@@ -473,7 +487,6 @@
     let canvas, ctx;
     let isCompleted = false;
 
-    // Splash Screen Timer (3.5 seconds)
     setTimeout(() => {
         switchScreen('splash-screen', 'welcome-screen');
     }, 3500);
@@ -513,7 +526,6 @@
     function drawCanvas() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // Draw connected lines
         if (currentDotIndex > 0) {
             ctx.beginPath();
             ctx.moveTo(dotPoints[0].x, dotPoints[0].y);
@@ -521,20 +533,18 @@
                 ctx.lineTo(dotPoints[i].x, dotPoints[i].y);
             }
             if (isCompleted) {
-                ctx.lineTo(dotPoints[0].x, dotPoints[0].y); // Close path
+                ctx.lineTo(dotPoints[0].x, dotPoints[0].y);
             }
             ctx.strokeStyle = isCompleted ? '#ffd54f' : '#ff9800';
             ctx.lineWidth = 4;
             ctx.stroke();
 
-            // Fill Diya color when completed
             if (isCompleted) {
                 ctx.fillStyle = "rgba(255, 152, 0, 0.35)";
                 ctx.fill();
             }
         }
 
-        // Glow Effect upon Diya completion
         if (isCompleted) {
             const gradient = ctx.createRadialGradient(180, 110, 10, 180, 110, 90);
             gradient.addColorStop(0, 'rgba(255, 235, 59, 0.95)');
@@ -546,12 +556,10 @@
             ctx.fill();
         }
 
-        // Draw Dots and Numbers
         dotPoints.forEach((p, idx) => {
             const isReached = idx <= currentDotIndex;
             const isNext = idx === currentDotIndex + 1;
 
-            // Dot Circle
             ctx.beginPath();
             ctx.arc(p.x, p.y, isNext ? 10 : 7, 0, Math.PI * 2);
             ctx.fillStyle = isReached ? '#ffd54f' : (isNext ? '#ff5722' : '#ffffff');
@@ -560,7 +568,6 @@
             ctx.lineWidth = 2;
             ctx.stroke();
 
-            // Label Position Calculations
             ctx.font = 'bold 13px Segoe UI';
             ctx.fillStyle = isNext ? '#ff5722' : '#ffffff';
             ctx.textAlign = 'center';
@@ -621,7 +628,7 @@
         document.getElementById('target-dot-tag').innerText = "बधाई हो!";
         document.getElementById('question-text').innerText = "🪔 सुंदर दीया पूरा हो गया और जगमगा उठा!";
         document.getElementById('options-container').innerHTML = `
-            <button class="btn" style="width: 100%; margin-top: 10px;" onclick="handleWin()">परिणाम देखें ➔</button>
+            <button class="btn" style="width: 100%; margin-top: 5px;" onclick="handleWin()">परिणाम देखें ➔</button>
         `;
     }
 
