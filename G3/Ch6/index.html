@@ -250,6 +250,7 @@
             .title { font-size: 1.8rem; }
             .story-text { font-size: 1.05rem; }
             .opt-btn { font-size: 0.95rem; }
+            .game-header { flex-wrap: wrap; gap: 8px; justify-content: center; }
         }
     </style>
 </head>
@@ -278,6 +279,7 @@
     <!-- Screen 3: Game Screen -->
     <div id="game-screen" class="screen">
         <div class="game-header">
+            <div class="stat-box" id="level-display">स्तर: 1</div>
             <div class="stat-box" id="score-display">अंक: 0</div>
             <div class="stat-box" id="step-display">चरण: 1/5</div>
             <div class="stat-box" id="timer-display">समय: 00:00</div>
@@ -358,55 +360,105 @@
         }
     }
 
-    // Story Steps Data
-    const storySteps = [
-        {
-            icon: "🦁",
-            prompt: "जंगल में भासुरक नाम का एक क्रूर शेर रहता था जो रोज कई जानवरों को मार डालता था। जानवरों ने मिलकर शेर से क्या समझौता किया?",
-            options: [
-                { text: "रोज एक जानवर खुद शेर के पास भोजन के रूप में जाएगा।", correct: true },
-                { text: "सभी जानवर जंगल छोड़कर दूर चले जाएँगे।", correct: false },
-                { text: "शेर को जंगल से बाहर निकाल दिया जाएगा।", correct: false }
-            ]
-        },
-        {
-            icon: "🐇",
-            prompt: "एक दिन खरगोश की बारी आई। खरगोश जान बचाने का उपाय सोचने लगा। वह शेर के पास कब पहुँचा?",
-            options: [
-                { text: "सुबह तड़के सबसे पहले पहुँचा।", correct: false },
-                { text: "देर से पहुँचा ताकि शेर गुस्से में आ जाए और योजना काम करे।", correct: true },
-                { text: "वह शेर के पास गया ही नहीं।", correct: false }
-            ]
-        },
-        {
-            icon: "😠",
-            prompt: "भूखा शेर गुस्से में दहाड़ा- 'तुम देर से क्यों आए और इतने छोटे क्यों हो?' खरगोश ने क्या उत्तर दिया?",
-            options: [
-                { text: "'रास्ते में मुझे देर हो गई क्योंकि मैं सो गया था।'", correct: false },
-                { text: "'रास्ते में दूसरे शक्तिशाली शेर ने मुझे रोक लिया था, जो खुद को राजा बता रहा था।'", correct: true },
-                { text: "'मैं रास्ता भूल गया था।'", correct: false }
-            ]
-        },
-        {
-            icon: "🕳️",
-            prompt: "दूसरे शेर की बात सुनकर भासुरक गुस्से से भर गया और बोला- 'मुझे उस दूसरे शेर के पास ले चलो!' खरगोश शेर को कहाँ ले गया?",
-            options: [
-                { text: "एक गहरे कुएँ के पास।", correct: true },
-                { text: "एक घनी गुफा के अंदर।", correct: false },
-                { text: "नदी के किनारे।", correct: false }
-            ]
-        },
-        {
-            icon: "🏆",
-            prompt: "खरगोश ने कुएँ में इशारा करके कहा- 'वह दूसरा शेर इसके अंदर छुपा है।' शेर ने कुएँ में क्या देखा और क्या किया?",
-            options: [
-                { text: "अपनी परछाई को दूसरा शेर समझकर कुएँ में छलांग लगा दी।", correct: true },
-                { text: "कुएँ में पत्थर फेंककर भाग गया।", correct: false },
-                { text: "खरगोश की बात मानकर वापस चला गया।", correct: false }
-            ]
-        }
-    ];
+    // Story Levels Data
+    const storyLevels = {
+        level1: [
+            {
+                icon: "🦁",
+                prompt: "जंगल में भासुरक नाम का एक क्रूर शेर रहता था जो रोज कई जानवरों को मार डालता था। जानवरों ने मिलकर शेर से क्या समझौता किया?",
+                options: [
+                    { text: "रोज एक जानवर खुद शेर के पास भोजन के रूप में जाएगा।", correct: true },
+                    { text: "सभी जानवर जंगल छोड़कर दूर चले जाएँगे।", correct: false },
+                    { text: "शेर को जंगल से बाहर निकाल दिया जाएगा।", correct: false }
+                ]
+            },
+            {
+                icon: "🐇",
+                prompt: "एक दिन खरगोश की बारी आई। खरगोश जान बचाने का उपाय सोचने लगा। वह शेर के पास कब पहुँचा?",
+                options: [
+                    { text: "सुबह तड़के सबसे पहले पहुँचा।", correct: false },
+                    { text: "देर से पहुँचा ताकि शेर गुस्से में आ जाए और योजना काम करे।", correct: true },
+                    { text: "वह शेर के पास गया ही नहीं।", correct: false }
+                ]
+            },
+            {
+                icon: "😠",
+                prompt: "भूखा शेर गुस्से में दहाड़ा- 'तुम देर से क्यों आए और इतने छोटे क्यों हो?' खरगोश ने क्या उत्तर दिया?",
+                options: [
+                    { text: "'रास्ते में मुझे देर हो गई क्योंकि मैं सो गया था।'", correct: false },
+                    { text: "'रास्ते में दूसरे शक्तिशाली शेर ने मुझे रोक लिया था, जो खुद को राजा बता रहा था।'", correct: true },
+                    { text: "'मैं रास्ता भूल गया था।'", correct: false }
+                ]
+            },
+            {
+                icon: "🕳️",
+                prompt: "दूसरे शेर की बात सुनकर भासुरक गुस्से से भर गया और बोला- 'मुझे उस दूसरे शेर के पास ले चलो!' खरगोश शेर को कहाँ ले गया?",
+                options: [
+                    { text: "एक गहरे कुएँ के पास।", correct: true },
+                    { text: "एक घनी गुफा के अंदर।", correct: false },
+                    { text: "नदी के किनारे।", correct: false }
+                ]
+            },
+            {
+                icon: "🏆",
+                prompt: "खरगोश ने कुएँ में इशारा करके कहा- 'वह दूसरा शेर इसके अंदर छुपा है।' शेर ने कुएँ में क्या देखा और क्या किया?",
+                options: [
+                    { text: "अपनी परछाई को दूसरा शेर समझकर कुएँ में छलांग लगा दी।", correct: true },
+                    { text: "कुएँ में पत्थर फेंककर भाग गया।", correct: false },
+                    { text: "खरगोश की बात मानकर वापस चला गया।", correct: false }
+                ]
+            }
+        ],
+        level2: [
+            {
+                icon: "📜",
+                prompt: "भासुरक के कुएँ में गिरने के बाद, खरगोश ने सबसे पहले क्या किया?",
+                options: [
+                    { text: "तुरंत भागकर जंगल के सभी जानवरों को खुशखबरी दी।", correct: true },
+                    { text: "वही कुएँ के पास बैठकर आराम करने लगा।", correct: false },
+                    { text: "शेर को बचाने के लिए रस्सी ढूंढने गया।", correct: false }
+                ]
+            },
+            {
+                icon: "🎉",
+                prompt: "जब सब जानवरों को पता चला कि क्रूर शेर मारा गया, तो उन्होंने खरगोश का सम्मान कैसे किया?",
+                options: [
+                    { text: "उसे जंगल से बाहर भेज दिया।", correct: false },
+                    { text: "उसकी बुद्धिमत्ता की सराहना की और उत्सव मनाया।", correct: true },
+                    { text: "उसे नया शेर खोजने का काम सौंपा।", correct: false }
+                ]
+            },
+            {
+                icon: "🦊",
+                prompt: "कहानी में खरगोश ने बल की जगह किस शक्ति का मुख्य प्रयोग किया?",
+                options: [
+                    { text: "शारीरिक शक्ति और गति का।", correct: false },
+                    { text: "बुद्धि और चतुर सोच का।", correct: true },
+                    { text: "जादू और छल-कपट का।", correct: false }
+                ]
+            },
+            {
+                icon: "💡",
+                prompt: "इस पंचतंत्र की कहानी से हमें सबसे मुख्य सीख (Moral) क्या मिलती है?",
+                options: [
+                    { text: "'बुद्धि बल से अधिक श्रेष्ठ होती है' (Intelligence is power).", correct: true },
+                    { text: "हमेशा शक्तिशाली से डरकर रहना चाहिए।", correct: false },
+                    { text: "कभी भी किसी की मदद नहीं करनी चाहिए।", correct: false }
+                ]
+            },
+            {
+                icon: "👑",
+                prompt: "भासुरक की समाप्ति के बाद जंगल में शांति कैसे कायम हुई?",
+                options: [
+                    { text: "सभी जानवर बिना डर के मिलकर खुशी-खुशी रहने लगे।", correct: true },
+                    { text: "एक दूसरा नया क्रूर राजा चुन लिया गया।", correct: false },
+                    { text: "सारे जानवर जंगल छोड़कर दूसरी जगह चले गए।", correct: false }
+                ]
+            }
+        ]
+    };
 
+    let currentLevelKey = "level1";
     let currentStep = 0;
     let score = 0;
     let secondsElapsed = 0;
@@ -425,6 +477,7 @@
     function startGame() {
         initAudio();
         score = 0;
+        currentLevelKey = "level1";
         currentStep = 0;
         secondsElapsed = 0;
 
@@ -444,8 +497,12 @@
     }
 
     function loadStep() {
-        const stepData = storySteps[currentStep];
-        document.getElementById('step-display').innerText = `चरण: ${currentStep + 1}/${storySteps.length}`;
+        const currentQuestions = storyLevels[currentLevelKey];
+        const stepData = currentQuestions[currentStep];
+        
+        const levelNum = currentLevelKey === "level1" ? 1 : 2;
+        document.getElementById('level-display').innerText = `स्तर: ${levelNum}`;
+        document.getElementById('step-display').innerText = `चरण: ${currentStep + 1}/${currentQuestions.length}`;
         document.getElementById('scene-icon').innerText = stepData.icon;
         document.getElementById('story-prompt').innerText = stepData.prompt;
 
@@ -462,13 +519,20 @@
     }
 
     function selectOption(isCorrect) {
+        const currentQuestions = storyLevels[currentLevelKey];
+
         if (isCorrect) {
             playSound('correct');
             score += 20;
             document.getElementById('score-display').innerText = `अंक: ${score}`;
             currentStep++;
 
-            if (currentStep < storySteps.length) {
+            if (currentStep < currentQuestions.length) {
+                loadStep();
+            } else if (currentLevelKey === "level1") {
+                alert("बधाई हो! आपने स्तर 1 पूरा कर लिया है। अब स्तर 2 शुरू हो रहा है!");
+                currentLevelKey = "level2";
+                currentStep = 0;
                 loadStep();
             } else {
                 endGame();
