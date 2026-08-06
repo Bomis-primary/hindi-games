@@ -113,7 +113,7 @@
 
     .grid-buttons {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr;
       gap: 12px;
       width: 100%;
       margin-top: 15px;
@@ -181,6 +181,12 @@
       min-height: 30px;
       margin-top: 10px;
     }
+
+    .sound-badge {
+      font-size: 0.9rem;
+      color: #f59e0b;
+      margin-bottom: 5px;
+    }
   </style>
 </head>
 <body>
@@ -200,9 +206,9 @@
   <div id="screen-instructions" class="screen hidden">
     <h2 style="color: #f59e0b; margin-top: 0;">🎯 खेल के नियम</h2>
     <div class="instruction-card">
-      <p>1. 🥭 <strong>मीठे आम चुनो:</strong> सही हिंदी उत्तर चुनकर आम बटोरें।[cite: 2]</p>
+      <p>1. 🥭 <strong>मीठे आम चुनो:</strong> सही उत्तर चुनकर आम बटोरो।[cite: 2]</p>
       <p>2. 🎶 <strong>कुहू-कुहू गाओ:</strong> कोयल की तरह मीठी बोली पहचानो।[cite: 2]</p>
-      <p>3. 👑 <strong>रानी बनो:</strong> 3/3 स्कोर करके 'चिड़ियों की रानी' का मुकुट जीतो![cite: 2]</p>
+      <p>3. 👑 <strong>रानी बनो:</strong> 5/5 स्कोर करके 'चिड़ियों की रानी' का मुकुट जीतो![cite: 2]</p>
     </div>
     <button class="btn" onclick="startGame()">शुरू करें 🚀</button>
   </div>
@@ -212,11 +218,12 @@
     
     <!-- Status Header -->
     <div class="status-bar">
-      <span id="stage-indicator">पड़ाव: 1/3</span>
+      <span id="stage-indicator">पड़ाव: 1/5</span>
       <span id="score-indicator">🥭 आम: 0</span>
     </div>
 
     <div class="stage-image" id="game-avatar">🌳</div>
+    <div class="sound-badge" id="sound-hint">🔊 ऑडियो संदेश</div>
     
     <div id="story-box" class="story-box">
       <!-- Question appears here -->
@@ -247,30 +254,52 @@
   let currentLevel = 0;
   let score = 0;
 
+  // Grade 3 specific engaging story questions with interactive feedback
   const questions = [
     {
       avatar: "🥭",
-      question: "कोयल का रंग कैसा होता है और वह कहाँ बैठती है?[cite: 2]",
-      options: ["काली, आम के पेड़ पर", "सफ़ेद, पानी में", "हरी, घास पर"],
+      sound: "🎵 'कूक-कूक...'",
+      question: "कोयल का रंग कैसा होता है और वह कहाँ बैठकर गाती है?[cite: 2]",
+      options: ["1. काली, आम के पेड़ पर[cite: 2]", "2. सफ़ेद, पानी में", "3. हरी, घास पर"],
       correct: 0,
-      successMsg: "✨ वाह! बिल्कुल सही। कोयल काली होती है और आम के पेड़ पर बैठती है! 🥭[cite: 2]",
-      failMsg: "❌ ओहो! कोयल काली होती है और आम के पेड़ पर गाती है।[cite: 2]"
+      successMsg: "✨ वाह! बिल्कुल सही। कोयल काली होती है और आम के पेड़ पर बैठकर गाती है! 🥭[cite: 2]",
+      failMsg: "❌ ओहो! कोयल काली होती है और आम की डाली पर गाती है।[cite: 2]"
     },
     {
       avatar: "🎶",
-      question: "कोयल अपनी मीठी आवाज़ में क्या बोलती है?[cite: 2]",
-      options: ["काँव-काँव", "कुहू-कुहू", "चीँ-चीँ"],
+      sound: "🎵 'कू-कू! कू-कू!'",
+      question: "कोयल अपनी मीठी आवाज़ से आमों में क्या घोलती है?[cite: 2]",
+      options: ["1. नमक", "2. मिश्री[cite: 2]", "3. मिर्ची"],
       correct: 1,
-      successMsg: "🎶 'कू-कू! कू-कू!' आपने आम के बाग में मिठास घोल दी! 🍬[cite: 2]",
-      failMsg: "❌ अरे नहीं! काँव-काँव कौआ करता है। कोयल 'कुहू-कुहू' गाती है।[cite: 2]"
+      successMsg: "🎶 'कू-कू!' आपने आमों में मिश्री घोल दी! 🍬[cite: 2]",
+      failMsg: "❌ अरे नहीं! कोयल कूक-कूक कर आमों में मिश्री घोलती है।[cite: 2]"
     },
     {
-      avatar: "📖",
-      question: "कवियत्री सुभद्रा कुमारी चौहान ने कोयल को किसकी रानी कहा है?[cite: 2]",
-      options: ["फूलों की रानी", "चिड़ियों की रानी", "जंगल की रानी"],
+      avatar: "☁️",
+      sound: "🎵 'वर्षा का संदेशा...'",
+      question: "कोयल प्यासी धरती को देखकर मेघों (बादलों) से क्या माँगती है?[cite: 2]",
+      options: ["1. पानी[cite: 2]", "2. धूप", "3. हवा"],
+      correct: 0,
+      successMsg: "🌧️ सही पहचाना! कोयल प्यासी धरती के लिए मेघों से पानी माँगती है! 💧[cite: 2]",
+      failMsg: "❌ ओहो! कोयल बादलों से पानी माँगती है।[cite: 2]"
+    },
+    {
+      avatar: "🐣",
+      sound: "🎵 'माँ की सीख...'",
+      question: "कोयल को सबसे मीठा-मीठा बोलना और डाल-डाल पर उड़ना किसने सिखाया है?[cite: 2]",
+      options: ["1. उसके दोस्तों ने", "2. उसकी माँ ने[cite: 2]", "3. कौए ने[cite: 2]"],
       correct: 1,
-      successMsg: "👑 बहुत बढ़िया! कोयल को 'चिड़ियों की रानी' कहा गया है![cite: 2]",
-      failMsg: "❌ सही उत्तर है: चिड़ियों की रानी! 👑[cite: 2]"
+      successMsg: "💖 शाबाश! कोयल की माँ ने उसे हमेशा मीठा बोलना सिखाया है! 🌸[cite: 2]",
+      failMsg: "❌ सही उत्तर: कोयल की माँ ने उसे यह सब सिखाया है।[cite: 2]"
+    },
+    {
+      avatar: "👑",
+      sound: "🎵 'चिड़ियों की रानी...'",
+      question: "माँ की बात मानने और मीठी बोली के कारण कोयल को क्या कहा जाता है?[cite: 2]",
+      options: ["1. जंगलों की रानी", "2. फूलों की रानी", "3. सब चिड़ियों की रानी[cite: 2]"],
+      correct: 2,
+      successMsg: "👑 बहुत बढ़िया! कोयल को 'सब चिड़ियों की रानी' कहा जाता है! 🏆[cite: 2]",
+      failMsg: "❌ सही उत्तर: सब चिड़ियों की रानी! 👑[cite: 2]"
     }
   ];
 
@@ -288,9 +317,10 @@
 
   function loadQuestion() {
     const q = questions[currentLevel];
-    document.getElementById('stage-indicator').innerText = `पड़ाव: ${currentLevel + 1}/3`;
+    document.getElementById('stage-indicator').innerText = `पड़ाव: ${currentLevel + 1}/5`;
     document.getElementById('score-indicator').innerText = `🥭 आम: ${score}`;
     document.getElementById('game-avatar').innerText = q.avatar;
+    document.getElementById('sound-hint').innerText = q.sound;
     document.getElementById('story-box').innerText = q.question;
     document.getElementById('feedback-msg').innerText = '';
     document.getElementById('next-btn').classList.add('hidden');
@@ -341,14 +371,18 @@
     const endTitle = document.getElementById('end-title');
     const endMsg = document.getElementById('end-msg');
 
-    if (score === 3) {
+    if (score === 5) {
       endAvatar.innerText = "👑✨";
       endTitle.innerText = "🏆 चिड़ियों की रानी!";
-      endMsg.innerText = "अद्भुत! आपने सभी प्रश्नों के सही उत्तर दिए और पूरे 3 मीठे आम जीते! 🥭[cite: 2]";
+      endMsg.innerText = "अद्भुत! आपने सभी 5 प्रश्नों के सही उत्तर दिए और पूरे 5 रसीले आम जीते! 🥭[cite: 2]";
+    } else if (score >= 3) {
+      endAvatar.innerText = "🐥🥭";
+      endTitle.innerText = "शानदार प्रयास!";
+      endMsg.innerText = `बहुत अच्छा! आपने ${score}/5 आम बटोरे। फिर से खेलकर 5/5 अंक लाएँ! 🚀`;
     } else {
-      endAvatar.innerText = "🐥";
-      endTitle.innerText = "अच्छा प्रयास!";
-      endMsg.innerText = `आपने ${score}/3 आम बटोरे। एक बार फिर कोशिश करें और सारे आम जीतें! 🥭[cite: 2]`;
+      endAvatar.innerText = "📖";
+      endTitle.innerText = "फिर से कोशिश करें!";
+      endMsg.innerText = `आपने ${score}/5 आम बटोरे। कविता को एक बार फिर पढ़ें और दोबारा खेलें! 🥭[cite: 2]`;
     }
   }
 
