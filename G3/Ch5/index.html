@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>पहले क्या लूँ? - Smart Shopper Game</title>
+    <style>
+        :root {
+            --primary: #4e54c8;
+            --secondary: #8f94fb;
+            --accent: #ff9900;
+            --need-color: #28a745;
+            --want-color: #dc3545;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .game-container {
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        h1 {
+            color: var(--primary);
+            margin-top: 0;
+            font-size: 1.8rem;
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: space-between;
+            background: #eef2f5;
+            padding: 10px 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .item-card {
+            border: 2px dashed var(--secondary);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            background: #fafafa;
+        }
+
+        .item-icon {
+            font-size: 4rem;
+            margin-bottom: 10px;
+        }
+
+        .item-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .item-price {
+            font-size: 1.2rem;
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px 20px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            color: white;
+            transition: transform 0.1s, opacity 0.2s;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-need {
+            background-color: var(--need-color);
+        }
+
+        .btn-want {
+            background-color: var(--want-color);
+        }
+
+        .feedback {
+            margin-top: 15px;
+            min-height: 24px;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .restart-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .result-screen {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="game-container">
+    <h1>🛍️ पहले क्या लूँ? (Smart Shopper)</h1>
+
+    <div id="gameplay">
+        <div class="stats-bar">
+            <span>बजट: ₹<span id="budget">100</span></span>
+            <span>गुल्लक: ₹<span id="savings">0</span></span>
+            <span>अंक: <span id="score">0</span></span>
+        </div>
+
+        <div class="item-card">
+            <div class="item-icon" id="itemIcon">📖</div>
+            <div class="item-name" id="itemName">किताब</div>
+            <div class="item-price">कीमत: ₹<span id="itemPrice">30</span></div>
+        </div>
+
+        <p>यह वस्तु क्या है? सही वर्गीकरण चुनिए:</p>
+
+        <div class="btn-group">
+            <button class="btn btn-need" onclick="makeChoice('need')">✅ ज़रूरत (Need)</button>
+            <button class="btn btn-want" onclick="makeChoice('want')">🎈 इच्छा (Want)</button>
+        </div>
+
+        <div class="feedback" id="feedback"></div>
+    </div>
+
+    <div class="result-screen" id="resultScreen">
+        <h2>खेल पूरा हुआ! 🎉</h2>
+        <p id="finalScore"></p>
+        <p id="finalSavings"></p>
+        <p id="evaluationMsg"></p>
+        <button class="restart-btn" id="restartBtn" style="display:inline-block;" onclick="restartGame()">पुनः खेलें 🔄</button>
+    </div>
+</div>
+
+<script>
+    // Item dataset built from Ch5.pdf context
+    const masterItemsBank = [
+        { name: 'किताब (Book)', category: 'need', price: 30, icon: '📖' },
+        { name: 'रोबोट (Robot Toy)', category: 'want', price: 50, icon: '🤖' },
+        { name: 'गुब्बारा (Balloon)', category: 'want', price: 10, icon: '🎈' },
+        { name: 'स्कूल बैग (School Bag)', category: 'need', price: 40, icon: '🎒' },
+        { name: 'टॉफ़ी (Toffee)', category: 'want', price: 10, icon: '🍬' },
+        { name: 'गेंद (Ball)', category: 'want', price: 20, icon: '⚽' },
+        { name: 'दूध (Milk)', category: 'need', price: 25, icon: '🥛' },
+        { name: 'साबुन (Soap)', category: 'need', price: 15, icon: '🧼' },
+        { name: 'चॉकलेट (Chocolate)', category: 'want', price: 15, icon: '🍫' },
+        { name: 'पेंसिल/स्टेशनरी (Stationery)', category: 'need', price: 10, icon: '✏️' }
+    ];
+
+    let items = [];
+    let currentIndex = 0;
+    let budget = 100;
+    let savings = 0;
+    let score = 0;
+
+    function startGame() {
+        items = [...masterItemsBank].sort(() => Math.random() - 0.5).slice(0, 6);
+        currentIndex = 0;
+        budget = 100;
+        savings = 0;
+        score = 0;
+
+        document.getElementById('gameplay').style.display = 'block';
+        document.getElementById('resultScreen').style.display = 'none';
+        updateStats();
+        loadNextItem();
+    }
+
+    function updateStats() {
+        document.getElementById('budget').innerText = budget;
+        document.getElementById('savings').innerText = savings;
+        document.getElementById('score').innerText = score;
+    }
+
+    function loadNextItem() {
+        if (currentIndex >= items.length || budget <= 0) {
+            endGame();
+            return;
+        }
+
+        const currentItem = items[currentIndex];
+        document.getElementById('itemName').innerText = currentItem.name;
+        document.getElementById('itemPrice').innerText = currentItem.price;
+        document.getElementById('itemIcon').innerText = currentItem.icon;
+        document.getElementById('feedback').innerText = '';
+    }
+
+    function makeChoice(userChoice) {
+        const currentItem = items[currentIndex];
+        const feedbackEl = document.getElementById('feedback');
+
+        if (userChoice === currentItem.category) {
+            score += 10;
+            if (userChoice === 'need') {
+                if (budget >= currentItem.price) {
+                    budget -= currentItem.price;
+                    feedbackEl.style.color = 'green';
+                    feedbackEl.innerText = 'सही निर्णय! यह एक ज़रूरत है। आपने इसे खरीदा।';
+                } else {
+                    feedbackEl.style.color = 'orange';
+                    feedbackEl.innerText = 'सही पहचान! पर आपके पास पर्याप्त बजट नहीं था।';
+                }
+            } else {
+                // If it's a want, saving the money to piggy bank
+                savings += currentItem.price;
+                feedbackEl.style.color = 'green';
+                feedbackEl.innerText = 'शाबाश! आपने इच्छा टालकर ' + currentItem.price + ' रुपये गुल्लक में बचाए।';
+            }
+        } else {
+            feedbackEl.style.color = 'red';
+            feedbackEl.innerText = 'गलत! ' + currentItem.name + ' एक ' + (currentItem.category === 'need' ? 'ज़रूरत' : 'इच्छा') + ' है।';
+        }
+
+        updateStats();
+        currentIndex++;
+        setTimeout(loadNextItem, 1500);
+    }
+
+    function endGame() {
+        document.getElementById('gameplay').style.display = 'none';
+        document.getElementById('resultScreen').style.display = 'block';
+
+        document.getElementById('finalScore').innerText = 'कुल अंक: ' + score;
+        document.getElementById('finalSavings').innerText = 'गुल्लक में बचाए गए रुपये: ₹' + savings;
+
+        const evalEl = document.getElementById('evaluationMsg');
+        if (score >= 50) {
+            evalEl.innerText = 'अद्भुत! आप माँ की तरह बहुत समझदार खरीदार हैं! 🌟';
+        } else {
+            evalEl.innerText = 'अच्छा प्रयास! अगली बार ज़रूरतों को पहले चुनने का प्रयास करें! 💡';
+        }
+    }
+
+    function restartGame() {
+        startGame();
+    }
+
+    // Start on load
+    startGame();
+</script>
+</body>
+</html>
