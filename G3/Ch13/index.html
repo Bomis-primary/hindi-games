@@ -3,597 +3,326 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>हिम्मत की दौड़ - Dynamic Sequence Builder</title>
+    <title>हिम्मत की दौड़ - घटनाक्रम खेल</title>
     <style>
         * {
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
-            user-select: none;
-            -webkit-user-select: none;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            background: linear-gradient(135deg, #e0f2fe 0%, #fef3c7 100%);
+            background-color: #f4f6f9;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 12px;
-            touch-action: manipulation;
+            padding: 20px;
         }
 
-        /* Screen Management */
-        .screen {
-            display: none;
+        #game-container {
+            background: #ffffff;
+            max-width: 650px;
             width: 100%;
-            max-width: 700px;
-            flex-direction: column;
-            align-items: center;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
             text-align: center;
-        }
-
-        .screen.active {
-            display: flex;
-        }
-
-        /* SCREEN 1: Innovine Splash Screen */
-        #screen1 {
-            height: 80vh;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .logo-container {
-            animation: fadeInScale 1.5s ease-in-out;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-            width: 100%;
-        }
-
-        .brand-logo-img {
-            max-width: 80%;
-            height: auto;
-            object-fit: contain;
-            filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.15));
-        }
-
-        .splash-timer {
-            margin-top: 15px;
-            width: 60%;
-            max-width: 180px;
-            height: 6px;
-            background: #cbd5e1;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
-        .splash-progress {
-            width: 0%;
-            height: 100%;
-            background: #2563eb;
-            animation: loadProgress 5s linear forwards;
-        }
-
-        /* SCREEN 2: Instructions Screen */
-        .card-box {
-            background: white;
-            padding: 24px 18px;
-            border-radius: 20px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
-            max-width: 550px;
-            width: 100%;
-        }
-
-        .card-box h2 {
-            color: #1e3a8a;
+            color: #1a252f;
             margin-bottom: 15px;
-            font-size: 1.5rem;
+            font-size: 1.6em;
         }
 
-        .instructions-list {
-            text-align: left;
-            margin: 15px 0;
+        .controls-header {
             display: flex;
-            flex-direction: column;
-            gap: 12px;
-            color: #374151;
-            font-size: 0.95rem;
-            line-height: 1.5;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            background: #eef2f7;
+            padding: 10px 15px;
+            border-radius: 8px;
         }
 
-        .btn-primary {
-            padding: 14px 28px;
-            background: #2563eb;
+        #level-indicator {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .btn-toggle {
+            background-color: #3498db;
             color: white;
             border: none;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-weight: bold;
+            padding: 8px 14px;
+            border-radius: 6px;
             cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);
-            margin-top: 10px;
-            width: 100%;
-            max-width: 280px;
+            font-weight: bold;
+            transition: background 0.2s;
         }
 
-        .btn-primary:active {
-            transform: scale(0.98);
+        .btn-toggle:hover {
+            background-color: #2980b9;
         }
 
-        /* SCREEN 3: Game Screen */
-        .game-header h1 {
-            color: #1e3a8a;
-            font-size: 1.4rem;
-            margin-bottom: 6px;
-        }
-
-        .game-subtitle {
-            color: #475569;
-            font-size: 0.85rem;
+        .instructions {
+            text-align: center;
+            color: #666;
             margin-bottom: 15px;
+            font-size: 0.95em;
         }
 
-        .list-container {
-            list-style: none;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
+        #events-list {
+            list-style-type: none;
             margin-bottom: 20px;
-            position: relative;
         }
 
-        .list-container li {
-            width: 100%;
-            touch-action: none;
-        }
-
-        .draggable-item {
-            background: white;
-            padding: 12px 14px;
-            border-radius: 14px;
+        #events-list li {
+            background-color: #fafafa;
+            border: 2px solid #e0e0e0;
+            margin: 8px 0;
+            padding: 12px 15px;
+            border-radius: 8px;
+            cursor: grab;
             display: flex;
             align-items: center;
-            gap: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            border: 2px solid #e2e8f0;
-            cursor: grab;
-            text-align: left;
-            transition: transform 0.15s ease, background 0.2s ease, border-color 0.2s ease;
+            user-select: none;
+            transition: background-color 0.2s, border-color 0.2s, transform 0.1s;
         }
 
-        .draggable-item.dragging {
-            opacity: 0.6;
+        #events-list li:active {
+            cursor: grabbing;
+        }
+
+        #events-list li.dragging {
+            opacity: 0.4;
             transform: scale(0.98);
         }
 
-        .draggable-item.touch-active {
-            position: fixed;
-            z-index: 1000;
-            pointer-events: none;
-            width: calc(100% - 24px);
-            max-width: 676px;
-            box-shadow: 0 12px 20px rgba(0,0,0,0.2);
-            border-color: #2563eb;
-            background: #eff6ff;
+        .drag-icon {
+            margin-right: 12px;
+            color: #aaa;
+            font-size: 1.2em;
         }
 
-        .item-number {
-            background: #eff6ff;
-            color: #2563eb;
+        .button-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            font-size: 1em;
             font-weight: bold;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-shrink: 0;
-            font-size: 0.9rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: opacity 0.2s;
         }
 
-        .item-text {
-            color: #1e293b;
-            font-size: 0.9rem;
-            font-weight: 500;
-            line-height: 1.3;
+        .btn:hover {
+            opacity: 0.9;
         }
 
-        .controls {
-            display: flex;
-            justify-content: center;
-            width: 100%;
+        .btn-check {
+            background-color: #27ae60;
+            color: white;
         }
 
-        .feedback-msg {
+        .btn-reset {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        #feedback {
             margin-top: 15px;
+            text-align: center;
             font-weight: bold;
-            font-size: 1rem;
-        }
-
-        /* SCREEN 4: End Screen */
-        .end-card {
-            background: white;
-            padding: 30px 20px;
-            border-radius: 20px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
-            max-width: 480px;
-            width: 100%;
-        }
-
-        .end-card h2 {
-            color: #1e3a8a;
-            font-size: 1.6rem;
-            margin-bottom: 10px;
-        }
-
-        .end-card p {
-            color: #4b5563;
-            font-size: 1rem;
-            margin-bottom: 20px;
-            line-height: 1.4;
-        }
-
-        @media (min-width: 600px) {
-            .card-box { padding: 35px; }
-            .card-box h2 { font-size: 1.8rem; }
-            .instructions-list { font-size: 1.05rem; }
-            .game-header h1 { font-size: 1.8rem; }
-            .game-subtitle { font-size: 0.95rem; }
-            .draggable-item { padding: 14px 18px; }
-            .item-text { font-size: 1rem; }
-            .btn-primary { width: auto; }
-        }
-
-        @keyframes fadeInScale {
-            0% { opacity: 0; transform: scale(0.85); }
-            100% { opacity: 1; transform: scale(1); }
-        }
-
-        @keyframes loadProgress {
-            0% { width: 0%; }
-            100% { width: 100%; }
+            font-size: 1.05em;
+            min-height: 24px;
         }
     </style>
 </head>
 <body>
 
-    <!-- SCREEN 1: Innovine Splash Screen -->
-    <div id="screen1" class="screen active">
-        <div class="logo-container">
-            <img src="assets/logo.png" alt="Innovine Logo" class="brand-logo-img">
-            <div class="splash-timer">
-                <div class="splash-progress"></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- SCREEN 2: Instructions Screen -->
-    <div id="screen2" class="screen">
-        <div class="card-box">
-            <h2>📜 खेल के नियम</h2>
-            <div class="instructions-list">
-                <p>1. कहानी की अलग-अलग घटनाओं को उनके सही समय (Chronology) के अनुसार लगाएँ।</p>
-                <p>2. कार्ड्स को ड्रैग करके सही क्रम में व्यवस्थित करें।</p>
-                <p>3. हर बार नए सवाल मिलेंगे! जाँच करने के लिए <b>'जाँच करें'</b> दबाएँ।</p>
-            </div>
-            <button class="btn-primary" onclick="goToScreen(3); startGame();">गेम शुरू करें 🚀</button>
-        </div>
-    </div>
-
-    <!-- SCREEN 3: Game Screen -->
-    <div id="screen3" class="screen">
-        <div class="game-header">
-            <h1>🏃‍♂️ हिम्मत की दौड़: Sequence Builder</h1>
-            <p class="game-subtitle">नीचे दी गई घटनाओं को सही क्रम में व्यवस्थित करें:</p>
+    <div id="game-container">
+        <h2>हिम्मत की दौड़ - घटनाक्रम गेम</h2>
+        
+        <div class="controls-header">
+            <span id="level-indicator">स्तर: 1</span>
+            <button id="level-toggle-btn" class="btn-toggle">स्तर 2 पर जाएं</button>
         </div>
 
-        <ul class="list-container" id="draggable-list"></ul>
+        <p class="instructions">घटनाओं को सही कालानुक्रमिक (Chronological) क्रम में व्यवस्थित करने के लिए ड्रैग करें:</p>
 
-        <div class="controls">
-            <button class="btn-primary" onclick="checkSequence()">जाँच करें ✔️</button>
-        </div>
-        <div id="feedback" class="feedback-msg"></div>
-    </div>
+        <ul id="events-list"></ul>
 
-    <!-- SCREEN 4: End Screen -->
-    <div id="screen4" class="screen">
-        <div class="end-card">
-            <h2>🎉 उत्कृष्ट प्रयास!</h2>
-            <p>आपने इस राउंड की सभी घटनाओं को एकदम सही क्रम में लगा दिया है!</p>
-            <button class="btn-primary" onclick="restartGame()">नए प्रश्नों के साथ पुनः खेलें 🔄</button>
+        <div class="button-group">
+            <button id="check-btn" class="btn btn-check">उत्तर जांचें</button>
+            <button id="reset-btn" class="btn btn-reset">पुनः प्रयास करें</button>
         </div>
+
+        <div id="feedback"></div>
     </div>
 
     <script>
-        const audioFiles = {
-            drag: new Audio('assets/drag.mp3'),
-            correct: new Audio('assets/correct.mp3'),
-            wrong: new Audio('assets/wrong.mp3'),
-            win: new Audio('assets/win.mp3')
-        };
-
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
-        function playSound(type) {
-            if (audioFiles[type]) {
-                audioFiles[type].currentTime = 0;
-                audioFiles[type].play().catch(() => playSynthSound(type));
-            } else {
-                playSynthSound(type);
-            }
-        }
-
-        function playSynthSound(type) {
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            const now = audioCtx.currentTime;
-
-            if (type === 'drag') {
-                osc.frequency.setValueAtTime(350, now);
-                gain.gain.setValueAtTime(0.08, now);
-                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
-                osc.start(now);
-                osc.stop(now + 0.08);
-            } else if (type === 'correct') {
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(523.25, now);
-                osc.frequency.setValueAtTime(659.25, now + 0.1);
-                gain.gain.setValueAtTime(0.15, now);
-                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
-                osc.start(now);
-                osc.stop(now + 0.3);
-            } else if (type === 'wrong') {
-                osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(200, now);
-                osc.frequency.setValueAtTime(140, now + 0.15);
-                gain.gain.setValueAtTime(0.15, now);
-                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
-                osc.start(now);
-                osc.stop(now + 0.3);
-            } else if (type === 'win') {
-                const notes = [523.25, 659.25, 783.99, 1046.50];
-                notes.forEach((freq, index) => {
-                    const oscW = audioCtx.createOscillator();
-                    const gainW = audioCtx.createGain();
-                    oscW.connect(gainW);
-                    gainW.connect(audioCtx.destination);
-                    oscW.frequency.setValueAtTime(freq, now + index * 0.12);
-                    gainW.gain.setValueAtTime(0.15, now + index * 0.12);
-                    gainW.gain.exponentialRampToValueAtTime(0.01, now + index * 0.12 + 0.2);
-                    oscW.start(now + index * 0.12);
-                    oscW.stop(now + index * 0.12 + 0.2);
-                });
-            }
-        }
-
+        // ==========================================
+        // 1. DATA POOL
+        // ==========================================
         const masterEventsPool = [
-            { id: 1, text: "3 सितंबर 1965 को इंग्लैंड में डेरेक रेडमंड का जन्म हुआ।" },
-            { id: 2, text: "7 साल की उम्र में डेरेक ने स्थानीय एथलेटिक्स क्लब से अभ्यास शुरू किया।" },
-            { id: 3, text: "1985 में उन्होंने 44.82 सेकंड का ब्रिटिश राष्ट्रीय रिकॉर्ड बनाया।" },
-            { id: 4, text: "1986 में स्टटगार्ट यूरोपीय चैंपियनशिप में उन्होंने स्वर्ण पदक जीता।" },
-            { id: 5, text: "1991 में टोक्यो विश्व चैंपियनशिप में फिर से स्वर्ण पदक अपने नाम किया।" },
-            { id: 6, text: "1992 में स्पेन के बार्सिलोना शहर में ओलंपिक के लिए चुने गए।" },
-            { id: 7, text: "दौड़ते समय 250 मीटर पर डेरेक के पैर की हैमस्ट्रिंग में चोट लग गई।" },
-            { id: 8, text: "दर्द से कराहते हुए भी डेरेक खड़े हुए और लंगड़ाते हुए आगे बढ़ने लगे।" },
-            { id: 9, text: "सुरक्षाकर्मियों की परवाह न करते हुए उनके पिता जिम रेडमंड मैदान में आए।" },
-            { id: 10, text: "पिता और पुत्र ने एक-दूसरे का सहारा लेकर फिनिश लाइन पार की।" },
-            { id: 11, text: "पूरे स्टेडियम के 65,000 दर्शकों ने खड़े होकर उनके लिए तालियाँ बजाईं।" }
+            // --- LEVEL 1: Main Story Line (Basic Events) ---
+            { id: "e1", level: 1, text: "डेरेक रेडमंड का जन्म 3 सितंबर 1965 को इंग्लैंड में हुआ।", correctOrder: 1 },
+            { id: "e2", level: 1, text: "डेरेक का सपना ओलंपिक में स्वर्ण पदक जीतना था।", correctOrder: 2 },
+            { id: "e3", level: 1, text: "डेरेक ने 7 वर्ष की उम्र में एथलेटिक्स क्लब में अभ्यास शुरू किया।", correctOrder: 3 },
+            { id: "e4", level: 1, text: "1992 बार्सिलोना ओलंपिक 400 मीटर सेमीफाइनल की दौड़ शुरू हुई।", correctOrder: 4 },
+            { id: "e5", level: 1, text: "250 मीटर पर डेरेक के पैर की हैमस्ट्रिंग में चोट लगी और वह गिर पड़े।", correctOrder: 5 },
+            { id: "e6", level: 1, text: "डेरेक दर्द में भी उठे और लंगड़ाते हुए आगे बढ़ने लगे।", correctOrder: 6 },
+            { id: "e7", level: 1, text: "पिता जिम रेडमंड मैदान में आए और अपने बेटे को सहारा दिया।", correctOrder: 7 },
+            { id: "e8", level: 1, text: "दर्शकों की तालियों के बीच दोनों ने मिलकर फिनिश लाइन पार की।", correctOrder: 8 },
+
+            // --- LEVEL 2: Detailed Career & Race Events (Advanced) ---
+            { id: "e9", level: 2, text: "1985 में डेरेक ने 44.82 सेकंड का ब्रिटिश राष्ट्रीय रिकॉर्ड बनाया।", correctOrder: 1 },
+            { id: "e10", level: 2, text: "1986 स्टटगार्ट यूरोपीय चैंपियनशिप में 4x400 मीटर रिले में स्वर्ण पदक जीता।", correctOrder: 2 },
+            { id: "e11", level: 2, text: "1987 रोम विश्व चैंपियनशिप में डेरेक ने रजत पदक प्राप्त किया।", correctOrder: 3 },
+            { id: "e12", level: 2, text: "1991 टोक्यो विश्व चैंपियनशिप में डेरेक ने फिर से स्वर्ण पदक जीता।", correctOrder: 4 },
+            { id: "e13", level: 2, text: "1992 बार्सिलोना में बंदूक की आवाज के साथ सेमीफाइनल दौड़ की शुरुआत हुई।", correctOrder: 5 },
+            { id: "e14", level: 2, text: "मेडिकल टीम स्ट्रेचर लेकर आई, लेकिन डेरेक ने हार मानने से इनकार कर दिया।", correctOrder: 6 },
+            { id: "e15", level: 2, text: "पिता जिम रेडमंड सुरक्षाकर्मियों को पीछे छोड़ चिल्लाते हुए मैदान में पहुंचे।", correctOrder: 7 },
+            { id: "e16", level: 2, text: "फिनिश लाइन के पास पहुँचकर पिता ने हाथ छोड़ दिया ताकि डेरेक खुद लाइन पार कर सके।", correctOrder: 8 }
         ];
 
-        let currentRoundEvents = [];
-        let listItems = [];
-        let dragStartIndex;
+        // ==========================================
+        // 2. GAME CONTROLLER
+        // ==========================================
+        class TimelineGame {
+            constructor() {
+                this.currentLevel = 1;
+                this.activeEvents = [];
+                this.draggedIndex = null;
 
-        function goToScreen(screenNumber) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(`screen${screenNumber}`).classList.add('active');
-        }
+                this.levelIndicator = document.getElementById('level-indicator');
+                this.levelToggleBtn = document.getElementById('level-toggle-btn');
+                this.eventsList = document.getElementById('events-list');
+                this.feedback = document.getElementById('feedback');
+                this.checkBtn = document.getElementById('check-btn');
+                this.resetBtn = document.getElementById('reset-btn');
 
-        window.onload = () => {
-            setTimeout(() => {
-                goToScreen(2);
-            }, 5000);
-        };
+                this.bindEvents();
+                this.loadLevel(this.currentLevel);
+            }
 
-        function startGame() {
-            document.getElementById('feedback').innerText = '';
-            const draggableList = document.getElementById('draggable-list');
-            draggableList.innerHTML = '';
-            listItems = [];
+            bindEvents() {
+                this.levelToggleBtn.addEventListener('click', () => this.toggleLevel());
+                this.checkBtn.addEventListener('click', () => this.checkAnswer());
+                this.resetBtn.addEventListener('click', () => this.loadLevel(this.currentLevel));
+            }
 
-            const shuffledPool = [...masterEventsPool].sort(() => Math.random() - 0.5);
-            const selectedSet = shuffledPool.slice(0, 5);
-
-            currentRoundEvents = [...selectedSet].sort((a, b) => a.id - b.id);
-            const displaySet = [...currentRoundEvents].sort(() => Math.random() - 0.5);
-
-            displaySet.forEach((item, index) => {
-                const listItem = document.createElement('li');
-                listItem.setAttribute('data-index', index);
-                listItem.setAttribute('data-id', item.id);
-
-                listItem.innerHTML = `
-                    <div class="draggable-item" draggable="true">
-                        <span class="item-number">${index + 1}</span>
-                        <span class="item-text">${item.text}</span>
-                    </div>
-                `;
-
-                listItems.push(listItem);
-                draggableList.appendChild(listItem);
-            });
-
-            addDragAndTouchListeners();
-        }
-
-        /* --- Drag and Touch Event Handlers --- */
-        let draggedItem = null;
-        let activeTouchElement = null;
-        let touchOffsetY = 0;
-
-        function addDragAndTouchListeners() {
-            const draggables = document.querySelectorAll('.draggable-item');
-            const dragListItems = document.querySelectorAll('#draggable-list li');
-
-            draggables.forEach(draggable => {
-                // Desktop
-                draggable.addEventListener('dragstart', dragStart);
-                draggable.addEventListener('dragend', dragEnd);
-
-                // Mobile Touch
-                draggable.addEventListener('touchstart', touchStart, { passive: false });
-                draggable.addEventListener('touchmove', touchMove, { passive: false });
-                draggable.addEventListener('touchend', touchEnd);
-            });
-
-            dragListItems.forEach(item => {
-                item.addEventListener('dragover', dragOver);
-                item.addEventListener('drop', dragDrop);
-            });
-        }
-
-        // Desktop Handlers
-        function dragStart() {
-            dragStartIndex = +this.closest('li').getAttribute('data-index');
-            this.classList.add('dragging');
-            playSound('drag');
-        }
-
-        function dragEnd() {
-            this.classList.remove('dragging');
-        }
-
-        function dragOver(e) {
-            e.preventDefault();
-        }
-
-        function dragDrop() {
-            const dragEndIndex = +this.getAttribute('data-index');
-            swapItems(dragStartIndex, dragEndIndex);
-            this.querySelector('.draggable-item').classList.remove('dragging');
-        }
-
-        // Mobile Touch Handlers
-        function touchStart(e) {
-            draggedItem = this;
-            const parentLi = draggedItem.closest('li');
-            dragStartIndex = +parentLi.getAttribute('data-index');
-
-            const touch = e.touches[0];
-            const rect = draggedItem.getBoundingClientRect();
-            touchOffsetY = touch.clientY - rect.top;
-
-            draggedItem.classList.add('touch-active');
-            draggedItem.style.top = `${touch.clientY - touchOffsetY}px`;
-            playSound('drag');
-        }
-
-        function touchMove(e) {
-            if (!draggedItem) return;
-            e.preventDefault();
-
-            const touch = e.touches[0];
-            draggedItem.style.top = `${touch.clientY - touchOffsetY}px`;
-
-            // Detect element under finger position
-            draggedItem.style.visibility = 'hidden';
-            const elementUnder = document.elementFromPoint(touch.clientX, touch.clientY);
-            draggedItem.style.visibility = 'visible';
-
-            if (elementUnder) {
-                const targetLi = elementUnder.closest('#draggable-list li');
-                if (targetLi) {
-                    activeTouchElement = targetLi;
+            shuffle(array) {
+                let shuffled = [...array];
+                for (let i = shuffled.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
                 }
-            }
-        }
-
-        function touchEnd() {
-            if (!draggedItem) return;
-
-            draggedItem.classList.remove('touch-active');
-            draggedItem.style.top = '';
-
-            if (activeTouchElement) {
-                const dragEndIndex = +activeTouchElement.getAttribute('data-index');
-                swapItems(dragStartIndex, dragEndIndex);
+                return shuffled;
             }
 
-            draggedItem = null;
-            activeTouchElement = null;
-        }
+            loadLevel(levelNumber) {
+                this.currentLevel = levelNumber;
+                this.levelIndicator.innerText = `स्तर: ${this.currentLevel} (${this.currentLevel === 1 ? 'मुख्य कहानी' : 'विस्तृत विवरण'})`;
+                this.levelToggleBtn.innerText = this.currentLevel === 1 ? "स्तर 2 पर जाएं" : "स्तर 1 पर जाएं";
+                this.feedback.innerText = "";
 
-        function swapItems(fromIndex, toIndex) {
-            if (fromIndex === toIndex) return;
+                const levelData = masterEventsPool.filter(e => e.level === levelNumber);
+                this.activeEvents = this.shuffle(levelData);
 
-            const itemOne = listItems[fromIndex].querySelector('.draggable-item');
-            const itemTwo = listItems[toIndex].querySelector('.draggable-item');
+                this.renderList();
+            }
 
-            listItems[fromIndex].appendChild(itemTwo);
-            listItems[toIndex].appendChild(itemOne);
+            toggleLevel() {
+                const nextLevel = this.currentLevel === 1 ? 2 : 1;
+                this.loadLevel(nextLevel);
+            }
 
-            const idOne = listItems[fromIndex].getAttribute('data-id');
-            const idTwo = listItems[toIndex].getAttribute('data-id');
-            listItems[fromIndex].setAttribute('data-id', idTwo);
-            listItems[toIndex].setAttribute('data-id', idOne);
+            renderList() {
+                this.eventsList.innerHTML = "";
 
-            updateItemNumbers();
-        }
+                this.activeEvents.forEach((event, index) => {
+                    const li = document.createElement('li');
+                    li.setAttribute('draggable', 'true');
+                    li.dataset.index = index;
+                    li.innerHTML = `<span class="drag-icon">☰</span> <span>${event.text}</span>`;
 
-        function updateItemNumbers() {
-            listItems.forEach((item, idx) => {
-                const badge = item.querySelector('.item-number');
-                if (badge) badge.innerText = idx + 1;
-            });
-        }
+                    // Drag and Drop Event Listeners
+                    li.addEventListener('dragstart', (e) => this.handleDragStart(e, index));
+                    li.addEventListener('dragover', (e) => this.handleDragOver(e));
+                    li.addEventListener('drop', (e) => this.handleDrop(e, index));
+                    li.addEventListener('dragend', (e) => this.handleDragEnd(e));
 
-        function checkSequence() {
-            let isCorrect = true;
+                    this.eventsList.appendChild(li);
+                });
+            }
 
-            listItems.forEach((listItem, index) => {
-                const currentId = parseInt(listItem.getAttribute('data-id'));
-                const correctId = currentRoundEvents[index].id;
-                const card = listItem.querySelector('.draggable-item');
+            // Drag and Drop Handlers
+            handleDragStart(e, index) {
+                this.draggedIndex = index;
+                e.dataTransfer.effectAllowed = 'move';
+                e.target.classList.add('dragging');
+            }
 
-                if (currentId !== correctId) {
-                    card.style.borderColor = '#ef4444';
-                    card.style.background = '#fef2f2';
-                    isCorrect = false;
+            handleDragOver(e) {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+            }
+
+            handleDrop(e, targetIndex) {
+                e.preventDefault();
+                if (this.draggedIndex === null || this.draggedIndex === targetIndex) return;
+
+                const movedItem = this.activeEvents.splice(this.draggedIndex, 1)[0];
+                this.activeEvents.splice(targetIndex, 0, movedItem);
+
+                this.renderList();
+            }
+
+            handleDragEnd(e) {
+                e.target.classList.remove('dragging');
+                this.draggedIndex = null;
+            }
+
+            // Answer Checking Logic
+            checkAnswer() {
+                let isCorrect = true;
+                const listItems = this.eventsList.children;
+
+                this.activeEvents.forEach((event, index) => {
+                    if (event.correctOrder !== index + 1) {
+                        isCorrect = false;
+                        listItems[index].style.backgroundColor = '#f8d7da';
+                        listItems[index].style.borderColor = '#f5c6cb';
+                    } else {
+                        listItems[index].style.backgroundColor = '#d4edda';
+                        listItems[index].style.borderColor = '#c3e6cb';
+                    }
+                });
+
+                if (isCorrect) {
+                    this.feedback.innerText = "अद्भुत! आपने सभी घटनाओं को सही क्रम में लगाया है। 🎉";
+                    this.feedback.style.color = "#27ae60";
                 } else {
-                    card.style.borderColor = '#10b981';
-                    card.style.background = '#ecfdf5';
+                    this.feedback.innerText = "कुछ घटनाएं गलत क्रम में हैं। लाल रंग वाले बॉक्स जांचें और पुनः प्रयास करें। ❌";
+                    this.feedback.style.color = "#e74c3c";
                 }
-            });
-
-            const feedback = document.getElementById('feedback');
-            if (isCorrect) {
-                playSound('correct');
-                feedback.style.color = '#059669';
-                feedback.innerText = '✨ बिल्कुल सही क्रम!';
-                setTimeout(() => {
-                    playSound('win');
-                    goToScreen(4);
-                }, 1000);
-            } else {
-                playSound('wrong');
-                feedback.style.color = '#dc2626';
-                feedback.innerText = '❌ क्रम सही नहीं है। पुनः प्रयास करें!';
             }
         }
 
-        function restartGame() {
-            goToScreen(3);
-            startGame();
-        }
+        // Run Game on Page Load
+        window.addEventListener('DOMContentLoaded', () => {
+            new TimelineGame();
+        });
     </script>
 </body>
 </html>
