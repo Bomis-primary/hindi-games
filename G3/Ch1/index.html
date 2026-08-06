@@ -3,20 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>कोयल की उड़ान - Interactive Game</title>
+  <title>कोयल - जंगल एडवेंचर (Grade 3)</title>
   <style>
-    :oot {
-      --bg-color: #12181b;
-      --card-bg: #1e262c;
-      --accent-color: #4cd137;
-      --accent-hover: #44bd32;
-      --text-color: #e0e6ed;
-      --subtext-color: #fbc531;
-      --border-color: #2c3a47;
+    :root {
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --accent-color: #10b981;
+      --accent-hover: #059669;
+      --text-color: #f8fafc;
+      --subtext-color: #f59e0b;
+      --border-color: #334155;
     }
 
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Comic Sans MS', 'Bubblegum Sans', 'Segoe UI', sans-serif;
       background-color: var(--bg-color);
       color: var(--text-color);
       display: flex;
@@ -24,22 +24,23 @@
       align-items: center;
       min-height: 100vh;
       margin: 0;
-      padding: 20px;
+      padding: 15px;
       box-sizing: border-box;
     }
 
     .game-card {
       background-color: var(--card-bg);
-      border-radius: 12px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
       width: 100%;
       max-width: 600px;
-      padding: 30px;
-      border: 1px solid var(--border-color);
+      padding: 25px;
+      border: 3px solid var(--border-color);
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
+      position: relative;
     }
 
     .screen {
@@ -55,31 +56,49 @@
 
     /* Screen 1: Logo / Splash */
     .logo-img {
-      max-width: 200px;
+      max-width: 180px;
       height: auto;
-      margin-bottom: 20px;
+      margin-bottom: 15px;
     }
 
     .game-title {
-      color: var(--accent-color);
-      margin-top: 0;
-      font-size: 1.8rem;
+      color: #34d399;
+      margin: 5px 0 15px 0;
+      font-size: 2.2rem;
+      text-shadow: 2px 2px #000;
+    }
+
+    /* Stats Bar for Grade 3 */
+    .status-bar {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      background: #0f172a;
+      padding: 10px 15px;
+      border-radius: 12px;
+      margin-bottom: 15px;
+      box-sizing: border-box;
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: #38bdf8;
+      border: 1px solid var(--border-color);
     }
 
     /* Controls & Buttons */
     .btn {
       width: 100%;
-      max-width: 250px;
-      padding: 12px;
-      margin-top: 15px;
+      max-width: 280px;
+      padding: 14px;
+      margin-top: 12px;
       border: none;
-      border-radius: 6px;
+      border-radius: 12px;
       background-color: var(--accent-color);
-      color: var(--bg-color);
+      color: #ffffff;
       font-weight: bold;
-      font-size: 1rem;
+      font-size: 1.2rem;
       cursor: pointer;
-      transition: background 0.2s, transform 0.1s;
+      box-shadow: 0 5px 0 #047857;
+      transition: all 0.1s;
     }
 
     .btn:hover {
@@ -87,78 +106,80 @@
       transform: translateY(-2px);
     }
 
-    .btn-group {
-      display: flex;
-      gap: 10px;
+    .btn:active {
+      transform: translateY(3px);
+      box-shadow: 0 2px 0 #047857;
+    }
+
+    .grid-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
       width: 100%;
       margin-top: 15px;
     }
 
-    .btn-group .btn {
-      flex: 1;
-      max-width: none;
+    .grid-btn {
+      padding: 15px;
+      font-size: 1.2rem;
+      border-radius: 12px;
+      border: 2px solid #38bdf8;
+      background: #1e293b;
+      color: #fff;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
     }
 
-    /* Screen 2: Instructions */
-    .instruction-list {
+    .grid-btn:hover {
+      background: #38bdf8;
+      color: #0f172a;
+    }
+
+    /* Instructions */
+    .instruction-card {
       text-align: left;
-      background-color: #141a1f;
-      padding: 20px 20px 20px 40px;
-      border-radius: 8px;
-      font-size: 1rem;
-      line-height: 1.6;
-      width: 100%;
-      box-sizing: border-box;
-      border-left: 4px solid #00a8ff;
-    }
-
-    .instruction-list li {
-      margin-bottom: 10px;
-    }
-
-    /* Screen 3: Game Screen */
-    .story-box {
-      background-color: #141a1f;
-      border-radius: 8px;
-      padding: 20px;
-      min-height: 120px;
-      width: 100%;
-      box-sizing: border-box;
+      background-color: #0f172a;
+      padding: 15px 20px;
+      border-radius: 12px;
       font-size: 1.1rem;
       line-height: 1.6;
-      border-left: 4px solid var(--accent-color);
-      text-align: left;
+      width: 100%;
+      box-sizing: border-box;
+      border-left: 5px solid #f59e0b;
       margin-bottom: 15px;
     }
 
-    input[type="text"] {
+    /* Visual Story Display */
+    .stage-image {
+      font-size: 3.5rem;
+      margin: 10px 0;
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .story-box {
+      background-color: #0f172a;
+      border-radius: 12px;
+      padding: 18px;
+      min-height: 90px;
       width: 100%;
-      padding: 12px;
-      border-radius: 6px;
-      border: 1px solid var(--border-color);
-      background-color: #141a1f;
-      color: #ffffff;
-      font-size: 1rem;
-      outline: none;
       box-sizing: border-box;
-    }
-
-    input[type="text"]:focus {
-      border-color: #00a8ff;
-    }
-
-    .inventory {
-      margin-top: 15px;
-      font-size: 0.95rem;
-      color: var(--subtext-color);
-      font-weight: bold;
-    }
-
-    /* Screen 4: End Screen */
-    .score-box {
       font-size: 1.2rem;
-      margin: 15px 0;
-      color: var(--subtext-color);
+      line-height: 1.5;
+      border: 2px dashed #38bdf8;
+      margin-bottom: 15px;
+    }
+
+    .feedback {
+      font-size: 1.2rem;
+      font-weight: bold;
+      min-height: 30px;
+      margin-top: 10px;
     }
   </style>
 </head>
@@ -168,181 +189,166 @@
 
   <!-- 1) LOGO / SPLASH SCREEN -->
   <div id="screen-logo" class="screen">
-    <!-- Using assets/logo.png as requested with a fallback image placeholder -->
-    <img src="assets/logo.png" alt="Innovine Logo" class="logo-img" onerror="this.src='https://via.placeholder.com/200x80?text=Innovine+Logo';">
-    <h1 class="game-title">🐦 कोयल की उड़ान</h1>
-    <p>सुभद्रा कुमारी चौहान की कविता पर आधारित ज्ञानवर्धक खेल[cite: 2]</p>
-    <button class="btn" onclick="showScreen('screen-instructions')">शुरू करें ▶</button>
+    <img src="assets/logo.png" alt="Innovine Logo" class="logo-img" onerror="this.src='https://via.placeholder.com/180x70?text=Innovine';">
+    <h1 class="game-title">🐦 कोयल का अनोखा सफर</h1>
+    <div class="stage-image">🌳 🥭 🐥</div>
+    <p style="font-size: 1.2rem;">क्या आप कोयल को जंगल की रानी बनाने के लिए तैयार हैं?[cite: 2]</p>
+    <button class="btn" onclick="showScreen('screen-instructions')">खेलें ▶</button>
   </div>
 
   <!-- 2) INSTRUCTIONS SCREEN -->
   <div id="screen-instructions" class="screen hidden">
-    <h2 style="color: #00a8ff;">📜 खेल के नियम (Instructions)</h2>
-    <ol class="instruction-list">
-      <li>आप इस खेल में 'कोयल' पक्षी की भूमिका निभा रहे हैं।[cite: 2]</li>
-      <li>आपको 3 अलग-अलग चरणों को पार करना होगा:
-        <ul>
-          <li>वर्ण-उड़ान (व्याकरण)[cite: 2]</li>
-          <li>मधुर कुहू-कुहू चुनौती[cite: 2]</li>
-          <li>कविता पहेली[cite: 2]</li>
-        </ul>
-      </li>
-      <li>प्रत्येक सही उत्तर पर आपको पुरस्कार (जैसे आम, मिश्री, मुकुट) मिलेंगे।[cite: 2]</li>
-      <li>अंतिम पड़ाव तक पहुँचकर 'चिड़ियों की रानी' का खिताब जीतें! 👑[cite: 2]</li>
-    </ol>
-    <button class="btn" onclick="startGame()">आगे बढ़ें ▶</button>
+    <h2 style="color: #f59e0b; margin-top: 0;">🎯 खेल के नियम</h2>
+    <div class="instruction-card">
+      <p>1. 🥭 <strong>मीठे आम चुनो:</strong> सही हिंदी उत्तर चुनकर आम बटोरें।[cite: 2]</p>
+      <p>2. 🎶 <strong>कुहू-कुहू गाओ:</strong> कोयल की तरह मीठी बोली पहचानो।[cite: 2]</p>
+      <p>3. 👑 <strong>रानी बनो:</strong> 3/3 स्कोर करके 'चिड़ियों की रानी' का मुकुट जीतो![cite: 2]</p>
+    </div>
+    <button class="btn" onclick="startGame()">शुरू करें 🚀</button>
   </div>
 
   <!-- 3) MAIN GAME SCREEN -->
   <div id="screen-game" class="screen hidden">
-    <h2 class="game-title">कोयल की साहसिक यात्रा</h2>
+    
+    <!-- Status Header -->
+    <div class="status-bar">
+      <span id="stage-indicator">पड़ाव: 1/3</span>
+      <span id="score-indicator">🥭 आम: 0</span>
+    </div>
+
+    <div class="stage-image" id="game-avatar">🌳</div>
     
     <div id="story-box" class="story-box">
-      <!-- Dynamic Story Content -->
+      <!-- Question appears here -->
     </div>
 
-    <!-- Multi-choice Control Group -->
-    <div id="choice-controls" class="btn-group hidden"></div>
-
-    <!-- Text Input Control Group -->
-    <div id="input-controls" class="btn-group hidden">
-      <input type="text" id="player-input" placeholder="अपना उत्तर यहाँ लिखें..." />
-      <button class="btn" onclick="handleTextInput()">उत्तर दें</button>
+    <!-- Clickable Interactive Options for Grade 3 -->
+    <div id="choice-grid" class="grid-buttons">
+      <!-- Dynamic Buttons -->
     </div>
 
-    <!-- Continue / Next Control -->
-    <button id="next-stage-btn" class="btn hidden" onclick="progressGame()">आगे बढ़ें ▶</button>
+    <div id="feedback-msg" class="feedback"></div>
 
-    <div class="inventory" id="inventory-box">
-      🎒 झोला: खाली
-    </div>
+    <button id="next-btn" class="btn hidden" onclick="nextQuestion()">आगे बढ़ें ▶</button>
   </div>
 
   <!-- 4) END SCREEN -->
   <div id="screen-end" class="screen hidden">
-    <h1 style="color: var(--accent-color);">🎉 बधाई हो! 🎉</h1>
-    <p style="font-size: 1.1rem; line-height: 1.6;">
-      आपने अपनी मीठी बोली और ज्ञान से सभी चरणों को पार कर लिया और <strong>'चिड़ियों की रानी'</strong> का खिताब प्राप्त किया! 👑[cite: 2]
-    </p>
-    <div class="score-box" id="final-inventory">
-      <!-- Final items summary -->
-    </div>
+    <div class="stage-image" id="end-avatar">👑</div>
+    <h1 id="end-title" style="color: #34d399; margin: 0;">शाबाश!</h1>
+    <p id="end-msg" style="font-size: 1.3rem; line-height: 1.6; margin: 15px 0;"></p>
+    
     <button class="btn" onclick="restartGame()">फिर से खेलें 🔄</button>
   </div>
 
 </div>
 
 <script>
-  let currentStage = 0;
-  let inventory = [];
+  let currentLevel = 0;
+  let score = 0;
 
-  const storyBox = document.getElementById('story-box');
-  const choiceControls = document.getElementById('choice-controls');
-  const inputControls = document.getElementById('input-controls');
-  const nextStageBtn = document.getElementById('next-stage-btn');
-  const playerInput = document.getElementById('player-input');
-  const inventoryBox = document.getElementById('inventory-box');
+  const questions = [
+    {
+      avatar: "🥭",
+      question: "कोयल का रंग कैसा होता है और वह कहाँ बैठती है?[cite: 2]",
+      options: ["काली, आम के पेड़ पर", "सफ़ेद, पानी में", "हरी, घास पर"],
+      correct: 0,
+      successMsg: "✨ वाह! बिल्कुल सही। कोयल काली होती है और आम के पेड़ पर बैठती है! 🥭[cite: 2]",
+      failMsg: "❌ ओहो! कोयल काली होती है और आम के पेड़ पर गाती है।[cite: 2]"
+    },
+    {
+      avatar: "🎶",
+      question: "कोयल अपनी मीठी आवाज़ में क्या बोलती है?[cite: 2]",
+      options: ["काँव-काँव", "कुहू-कुहू", "चीँ-चीँ"],
+      correct: 1,
+      successMsg: "🎶 'कू-कू! कू-कू!' आपने आम के बाग में मिठास घोल दी! 🍬[cite: 2]",
+      failMsg: "❌ अरे नहीं! काँव-काँव कौआ करता है। कोयल 'कुहू-कुहू' गाती है।[cite: 2]"
+    },
+    {
+      avatar: "📖",
+      question: "कवियत्री सुभद्रा कुमारी चौहान ने कोयल को किसकी रानी कहा है?[cite: 2]",
+      options: ["फूलों की रानी", "चिड़ियों की रानी", "जंगल की रानी"],
+      correct: 1,
+      successMsg: "👑 बहुत बढ़िया! कोयल को 'चिड़ियों की रानी' कहा गया है![cite: 2]",
+      failMsg: "❌ सही उत्तर है: चिड़ियों की रानी! 👑[cite: 2]"
+    }
+  ];
 
-  // Navigation between screens
   function showScreen(screenId) {
     document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
     document.getElementById(screenId).classList.remove('hidden');
   }
 
-  function updateInventoryDisplay() {
-    if (inventory.length === 0) {
-      inventoryBox.innerText = '🎒 झोला: खाली';
-    } else {
-      inventoryBox.innerText = '🎒 झोला: ' + inventory.join(', ');
-    }
-  }
-
   function startGame() {
-    currentStage = 0;
-    inventory = [];
-    updateInventoryDisplay();
+    currentLevel = 0;
+    score = 0;
     showScreen('screen-game');
-    renderGameStage();
+    loadQuestion();
   }
 
-  function progressGame() {
-    currentStage++;
-    renderGameStage();
+  function loadQuestion() {
+    const q = questions[currentLevel];
+    document.getElementById('stage-indicator').innerText = `पड़ाव: ${currentLevel + 1}/3`;
+    document.getElementById('score-indicator').innerText = `🥭 आम: ${score}`;
+    document.getElementById('game-avatar').innerText = q.avatar;
+    document.getElementById('story-box').innerText = q.question;
+    document.getElementById('feedback-msg').innerText = '';
+    document.getElementById('next-btn').classList.add('hidden');
+
+    const grid = document.getElementById('choice-grid');
+    grid.innerHTML = '';
+    grid.classList.remove('hidden');
+
+    q.options.forEach((option, index) => {
+      const btn = document.createElement('button');
+      btn.className = 'grid-btn';
+      btn.innerText = option;
+      btn.onclick = () => handleAnswer(index);
+      grid.appendChild(btn);
+    });
   }
 
-  function renderGameStage() {
-    // Hide all input controls by default
-    choiceControls.classList.add('hidden');
-    inputControls.classList.add('hidden');
-    nextStageBtn.classList.add('hidden');
-    choiceControls.innerHTML = '';
+  function handleAnswer(selectedIndex) {
+    const q = questions[currentLevel];
+    const feedback = document.getElementById('feedback-msg');
+    document.getElementById('choice-grid').classList.add('hidden');
 
-    if (currentStage === 0) {
-      storyBox.innerText = "आप एक काले रंग की सुंदर कोयल हैं। आप आम के पेड़ों पर मंडरा रहे हैं। आपका उद्देश्य अपनी मीठी बोली से सब जगह मिठास फैलाना है![cite: 2]";
-      nextStageBtn.classList.remove('hidden');
-    }
-    else if (currentStage === 1) {
-      storyBox.innerText = "📍 [चरण 1: वर्ण-उड़ान]\n\nशब्द है: 'आम'\nयह शब्द किससे शुरू होता है? (स्वर या व्यंजन?)[cite: 2]";
-      choiceControls.innerHTML = `
-        <button class="btn" onclick="submitChoice('स्वर')">स्वर</button>
-        <button class="btn" onclick="submitChoice('व्यंजन')">व्यंजन</button>
-      `;
-      choiceControls.classList.remove('hidden');
-    }
-    else if (currentStage === 2) {
-      storyBox.innerText = "📍 [चरण 2: मधुर कुहू-कुहू चुनौती]\n\nआप आम की डाल पर बैठे हैं। बच्चे पूछ रहे हैं: 'क्या संदेशा लाई हो?'\nअपनी मीठी आवाज़ टाइप करें (संकेत: कुहू-कुहू):[cite: 2]";
-      playerInput.value = '';
-      inputControls.classList.remove('hidden');
-    }
-    else if (currentStage === 3) {
-      storyBox.innerText = "📍 [चरण 3: अंतिम पहेली]\n\nइस सुंदर 'कोयल' कविता की रचयिता कवियत्री का नाम क्या है?[cite: 2]";
-      playerInput.value = '';
-      inputControls.classList.remove('hidden');
-    }
-    else if (currentStage === 4) {
-      // Transition to End Screen
-      document.getElementById('final-inventory').innerText = 
-        'आपने इकट्ठा किया: ' + (inventory.length > 0 ? inventory.join(', ') : 'कुछ नहीं');
-      showScreen('screen-end');
-    }
-  }
-
-  function submitChoice(choice) {
-    if (choice === 'स्वर') {
-      inventory.push('मीठा आम 🥭');
-      updateInventoryDisplay();
-      storyBox.innerText = "✨ सही उत्तर! 'आ' एक स्वर है। आपने एक रसीला आम प्राप्त किया![cite: 2]";
+    if (selectedIndex === q.correct) {
+      score++;
+      feedback.style.color = '#34d399';
+      feedback.innerText = q.successMsg;
     } else {
-      storyBox.innerText = "❌ ओहो! 'आ' स्वर है, व्यंजन नहीं।[cite: 2]";
+      feedback.style.color = '#f87171';
+      feedback.innerText = q.failMsg;
     }
-    choiceControls.classList.add('hidden');
-    nextStageBtn.classList.remove('hidden');
+
+    document.getElementById('score-indicator').innerText = `🥭 आम: ${score}`;
+    document.getElementById('next-btn').classList.remove('hidden');
   }
 
-  function handleTextInput() {
-    const val = playerInput.value.trim();
-
-    if (currentStage === 2) {
-      if (val.includes("कुहू") || val.includes("कू")) {
-        inventory.push("मिश्री 🍬");
-        updateInventoryDisplay();
-        storyBox.innerText = "🎶 'कू-कू! कू-कू!' आपकी मीठी बोली से पूरी प्रकृति में मिठास घुल गई![cite: 2]";
-      } else {
-        storyBox.innerText = "🔊 यह कोयल जैसी मीठी आवाज़ नहीं लगी, फिर भी आपने प्रयास किया![cite: 2]";
-      }
-      inputControls.classList.add('hidden');
-      nextStageBtn.classList.remove('hidden');
+  function nextQuestion() {
+    currentLevel++;
+    if (currentLevel < questions.length) {
+      loadQuestion();
+    } else {
+      showEndScreen();
     }
-    else if (currentStage === 3) {
-      if (val.includes("सुभद्रा") || val.includes("चौहान")) {
-        inventory.push("रानी का मुकुट 👑");
-        updateInventoryDisplay();
-        storyBox.innerText = "✨ बिल्कुल सही! रचयिता सुभद्रा कुमारी चौहान जी हैं।[cite: 2]";
-      } else {
-        storyBox.innerText = "❌ सही उत्तर 'सुभद्रा कुमारी चौहान' है।[cite: 2]";
-      }
-      inputControls.classList.add('hidden');
-      nextStageBtn.classList.remove('hidden');
+  }
+
+  function showEndScreen() {
+    showScreen('screen-end');
+    const endAvatar = document.getElementById('end-avatar');
+    const endTitle = document.getElementById('end-title');
+    const endMsg = document.getElementById('end-msg');
+
+    if (score === 3) {
+      endAvatar.innerText = "👑✨";
+      endTitle.innerText = "🏆 चिड़ियों की रानी!";
+      endMsg.innerText = "अद्भुत! आपने सभी प्रश्नों के सही उत्तर दिए और पूरे 3 मीठे आम जीते! 🥭[cite: 2]";
+    } else {
+      endAvatar.innerText = "🐥";
+      endTitle.innerText = "अच्छा प्रयास!";
+      endMsg.innerText = `आपने ${score}/3 आम बटोरे। एक बार फिर कोशिश करें और सारे आम जीतें! 🥭[cite: 2]`;
     }
   }
 
