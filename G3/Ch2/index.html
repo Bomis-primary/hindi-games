@@ -189,7 +189,7 @@
         .left-bank, .right-bank {
             position: absolute;
             bottom: 0;
-            width: 120px;
+            width: 100px;
             height: 90px;
             background: #689f38;
             border-top: 8px solid #8bc34a;
@@ -201,8 +201,8 @@
         .river-water {
             position: absolute;
             bottom: 0;
-            left: 120px;
-            right: 120px;
+            left: 100px;
+            right: 100px;
             height: 60px;
             background: repeating-linear-gradient(
                 -45deg,
@@ -222,19 +222,19 @@
         .bridge-container {
             position: absolute;
             bottom: 70px;
-            left: 120px;
-            width: calc(100% - 240px);
+            left: 100px;
+            width: calc(100% - 200px);
             height: 18px;
             display: flex;
-            gap: 4px;
+            gap: 2px;
         }
 
         .plank {
             flex: 1;
             height: 100%;
             background: #8d6e63;
-            border: 2px solid #5d4037;
-            border-radius: 4px;
+            border: 1px solid #5d4037;
+            border-radius: 3px;
             opacity: 0.15;
             transition: opacity 0.5s ease, transform 0.3s ease;
         }
@@ -249,7 +249,7 @@
         .character {
             position: absolute;
             bottom: 85px;
-            left: 40px;
+            left: 30px;
             font-size: 2.5rem;
             transition: left 0.6s cubic-bezier(0.25, 0.1, 0.25, 1);
             z-index: 5;
@@ -260,7 +260,7 @@
         .tree-target {
             position: absolute;
             bottom: 85px;
-            right: 35px;
+            right: 25px;
             font-size: 2.8rem;
         }
 
@@ -359,21 +359,21 @@
                 height: 180px;
             }
             .left-bank, .right-bank {
-                width: 80px;
+                width: 60px;
             }
             .river-water {
-                left: 80px;
-                right: 80px;
+                left: 60px;
+                right: 60px;
             }
             .bridge-container {
-                left: 80px;
-                width: calc(100% - 160px);
+                left: 60px;
+                width: calc(100% - 120px);
             }
             .character {
-                left: 20px;
+                left: 15px;
             }
             .tree-target {
-                right: 20px;
+                right: 15px;
             }
             .innovine-logo-img {
                 max-height: 160px;
@@ -401,7 +401,7 @@
         <p class="subtitle">पाठ 2: लकड़हारा और पेड़ - व्याकरण एवं पाठ बोध</p>
         <div style="font-size: 4rem; margin-bottom: 15px;">🌉🌳</div>
         <p style="margin-bottom: 20px; max-width: 80%; color: #555;">
-            सही उत्तर देकर पूल की लकड़ियाँ (Planks) बिछाइए और नदी पार करके हरे-भरे जंगल तक पहुँचिए!
+            10 प्रश्नों के सही उत्तर देकर पुल की लकड़ियाँ बिछाइए और नदी पार करके हरे-भरे जंगल तक पहुँचिए!
         </p>
         <button class="btn" onclick="startGame()">खेल शुरू करें</button>
     </div>
@@ -411,7 +411,7 @@
         <div class="game-header">
             <div class="stat-box" id="score-display">अंक: 0</div>
             <div class="stat-box" id="chances-display">प्रयास: ❤️ ❤️</div>
-            <div class="stat-box" id="progress-display">पूल: 0/5</div>
+            <div class="stat-box" id="progress-display">पूल: 0/10</div>
             <div class="stat-box" id="timer-display">समय: 00:00</div>
         </div>
 
@@ -424,6 +424,11 @@
                 <div class="plank" id="plank-2"></div>
                 <div class="plank" id="plank-3"></div>
                 <div class="plank" id="plank-4"></div>
+                <div class="plank" id="plank-5"></div>
+                <div class="plank" id="plank-6"></div>
+                <div class="plank" id="plank-7"></div>
+                <div class="plank" id="plank-8"></div>
+                <div class="plank" id="plank-9"></div>
             </div>
             <div class="right-bank"></div>
             <div class="character" id="character">🚶</div>
@@ -440,7 +445,7 @@
     <div id="end-screen" class="screen">
         <div class="end-card">
             <h2>शानदार सफलता! 🎉</h2>
-            <p style="font-size: 1.1rem; margin-bottom: 15px;">आपने सही उत्तर देकर सेतु का निर्माण पूरा कर लिया और जंगल पहुँच गए!</p>
+            <p style="font-size: 1.1rem; margin-bottom: 15px;">आपने सभी 10 प्रश्नों के उत्तर देकर सेतु का निर्माण पूरा कर लिया और जंगल पहुँच गए!</p>
             <div class="end-stat" id="final-score">कुल अंक: 0</div>
             <div class="end-stat" id="final-time">कुल समय: 00:00</div>
             <button class="btn" style="margin-top: 20px;" onclick="restartGame()">पुनः खेलें</button>
@@ -520,7 +525,7 @@
     ];
 
     // --- Game Variables ---
-    const TOTAL_PLANKS = 5;
+    const TOTAL_PLANKS = 10;
     let currentQuestions = [];
     let currentQIndex = 0;
     let builtPlanks = 0;
@@ -586,7 +591,6 @@
             return;
         }
 
-        // If all questions are shown, reshuffle and reset index
         if (currentQIndex >= currentQuestions.length) {
             currentQuestions = [...questionBank].sort(() => Math.random() - 0.5);
             currentQIndex = 0;
@@ -658,8 +662,8 @@
         const containerWidth = document.getElementById('game-container').clientWidth;
         const isMobile = containerWidth <= 600;
 
-        const startLeft = isMobile ? 20 : 40;
-        const totalTravel = containerWidth - (isMobile ? 120 : 180);
+        const startLeft = isMobile ? 15 : 30;
+        const totalTravel = containerWidth - (isMobile ? 90 : 150);
 
         const step = totalTravel / TOTAL_PLANKS;
         const newLeft = startLeft + (builtPlanks * step);
