@@ -465,7 +465,7 @@
         }
     }
 
-    // --- Question Bank ---
+    // --- Question Bank (10 Questions) ---
     const questionBank = [
         {
             q: "\"हमें सोच-समझकर निर्णय लेना चाहिए।\" – यह किस पेड़ ने कहा?",
@@ -511,6 +511,11 @@
             q: "जंगल के उजड़ने के बाद वहाँ क्या रह गया?",
             options: ["फूलों की महक", "हवा के झोंके", "केवल सन्नाटा", "झरनों की आवाज"],
             answer: 2
+        },
+        {
+            q: "'दयालु' शब्द का विलोम (विपरीत) शब्द क्या होगा?",
+            options: ["कृपालु", "निर्दयी", "परोपकारी", "सज्जन"],
+            answer: 1
         }
     ];
 
@@ -549,7 +554,9 @@
         score = 0;
         builtPlanks = 0;
         secondsElapsed = 0;
+        currentQIndex = 0;
 
+        // Shuffle/Randomize the 10 questions every time game starts
         currentQuestions = [...questionBank].sort(() => Math.random() - 0.5);
 
         for (let i = 0; i < TOTAL_PLANKS; i++) {
@@ -579,6 +586,7 @@
             return;
         }
 
+        // If all questions are shown, reshuffle and reset index
         if (currentQIndex >= currentQuestions.length) {
             currentQuestions = [...questionBank].sort(() => Math.random() - 0.5);
             currentQIndex = 0;
