@@ -47,11 +47,20 @@
             display: block;
         }
 
-        /* Splash / Logo Screen */
-        .logo-img {
-            max-width: 180px;
-            height: auto;
+        /* Screen 1: Logo & Splash Screen Styling */
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
             margin-bottom: 20px;
+            min-height: 100px;
+        }
+
+        .logo-img {
+            max-width: 200px;
+            width: 100%;
+            height: auto;
+            object-fit: contain;
         }
 
         h1 {
@@ -176,9 +185,11 @@
 <div class="game-container">
     <button class="sound-toggle" onclick="toggleAudio()" id="soundBtn">🔊</button>
 
-    <!-- Screen 1: Logo & Welcome -->
+    <!-- Screen 1: Corrected Logo & Welcome Screen -->
     <div id="screenLogo" class="screen active-screen">
-        <img src="assets/logo.png" alt="Innovine Logo" class="logo-img" onerror="this.src='https://via.placeholder.com/180x80?text=Innovine'">
+        <div class="logo-container">
+            <img src="assets/logo.png" alt="Innovine Logo" class="logo-img" onerror="this.onerror=null; this.src='https://via.placeholder.com/200x80?text=Innovine+Logo';">
+        </div>
         <h1>पहले क्या लूँ?</h1>
         <p>स्मार्ट ख़रीददार बनें और समझदारी से फ़ैसले लें!</p>
         <button class="btn btn-primary" onclick="showInstructions()">आगे बढ़ें ➡️</button>
@@ -188,7 +199,7 @@
     <div id="screenInstructions" class="screen">
         <h2>खेल के नियम 📜</h2>
         <ul class="instructions-list">
-            <li>आपको <b>₹100</b> जेब खर्च मिलेगा।</li>
+            <li>आपको <b>₹100</b> जेब खर्च मिलेगा[cite: 3]।</li>
             <li>बाज़ार की वस्तुओं को देखकर चुनें कि वह <b>ज़रूरत (Need)</b> है या <b>इच्छा (Want)</b>।</li>
             <li><b>ज़रूरत (Need):</b> ऐसी चीज़ें जिनके बिना काम न चले (उदा. किताब, बैग)।</li>
             <li><b>इच्छा (Want):</b> शौक या मज़ा लेने की चीज़ें (उदा. खिलौने, टॉफ़ी)।</li>
@@ -232,7 +243,7 @@
 </div>
 
 <script>
-    // Web Audio API Sound Synthesizer (No external assets required for SFX)
+    // Web Audio Synthesizer
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     let audioCtx = null;
     let audioMuted = false;
@@ -260,11 +271,11 @@
 
     function playSound(type) {
         if (type === 'correct') {
-            playTone(523.25, 'sine', 0.15); // C5
-            setTimeout(() => playTone(659.25, 'sine', 0.2), 100); // E5
+            playTone(523.25, 'sine', 0.15);
+            setTimeout(() => playTone(659.25, 'sine', 0.2), 100);
         } else if (type === 'wrong') {
-            playTone(220, 'square', 0.2); // A3
-            setTimeout(() => playTone(185, 'square', 0.3), 150); // F#3
+            playTone(220, 'square', 0.2);
+            setTimeout(() => playTone(185, 'square', 0.3), 150);
         } else if (type === 'win') {
             playTone(523.25, 'triangle', 0.1);
             setTimeout(() => playTone(659.25, 'triangle', 0.1), 100);
@@ -277,9 +288,8 @@
         document.getElementById('soundBtn').innerText = audioMuted ? '🔇' : '🔊';
     }
 
-    // Dataset based on Chapter 5 (Expanded to 15 total items)
+    // Item Dataset
     const masterItemsBank = [
-        // Original 10 Items
         { name: 'किताब (Book)', category: 'need', price: 30, icon: '📖' },
         { name: 'रोबोट (Robot Toy)', category: 'want', price: 50, icon: '🤖' },
         { name: 'गुब्बारा (Balloon)', category: 'want', price: 10, icon: '🎈' },
@@ -290,8 +300,6 @@
         { name: 'साबुन (Soap)', category: 'need', price: 15, icon: '🧼' },
         { name: 'चॉकलेट (Chocolate)', category: 'want', price: 15, icon: '🍫' },
         { name: 'पेंसिल/स्टेशनरी (Stationery)', category: 'need', price: 10, icon: '✏️' },
-
-        // 5 New Items added from textbook context
         { name: 'मटका / पानी का बर्तन (Earthen Pot)', category: 'need', price: 35, icon: '🏺' },
         { name: 'चावल (Rice)', category: 'need', price: 30, icon: '🌾' },
         { name: 'बिस्कुट का पैकेट (Biscuit Packet)', category: 'want', price: 15, icon: '🍪' },
@@ -317,7 +325,6 @@
 
     function startGame() {
         initAudio();
-        // Pick 6 random items each round from the 15-item bank
         items = [...masterItemsBank].sort(() => Math.random() - 0.5).slice(0, 6);
         currentIndex = 0;
         budget = 100;
