@@ -3,923 +3,254 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>हवा महल - भूलभुलैया साहसिक (Maze Adventure)</title>
+    <title>हिंदी व्याकरण क्विज़</title>
     <style>
-        :root {
-            --primary: #d94f30;
-            --primary-dark: #b3391e;
-            --secondary: #f4a261;
-            --accent: #2a9d8f;
-            --bg-color: #fdf6ec;
-            --text-color: #2b2d42;
-            --card-bg: #ffffff;
-            --shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            user-select: none;
-        }
-
         body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 20px;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            overflow: hidden;
         }
-
-        #game-container {
+        .quiz-container {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             width: 100%;
-            max-width: 900px;
-            height: 95vh;
-            max-height: 750px;
-            background: var(--card-bg);
-            border-radius: 20px;
-            box-shadow: var(--shadow);
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
+            max-width: 600px;
+            padding: 25px;
+            box-sizing: border-box;
         }
-
-        .screen {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.5s ease;
-        }
-
-        .screen.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        /* Screen 1: Splash Screen */
-        #splash-screen {
-            background: linear-gradient(135deg, #f4a261, #e76f51);
-            color: white;
+        h1, h2 {
             text-align: center;
+            color: #333;
         }
-
-        .logo-box {
-            background: white;
-            padding: 35px 55px;
-            border-radius: 24px;
-            box-shadow: var(--shadow);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            animation: pulse 2.5s infinite ease-in-out;
-            max-width: 85%;
-            max-height: 85%;
-            margin-bottom: 20px;
-        }
-
-        .innovine-logo-img {
-            max-height: 220px;
-            width: 100%;
-            max-width: 480px;
-            object-fit: contain;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-
-        /* Screen 2: Welcome Screen */
-        #welcome-screen {
-            background: linear-gradient(to bottom, #fdf6ec, #fae1dd);
-            text-align: center;
-        }
-
-        .title {
-            font-size: 2.2rem;
-            color: var(--primary-dark);
-            margin-bottom: 5px;
-        }
-
-        .subtitle {
-            font-size: 1.1rem;
-            color: #555;
-            margin-bottom: 15px;
-        }
-
-        .level-selection {
+        .btn-container {
             display: flex;
             flex-direction: column;
             gap: 12px;
-            width: 100%;
-            max-width: 400px;
-            margin-top: 10px;
+            margin-top: 20px;
         }
-
         .btn {
-            background-color: var(--primary);
-            color: white;
+            padding: 14px 20px;
+            font-size: 16px;
             border: none;
-            padding: 14px 28px;
-            font-size: 1.15rem;
-            font-weight: bold;
-            border-radius: 30px;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(217, 79, 48, 0.4);
-            transition: all 0.2s ease;
-        }
-
-        .btn:hover {
-            background-color: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(217, 79, 48, 0.5);
-        }
-
-        .btn-secondary {
-            background-color: var(--accent);
-            box-shadow: 0 4px 12px rgba(42, 157, 143, 0.4);
-        }
-
-        .btn-secondary:hover {
-            background-color: #1f7a6f;
-            box-shadow: 0 6px 16px rgba(42, 157, 143, 0.5);
-        }
-
-        .btn:active {
-            transform: translateY(0);
-        }
-
-        /* Screen 3: Game Play Screen */
-        #game-screen {
-            justify-content: flex-start;
-            padding: 15px;
-        }
-
-        .game-header {
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-            background: #fff0eb;
-            padding: 10px 20px;
-            border-radius: 12px;
-        }
-
-        .stat-box {
-            font-size: 0.95rem;
-            font-weight: bold;
-            color: var(--primary-dark);
-        }
-
-        .game-area {
-            display: flex;
-            flex-direction: row;
-            gap: 20px;
-            width: 100%;
-            height: calc(100% - 60px);
-            align-items: center;
-            justify-content: center;
-        }
-
-        #maze-board {
-            display: grid;
-            gap: 2px;
-            background-color: #d8b4a0;
-            padding: 4px;
             border-radius: 8px;
-            box-shadow: var(--shadow);
-            aspect-ratio: 1;
-            max-height: 480px;
-            max-width: 480px;
-            width: 100%;
-        }
-
-        .cell {
-            background-color: #fff8f0;
-            border-radius: 3px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 1.2rem;
-            position: relative;
-        }
-
-        .cell.wall {
-            background-color: #b35d46;
-            background-image: linear-gradient(45deg, #9e4f3a 25%, transparent 25%, transparent 75%, #9e4f3a 75%), 
-                              linear-gradient(45deg, #9e4f3a 25%, transparent 25%, transparent 75%, #9e4f3a 75%);
-            background-size: 10px 10px;
-            background-position: 0 0, 5px 5px;
-        }
-
-        .cell.player::after {
-            content: '🚶';
-            font-size: 1.3rem;
-            animation: bounce 0.5s infinite alternate;
-        }
-
-        @keyframes bounce {
-            from { transform: translateY(0); }
-            to { transform: translateY(-3px); }
-        }
-
-        .cell.checkpoint::after {
-            content: '❓';
-            font-size: 1.1rem;
-            animation: pulse 1s infinite;
-        }
-
-        .cell.goal::after {
-            content: '🏰';
-            font-size: 1.4rem;
-        }
-
-        .controls {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .control-row {
-            display: flex;
-            gap: 8px;
-        }
-
-        .ctrl-btn {
-            width: 55px;
-            height: 55px;
-            border-radius: 50%;
-            border: none;
-            background: var(--primary);
-            color: white;
-            font-size: 1.4rem;
-            font-weight: bold;
             cursor: pointer;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: background 0.1s, transform 0.1s;
-        }
-
-        .ctrl-btn:active {
-            background: var(--primary-dark);
-            transform: scale(0.95);
-        }
-
-        /* In-Game Warning Toast */
-        #warning-toast {
-            position: absolute;
-            top: 70px;
-            left: 50%;
-            transform: translateX(-50%) translateY(-20px);
-            background: #e74c3c;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 20px;
-            font-weight: bold;
-            font-size: 0.95rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-            opacity: 0;
-            pointer-events: none;
-            transition: all 0.3s ease;
-            z-index: 5;
-            text-align: center;
-            white-space: nowrap;
-        }
-
-        #warning-toast.show {
-            opacity: 1;
-            transform: translateX(-50%) translateY(0);
-        }
-
-        /* Modal / Question Overlay */
-        .modal {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.6);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-            z-index: 10;
-        }
-
-        .modal.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .modal-card {
-            background: white;
-            width: 90%;
-            max-width: 450px;
-            padding: 25px;
-            border-radius: 16px;
-            box-shadow: var(--shadow);
-            text-align: center;
-            position: relative;
-        }
-
-        .modal-card h3 {
-            color: var(--primary-dark);
-            margin-bottom: 15px;
-            font-size: 1.2rem;
-        }
-
-        .options-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .opt-btn {
-            background: #f8f9fa;
-            border: 2px solid #e9ecef;
-            padding: 12px 16px;
-            border-radius: 10px;
-            font-size: 1rem;
-            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease;
             text-align: left;
-            transition: all 0.2s;
         }
-
-        .opt-btn:hover {
-            border-color: var(--secondary);
-            background: #fff8f0;
+        .btn:hover {
+            transform: translateY(-2px);
         }
-
-        /* Inline Error Banner inside Question Card */
-        #modal-error-msg {
-            display: none;
-            background-color: #f8d7da;
-            color: #842029;
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-size: 0.95rem;
-            margin-top: 10px;
-            font-weight: bold;
-        }
-
-        /* Screen 4: End Screen */
-        #end-screen {
-            background: linear-gradient(to bottom, #fae1dd, #fdf6ec);
-            text-align: center;
-        }
-
-        .end-card {
-            background: white;
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: var(--shadow);
-            max-width: 420px;
-            width: 90%;
-        }
-
-        .end-card h2 {
-            color: var(--primary);
-            font-size: 2rem;
-            margin-bottom: 15px;
-        }
-
-        .end-stat {
-            font-size: 1.2rem;
-            margin: 10px 0;
-            color: #444;
-        }
-
-        @media (max-width: 768px) {
-            .game-area {
-                flex-direction: column;
-                gap: 10px;
-            }
-            #maze-board {
-                max-height: 320px;
-                max-width: 320px;
-            }
-            .ctrl-btn {
-                width: 45px;
-                height: 45px;
-                font-size: 1.1rem;
-            }
-            #warning-toast {
-                white-space: normal;
-                width: 90%;
-            }
-        }
+        .btn-primary { background-color: #4a90e2; color: white; }
+        .btn-secondary { background-color: #50e3c2; color: #333; font-weight: bold; }
+        .btn-option { background-color: #eef2f5; color: #333; border: 1px solid #dcdfe3; }
+        .btn-option:hover { background-color: #e0e6ed; }
+        .btn-option.correct { background-color: #2ecc71; color: white; }
+        .btn-option.wrong { background-color: #e74c3c; color: white; }
+        .screen { display: none; }
+        .screen.active { display: block; }
+        .question-text { font-size: 18px; margin-bottom: 20px; font-weight: 600; color: #2c3e50; }
+        .score-text { font-size: 20px; text-align: center; margin-bottom: 20px; }
+        .controls { display: flex; justify-content: space-between; margin-top: 20px; }
     </style>
 </head>
 <body>
 
-<div id="game-container">
-    <div id="splash-screen" class="screen active">
-        <div class="logo-box">
-            <img src="assets/logo.png" alt="Innovine Logo" class="innovine-logo-img" onerror="this.src='https://via.placeholder.com/300x120?text=Innovine';">
-        </div>
-        <p style="font-size: 1.1rem;">जयपुर की ऐतिहासिक यात्रा...</p>
-    </div>
-
-    <div id="welcome-screen" class="screen">
-        <h1 class="title">हवा महल भूलभुलैया (Maze Adventure)</h1>
-        <p class="subtitle">पाठ 3: हवा महल - जयपुर की यात्रा</p>
-        <div style="font-size: 3.5rem; margin-bottom: 10px;">🏰</div>
-        <p style="margin-bottom: 15px; max-width: 85%; color: #666; font-size: 0.95rem;">
-            भूलभुलैया में सही स्तर चुनकर प्रश्नों के उत्तर दें और हवा महल तक पहुँचें!
-        </p>
-        
-        <div class="level-selection">
-            <button class="btn" onclick="selectLevel(1)">
-                लेवल 1: पाठ बोध (कहानी) 📖
+<div class="quiz-container">
+    <!-- Welcome Screen -->
+    <div id="welcome-screen" class="screen active">
+        <h1>हिंदी व्याकरण अभ्यास</h1>
+        <p style="text-align: center;">अपना स्तर चुनिए:</p>
+        <div class="btn-container">
+            <button class="btn btn-primary" onclick="selectLevel(1)">
+                लेवल 1: आधारभूत अभ्यास 📘
             </button>
             <button class="btn btn-secondary" onclick="selectLevel(2)">
-                लेवल 2: व्याकरण बोध (विलोम शब्द) ✍️
+                लेवल 2: व्याकरण बोध (पर्यायवाची शब्द) ✍️
             </button>
         </div>
     </div>
 
-    <div id="game-screen" class="screen">
-        <div class="game-header">
-            <div class="stat-box" id="level-display-mode">स्तर: 1</div>
-            <div class="stat-box" id="score-display">अंक: 0</div>
-            <div class="stat-box" id="level-display">प्रश्न शेष: 10</div>
-            <div class="stat-box" id="timer-display">समय: 00:00</div>
-        </div>
-
-        <!-- In-Game Notification Banner -->
-        <div id="warning-toast">⚠️ हवा महल पहुँचने से पहले सभी प्रश्नों (❓) के उत्तर दें!</div>
-
-        <div class="game-area">
-            <div id="maze-board"></div>
-
-            <div class="controls">
-                <button class="ctrl-btn" onclick="movePlayer(0, -1)">▲</button>
-                <div class="control-row">
-                    <button class="ctrl-btn" onclick="movePlayer(-1, 0)">◄</button>
-                    <button class="ctrl-btn" onclick="movePlayer(0, 1)">▼</button>
-                    <button class="ctrl-btn" onclick="movePlayer(1, 0)">►</button>
-                </div>
-            </div>
-        </div>
-
-        <div id="question-modal" class="modal">
-            <div class="modal-card">
-                <h3 id="question-text">प्रश्न यहाँ आएगा...</h3>
-                <div class="options-grid" id="options-container"></div>
-                <div id="modal-error-msg">❌ गलत उत्तर! पुनः प्रयास करें।</div>
-            </div>
+    <!-- Quiz Screen -->
+    <div id="quiz-screen" class="screen">
+        <h2 id="level-title">लेवल 2: पर्यायवाची शब्द</h2>
+        <div class="question-text" id="question-text">प्रश्न यहाँ दिखेगा</div>
+        <div class="btn-container" id="options-container"></div>
+        <div class="controls">
+            <button class="btn btn-primary" id="next-btn" onclick="nextQuestion()" style="display:none; margin-left: auto;">अगला प्रश्न ➡️</button>
         </div>
     </div>
 
-    <div id="end-screen" class="screen">
-        <div class="end-card">
-            <h2>बधाई हो! 🎉</h2>
-            <p style="font-size: 1.1rem; margin-bottom: 15px;">आपने हवा महल की यात्रा सफलतापूर्वक पूरी कर ली!</p>
-            <div class="end-stat" id="final-score">कुल अंक: 0</div>
-            <div class="end-stat" id="final-time">कुल समय: 00:00</div>
-            <div style="display: flex; gap: 10px; justify-content: center; margin-top: 15px;">
-                <button class="btn" style="padding: 10px 20px; font-size: 1rem;" onclick="restartGame()">पुनः खेलें 🔄</button>
-                <button class="btn btn-secondary" style="padding: 10px 20px; font-size: 1rem;" onclick="switchScreen('end-screen', 'welcome-screen')">मुख्य मेनू 🏠</button>
-            </div>
+    <!-- Result Screen -->
+    <div id="result-screen" class="screen">
+        <h2>परिणाम 🏆</h2>
+        <div class="score-text" id="score-text"></div>
+        <div class="btn-container">
+            <button class="btn btn-primary" onclick="restartQuiz()">पुनः प्रयास करें 🔄</button>
+            <button class="btn btn-option" onclick="goHome()">मुख्य पृष्ठ पर जाएँ 🏠</button>
         </div>
     </div>
 </div>
 
 <script>
-    // Audio Context & SFX Generator
-    const AudioCtx = window.AudioContext || window.webkitAudioContext;
-    let audioCtx = null;
-
-    function initAudio() {
-        if (!audioCtx) audioCtx = new AudioCtx();
+// Level 2 Questions (Grammar: Synonyms / पर्यायवाची शब्द)
+const level2Questions = [
+    {
+        q: "जिन शब्दों के अर्थ समान या लगभग एक जैसे होते हैं, उन्हें क्या कहते हैं?",
+        options: ["विलोम शब्द", "पर्यायवाची शब्द", "संज्ञा", "सर्वनाम"],
+        answer: 1
+    },
+    {
+        q: "'हवा' शब्द का सही पर्यायवाची शब्द कौन-सा है?",
+        options: ["वायु", "जल", "अग्नि", "भूमि"],
+        answer: 0
+    },
+    {
+        q: "'महल' शब्द का सही पर्यायवाची शब्द क्या होगा?",
+        options: ["झोपड़ी", "प्रासाद", "वन", "पहाड़"],
+        answer: 1
+    },
+    {
+        q: "'पवन' शब्द किस शब्द का पर्यायवाची है?",
+        options: ["पानी", "हवा", "आकाश", "सूरज"],
+        answer: 1
+    },
+    {
+        q: "'भवन' शब्द का समान अर्थ (पर्यायवाची) देने वाला शब्द चुनिए:",
+        options: ["घर / महल", "रास्ता", "पेड़", "नदी"],
+        answer: 0
+    },
+    {
+        q: "'राजा' शब्द का सही पर्यायवाची शब्द इनमें से कौन-सा है?",
+        options: ["नृप", "सैनिक", "प्रजा", "सेवक"],
+        answer: 0
+    },
+    {
+        q: "'सूर्य' शब्द का पर्यायवाची शब्द क्या होगा?",
+        options: ["चंद्रमा", "रवि", "मेघ", "तारा"],
+        answer: 1
+    },
+    {
+        q: "'पानी' शब्द का सही पर्यायवाची शब्द बताइए:",
+        options: ["जल", "अनल", "आकाश", "पर्वत"],
+        answer: 0
+    },
+    {
+        q: "'आकाश' शब्द का पर्यायवाची शब्द इनमें से कौन-सा है?",
+        options: ["गगन", "धरती", "सागर", "पाताल"],
+        answer: 0
+    },
+    {
+        q: "'फूल' शब्द का समानार्थक (पर्यायवाची) शब्द क्या होगा?",
+        options: ["पुष्प", "पत्ता", "फल", "तथा"],
+        answer: 0
     }
+];
 
-    function playSound(type) {
-        if (!audioCtx) return;
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-
-        const now = audioCtx.currentTime;
-
-        if (type === 'move') {
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(300, now);
-            osc.frequency.exponentialRampToValueAtTime(150, now + 0.1);
-            gain.gain.setValueAtTime(0.1, now);
-            gain.gain.linearRampToValueAtTime(0.01, now + 0.1);
-            osc.start(now);
-            osc.stop(now + 0.1);
-        } else if (type === 'correct') {
-            osc.type = 'triangle';
-            osc.frequency.setValueAtTime(523.25, now); // C5
-            osc.frequency.setValueAtTime(659.25, now + 0.1); // E5
-            osc.frequency.setValueAtTime(783.99, now + 0.2); // G5
-            gain.gain.setValueAtTime(0.2, now);
-            gain.gain.linearRampToValueAtTime(0.01, now + 0.35);
-            osc.start(now);
-            osc.stop(now + 0.35);
-        } else if (type === 'wrong') {
-            osc.type = 'sawtooth';
-            osc.frequency.setValueAtTime(180, now);
-            osc.frequency.setValueAtTime(130, now + 0.15);
-            gain.gain.setValueAtTime(0.2, now);
-            gain.gain.linearRampToValueAtTime(0.01, now + 0.3);
-            osc.start(now);
-            osc.stop(now + 0.3);
-        } else if (type === 'win') {
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(440, now);
-            osc.frequency.setValueAtTime(554.37, now + 0.15);
-            osc.frequency.setValueAtTime(659.25, now + 0.3);
-            osc.frequency.setValueAtTime(880, now + 0.45);
-            gain.gain.setValueAtTime(0.25, now);
-            gain.gain.linearRampToValueAtTime(0.01, now + 0.7);
-            osc.start(now);
-            osc.stop(now + 0.7);
-        }
+// Fallback Level 1 Questions
+const level1Questions = [
+    {
+        q: "वर्णों के समूह को क्या कहते हैं?",
+        options: ["वर्णमाला", "शब्द", "वाक्य", "पद"],
+        answer: 0
+    },
+    {
+        q: "हिंदी में कितने स्वर होते हैं?",
+        options: ["10", "11", "12", "13"],
+        answer: 1
     }
+];
 
-    // Level 1 Questions (Chapter 3: Hawa Mahal - Story)
-    const level1Questions = [
-        {
-            q: "जयपुर शहर को किस नाम से जाना जाता है?",
-            options: ["सफ़ेद नगरी", "गुलाबी नगरी", "नीली नगरी", "सोना नगरी"],
-            answer: 1
-        },
-        {
-            q: "हवा महल का निर्माण किस सन में करवाया गया था?",
-            options: ["1799", "1876", "2019", "2022"],
-            answer: 0
-        },
-        {
-            q: "हवा महल में कुल कितने झरोखे हैं?",
-            options: ["180", "953", "1876", "1799"],
-            answer: 1
-        },
-        {
-            q: "हवा महल का निर्माण किस महाराजा ने करवाया था?",
-            options: ["सवाई राम सिंह", "सवाई प्रताप सिंह", "अकबर", "महाराणा प्रताप"],
-            answer: 1
-        },
-        {
-            q: "युवराज अल्बर्ट एडवर्ड के स्वागत में जयपुर को गुलाबी रंग से किसने रंगवाया?",
-            options: ["महाराजा सवाई प्रताप सिंह", "महाराजा सवाई राम सिंह", "विद्याधर भट्टाचार्य", "लाल चंद उस्ताद"],
-            answer: 1
-        },
-        {
-            q: "यूनेस्को ने जयपुर को विश्व धरोहर शहर कब घोषित किया?",
-            options: ["6 जुलाई 2019", "18 फरवरी 2022", "1799", "1876"],
-            answer: 0
-        },
-        {
-            q: "हवा महल की कितनी मंजिलें हैं?",
-            options: ["3", "4", "5", "7"],
-            answer: 2
-        },
-        {
-            q: "हवा महल का डिज़ाइन किस वास्तुकार ने तैयार किया था?",
-            options: ["विद्याधर भट्टाचार्य", "लाल चंद उस्ताद", "सवाई राम सिंह", "अंकित"],
-            answer: 1
-        },
-        {
-            q: "हवा महल किस पत्थर से निर्मित है?",
-            options: ["सफ़ेद संगमरमर", "लाल और गुलाबी बलुआ पत्थर", "काला ग्रेनाइट", "चूना पत्थर"],
-            answer: 1
-        },
-        {
-            q: "हवा महल का आकार किस भगवान के मुकुट जैसा दिखाई देता है?",
-            options: ["भगवान शिव", "भगवान श्री कृष्ण", "भगवान राम", "भगवान विष्णु"],
-            answer: 1
-        }
-    ];
+let currentQuestions = [];
+let currentQuestionIndex = 0;
+let score = 0;
 
-    // Level 2 Questions (Grammar: Antonyms / विलोम शब्द)
-    const level2Questions = [
-        {
-            q: "जो शब्द एक-दूसरे का उल्टा अर्थ बताते हैं, उन्हें क्या कहते हैं?",
-            options: ["पर्यायवाची शब्द", "विलोम शब्द", "संज्ञा", "सर्वनाम"],
-            answer: 1
-        },
-        {
-            q: "'दिन' शब्द का सही विलोम शब्द क्या होगा?",
-            options: ["सुबह", "रात", "शाम", "दोपहर"],
-            answer: 1
-        },
-        {
-            q: "'बड़ा' शब्द का विलोम शब्द इनमें से कौन-सा है?",
-            options: ["ऊँचा", "छोटा", "लंबा", "चौड़ा"],
-            answer: 1
-        },
-        {
-            q: "'ठंडा' शब्द का सही विलोम शब्द क्या होगा?",
-            options: ["गर्म", "शीतल", "बर्फ", "पानी"],
-            answer: 0
-        },
-        {
-            q: "'उजाला' शब्द का विलोम शब्द क्या है?",
-            options: ["प्रकाश", "अँधेरा", "रोशनी", "चमक"],
-            answer: 1
-        },
-        {
-            q: "'सच्चा' (सत्य) शब्द का सही विलोम शब्द बताइए:",
-            options: ["झूठा", "अच्छा", "ईमानदार", "निडर"],
-            answer: 0
-        },
-        {
-            q: "'अमीर' शब्द का विपरीतार्थक (विलोम) शब्द क्या होगा?",
-            options: ["धनवान", "ग़रीब", "मालिक", "राजा"],
-            answer: 1
-        },
-        {
-            q: "'सुख' शब्द का सही विलोम शब्द चुनिए:",
-            options: ["खुशी", "दुःख", "आनंद", "हँसी"],
-            answer: 1
-        },
-        {
-            q: "'नया' शब्द का सही विलोम शब्द क्या है?",
-            options: ["पुराना", "ताज़ा", "नवीन", "आधुनिक"],
-            answer: 0
-        },
-        {
-            q: "'हँसना' शब्द का सही विलोम शब्द क्या होगा?",
-            options: ["मुस्कुराना", "गाना", "रोना", "सोना"],
-            answer: 2
-        }
-    ];
-
-    // Maze Grid Layout (9x9 Grid containing 10 checkpoints)
-    // 0 = path, 1 = wall, 2 = checkpoint (question), 3 = goal
-    const initialMazeLayout = [
-        [0, 2, 0, 1, 0, 2, 0, 1, 0],
-        [1, 1, 0, 1, 0, 1, 0, 1, 2],
-        [0, 2, 0, 0, 0, 0, 0, 1, 0],
-        [0, 1, 1, 1, 2, 1, 1, 1, 0],
-        [0, 0, 2, 0, 0, 0, 2, 0, 0],
-        [1, 1, 0, 1, 1, 1, 0, 1, 1],
-        [0, 2, 0, 0, 2, 0, 0, 0, 0],
-        [0, 1, 1, 1, 0, 1, 1, 1, 2],
-        [0, 0, 0, 1, 0, 0, 0, 1, 3]
-    ];
-
-    let mazeLayout = JSON.parse(JSON.stringify(initialMazeLayout));
-    const mazeSize = 9;
-    let currentLevelMode = 1;
-    let playerPos = { x: 0, y: 0 };
-    let score = 0;
-    let timerInterval = null;
-    let secondsElapsed = 0;
-    let currentQuestions = [];
-    let pendingMove = null;
-    let toastTimeout = null;
-
-    // Auto-Transition Splash to Welcome Screen after 3 seconds
-    setTimeout(() => {
-        switchScreen('splash-screen', 'welcome-screen');
-    }, 3000);
-
-    function switchScreen(fromId, toId) {
-        document.getElementById(fromId).classList.remove('active');
-        document.getElementById(toId).classList.add('active');
+function selectLevel(level) {
+    if (level === 2) {
+        currentQuestions = level2Questions;
+        document.getElementById('level-title').innerText = "लेवल 2: पर्यायवाची शब्द";
+    } else {
+        currentQuestions = level1Questions;
+        document.getElementById('level-title').innerText = "लेवल 1: आधारभूत अभ्यास";
     }
+    
+    currentQuestionIndex = 0;
+    score = 0;
+    
+    showScreen('quiz-screen');
+    loadQuestion();
+}
 
-    function selectLevel(lvl) {
-        currentLevelMode = lvl;
-        startGame();
-    }
+function loadQuestion() {
+    const qData = currentQuestions[currentQuestionIndex];
+    document.getElementById('question-text').innerText = `${currentQuestionIndex + 1}. ${qData.q}`;
+    
+    const optionsContainer = document.getElementById('options-container');
+    optionsContainer.innerHTML = '';
+    
+    document.getElementById('next-btn').style.display = 'none';
 
-    // Count remaining checkpoints
-    function getRemainingCheckpoints() {
-        let count = 0;
-        for (let y = 0; y < mazeSize; y++) {
-            for (let x = 0; x < mazeSize; x++) {
-                if (mazeLayout[y][x] === 2) count++;
-            }
-        }
-        return count;
-    }
-
-    function updateCheckpointDisplay() {
-        const remaining = getRemainingCheckpoints();
-        document.getElementById('level-display').innerText = `प्रश्न शेष: ${remaining}`;
-    }
-
-    function showToast(message) {
-        const toast = document.getElementById('warning-toast');
-        toast.innerText = message;
-        toast.classList.add('show');
-        clearTimeout(toastTimeout);
-        toastTimeout = setTimeout(() => {
-            toast.classList.remove('show');
-        }, 2500);
-    }
-
-    function startGame() {
-        initAudio();
-        score = 0;
-        secondsElapsed = 0;
-        playerPos = { x: 0, y: 0 };
-
-        document.getElementById('level-display-mode').innerText = `स्तर: ${currentLevelMode}`;
-
-        // Reset Maze Layout Checkpoints
-        mazeLayout = JSON.parse(JSON.stringify(initialMazeLayout));
-
-        // Select and Shuffle Question Pool according to Level Mode
-        const rawQuestions = (currentLevelMode === 1) ? level1Questions : level2Questions;
-        currentQuestions = [...rawQuestions].sort(() => Math.random() - 0.5);
-
-        document.getElementById('score-display').innerText = `अंक: ${score}`;
-        document.getElementById('timer-display').innerText = `समय: 00:00`;
-        updateCheckpointDisplay();
-
-        buildMaze();
-        switchScreen('welcome-screen', 'game-screen');
-
-        clearInterval(timerInterval);
-        timerInterval = setInterval(() => {
-            secondsElapsed++;
-            const mins = String(Math.floor(secondsElapsed / 60)).padStart(2, '0');
-            const secs = String(secondsElapsed % 60).padStart(2, '0');
-            document.getElementById('timer-display').innerText = `समय: ${mins}:${secs}`;
-        }, 1000);
-    }
-
-    function buildMaze() {
-        const board = document.getElementById('maze-board');
-        board.innerHTML = '';
-        board.style.gridTemplateColumns = `repeat(${mazeSize}, 1fr)`;
-
-        for (let y = 0; y < mazeSize; y++) {
-            for (let x = 0; x < mazeSize; x++) {
-                const cell = document.createElement('div');
-                cell.classList.add('cell');
-                cell.id = `cell-${x}-${y}`;
-
-                const type = mazeLayout[y][x];
-                if (type === 1) cell.classList.add('wall');
-                else if (type === 2) cell.classList.add('checkpoint');
-                else if (type === 3) cell.classList.add('goal');
-
-                if (x === playerPos.x && y === playerPos.y) {
-                    cell.classList.add('player');
-                }
-
-                board.appendChild(cell);
-            }
-        }
-    }
-
-    function movePlayer(dx, dy) {
-        const newX = playerPos.x + dx;
-        const newY = playerPos.y + dy;
-
-        // Check boundary limits
-        if (newX < 0 || newX >= mazeSize || newY < 0 || newY >= mazeSize) return;
-
-        // Check wall collision
-        if (mazeLayout[newY][newX] === 1) return;
-
-        const targetType = mazeLayout[newY][newX];
-
-        if (targetType === 2) { // Checkpoint Question
-            pendingMove = { x: newX, y: newY };
-            showQuestionModal();
-        } else if (targetType === 3) { // Goal Position
-            // Require all 10 checkpoints to be completed
-            if (getRemainingCheckpoints() > 0) {
-                showToast("⚠️ हवा महल पहुँचने से पहले सभी 10 प्रश्नों (❓) के उत्तर दें!");
-                return;
-            }
-            executeMove(newX, newY);
-            handleWin();
-        } else {
-            executeMove(newX, newY);
-        }
-    }
-
-    function executeMove(x, y) {
-        playSound('move');
-        document.getElementById(`cell-${playerPos.x}-${playerPos.y}`).classList.remove('player');
-        playerPos = { x, y };
-        document.getElementById(`cell-${playerPos.x}-${playerPos.y}`).classList.add('player');
-    }
-
-    function showQuestionModal() {
-        document.getElementById('modal-error-msg').style.display = 'none';
-
-        if (currentQuestions.length === 0) {
-            const rawQuestions = (currentLevelMode === 1) ? level1Questions : level2Questions;
-            currentQuestions = [...rawQuestions].sort(() => Math.random() - 0.5);
-        }
-        const qData = currentQuestions.pop();
-
-        document.getElementById('question-text').innerText = qData.q;
-        const optsContainer = document.getElementById('options-container');
-        optsContainer.innerHTML = '';
-
-        qData.options.forEach((opt, idx) => {
-            const btn = document.createElement('button');
-            btn.classList.add('opt-btn');
-            btn.innerText = opt;
-            btn.onclick = () => handleAnswer(idx === qData.answer);
-            optsContainer.appendChild(btn);
-        });
-
-        document.getElementById('question-modal').classList.add('active');
-    }
-
-    function handleAnswer(isCorrect) {
-        if (isCorrect) {
-            document.getElementById('question-modal').classList.remove('active');
-            playSound('correct');
-            score += 10;
-            document.getElementById('score-display').innerText = `अंक: ${score}`;
-            
-            // Mark checkpoint cleared
-            mazeLayout[pendingMove.y][pendingMove.x] = 0;
-            const cell = document.getElementById(`cell-${pendingMove.x}-${pendingMove.y}`);
-            cell.classList.remove('checkpoint');
-            updateCheckpointDisplay();
-            executeMove(pendingMove.x, pendingMove.y);
-            pendingMove = null;
-        } else {
-            playSound('wrong');
-            const errorMsg = document.getElementById('modal-error-msg');
-            errorMsg.style.display = 'block';
-        }
-    }
-
-    function handleWin() {
-        clearInterval(timerInterval);
-        playSound('win');
-        
-        const mins = String(Math.floor(secondsElapsed / 60)).padStart(2, '0');
-        const secs = String(secondsElapsed % 60).padStart(2, '0');
-
-        document.getElementById('final-score').innerText = `कुल अंक: ${score}`;
-        document.getElementById('final-time').innerText = `कुल समय: ${mins}:${secs}`;
-
-        setTimeout(() => {
-            switchScreen('game-screen', 'end-screen');
-        }, 500);
-    }
-
-    function restartGame() {
-        switchScreen('end-screen', 'game-screen');
-        startGame();
-    }
-
-    // Keyboard Controls
-    window.addEventListener('keydown', (e) => {
-        if (!document.getElementById('game-screen').classList.contains('active')) return;
-        if (document.getElementById('question-modal').classList.contains('active')) return;
-
-        switch (e.key) {
-            case 'ArrowUp':
-            case 'w':
-            case 'W':
-                movePlayer(0, -1);
-                break;
-            case 'ArrowDown':
-            case 's':
-            case 'S':
-                movePlayer(0, 1);
-                break;
-            case 'ArrowLeft':
-            case 'a':
-            case 'A':
-                movePlayer(-1, 0);
-                break;
-            case 'ArrowRight':
-            case 'd':
-            case 'D':
-                movePlayer(1, 0);
-                break;
-        }
+    qData.options.forEach((opt, index) => {
+        const btn = document.createElement('button');
+        btn.className = 'btn btn-option';
+        btn.innerText = opt;
+        btn.onclick = () => checkAnswer(index, btn);
+        optionsContainer.appendChild(btn);
     });
+}
+
+function checkAnswer(selectedIndex, selectedBtn) {
+    const qData = currentQuestions[currentQuestionIndex];
+    const buttons = document.querySelectorAll('#options-container .btn-option');
+    
+    buttons.forEach(btn => btn.disabled = true);
+
+    if (selectedIndex === qData.answer) {
+        selectedBtn.classList.add('correct');
+        score++;
+    } else {
+        selectedBtn.classList.add('wrong');
+        buttons[qData.answer].classList.add('correct');
+    }
+
+    document.getElementById('next-btn').style.display = 'block';
+}
+
+function nextQuestion() {
+    currentQuestionIndex++;
+    if (currentQuestionIndex < currentQuestions.length) {
+        loadQuestion();
+    } else {
+        showResults();
+    }
+}
+
+function showResults() {
+    showScreen('result-screen');
+    document.getElementById('score-text').innerText = `आपने ${currentQuestions.length} में से ${score} अंक प्राप्त किए!`;
+}
+
+function restartQuiz() {
+    currentQuestionIndex = 0;
+    score = 0;
+    showScreen('quiz-screen');
+    loadQuestion();
+}
+
+function goHome() {
+    showScreen('welcome-screen');
+}
+
+function showScreen(screenId) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(screenId).classList.add('active');
+}
 </script>
+
 </body>
 </html>
