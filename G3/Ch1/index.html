@@ -340,19 +340,20 @@
 <script>
   let currentLevel = 0;
   let score = 0;
+  let activeQuestions = [];
 
-  // 10 Interactive Speech Bubble Fill Questions
-  const questions = [
+  // Master List of 10 Interactive Speech Bubble Fill Questions
+  const masterQuestions = [
     {
       avatar: "🐦",
       template: "कोयल का रंग <span class='blank-target'>[ _____ ]</span> होता है और वह आम के पेड़ पर बैठती है।",
       words: ["काला", "सफ़ेद", "हरी"],
       correct: "काला",
       successMsg: "✨ वाह! कोयल काली होती है और आम के पेड़ पर गाती है! 🥭",
-      failMsg: "❌ सही उत्तर 'काली' है।"
+      failMsg: "❌ सही उत्तर 'काला' है।"
     },
     {
-      avatar: "🥭",
+      avatar: "🐦",
       template: "कोयल अपनी मीठी आवाज़ में <span class='blank-target'>[ _____ ]</span> गाती है।",
       words: ["काँव-काँव", "कुहू-कुहू", "चीँ-चीँ"],
       correct: "कुहू-कुहू",
@@ -360,7 +361,7 @@
       failMsg: "❌ सही उत्तर 'कुहू-कुहू' है।"
     },
     {
-      avatar: "🍬",
+      avatar: "🐦",
       template: "कोयल कूक-कूक कर आमों में <span class='blank-target'>[ _____ ]</span> घोल देती है।",
       words: ["मिश्री", "नमक", "मिर्ची"],
       correct: "मिश्री",
@@ -425,6 +426,11 @@
     }
   ];
 
+  // Helper function to shuffle array items
+  function shuffleArray(array) {
+    return [...array].sort(() => Math.random() - 0.5);
+  }
+
   function showScreen(screenId) {
     document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
     document.getElementById(screenId).classList.remove('hidden');
@@ -433,12 +439,14 @@
   function startGame() {
     currentLevel = 0;
     score = 0;
+    // Randomize the order of questions for every game session
+    activeQuestions = shuffleArray(masterQuestions);
     showScreen('screen-game');
     loadQuestion();
   }
 
   function loadQuestion() {
-    const q = questions[currentLevel];
+    const q = activeQuestions[currentLevel];
     document.getElementById('stage-indicator').innerText = `पड़ाव: ${currentLevel + 1}/10`;
     document.getElementById('score-indicator').innerText = `🥭 आम: ${score}`;
     document.getElementById('game-avatar').innerText = q.avatar;
@@ -454,8 +462,8 @@
     wordBank.innerHTML = '';
     wordBank.classList.remove('hidden');
 
-    // Shuffle word options
-    const shuffledWords = [...q.words].sort(() => Math.random() - 0.5);
+    // Shuffle word choices randomly for each question
+    const shuffledWords = shuffleArray(q.words);
 
     shuffledWords.forEach(word => {
       const chip = document.createElement('div');
@@ -467,7 +475,7 @@
   }
 
   function handleWordSelect(selectedWord) {
-    const q = questions[currentLevel];
+    const q = activeQuestions[currentLevel];
     const feedback = document.getElementById('feedback-msg');
     document.getElementById('word-bank').classList.add('hidden');
 
@@ -495,7 +503,7 @@
 
   function nextQuestion() {
     currentLevel++;
-    if (currentLevel < questions.length) {
+    if (currentLevel < activeQuestions.length) {
       loadQuestion();
     } else {
       showEndScreen();
