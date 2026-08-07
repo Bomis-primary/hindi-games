@@ -3,524 +3,711 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>सच्चा देशप्रेम - Catch the Answer</title>
+    <title>भाषा ज्ञान: फ्लैश कार्ड क्वेस्ट</title>
     <style>
+        :root {
+            --primary: #0077b6;
+            --primary-dark: #023e8a;
+            --secondary: #ffb713;
+            --accent: #fb8500;
+            --bg-color: #f4f9f9;
+            --text-color: #1d3557;
+            --card-bg: #ffffff;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             user-select: none;
         }
 
         body {
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            color: #ffffff;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 10px;
+            overflow: hidden;
         }
 
         #game-container {
             width: 100%;
-            max-width: 700px;
-            background: #ffffff;
-            color: #333;
+            max-width: 850px;
+            height: 95vh;
+            max-height: 680px;
+            background: var(--card-bg);
             border-radius: 20px;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
-            padding: 20px;
-            text-align: center;
+            box-shadow: var(--shadow);
             position: relative;
-            min-height: 580px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
 
-        /* Screen Management */
         .screen {
-            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            width: 100%;
-            height: 100%;
+            padding: 25px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
         }
 
         .screen.active {
-            display: flex;
+            opacity: 1;
+            pointer-events: auto;
         }
 
-        /* Screen 1: Logo Splash */
-        .splash-logo {
-            max-width: 280px;
-            height: auto;
-            margin-bottom: 20px;
-            animation: fadeIn 1.5s ease-in-out;
-        }
-
-        .timer-text {
-            color: #666;
-            font-size: 0.95rem;
-            margin-top: 15px;
-        }
-
-        /* Titles and Text */
-        h1 {
-            color: #1e3c72;
-            font-size: 2rem;
-            margin-bottom: 10px;
-        }
-
-        p.subtitle {
-            color: #666;
-            font-size: 1rem;
-            margin-bottom: 20px;
-        }
-
-        /* Instructions */
-        .instructions-list {
-            background: #f0f4f8;
-            border-radius: 12px;
-            padding: 20px;
-            text-align: left;
-            margin-bottom: 20px;
-            width: 100%;
-        }
-
-        .instructions-list li {
-            font-size: 0.95rem;
-            margin-bottom: 10px;
-            color: #444;
-            line-height: 1.5;
-            list-style: none;
-        }
-
-        /* Game Area */
-        #game-canvas {
-            width: 100%;
-            height: 400px;
-            background: #f4f7f6;
-            border: 2px solid #1e3c72;
-            border-radius: 12px;
-            position: relative;
-            overflow: hidden;
-            margin-bottom: 10px;
-        }
-
-        .hud {
-            display: flex;
-            justify-content: space-between;
-            width: 100%;
-            background: #eef2f7;
-            padding: 10px 15px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            font-weight: bold;
-            color: #1e3c72;
-        }
-
-        /* Falling Elements */
-        .falling-question {
-            position: absolute;
-            background: #e74c3c;
-            color: #fff;
-            padding: 8px 14px;
-            border-radius: 20px;
-            font-weight: bold;
-            font-size: 0.9rem;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-            border: 2px solid #c0392b;
-            max-width: 80%;
-            z-index: 2;
-        }
-
-        .falling-option {
-            position: absolute;
-            background: #1e3c72;
-            color: #fff;
-            padding: 6px 12px;
-            border-radius: 15px;
-            font-weight: bold;
-            font-size: 0.85rem;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            z-index: 2;
-        }
-
-        #basket {
-            position: absolute;
-            bottom: 5px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 110px;
-            height: 28px;
-            background: #ff9800;
-            border-radius: 14px 14px 5px 5px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        /* Screen 1: Splash Screen */
+        #splash-screen {
+            background: linear-gradient(135deg, #0077b6, #90e0ef);
             color: white;
-            font-weight: bold;
+            text-align: center;
+        }
+
+        .logo-box {
+            background: white;
+            padding: 30px 50px;
+            border-radius: 24px;
+            box-shadow: var(--shadow);
             display: flex;
-            align-items: center;
             justify-content: center;
-            font-size: 0.85rem;
-            z-index: 10;
+            align-items: center;
+            animation: pulse 2.5s infinite ease-in-out;
+            max-width: 85%;
+            margin-bottom: 20px;
         }
 
-        /* Controls */
-        .controls-note {
-            font-size: 0.85rem;
-            color: #666;
-            margin-top: 5px;
+        .innovine-logo-img {
+            max-height: 200px;
+            width: 100%;
+            max-width: 450px;
+            object-fit: contain;
         }
 
-        /* Feedback Message Overlay */
-        #game-feedback {
-            position: absolute;
-            top: 15px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 6px 15px;
-            border-radius: 20px;
-            font-weight: bold;
-            font-size: 0.9rem;
-            display: none;
-            z-index: 20;
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
         }
 
-        .fb-correct { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-        .fb-wrong { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        /* Screen 2: Level Selection */
+        #welcome-screen {
+            background: linear-gradient(to bottom, #f4f9f9, #e0f2fe);
+            text-align: center;
+        }
 
-        /* Buttons */
-        .btn {
-            background: #ff9800;
-            color: #ffffff;
-            border: none;
-            padding: 12px 30px;
+        .title {
+            font-size: 2.2rem;
+            color: var(--primary-dark);
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
             font-size: 1.1rem;
-            font-weight: bold;
-            border-radius: 25px;
+            color: #457b9d;
+            margin-bottom: 25px;
+        }
+
+        .level-container {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .level-card {
+            background: white;
+            border: 2px solid #bde0fe;
+            border-radius: 16px;
+            padding: 20px;
+            width: 220px;
             cursor: pointer;
-            transition: transform 0.2s, background 0.2s;
-            box-shadow: 0 4px 10px rgba(255, 152, 0, 0.3);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .level-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+        }
+
+        .level-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--primary-dark);
+            margin-bottom: 8px;
+        }
+
+        .level-desc {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 14px 34px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(0, 119, 182, 0.4);
+            transition: all 0.2s ease;
         }
 
         .btn:hover {
-            background: #e68a00;
+            background-color: var(--primary-dark);
             transform: translateY(-2px);
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
+        /* Screen 3: Game Play Screen */
+        #game-screen {
+            justify-content: flex-start;
+            padding: 20px;
+        }
+
+        .game-header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            background: #e0f2fe;
+            padding: 12px 24px;
+            border-radius: 12px;
+        }
+
+        .stat-box {
+            font-size: 1.05rem;
+            font-weight: bold;
+            color: var(--primary-dark);
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 100%;
+            max-height: 10px;
+            background: #e2e8f0;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--secondary), var(--accent));
+            transition: width 0.3s ease;
+        }
+
+        /* 3D Flash Card Styling */
+        .flashcard-area {
+            perspective: 1000px;
+            width: 100%;
+            max-width: 520px;
+            height: 280px;
+            margin-bottom: 20px;
+        }
+
+        .flashcard {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+            cursor: pointer;
+        }
+
+        .flashcard.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 18px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        .card-front {
+            background: linear-gradient(135deg, #ffffff, #f0f7ff);
+            border: 3px solid var(--primary);
+        }
+
+        .card-back {
+            background: linear-gradient(135deg, #0077b6, #023e8a);
+            color: white;
+            transform: rotateY(180deg);
+            border: 3px solid var(--secondary);
+        }
+
+        .card-badge {
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: var(--accent);
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .card-question {
+            font-size: 1.25rem;
+            font-weight: 600;
+            line-height: 1.5;
+        }
+
+        .card-hint {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 15px;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            width: 100%;
+            max-width: 520px;
+        }
+
+        .opt-btn {
+            background: #ffffff;
+            border: 2px solid #bde0fe;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 1rem;
+            color: var(--text-color);
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .opt-btn:hover {
+            background: #e0f2fe;
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        /* Screen 4: End Screen */
+        #end-screen {
+            background: linear-gradient(to bottom, #e0f2fe, #f4f9f9);
+            text-align: center;
+        }
+
+        .end-card {
+            background: white;
+            padding: 35px;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            max-width: 420px;
+            width: 90%;
+        }
+
+        .end-card h2 {
+            color: var(--primary-dark);
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        .end-stat {
+            font-size: 1.2rem;
+            margin: 10px 0;
+            color: #333;
+        }
+
+        @media (max-width: 600px) {
+            .level-container { flex-direction: column; gap: 10px; }
+            .level-card { width: 100%; }
+            .options-grid { grid-template-columns: 1fr; }
+            .flashcard-area { height: 240px; }
+            .card-question { font-size: 1.1rem; }
         }
     </style>
 </head>
 <body>
 
 <div id="game-container">
-
-    <!-- SCREEN 1: LOGO SPLASH -->
-    <div id="screen-logo" class="screen active">
-        <img src="assets/logo.png" alt="Innovine Logo" class="splash-logo" onerror="this.onerror=null; this.src='https://via.placeholder.com/280x100?text=INNOVINE+LOGO';">
-        <p class="timer-text">लोड हो रहा है... (<span id="splash-countdown">5</span>)</p>
+    <!-- Screen 1: Splash Screen -->
+    <div id="splash-screen" class="screen active">
+        <div class="logo-box">
+            <img src="assets/logo.png" alt="Logo" class="innovine-logo-img" onerror="this.onerror=null; this.src='https://via.placeholder.com/350x120?text=INNOVINE+LEARNING';">
+        </div>
+        <p style="font-size: 1.2rem; font-weight: 500;">ज्ञान की दुनिया में आपका स्वागत है...</p>
     </div>
 
-    <!-- SCREEN 2: INSTRUCTIONS -->
-    <div id="screen-instructions" class="screen">
-        <h1>🧺 Catch the Correct Answer</h1>
-        <p class="subtitle">8 - सच्चा देशप्रेम</p>
+    <!-- Screen 2: Welcome / Level Select Screen -->
+    <div id="welcome-screen" class="screen">
+        <h1 class="title">फ्लैश कार्ड क्वेस्ट</h1>
+        <p class="subtitle">अपना स्तर चुनें (Choose Level)</p>
         
-        <ul class="instructions-list">
-            <li>❓ <strong>गेम का नियम:</strong> ऊपर से <strong>लाल रंग में प्रश्न</strong> और <strong>नीले रंग में विकल्प</strong> नीचे गिरेंगे।</li>
-            <li>🎯 <strong>लक्ष्य:</strong> प्रश्न पढ़कर केवल <strong>सही उत्तर वाले विकल्प</strong> को अपनी बास्केट में पकड़ें!</li>
-            <li>⌨️ <strong>कंट्रोल:</strong> बास्केट चलाने के लिए <strong>Left/Right Arrow keys</strong> या माउस/टच ड्रैग का प्रयोग करें।</li>
-            <li>✅ <strong>अंक प्रणाली:</strong> सही उत्तर = +10 अंक | गलत उत्तर या प्रश्न पकड़ने पर = -5 अंक</li>
-        </ul>
-
-        <button class="btn" onclick="startGame()">गेम शुरू करें 🚀</button>
+        <div class="level-container">
+            <div class="level-card" onclick="selectLevel(1)">
+                <div style="font-size: 2.5rem; margin-bottom: 10px;">🎮</div>
+                <div class="level-title">लेवल 1</div>
+                <div class="level-desc">खेल और वार्म-अप (Basic Knowledge Game)</div>
+            </div>
+            <div class="level-card" onclick="selectLevel(2)">
+                <div style="font-size: 2.5rem; margin-bottom: 10px;">📝</div>
+                <div class="level-title">लेवल 2</div>
+                <div class="level-desc">व्याकरण बोध: सर्वनाम (Grammar: Pronouns)</div>
+            </div>
+        </div>
     </div>
 
-    <!-- SCREEN 3: GAME PLAY -->
-    <div id="screen-game" class="screen">
-        <div class="hud">
-            <div>प्रश्न: <span id="current-q">1</span>/<span id="total-q">5</span></div>
-            <div>अंक: <span id="score">0</span></div>
+    <!-- Screen 3: Game Screen -->
+    <div id="game-screen" class="screen">
+        <div class="game-header">
+            <div class="stat-box" id="score-display">अंक: 0</div>
+            <div class="stat-box" id="card-count-display">कार्ड: 1/5</div>
+            <div class="stat-box" id="timer-display">समय: 00:00</div>
         </div>
 
-        <div id="game-canvas">
-            <div id="game-feedback"></div>
-            <div id="basket">बास्केट 🧺</div>
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progress-bar"></div>
         </div>
 
-        <p class="controls-note">👈 बास्केट चलाने के लिए एरो कीज़ दबाएं या माउस/टच का उपयोग करें 👉</p>
+        <div class="flashcard-area" onclick="flipCard()">
+            <div class="flashcard" id="flashcard">
+                <div class="card-face card-front">
+                    <div class="card-badge" id="card-badge">कार्ड #1</div>
+                    <div class="card-question" id="card-question">प्रश्न लोड हो रहा है...</div>
+                    <div class="card-hint">💡 (संकेत देखने के लिए कार्ड पर क्लिक करें)</div>
+                </div>
+                <div class="card-face card-back">
+                    <div class="card-badge" style="color: #ffb703;">उत्तर का संकेत</div>
+                    <div class="card-question" id="card-hint-text">सही विकल्प चुनें!</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="options-grid" id="options-container"></div>
     </div>
 
-    <!-- SCREEN 4: END SCREEN -->
-    <div id="screen-end" class="screen">
-        <h1>🎉 खेल पूर्ण हुआ!</h1>
-        <p class="subtitle">सच्चा देशप्रेम - प्रश्नोत्तरी चुनौती</p>
-        
-        <div style="font-size: 1.4rem; font-weight: bold; color: #1e3c72; margin-bottom: 15px;">
-            आपका अंतिम स्कोर: <span id="final-score">0</span> / 50
+    <!-- Screen 4: End Screen -->
+    <div id="end-screen" class="screen">
+        <div class="end-card">
+            <div style="font-size: 3.5rem; margin-bottom: 10px;">🏆</div>
+            <h2>शानदार कार्य!</h2>
+            <p style="font-size: 1.1rem; margin-bottom: 15px;" id="end-message">आपने यह स्तर पूरा कर लिया है!</p>
+            <div class="end-stat" id="final-score">कुल अंक: 0</div>
+            <div class="end-stat" id="final-time">कुल समय: 00:00</div>
+            <button class="btn" style="margin-top: 20px;" onclick="restartGame()">मुख्य मेनू</button>
         </div>
-
-        <div style="background: #eef2f7; padding: 15px; border-radius: 10px; color: #333; margin-bottom: 25px; line-height: 1.6; text-align: left;">
-            <strong>आज की मुख्य सीख:</strong><br>
-            • राष्ट्रगान का सम्मान करना आवश्यक है।<br>
-            • दूसरों की जान बचाना, सुरक्षा में मदद करना और अपने कर्तव्यों का पालन करना ही सच्चा देशप्रेम है।
-        </div>
-
-        <button class="btn" onclick="startGame()">पुनः खेलें 🔄</button>
     </div>
-
 </div>
 
 <script>
-    // Audio Setup
-    const soundCorrect = new Audio('assets/correct.mp3');
-    const soundWrong = new Audio('assets/wrong.mp3');
+    // Audio Context SFX
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    let audioCtx = null;
 
-    function playAudio(audioObj) {
-        audioObj.currentTime = 0;
-        audioObj.play().catch(e => console.log("Audio playback error: ", e));
+    function initAudio() {
+        if (!audioCtx) audioCtx = new AudioCtx();
     }
 
-    // 1. Splash Screen Timer (5 Seconds)
-    let logoTimer = 5;
-    const countdownEl = document.getElementById('splash-countdown');
+    function playSound(type) {
+        if (!audioCtx) return;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
 
-    const splashInterval = setInterval(() => {
-        logoTimer--;
-        if (countdownEl) countdownEl.innerText = logoTimer;
-        
-        if (logoTimer <= 0) {
-            clearInterval(splashInterval);
-            switchScreen('screen-instructions');
+        const now = audioCtx.currentTime;
+
+        if (type === 'flip') {
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(300, now);
+            osc.frequency.exponentialRampToValueAtTime(500, now + 0.1);
+            gain.gain.setValueAtTime(0.15, now);
+            gain.gain.linearRampToValueAtTime(0.01, now + 0.1);
+            osc.start(now);
+            osc.stop(now + 0.1);
+        } else if (type === 'correct') {
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(523.25, now);
+            osc.frequency.setValueAtTime(659.25, now + 0.1);
+            osc.frequency.setValueAtTime(783.99, now + 0.2);
+            gain.gain.setValueAtTime(0.2, now);
+            gain.gain.linearRampToValueAtTime(0.01, now + 0.35);
+            osc.start(now);
+            osc.stop(now + 0.35);
+        } else if (type === 'wrong') {
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(180, now);
+            osc.frequency.setValueAtTime(120, now + 0.15);
+            gain.gain.setValueAtTime(0.2, now);
+            gain.gain.linearRampToValueAtTime(0.01, now + 0.3);
+            osc.start(now);
+            osc.stop(now + 0.3);
+        } else if (type === 'win') {
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(440, now);
+            osc.frequency.setValueAtTime(554.37, now + 0.15);
+            osc.frequency.setValueAtTime(659.25, now + 0.3);
+            osc.frequency.setValueAtTime(880, now + 0.45);
+            gain.gain.setValueAtTime(0.25, now);
+            gain.gain.linearRampToValueAtTime(0.01, now + 0.7);
+            osc.start(now);
+            osc.stop(now + 0.7);
         }
-    }, 1000);
-
-    function switchScreen(screenId) {
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        document.getElementById(screenId).classList.add('active');
     }
 
-    // Question & Answer Data based on Lesson 8
-    const quizData = [
+    // Level 1 Questions (Game / Warm-up)
+    const level1Data = [
         {
-            question: "❓ अमन ने मेले से कौन-सा खिलौना खरीदा?",
-            correct: "नीले रंग का हाथी",
-            wrongs: ["लकड़ी का घोड़ा", "सुंदर कार"]
+            badge: "लेवल 1 - कार्ड 1",
+            question: "भारत का राष्ट्रीय पशु कौन सा है?",
+            hint: "यह जंगल का एक शक्तिशाली जानवर है।",
+            options: ["शेर", "बाघ", "हाथी", "हिरण"],
+            answer: 1
         },
         {
-            question: "❓ राष्ट्रगान शुरू होने पर लोगों ने क्या किया?",
-            correct: "सम्मानपूर्वक खड़े हुए",
-            wrongs: ["ताली बजाने लगे", "इधर-उधर भागने लगे"]
+            badge: "लेवल 1 - कार्ड 2",
+            question: "सौरमंडल में कुल कितने मुख्य ग्रह हैं?",
+            hint: "हमारी पृथ्वी भी इनमें से एक है।",
+            options: ["7", "8", "9", "10"],
+            answer: 1
         },
         {
-            question: "❓ छोटा बच्चा सड़क की ओर किसके पीछे भाग रहा था?",
-            correct: "रंगीन गेंद",
-            wrongs: ["रंग-बिरंगा गुब्बारा", "छोटा कुत्ता"]
+            badge: "लेवल 1 - कार्ड 3",
+            question: "हमारे राष्ट्रीय ध्वज तिरंगे में सबसे ऊपर कौन सा रंग होता है?",
+            hint: "यह त्याग और साहस का प्रतीक है।",
+            options: ["हरा", "सफेद", "केसरिया", "नीला"],
+            answer: 2
         },
         {
-            question: "❓ बच्चे की जान बचाने के लिए अमन ने किसे आवाज दी?",
-            correct: "गार्ड अंकल को",
-            wrongs: ["बस चालक को", "दुकानदार को"]
+            badge: "लेवल 1 - कार्ड 4",
+            question: "एक वर्ष में कितने महीने होते हैं?",
+            hint: "जनवरी से शुरू होकर दिसंबर तक।",
+            options: ["10", "11", "12", "14"],
+            answer: 2
         },
         {
-            question: "❓ पाठ के अनुसार 'सच्चा देशप्रेम' क्या है?",
-            correct: "दूसरों की मदद और सुरक्षा करना",
-            wrongs: ["केवल बड़े-बड़े काम करना", "नियमों को तोड़ना"]
+            badge: "लेवल 1 - कार्ड 5",
+            question: "सूर्य किस दिशा से उगता है?",
+            hint: "पश्चिम का विपरीत दिशा।",
+            options: ["पूर्व", "पश्चिम", "उत्तर", "दक्षिण"],
+            answer: 0
         }
     ];
 
-    let currentLevel = 0;
-    let score = 0;
-    let basketX = 50; // percentage
-    let fallingElements = [];
-    let gameLoopInterval = null;
-    let spawnInterval = null;
-    let currentSpawnIndex = 0;
-    let spawnSequence = [];
+    // Level 2 Questions (Grammar: सर्वनाम)
+    const level2Data = [
+        {
+            badge: "लेवल 2 - कार्ड 1: सर्वनाम की परिभाषा",
+            question: "जो शब्द संज्ञा के स्थान पर प्रयोग किए जाते हैं, उन्हें क्या कहते हैं?",
+            hint: "संज्ञा नाम होती है, और यह उसके स्थान पर आता है।",
+            options: ["विशेषण", "सर्वनाम", "क्रिया", "वचन"],
+            answer: 1
+        },
+        {
+            badge: "लेवल 2 - कार्ड 2: सर्वनाम का उदाहरण",
+            question: "इनमें से कौन-सा शब्द सर्वनाम है?",
+            hint: "यह किसी व्यक्ति के नाम की जगह इस्तेमाल होता है।",
+            options: ["अमन", "मेला", "वह", "खुश"],
+            answer: 2
+        },
+        {
+            badge: "लेवल 2 - कार्ड 3: सर्वनाम पहचान",
+            question: "\"अमन मेले में गया। वह बहुत खुश था।\" - इस वाक्य में सर्वनाम शब्द क्या है?",
+            hint: "यह शब्द 'अमन' (संज्ञा) की जगह आया है।",
+            options: ["अमन", "मेले", "खुश", "वह"],
+            answer: 3
+        },
+        {
+            badge: "लेवल 2 - कार्ड 4: स्वयं के लिए सर्वनाम",
+            question: "अपने लिए बात करते समय हम किस सर्वनाम का प्रयोग करते हैं?",
+            hint: "उदाहरण: '_____ स्कूल जा रहा हूँ।'",
+            options: ["मैं", "वह", "वे", "उसका"],
+            answer: 0
+        },
+        {
+            badge: "लेवल 2 - कार्ड 5: सामने वाले के लिए सर्वनाम",
+            question: "जिससे हम बात कर रहे हैं, उसके लिए कौन-सा सर्वनाम चुनेंगे?",
+            hint: "उदाहरण: '_____ कहाँ जा रहे हो?'",
+            options: ["वह", "तुम", "मैं", "हम"],
+            answer: 1
+        },
+        {
+            badge: "लेवल 2 - कार्ड 6: समूह के लिए सर्वनाम",
+            question: "जब एक से अधिक लोग अपने लिए बात करते हैं, तो कौन सा सर्वनाम आता है?",
+            hint: "उदाहरण: '_____ सब मिलकर खेलेंगे।'",
+            options: ["तुम", "हम", "वह", "यह"],
+            answer: 1
+        },
+        {
+            badge: "लेवल 2 - कार्ड 7: वस्तु संकेत सर्वनाम",
+            question: "\"यह मेरी पुस्तक है।\" - इस वाक्य में सर्वनाम शब्द कौन सा है?",
+            hint: "पास की वस्तु की ओर इशारा करने वाला शब्द।",
+            options: ["पुस्तक", "मेरी", "यह", "है"],
+            answer: 2
+        },
+        {
+            badge: "लेवल 2 - कार्ड 8: बहुवचन सर्वनाम",
+            question: "'वह' का बहुवचन रूप क्या होगा?",
+            hint: "एक से अधिक दूर के व्यक्तियों के लिए।",
+            options: ["हम", "वे", "तुम", "यह"],
+            answer: 1
+        },
+        {
+            badge: "लेवल 2 - कार्ड 9: वाक्य पूर्ति",
+            question: "\"राधा आ रही है। _____ गाना गाएगी।\" - सही सर्वनाम भरें:",
+            hint: "राधा एक लड़की है, उसके स्थान पर आने वाला शब्द।",
+            options: ["वे", "तुम", "वह", "हम"],
+            answer: 2
+        },
+        {
+            badge: "लेवल 2 - कार्ड 10: सर्वनाम की पहचान",
+            question: "निम्नलिखित में से सर्वनाम शब्दों का समूह कौन-सा है?",
+            hint: "पाठ में दिए गए मुख्य उदाहरण: वह, यह, मैं, तुम, हम, वे।",
+            options: ["राम, मोहन, सीता", "वह, यह, मैं, तुम", "हंसना, गाना, रोना", "सुंदर, बड़ा, लाल"],
+            answer: 1
+        }
+    ];
 
-    const gameCanvas = document.getElementById('game-canvas');
-    const basket = document.getElementById('basket');
+    let activeDeck = [];
+    let currentCardIndex = 0;
+    let score = 0;
+    let secondsElapsed = 0;
+    let timerInterval = null;
+    let isFlipped = false;
+
+    // Splash Screen Transition
+    setTimeout(() => {
+        switchScreen('splash-screen', 'welcome-screen');
+    }, 3000);
+
+    function switchScreen(fromId, toId) {
+        document.getElementById(fromId).classList.remove('active');
+        document.getElementById(toId).classList.add('active');
+    }
+
+    function selectLevel(levelNum) {
+        initAudio();
+        if (levelNum === 1) {
+            activeDeck = level1Data;
+            document.getElementById('end-message').innerText = "आपने लेवल 1 (खेल) सफलतापूर्वक पूरा कर लिया!";
+        } else {
+            activeDeck = level2Data;
+            document.getElementById('end-message').innerText = "आपने लेवल 2 (सर्वनाम व्याकरण) सफलतापूर्वक पूरा कर लिया!";
+        }
+        startGame();
+    }
 
     function startGame() {
-        currentLevel = 0;
         score = 0;
-        basketX = 50;
-        
-        switchScreen('screen-game');
-        document.getElementById('total-q').innerText = quizData.length;
-        
-        // Setup Event Listeners
-        window.removeEventListener('keydown', handleKeyDown);
-        window.addEventListener('keydown', handleKeyDown);
-        
-        gameCanvas.removeEventListener('mousemove', handleMouseMove);
-        gameCanvas.addEventListener('mousemove', handleMouseMove);
-        
-        gameCanvas.removeEventListener('touchmove', handleTouchMove);
-        gameCanvas.addEventListener('touchmove', handleTouchMove);
+        currentCardIndex = 0;
+        secondsElapsed = 0;
+        isFlipped = false;
 
-        startLevel();
+        document.getElementById('score-display').innerText = `अंक: ${score}`;
+        document.getElementById('timer-display').innerText = `समय: 00:00`;
+
+        switchScreen('welcome-screen', 'game-screen');
+        loadCard();
+
+        clearInterval(timerInterval);
+        timerInterval = setInterval(() => {
+            secondsElapsed++;
+            const mins = String(Math.floor(secondsElapsed / 60)).padStart(2, '0');
+            const secs = String(secondsElapsed % 60).padStart(2, '0');
+            document.getElementById('timer-display').innerText = `समय: ${mins}:${secs}`;
+        }, 1000);
     }
 
-    function startLevel() {
-        // Clear existing elements
-        document.querySelectorAll('.falling-question, .falling-option').forEach(e => e.remove());
-        fallingElements = [];
-        currentSpawnIndex = 0;
-
-        document.getElementById('current-q').innerText = currentLevel + 1;
-        document.getElementById('score').innerText = score;
-        updateBasketPos();
-
-        // Sequence: Question drops first, followed by correct and incorrect options
-        const lvlData = quizData[currentLevel];
-        spawnSequence = [
-            { text: lvlData.question, type: 'question', isCorrect: false },
-            { text: lvlData.correct, type: 'option', isCorrect: true },
-            { text: lvlData.wrongs[0], type: 'option', isCorrect: false },
-            { text: lvlData.wrongs[1], type: 'option', isCorrect: false }
-        ];
-
-        // Shuffle options while keeping question first
-        const qItem = spawnSequence.shift();
-        spawnSequence.sort(() => Math.random() - 0.5);
-        spawnSequence.unshift(qItem);
-
-        if (gameLoopInterval) clearInterval(gameLoopInterval);
-        if (spawnInterval) clearInterval(spawnInterval);
-
-        gameLoopInterval = setInterval(updateGame, 30);
-        spawnInterval = setInterval(spawnNextItem, 2200);
-        spawnNextItem(); 
-    }
-
-    function updateBasketPos() {
-        basket.style.left = basketX + '%';
-    }
-
-    function handleKeyDown(e) {
-        if (e.key === 'ArrowLeft' && basketX > 10) basketX -= 8;
-        if (e.key === 'ArrowRight' && basketX < 90) basketX += 8;
-        updateBasketPos();
-    }
-
-    function handleMouseMove(e) {
-        const rect = gameCanvas.getBoundingClientRect();
-        let relX = ((e.clientX - rect.left) / rect.width) * 100;
-        basketX = Math.max(10, Math.min(90, relX));
-        updateBasketPos();
-    }
-
-    function handleTouchMove(e) {
-        if (!e.touches[0]) return;
-        const rect = gameCanvas.getBoundingClientRect();
-        let relX = ((e.touches[0].clientX - rect.left) / rect.width) * 100;
-        basketX = Math.max(10, Math.min(90, relX));
-        updateBasketPos();
-    }
-
-    function spawnNextItem() {
-        if (currentSpawnIndex >= spawnSequence.length) return;
-
-        const itemData = spawnSequence[currentSpawnIndex];
-        currentSpawnIndex++;
-
-        const el = document.createElement('div');
-        el.className = itemData.type === 'question' ? 'falling-question' : 'falling-option';
-        el.innerText = itemData.text;
-
-        const startX = Math.floor(Math.random() * 50) + 25; 
-        el.style.left = startX + '%';
-        el.style.top = '0px';
-
-        gameCanvas.appendChild(el);
-
-        fallingElements.push({
-            el: el,
-            x: startX,
-            y: 0,
-            data: itemData
-        });
-    }
-
-    function showFeedback(text, isCorrect) {
-        const fb = document.getElementById('game-feedback');
-        fb.innerText = text;
-        fb.className = isCorrect ? 'fb-correct' : 'fb-wrong';
-        fb.style.display = 'block';
-        setTimeout(() => { fb.style.display = 'none'; }, 1500);
-    }
-
-    function updateGame() {
-        const canvasHeight = gameCanvas.clientHeight;
-
-        for (let i = fallingElements.length - 1; i >= 0; i--) {
-            let item = fallingElements[i];
-            item.y += 2.2; 
-            item.el.style.top = item.y + 'px';
-
-            // Catch Collision Detection
-            if (item.y >= canvasHeight - 45 && item.y <= canvasHeight - 10) {
-                if (Math.abs(item.x - basketX) < 18) {
-                    
-                    if (item.data.type === 'question') {
-                        score = Math.max(0, score - 5);
-                        playAudio(soundWrong);
-                        showFeedback("❌ केवल सही उत्तर कैच करें!", false);
-                    } else if (item.data.isCorrect) {
-                        score += 10;
-                        playAudio(soundCorrect);
-                        showFeedback("✨ शाबाश! सही उत्तर!", true);
-                        item.el.remove();
-                        fallingElements.splice(i, 1);
-                        
-                        nextLevel();
-                        return;
-                    } else {
-                        score = Math.max(0, score - 5);
-                        playAudio(soundWrong);
-                        showFeedback("❌ गलत उत्तर!", false);
-                    }
-
-                    document.getElementById('score').innerText = score;
-                    item.el.remove();
-                    fallingElements.splice(i, 1);
-                    continue;
-                }
-            }
-
-            // Remove items when reaching the bottom
-            if (item.y > canvasHeight) {
-                item.el.remove();
-                fallingElements.splice(i, 1);
-            }
+    function flipCard() {
+        playSound('flip');
+        const cardEl = document.getElementById('flashcard');
+        isFlipped = !isFlipped;
+        if (isFlipped) {
+            cardEl.classList.add('flipped');
+        } else {
+            cardEl.classList.remove('flipped');
         }
     }
 
-    function nextLevel() {
-        currentLevel++;
-        if (currentLevel < quizData.length) {
-            startLevel();
+    function loadCard() {
+        const card = activeDeck[currentCardIndex];
+        isFlipped = false;
+        document.getElementById('flashcard').classList.remove('flipped');
+
+        document.getElementById('card-count-display').innerText = `कार्ड: ${currentCardIndex + 1}/${activeDeck.length}`;
+        document.getElementById('card-badge').innerText = card.badge;
+        document.getElementById('card-question').innerText = card.question;
+        document.getElementById('card-hint-text').innerText = `संकेत: ${card.hint}`;
+
+        const progressPct = ((currentCardIndex) / activeDeck.length) * 100;
+        document.getElementById('progress-bar').style.width = `${progressPct}%`;
+
+        const optsContainer = document.getElementById('options-container');
+        optsContainer.innerHTML = '';
+
+        card.options.forEach((opt, idx) => {
+            const btn = document.createElement('button');
+            btn.classList.add('opt-btn');
+            btn.innerText = opt;
+            btn.onclick = () => handleOptionSelect(idx);
+            optsContainer.appendChild(btn);
+        });
+    }
+
+    function handleOptionSelect(selectedIdx) {
+        const card = activeDeck[currentCardIndex];
+
+        if (selectedIdx === card.answer) {
+            playSound('correct');
+            score += 10;
+            document.getElementById('score-display').innerText = `अंक: ${score}`;
+            currentCardIndex++;
+
+            if (currentCardIndex < activeDeck.length) {
+                loadCard();
+            } else {
+                document.getElementById('progress-bar').style.width = `100%`;
+                endGame();
+            }
         } else {
-            endGame();
+            playSound('wrong');
+            alert("गलत उत्तर! सही उत्तर जानने के लिए कार्ड पर क्लिक करके पलटें और पुनः प्रयास करें।");
         }
     }
 
     function endGame() {
-        clearInterval(gameLoopInterval);
-        clearInterval(spawnInterval);
+        clearInterval(timerInterval);
+        playSound('win');
 
-        switchScreen('screen-end');
-        document.getElementById('final-score').innerText = score;
+        const mins = String(Math.floor(secondsElapsed / 60)).padStart(2, '0');
+        const secs = String(secondsElapsed % 60).padStart(2, '0');
+
+        document.getElementById('final-score').innerText = `कुल अंक: ${score}`;
+        document.getElementById('final-time').innerText = `कुल समय: ${mins}:${secs}`;
+
+        switchScreen('game-screen', 'end-screen');
+    }
+
+    function restartGame() {
+        switchScreen('end-screen', 'welcome-screen');
     }
 </script>
-
 </body>
 </html>
