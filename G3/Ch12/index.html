@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>एआई का कमाल - सही जोड़ी मिलाओ</title>
+    <title>एआई का कमाल - खेल संग्रह</title>
     <style>
         * {
             box-sizing: border-box;
@@ -80,7 +80,7 @@
             animation: loadProgress 5s linear forwards;
         }
 
-        /* SCREEN 2: Instructions */
+        /* SCREEN 2: Level Selection */
         .card-box {
             background: rgba(30, 41, 59, 0.9);
             border: 1px solid #334155;
@@ -95,18 +95,15 @@
         .card-box h2 {
             color: #38bdf8;
             margin-bottom: 15px;
-            font-size: 1.5rem;
+            font-size: 1.6rem;
         }
 
-        .instructions-list {
-            text-align: left;
-            margin: 15px 0;
+        .level-select-container {
             display: flex;
             flex-direction: column;
-            gap: 12px;
-            color: #cbd5e1;
-            font-size: 0.95rem;
-            line-height: 1.5;
+            gap: 16px;
+            margin-top: 20px;
+            width: 100%;
         }
 
         .btn-primary {
@@ -115,20 +112,24 @@
             color: white;
             border: none;
             border-radius: 12px;
-            font-size: 1rem;
+            font-size: 1.05rem;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.2s ease;
             box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4);
             width: 100%;
-            max-width: 280px;
         }
 
-        .btn-primary:active {
+        .btn-secondary {
+            background: linear-gradient(135deg, #059669, #0d9488);
+            box-shadow: 0 4px 12px rgba(13, 148, 136, 0.4);
+        }
+
+        .btn-primary:active, .btn-secondary:active {
             transform: scale(0.96);
         }
 
-        /* SCREEN 3: Game Screen */
+        /* SCREEN 3: Game Headers & Board */
         .game-header h1 {
             color: #38bdf8;
             font-size: 1.4rem;
@@ -149,6 +150,7 @@
 
         .score-val { color: #38bdf8; font-size: 1.1rem; }
 
+        /* Level 1 UI Elements */
         .matching-container {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -164,7 +166,7 @@
         }
 
         .column-header {
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 700;
             padding: 8px;
             border-radius: 8px;
@@ -195,11 +197,6 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
         }
 
-        .match-card:hover {
-            border-color: #38bdf8;
-            background: rgba(51, 65, 85, 0.9);
-        }
-
         .match-card.selected {
             border-color: #a855f7;
             background: #581c87;
@@ -213,12 +210,73 @@
             color: #86efac;
             cursor: default;
             opacity: 0.85;
-            box-shadow: 0 0 10px rgba(34, 197, 94, 0.3);
         }
 
         .match-card.wrong-flash {
             border-color: #ef4444 !important;
             background: rgba(127, 29, 29, 0.9) !important;
+            animation: shake 0.4s ease-in-out;
+        }
+
+        /* Level 2 UI Elements (Ashuddhi Shodhan) */
+        .grammar-box {
+            background: rgba(30, 41, 59, 0.85);
+            border: 1px solid #475569;
+            padding: 20px;
+            border-radius: 18px;
+            width: 100%;
+            max-width: 600px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .sentence-display {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px dashed #f59e0b;
+            padding: 15px;
+            border-radius: 12px;
+            color: #fef3c7;
+            font-size: 1.15rem;
+            font-weight: bold;
+        }
+
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .option-btn {
+            background: rgba(51, 65, 85, 0.7);
+            border: 2px solid #64748b;
+            padding: 12px;
+            border-radius: 10px;
+            color: #f8fafc;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+        }
+
+        .option-btn:hover {
+            border-color: #38bdf8;
+            background: rgba(71, 85, 105, 0.9);
+        }
+
+        .option-btn.correct-ans {
+            border-color: #22c55e !important;
+            background: rgba(20, 83, 45, 0.9) !important;
+            color: #86efac;
+        }
+
+        .option-btn.wrong-ans {
+            border-color: #ef4444 !important;
+            background: rgba(127, 29, 29, 0.9) !important;
+            color: #fca5a5;
             animation: shake 0.4s ease-in-out;
         }
 
@@ -236,7 +294,6 @@
         .end-card h2 { color: #38bdf8; font-size: 1.8rem; margin-bottom: 10px; }
         .end-card p { color: #cbd5e1; font-size: 1rem; margin-bottom: 25px; }
 
-        /* Animations */
         @keyframes fadeInScale {
             0% { opacity: 0; transform: scale(0.85); }
             100% { opacity: 1; transform: scale(1); }
@@ -256,12 +313,10 @@
         @media (min-width: 600px) {
             .card-box { padding: 35px; }
             .card-box h2 { font-size: 1.8rem; }
-            .instructions-list { font-size: 1.05rem; }
             .game-header h1 { font-size: 1.8rem; }
             .stats-board { font-size: 1.1rem; }
             .match-card { font-size: 1rem; padding: 16px; }
             .matching-container { gap: 24px; }
-            .btn-primary { width: auto; }
         }
     </style>
 </head>
@@ -277,42 +332,45 @@
         </div>
     </div>
 
-    <!-- SCREEN 2: Instructions -->
+    <!-- SCREEN 2: Level Selection Screen -->
     <div id="screen2" class="screen">
         <div class="card-box">
-            <h2>📜 खेल के नियम</h2>
-            <div class="instructions-list">
-                <p>1. पाठ <b>"एआई का कमाल"</b> के आधार पर सही जोड़ी का मिलान करें।</p>
-                <p>2. पहले <b>कॉलम A</b> से किसी कार्ड पर टैप करें।</p>
-                <p>3. फिर <b>कॉलम B</b> से उसके सही उत्तर पर टैप करके जोड़ी बनाएं!</p>
-                <p>4. सभी जोडियाँ सही मिलाकर खेल पूरा करें!</p>
+            <h2>🎯 लेवल चुनें</h2>
+            <p style="color: #cbd5e1; margin-bottom: 10px;">अपनी पसंद का गेम खेलें:</p>
+            <div class="level-select-container">
+                <button class="btn-primary" onclick="startLevel(1)">लेवल 1: सही जोड़ी मिलाओ (A और B) 🧩</button>
+                <button class="btn-primary btn-secondary" onclick="startLevel(2)">लेवल 2: अशुद्धि-शोधन (व्याकरण) ✍️</button>
             </div>
-            <button class="btn-primary" onclick="goToScreen(3); startGame();">गेम शुरू करें 🚀</button>
         </div>
     </div>
 
-    <!-- SCREEN 3: Match A and B Board -->
+    <!-- SCREEN 3: Game Board -->
     <div id="screen3" class="screen">
         <div class="game-header">
-            <h1>🧩 एआई का कमाल: सही जोड़ी मिलाओ</h1>
+            <h1 id="gameTitle">एआई का कमाल</h1>
         </div>
 
         <div class="stats-board">
-            जोड़ी बनाई: <span id="score" class="score-val">0</span> / <span id="total-score">5</span>
+            स्कोर: <span id="score" class="score-val">0</span> / <span id="total-score">5</span>
         </div>
 
-        <div class="matching-container">
-            <!-- Column A -->
+        <!-- Level 1 Board -->
+        <div id="level1Board" class="matching-container" style="display: none;">
             <div class="column">
-                <div class="column-header">कॉलम A (क्षमता / कार्य)</div>
+                <div class="column-header">कॉलम A (कार्य / भावना)</div>
                 <div id="colA" class="column"></div>
             </div>
-
-            <!-- Column B -->
             <div class="column">
-                <div class="column-header col-b">कॉलम B (माध्यम / पहचान)</div>
+                <div class="column-header col-b">कॉलम B (माध्यम / कर्ता)</div>
                 <div id="colB" class="column"></div>
             </div>
+        </div>
+
+        <!-- Level 2 Board -->
+        <div id="level2Board" class="grammar-box" style="display: none;">
+            <p style="color: #a7f3d0; font-weight: 600;">अशुद्ध वाक्य को देखकर सही शुद्ध वाक्य चुनें:</p>
+            <div id="incorrectSentence" class="sentence-display">अशुद्ध वाक्य लोड हो रहा है...</div>
+            <div id="optionsGrid" class="options-grid"></div>
         </div>
     </div>
 
@@ -320,8 +378,11 @@
     <div id="screen4" class="screen">
         <div class="end-card">
             <h2>🎉 अद्भुत प्रदर्शन!</h2>
-            <p>आपने पाठ के आधार पर सभी जोड़ियों का बिल्कुल सही मिलान किया!</p>
-            <button class="btn-primary" onclick="restartGame()">पुनः खेलें 🔄</button>
+            <p id="endMessage">आपने सफलतापूर्वक लेवल पूरा कर लिया है!</p>
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+                <button class="btn-primary" onclick="goToScreen(2)">अन्य लेवल चुनें 🎯</button>
+                <button class="btn-primary btn-secondary" onclick="restartCurrentLevel()">पुनः खेलें 🔄</button>
+            </div>
         </div>
     </div>
 
@@ -372,35 +433,63 @@
                 gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
                 osc.start(now);
                 osc.stop(now + 0.25);
-            } else if (type === 'win') {
-                const notes = [440, 554.37, 659.25, 880];
-                notes.forEach((freq, idx) => {
-                    const winOsc = audioCtx.createOscillator();
-                    const winGain = audioCtx.createGain();
-                    winOsc.connect(winGain);
-                    winGain.connect(audioCtx.destination);
-                    winOsc.frequency.setValueAtTime(freq, now + idx * 0.1);
-                    winGain.gain.setValueAtTime(0.1, now + idx * 0.1);
-                    winGain.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.1 + 0.25);
-                    winOsc.start(now + idx * 0.1);
-                    winOsc.stop(now + idx * 0.1 + 0.25);
-                });
             }
         }
 
-        // Pairs dataset matching AI capabilities/Human traits
-        const matching PairsBank = [
+        // LEVEL 1 DATA (Matching)
+        const pairsBank = [
             { id: 1, optionA: '🚗 बिना ड्राइवर गाड़ी चलाना', optionB: '🤖 एआई (स्वचालित कार)' },
-            { id: 2, name: '💖 दया और सहानुभूति', optionA: '💖 दया और मानवीय भावनाएं', optionB: '🧠 इंसान (मानव)' },
+            { id: 2, optionA: '💖 दया और मानवीय भावनाएं', optionB: '🧠 इंसान (मानव)' },
             { id: 3, optionA: '🌐 भाषाओं का तुरंत अनुवाद', optionB: '⚡ एआई मशीन' },
             { id: 4, optionA: '🎨 मौलिक कला और रचनात्मकता', optionB: '🎨 इंसानी दिमाग' },
             { id: 5, optionA: '🔓 चेहरा पहचानकर सुरक्षा', optionB: '👁️ एआई सुरक्षा प्रणाली' }
         ];
 
+        // LEVEL 2 DATA (Ashuddhi Shodhan)
+        const grammarBank = [
+            {
+                incorrect: "अशुद्ध : बच्चो खेल रहे है।",
+                options: [
+                    "बच्चे खेल रहे हैं।",
+                    "बच्चो खेल रहा हैं।",
+                    "बच्चे खेल रहा है।"
+                ],
+                correctIndex: 0
+            },
+            {
+                incorrect: "अशुद्ध : रोहन ने गाना गाया हैं।",
+                options: [
+                    "रोहन गाना गाते हैं।",
+                    "रोहन ने गाना गाया।",
+                    "रोहन गाना गा रहा हैं।"
+                ],
+                correctIndex: 1
+            },
+            {
+                incorrect: "अशुद्ध : मेरे को घर जाना है।",
+                options: [
+                    "मेरे घर जाना है।",
+                    "मुझे घर जाना है।",
+                    "मुझको घर जाते हैं।"
+                ],
+                correctIndex: 1
+            },
+            {
+                incorrect: "अशुद्ध : एआई बहुत बुद्धिमान होती है।",
+                options: [
+                    "एआई बहुत बुद्धिमान होता है।",
+                    "एआई बुद्धिमत्ता है।",
+                    "एआई बहुत बुद्धिमान हैं।"
+                ],
+                correctIndex: 0
+            }
+        ];
+
+        let currentLevel = 1;
         let selectedA = null;
         let selectedB = null;
         let score = 0;
-        const TOTAL_PAIRS = pairsBank.length;
+        let level2Index = 0;
 
         function goToScreen(screenNumber) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -413,20 +502,36 @@
             }, 5000);
         };
 
-        function startGame() {
+        function startLevel(lvl) {
+            currentLevel = lvl;
             score = 0;
+            document.getElementById('score').innerText = score;
+            goToScreen(3);
+
+            if (lvl === 1) {
+                document.getElementById('gameTitle').innerText = "🧩 लेवल 1: सही जोड़ी मिलाओ";
+                document.getElementById('level1Board').style.display = 'grid';
+                document.getElementById('level2Board').style.display = 'none';
+                initLevel1();
+            } else if (lvl === 2) {
+                document.getElementById('gameTitle').innerText = "✍️ लेवल 2: अशुद्धि-शोधन";
+                document.getElementById('level1Board').style.display = 'none';
+                document.getElementById('level2Board').style.display = 'flex';
+                initLevel2();
+            }
+        }
+
+        /* --- LEVEL 1 LOGIC --- */
+        function initLevel1() {
             selectedA = null;
             selectedB = null;
-            document.getElementById('score').innerText = score;
-            document.getElementById('total-score').innerText = TOTAL_PAIRS;
+            document.getElementById('total-score').innerText = pairsBank.length;
 
             const colAContainer = document.getElementById('colA');
             const colBContainer = document.getElementById('colB');
-
             colAContainer.innerHTML = '';
             colBContainer.innerHTML = '';
 
-            // Shuffle Column A and Column B independently
             const listA = [...pairsBank].sort(() => Math.random() - 0.5);
             const listB = [...pairsBank].sort(() => Math.random() - 0.5);
 
@@ -434,7 +539,6 @@
                 const card = document.createElement('div');
                 card.className = 'match-card';
                 card.innerText = item.optionA;
-                card.dataset.id = item.id;
                 card.onclick = () => handleSelectA(card, item.id);
                 colAContainer.appendChild(card);
             });
@@ -443,7 +547,6 @@
                 const card = document.createElement('div');
                 card.className = 'match-card';
                 card.innerText = item.optionB;
-                card.dataset.id = item.id;
                 card.onclick = () => handleSelectB(card, item.id);
                 colBContainer.appendChild(card);
             });
@@ -451,55 +554,46 @@
 
         function handleSelectA(cardElement, id) {
             if (cardElement.classList.contains('matched')) return;
-
             playSound('select');
             document.querySelectorAll('#colA .match-card').forEach(c => c.classList.remove('selected'));
             cardElement.classList.add('selected');
             selectedA = { element: cardElement, id: id };
-
             checkMatch();
         }
 
         function handleSelectB(cardElement, id) {
             if (cardElement.classList.contains('matched')) return;
-
             playSound('select');
             document.querySelectorAll('#colB .match-card').forEach(c => c.classList.remove('selected'));
             cardElement.classList.add('selected');
             selectedB = { element: cardElement, id: id };
-
             checkMatch();
         }
 
         function checkMatch() {
             if (selectedA && selectedB) {
                 if (selectedA.id === selectedB.id) {
-                    // Match found
                     playSound('correct');
                     selectedA.element.classList.remove('selected');
                     selectedB.element.classList.remove('selected');
-
                     selectedA.element.classList.add('matched');
                     selectedB.element.classList.add('matched');
 
                     selectedA = null;
                     selectedB = null;
-
                     score++;
                     document.getElementById('score').innerText = score;
 
-                    if (score === TOTAL_PAIRS) {
+                    if (score === pairsBank.length) {
                         setTimeout(() => {
-                            playSound('win');
+                            document.getElementById('endMessage').innerText = "आपने सभी जोडियों का सही मिलान किया!";
                             goToScreen(4);
-                        }, 600);
+                        }, 500);
                     }
                 } else {
-                    // Incorrect Match
                     playSound('wrong');
                     const tempA = selectedA.element;
                     const tempB = selectedB.element;
-
                     tempA.classList.add('wrong-flash');
                     tempB.classList.add('wrong-flash');
 
@@ -514,9 +608,66 @@
             }
         }
 
-        function restartGame() {
-            goToScreen(3);
-            startGame();
+        /* --- LEVEL 2 LOGIC (Grammar / Ashuddhi-Shodhan) --- */
+        function initLevel2() {
+            level2Index = 0;
+            document.getElementById('total-score').innerText = grammarBank.length;
+            loadGrammarQuestion();
+        }
+
+        function loadGrammarQuestion() {
+            const currentQ = grammarBank[level2Index];
+            document.getElementById('incorrectSentence').innerText = currentQ.incorrect;
+            const optionsGrid = document.getElementById('optionsGrid');
+            optionsGrid.innerHTML = '';
+
+            currentQ.options.forEach((optText, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerText = `${index + 1}. ${optText}`;
+                btn.onclick = () => handleGrammarAnswer(btn, index, currentQ.correctIndex);
+                optionsGrid.appendChild(btn);
+            });
+        }
+
+        function handleGrammarAnswer(btnElement, selectedIdx, correctIdx) {
+            const allBtns = document.querySelectorAll('.option-btn');
+            allBtns.forEach(b => b.style.pointerEvents = 'none');
+
+            if (selectedIdx === correctIdx) {
+                playSound('correct');
+                btnElement.classList.add('correct-ans');
+                score++;
+                document.getElementById('score').innerText = score;
+
+                setTimeout(() => {
+                    level2Index++;
+                    if (level2Index < grammarBank.length) {
+                        loadGrammarQuestion();
+                    } else {
+                        document.getElementById('endMessage').innerText = "आपने सभी अशुद्ध वाक्यों का सही व्याकरण शोधन किया!";
+                        goToScreen(4);
+                    }
+                }, 1000);
+            } else {
+                playSound('wrong');
+                btnElement.classList.add('wrong-ans');
+                allBtns[correctIdx].classList.add('correct-ans');
+
+                setTimeout(() => {
+                    level2Index++;
+                    if (level2Index < grammarBank.length) {
+                        loadGrammarQuestion();
+                    } else {
+                        document.getElementById('endMessage').innerText = "गेम समाप्त! आपने व्याकरण शोधन का अभ्यास किया।";
+                        goToScreen(4);
+                    }
+                }, 1400);
+            }
+        }
+
+        function restartCurrentLevel() {
+            startLevel(currentLevel);
         }
     </script>
 </body>
