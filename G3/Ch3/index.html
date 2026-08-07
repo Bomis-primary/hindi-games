@@ -384,7 +384,7 @@
         <p class="subtitle">पाठ 3: हवा महल - जयपुर की यात्रा पर आधारित गेम</p>
         <div style="font-size: 4rem; margin-bottom: 20px;">🏰</div>
         <p style="margin-bottom: 20px; max-width: 80%; color: #666;">
-            भूलभुलैया में आगे बढ़ते हुए सवालों के जवाब दें और हवा महल तक पहुँचें!
+            भूलभुलैया में सभी 5 प्रश्नों का सही उत्तर दें और हवा महल तक पहुँचें!
         </p>
         <button class="btn" onclick="startGame()">खेल शुरू करें</button>
     </div>
@@ -392,7 +392,7 @@
     <div id="game-screen" class="screen">
         <div class="game-header">
             <div class="stat-box" id="score-display">अंक: 0</div>
-            <div class="stat-box" id="level-display">स्तर: 1/1</div>
+            <div class="stat-box" id="level-display">प्रश्न शेष: 5</div>
             <div class="stat-box" id="timer-display">समय: 00:00</div>
         </div>
 
@@ -560,6 +560,22 @@
         document.getElementById(toId).classList.add('active');
     }
 
+    // Helper function to count remaining checkpoints
+    function getRemainingCheckpoints() {
+        let count = 0;
+        for (let y = 0; y < mazeSize; y++) {
+            for (let x = 0; x < mazeSize; x++) {
+                if (mazeLayout[y][x] === 2) count++;
+            }
+        }
+        return count;
+    }
+
+    function updateCheckpointDisplay() {
+        const remaining = getRemainingCheckpoints();
+        document.getElementById('level-display').innerText = `प्रश्न शेष: ${remaining}`;
+    }
+
     function startGame() {
         initAudio();
         score = 0;
@@ -574,6 +590,7 @@
 
         document.getElementById('score-display').innerText = `अंक: ${score}`;
         document.getElementById('timer-display').innerText = `समय: 00:00`;
+        updateCheckpointDisplay();
 
         buildMaze();
         switchScreen('welcome-screen', 'game-screen');
@@ -627,11 +644,16 @@
         if (targetType === 2) { // Checkpoint Question
             pendingMove = { x: newX, y: newY };
             showQuestionModal();
+        } else if (targetType === 3) { // Goal Position
+            // Check if all checkpoints are cleared
+            if (getRemainingCheckpoints() > 0) {
+                alert("आपको हवा महल पहुँचने से पहले सभी प्रश्नों (❓) के उत्तर देने होंगे!");
+                return;
+            }
+            executeMove(newX, newY);
+            handleWin();
         } else {
             executeMove(newX, newY);
-            if (targetType === 3) { // Reached Goal
-                handleWin();
-            }
         }
     }
 
@@ -675,6 +697,7 @@
             mazeLayout[pendingMove.y][pendingMove.x] = 0;
             const cell = document.getElementById(`cell-${pendingMove.x}-${pendingMove.y}`);
             cell.classList.remove('checkpoint');
+            updateCheckpointDisplay();
             executeMove(pendingMove.x, pendingMove.y);
         } else {
             playSound('wrong');
