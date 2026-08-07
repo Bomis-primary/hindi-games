@@ -2,15 +2,14 @@
 <html lang="hi">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>कोयल - जंगल एडवेंचर</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>कोयल और व्याकरण - जंगल एडवेंचर</title>
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
       --card-bg: rgba(30, 41, 59, 0.96);
       --accent-color: #10b981;
-      --accent-hover: #159669;
       --text-color: #f8fafc;
       --highlight-yellow: #fbbf24;
       --highlight-cyan: #38bdf8;
@@ -19,10 +18,12 @@
 
     * {
       box-sizing: border-box;
+      font-family: 'Baloo 2', 'Comic Sans MS', cursive, sans-serif;
+      user-select: none;
+      -webkit-user-select: none;
     }
 
     body {
-      font-family: 'Baloo 2', 'Comic Sans MS', cursive, sans-serif;
       background: #090d16;
       background-image: 
         radial-gradient(at 10% 10%, rgba(56, 189, 248, 0.15) 0px, transparent 50%),
@@ -44,14 +45,13 @@
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), inset 0 2px 4px rgba(255, 255, 255, 0.1);
       width: 100%;
       max-width: 580px;
-      padding: 30px 25px;
+      padding: 25px 20px;
       border: 4px solid #334155;
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
       position: relative;
-      overflow: hidden;
     }
 
     .screen {
@@ -65,7 +65,7 @@
       display: none !important;
     }
 
-    /* Screen 1: Logo / Splash */
+    /* Screen 1: Logo */
     .logo-only-container {
       display: flex;
       flex-direction: column;
@@ -103,141 +103,111 @@
       background: rgba(15, 23, 42, 0.8);
       padding: 12px 20px;
       border-radius: 16px;
-      margin-bottom: 20px;
-      font-size: 1.2rem;
+      margin-bottom: 15px;
+      font-size: 1.1rem;
       font-weight: 700;
       color: var(--highlight-cyan);
       border: 2px solid var(--border-color);
-      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
     }
 
-    /* Buttons */
     .btn {
       width: 100%;
-      max-width: 280px;
+      max-width: 320px;
       padding: 14px 20px;
-      margin-top: 15px;
+      margin-top: 12px;
       border: none;
       border-radius: 50px;
       background: linear-gradient(180deg, #34d399 0%, #10b981 100%);
       color: #064e3b;
       font-weight: 800;
-      font-size: 1.3rem;
+      font-size: 1.2rem;
       cursor: pointer;
       box-shadow: 0 6px 0 #047857, 0 12px 20px rgba(0,0,0,0.3);
       transition: all 0.15s ease;
-      letter-spacing: 0.5px;
     }
 
     .btn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 9px 0 #047857, 0 15px 25px rgba(0,0,0,0.4);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 0 #047857, 0 15px 25px rgba(0,0,0,0.4);
       background: linear-gradient(180deg, #6ee7b7 0%, #10b981 100%);
     }
 
     .btn:active {
-      transform: translateY(3px);
-      box-shadow: 0 3px 0 #047857, 0 6px 10px rgba(0,0,0,0.3);
+      transform: translateY(2px);
+      box-shadow: 0 2px 0 #047857, 0 6px 10px rgba(0,0,0,0.3);
     }
 
-    /* Instructions Card */
-    .instruction-card {
-      text-align: left;
-      background: rgba(15, 23, 42, 0.8);
-      padding: 20px;
-      border-radius: 20px;
-      font-size: 1.15rem;
-      line-height: 1.7;
-      width: 100%;
-      border-left: 6px solid var(--highlight-yellow);
-      border-right: 1px solid var(--border-color);
-      border-top: 1px solid var(--border-color);
-      border-bottom: 1px solid var(--border-color);
-      margin-bottom: 15px;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    .btn-secondary {
+      background: linear-gradient(180deg, #38bdf8 0%, #0284c7 100%);
+      color: #0c4a6e;
+      box-shadow: 0 6px 0 #0369a1, 0 12px 20px rgba(0,0,0,0.3);
     }
 
-    .instruction-card p {
-      margin: 10px 0;
+    .btn-secondary:hover {
+      background: linear-gradient(180deg, #7dd3fc 0%, #0284c7 100%);
+      box-shadow: 0 8px 0 #0369a1, 0 15px 25px rgba(0,0,0,0.4);
+    }
+
+    /* Level Selector Cards */
+    .level-container {
       display: flex;
-      align-items: center;
-      gap: 10px;
+      flex-direction: column;
+      gap: 15px;
+      width: 100%;
+      margin: 15px 0;
     }
 
-    /* Avatars & Visual Elements */
     .stage-image {
-      font-size: 4.5rem;
-      margin: 5px 0 15px 0;
+      font-size: 4rem;
+      margin: 5px 0;
       filter: drop-shadow(0 10px 15px rgba(0,0,0,0.5));
       animation: float 2.5s ease-in-out infinite;
     }
 
     @keyframes float {
       0%, 100% { transform: translateY(0) rotate(0deg); }
-      50% { transform: translateY(-12px) rotate(3deg); }
+      50% { transform: translateY(-10px) rotate(3deg); }
     }
 
-    /* Speech Bubble Styling */
-    .speech-bubble-container {
-      position: relative;
-      width: 100%;
-      margin-bottom: 25px;
-    }
-
+    /* Speech Bubble */
     .speech-bubble {
       position: relative;
       background: linear-gradient(145deg, #1e293b, #0f172a);
       border: 3px solid var(--highlight-cyan);
-      border-radius: 24px;
-      padding: 22px 20px;
+      border-radius: 20px;
+      padding: 18px;
       width: 100%;
-      font-size: 1.25rem;
-      line-height: 1.7;
+      font-size: 1.2rem;
+      line-height: 1.6;
       text-align: left;
       box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-    }
-
-    .speech-bubble::after {
-      content: '';
-      position: absolute;
-      top: -16px;
-      left: 50%;
-      transform: translateX(-50%);
-      border-width: 0 14px 16px 14px;
-      border-style: solid;
-      border-color: transparent transparent var(--highlight-cyan) transparent;
-      display: block;
-      width: 0;
+      margin-bottom: 20px;
     }
 
     .blank-target {
       color: var(--highlight-yellow);
       background: rgba(251, 191, 36, 0.15);
-      padding: 4px 12px;
-      border-radius: 10px;
+      padding: 2px 10px;
+      border-radius: 8px;
       border: 2px dashed var(--highlight-yellow);
       font-weight: 700;
-      display: inline-block;
-      margin: 0 4px;
     }
 
-    /* Word Bank */
     .word-bank {
       display: flex;
       flex-wrap: wrap;
-      gap: 12px;
+      gap: 10px;
       justify-content: center;
       width: 100%;
-      margin-top: 5px;
     }
 
     .word-chip {
       background: linear-gradient(180deg, #334155 0%, #1e293b 100%);
       color: var(--highlight-cyan);
       border: 2px solid var(--highlight-cyan);
-      padding: 12px 22px;
+      padding: 10px 18px;
       border-radius: 50px;
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       font-weight: 700;
       cursor: pointer;
       box-shadow: 0 4px 10px rgba(0,0,0,0.3);
@@ -247,25 +217,18 @@
     .word-chip:hover {
       background: var(--highlight-cyan);
       color: #0f172a;
-      transform: scale(1.08) translateY(-2px);
-      box-shadow: 0 8px 15px rgba(56, 189, 248, 0.4);
-    }
-
-    .word-chip:active {
-      transform: scale(0.98);
+      transform: scale(1.05);
     }
 
     .feedback {
-      font-size: 1.25rem;
+      font-size: 1.15rem;
       font-weight: 700;
       min-height: 35px;
       margin-top: 15px;
       padding: 8px 15px;
       border-radius: 12px;
-      transition: all 0.3s ease;
     }
 
-    /* Sparkle Effects for End Screen */
     .stars {
       font-size: 2rem;
       margin-bottom: 10px;
@@ -276,9 +239,9 @@
 
 <div class="game-card">
 
-  <!-- 1) LOGO SCREEN ONLY -->
+  <!-- 1) LOGO SCREEN -->
   <div id="screen-logo" class="screen">
-    <div class="logo-only-container" onclick="showScreen('screen-instructions')">
+    <div class="logo-only-container" onclick="showScreen('screen-levels')">
       <div class="logo-wrapper">
         <img src="assets/logo.png" alt="Innovine Logo" class="logo-img-large" onerror="this.src='https://via.placeholder.com/280x100?text=Innovine';">
       </div>
@@ -286,40 +249,33 @@
     </div>
   </div>
 
-  <!-- 2) INSTRUCTIONS SCREEN -->
-  <div id="screen-instructions" class="screen hidden">
-    <h2 style="color: var(--highlight-yellow); margin-top: 0; font-size: 1.8rem; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">🎯 खेल के नियम</h2>
-    <div class="instruction-card">
-      <p>💬 <span><strong>बोल-बताओ:</strong> खाली स्थान को सही शब्द से पूरा करें।</span></p>
-      <p>🥭 <span><strong>शब्द चुनो:</strong> नीचे दिए गए रंग-बिरंगे शब्दों पर क्लिक करें।</span></p>
-      <p>👑 <span><strong>रानी बनो:</strong> 10 पड़ाव पार करके 'चिड़ियों की रानी' का मुकुट जीतो!</span></p>
+  <!-- 2) LEVEL SELECTION SCREEN -->
+  <div id="screen-levels" class="screen hidden">
+    <h2 style="color: var(--highlight-yellow); margin: 0 0 10px 0; font-size: 1.8rem;">🎯 खेल का स्तर चुनें</h2>
+    <div class="level-container">
+      <button class="btn" onclick="startSelectedLevel(1)">
+        लेवल 1: कोयल कविता (कविता ज्ञान) 🐦
+      </button>
+      <button class="btn btn-secondary" onclick="startSelectedLevel(2)">
+        लेवल 2: भाषा, लिपि और वर्णमाला (व्याकरण) 📚
+      </button>
     </div>
-    <button class="btn" onclick="startGame()">शुरू करें 🚀</button>
   </div>
 
   <!-- 3) MAIN GAME SCREEN -->
   <div id="screen-game" class="screen hidden">
-    
-    <!-- Status Header -->
     <div class="status-bar">
       <span id="stage-indicator">पड़ाव: 1/10</span>
-      <span id="score-indicator">🥭 आम: 0</span>
+      <span id="score-indicator">🥭 स्कोर: 0</span>
     </div>
 
     <div class="stage-image" id="game-avatar">🐦</div>
     
-    <!-- Dynamic Speech Bubble -->
-    <div class="speech-bubble-container">
-      <div id="speech-bubble" class="speech-bubble">
-        <!-- Sentence with blank goes here -->
-      </div>
+    <div class="speech-bubble-container" style="width:100%;">
+      <div id="speech-bubble" class="speech-bubble"></div>
     </div>
 
-    <!-- Word Bank for Fill-in-the-blank -->
-    <div id="word-bank" class="word-bank">
-      <!-- Dynamic Word Chips -->
-    </div>
-
+    <div id="word-bank" class="word-bank"></div>
     <div id="feedback-msg" class="feedback"></div>
 
     <button id="next-btn" class="btn hidden" onclick="nextQuestion()">आगे बढ़ें ▶</button>
@@ -329,33 +285,70 @@
   <div id="screen-end" class="screen hidden">
     <div class="stars">✨ ⭐ ✨</div>
     <div class="stage-image" id="end-avatar">👑</div>
-    <h1 id="end-title" style="color: #34d399; margin: 0; font-size: 2.2rem; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">शाबाश!</h1>
-    <p id="end-msg" style="font-size: 1.3rem; line-height: 1.6; margin: 20px 0; font-weight: 600;"></p>
+    <h1 id="end-title" style="color: #34d399; margin: 0; font-size: 2rem;">शाबाश!</h1>
+    <p id="end-msg" style="font-size: 1.2rem; line-height: 1.6; margin: 15px 0; font-weight: 600;"></p>
     
-    <button class="btn" onclick="restartGame()">फिर से खेलें 🔄</button>
+    <button class="btn" onclick="showScreen('screen-levels')">मुख्य मेनू 🎯</button>
+    <button class="btn btn-secondary" onclick="restartCurrentLevel()">पुनः खेलें 🔄</button>
   </div>
 
 </div>
 
 <script>
-  let currentLevel = 0;
+  let currentLevelMode = 1;
+  let currentQuestionIdx = 0;
   let score = 0;
   let activeQuestions = [];
 
-  // Master List of 10 Interactive Speech Bubble Fill Questions
-  const masterQuestions = [
+  // Audio Context synth for sound effects
+  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  function playSynthSound(type) {
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    const now = audioCtx.currentTime;
+
+    if (type === 'select') {
+      osc.frequency.setValueAtTime(450, now);
+      gain.gain.setValueAtTime(0.08, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
+      osc.start(now);
+      osc.stop(now + 0.08);
+    } else if (type === 'correct') {
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(523.25, now);
+      osc.frequency.setValueAtTime(659.25, now + 0.1);
+      gain.gain.setValueAtTime(0.12, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+      osc.start(now);
+      osc.stop(now + 0.3);
+    } else if (type === 'wrong') {
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(200, now);
+      osc.frequency.setValueAtTime(140, now + 0.12);
+      gain.gain.setValueAtTime(0.12, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+      osc.start(now);
+      osc.stop(now + 0.25);
+    }
+  }
+
+  // LEVEL 1: Poem Questions
+  const level1Questions = [
     {
       avatar: "🐦",
       template: "कोयल का रंग <span class='blank-target'>[ _____ ]</span> होता है और वह आम के पेड़ पर बैठती है।",
       words: ["काला", "सफ़ेद", "हरी"],
       correct: "काला",
-      successMsg: "✨ वाह! कोयल काली होती है और आम के पेड़ पर गाती है! 🥭",
+      successMsg: "✨ वाह! कोयल काली होती है! 🥭",
       failMsg: "❌ सही उत्तर 'काला' है।"
     },
     {
       avatar: "🐦",
       template: "कोयल अपनी मीठी आवाज़ में <span class='blank-target'>[ _____ ]</span> गाती है।",
-      words: ["काँव-काँव", "कुहू-कुहू", "चीँ-चीँ"],
+      words: ["कुहू-कुहू", "काँव-काँव", "चीँ-चीँ"],
       correct: "कुहू-कुहू",
       successMsg: "🎶 'कुहू-कुहू!' आपने आम के बाग में मिठास घोल दी! 🍬",
       failMsg: "❌ सही उत्तर 'कुहू-कुहू' है।"
@@ -365,7 +358,7 @@
       template: "कोयल कूक-कूक कर आमों में <span class='blank-target'>[ _____ ]</span> घोल देती है।",
       words: ["मिश्री", "नमक", "मिर्ची"],
       correct: "मिश्री",
-      successMsg: "✨ बहुत बढ़िया! कूक-कूक कर मिश्री जैसी मिठास घुल गई!",
+      successMsg: "✨ बहुत बढ़िया! मिश्री जैसी मिठास घुल गई!",
       failMsg: "❌ सही उत्तर 'मिश्री' है।"
     },
     {
@@ -383,50 +376,53 @@
       correct: "माँ",
       successMsg: "💖 सही पहचाना! माँ की सीख से ही कोयल मीठा बोलती है!",
       failMsg: "❌ सही उत्तर 'माँ' है।"
-    },
-    {
-      avatar: "🌳",
-      template: "कोयल आम के पेड़ की <span class='blank-target'>[ _____ ]</span> पर बैठकर गाती है।",
-      words: ["डाली", "जड़", "पत्ते"],
-      correct: "डाली",
-      successMsg: "🌿 बहुत सुंदर! कोयल आम की ऊंची डाली पर गाती है!",
-      failMsg: "❌ सही उत्तर 'डाली' है।"
-    },
-    {
-      avatar: "☀️",
-      template: "गर्मी के मौसम में जब <span class='blank-target'>[ _____ ]</span> आते हैं, तब कोयल कूकती है।",
-      words: ["आम", "सेब", "केले"],
-      correct: "आम",
-      successMsg: "🥭 ज़बरदस्त! गर्मी में मीठे आम आते ही कोयल गाती है!",
-      failMsg: "❌ सही उत्तर 'आम' है।"
-    },
-    {
-      avatar: "👑",
-      template: "मीठी बोली के कारण कोयल को सब <span class='blank-target'>[ _____ ]</span> की रानी कहते हैं।",
-      words: ["चिड़ियों", "नदियों", "फूलों"],
-      correct: "चिड़ियों",
-      successMsg: "👑 शानदार! कोयल सब चिड़ियों की रानी कहलाती है!",
-      failMsg: "❌ सही उत्तर 'चिड़ियों' है।"
-    },
-    {
-      avatar: "📖",
-      template: "'कोयल' कविता की रचयिता कवियत्री <span class='blank-target'>[ _____ ]</span> कुमारी चौहान हैं।",
-      words: ["सुभद्रा", "महादेवी", "सरोजिनी"],
-      correct: "सुभद्रा",
-      successMsg: "✨ उत्तर सही है! कवियत्री सुभद्रा कुमारी चौहान हैं!",
-      failMsg: "❌ सही उत्तर 'सुभद्रा' है।"
-    },
-    {
-      avatar: "💬",
-      template: "हमें भी कोयल की तरह हमेशा <span class='blank-target'>[ _____ ]</span> बोलना चाहिए।",
-      words: ["मीठा", "कड़वा", "ज़ोर से"],
-      correct: "मीठा",
-      successMsg: "💖 वाह! हमें सब के साथ हमेशा मीठी बोली बोलनी चाहिए! 🌟",
-      failMsg: "❌ सही उत्तर 'मीठा' है।"
     }
   ];
 
-  // Helper function to shuffle array items
+  // LEVEL 2: Original Grammar Questions (Based on textbook: Bhasha, Lipi aur Varnamala)
+  const level2Questions = [
+    {
+      avatar: "🗣️",
+      template: "हम अपने विचार बोलकर या लिखकर दूसरों तक पहुँचाते हैं, उसे <span class='blank-target'>[ _____ ]</span> कहते हैं।",
+      words: ["भाषा", "लिपि", "वर्ण"],
+      correct: "भाषा",
+      successMsg: "✨ सही! विचारों का आदान-प्रदान 'भाषा' कहलाता है! 📚",
+      failMsg: "❌ सही उत्तर 'भाषा' है।"
+    },
+    {
+      avatar: "🎙️",
+      template: "हम जो मुँह से बोलते हैं, वह भाषा का <span class='blank-target'>[ _____ ]</span> रूप है।",
+      words: ["मौखिक", "लिखित", "सांकेतिक"],
+      correct: "मौखिक",
+      successMsg: "🎉 बिल्कुल सही! बोली जाने वाली भाषा 'मौखिक' होती है!",
+      failMsg: "❌ सही उत्तर 'मौखिक' है।"
+    },
+    {
+      avatar: "✍️",
+      template: "हम जो कागज़ पर लिखते हैं, वह भाषा का <span class='blank-target'>[ _____ ]</span> रूप है।",
+      words: ["लिखित", "मौखिक", "ध्वनि"],
+      correct: "लिखित",
+      successMsg: "📝 शाबाश! लिखा जाने वाला रूप 'लिखित भाषा' है!",
+      failMsg: "❌ सही उत्तर 'लिखित' है।"
+    },
+    {
+      avatar: "📜",
+      template: "हिन्दी भाषा <span class='blank-target'>[ _____ ]</span> लिपि में लिखी जाती है।",
+      words: ["देवनागरी", "रोमन", "गुरुमुखी"],
+      correct: "देवनागरी",
+      successMsg: "🌟 शानदार! हिन्दी की लिपि 'देवनागरी' है!",
+      failMsg: "❌ सही उत्तर 'देवनागरी' है।"
+    },
+    {
+      avatar: "🔤",
+      template: "अंग्रेज़ी भाषा <span class='blank-target'>[ _____ ]</span> लिपि में लिखी जाती है।",
+      words: ["रोमन", "देवनागरी", "फारसी"],
+      correct: "रोमन",
+      successMsg: "🎯 बहुत बढ़िया! अंग्रेज़ी 'रोमन' लिपि में लिखी जाती है!",
+      failMsg: "❌ सही उत्तर 'रोमन' है।"
+    }
+  ];
+
   function shuffleArray(array) {
     return [...array].sort(() => Math.random() - 0.5);
   }
@@ -436,33 +432,39 @@
     document.getElementById(screenId).classList.remove('hidden');
   }
 
-  function startGame() {
-    currentLevel = 0;
+  function startSelectedLevel(lvl) {
+    currentLevelMode = lvl;
+    currentQuestionIdx = 0;
     score = 0;
-    // Randomize the order of questions for every game session
-    activeQuestions = shuffleArray(masterQuestions);
+
+    if (lvl === 1) {
+      activeQuestions = shuffleArray(level1Questions);
+    } else {
+      activeQuestions = shuffleArray(level2Questions);
+    }
+
     showScreen('screen-game');
     loadQuestion();
   }
 
   function loadQuestion() {
-    const q = activeQuestions[currentLevel];
-    document.getElementById('stage-indicator').innerText = `पड़ाव: ${currentLevel + 1}/10`;
-    document.getElementById('score-indicator').innerText = `🥭 आम: ${score}`;
+    const q = activeQuestions[currentQuestionIdx];
+    document.getElementById('stage-indicator').innerText = `पड़ाव: ${currentQuestionIdx + 1}/${activeQuestions.length}`;
+    document.getElementById('score-indicator').innerText = `🥭 स्कोर: ${score}`;
     document.getElementById('game-avatar').innerText = q.avatar;
     document.getElementById('speech-bubble').innerHTML = q.template;
-    
+
     const feedback = document.getElementById('feedback-msg');
     feedback.innerText = '';
     feedback.style.background = 'transparent';
-    
+
     document.getElementById('next-btn').classList.add('hidden');
 
     const wordBank = document.getElementById('word-bank');
     wordBank.innerHTML = '';
     wordBank.classList.remove('hidden');
 
-    // Shuffle word choices randomly for each question
+    // Shuffle options dynamically each time
     const shuffledWords = shuffleArray(q.words);
 
     shuffledWords.forEach(word => {
@@ -475,11 +477,11 @@
   }
 
   function handleWordSelect(selectedWord) {
-    const q = activeQuestions[currentLevel];
+    playSynthSound('select');
+    const q = activeQuestions[currentQuestionIdx];
     const feedback = document.getElementById('feedback-msg');
     document.getElementById('word-bank').classList.add('hidden');
 
-    // Fill blank visually inside speech bubble
     const filledSentence = q.template.replace(
       "<span class='blank-target'>[ _____ ]</span>",
       `<strong style='color: var(--highlight-yellow); background: rgba(251, 191, 36, 0.2); padding: 2px 10px; border-radius: 8px;'>${selectedWord}</strong>`
@@ -487,23 +489,25 @@
     document.getElementById('speech-bubble').innerHTML = filledSentence;
 
     if (selectedWord === q.correct) {
+      playSynthSound('correct');
       score++;
       feedback.style.color = '#34d399';
       feedback.style.background = 'rgba(52, 211, 153, 0.1)';
       feedback.innerText = q.successMsg;
     } else {
+      playSynthSound('wrong');
       feedback.style.color = '#f87171';
       feedback.style.background = 'rgba(248, 113, 113, 0.1)';
       feedback.innerText = q.failMsg;
     }
 
-    document.getElementById('score-indicator').innerText = `🥭 आम: ${score}`;
+    document.getElementById('score-indicator').innerText = `🥭 स्कोर: ${score}`;
     document.getElementById('next-btn').classList.remove('hidden');
   }
 
   function nextQuestion() {
-    currentLevel++;
-    if (currentLevel < activeQuestions.length) {
+    currentQuestionIdx++;
+    if (currentQuestionIdx < activeQuestions.length) {
       loadQuestion();
     } else {
       showEndScreen();
@@ -516,23 +520,19 @@
     const endTitle = document.getElementById('end-title');
     const endMsg = document.getElementById('end-msg');
 
-    if (score === 10) {
+    if (score === activeQuestions.length) {
       endAvatar.innerText = "👑✨";
-      endTitle.innerText = "🏆 सब चिड़ियों की रानी!";
-      endMsg.innerText = "अद्भुत! आपने सभी 10 वाक्यों को सही पूरा किया और 10 रसीले आम बटोरे! 🥭";
-    } else if (score >= 6) {
-      endAvatar.innerText = "🐥🥭";
-      endTitle.innerText = "बहुत बढ़िया!";
-      endMsg.innerText = `शानदार प्रयास! आपने ${score}/10 आम बटोरे। फिर से खेलकर 10/10 का स्कोर बनाएँ! 🚀`;
+      endTitle.innerText = "🏆 सर्वश्रेष्ठ प्रदर्शन!";
+      endMsg.innerText = `अद्भुत! आपने सभी ${activeQuestions.length} प्रश्नों के सही उत्तर दिए! 🎉`;
     } else {
-      endAvatar.innerText = "📖";
-      endTitle.innerText = "फिर कोशिश करें!";
-      endMsg.innerText = `आपने ${score}/10 आम बटोरे। कविता को दोबारा पढ़ें और खेलें! 🥭`;
+      endAvatar.innerText = "⭐";
+      endTitle.innerText = "बहुत बढ़िया!";
+      endMsg.innerText = `आपने ${activeQuestions.length} में से ${score} अंक प्राप्त किए। फिर से प्रयास करें! 🚀`;
     }
   }
 
-  function restartGame() {
-    showScreen('screen-logo');
+  function restartCurrentLevel() {
+    startSelectedLevel(currentLevelMode);
   }
 </script>
 
