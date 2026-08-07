@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>बचपन के खेल - वर्गीकरण खेल</title>
+    <title>खेल एवं व्याकरण - वर्गीकरण खेल</title>
     <style>
         * {
             box-sizing: border-box;
@@ -127,7 +127,7 @@
 
         /* SCREEN 3: Game Screen */
         .game-header {
-            margin-bottom: 12px;
+            margin-bottom: 8px;
         }
 
         .game-header h1 {
@@ -135,12 +135,23 @@
             font-size: 1.4rem;
         }
 
+        .level-badge {
+            display: inline-block;
+            background: #e0e7ff;
+            color: #3730a3;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-top: 4px;
+        }
+
         .stats-board {
             background: white;
             padding: 8px 20px;
             border-radius: 50px;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            margin: 10px 0 15px 0;
+            margin: 8px 0 12px 0;
             font-weight: bold;
             color: #1f2937;
             font-size: 0.95rem;
@@ -213,16 +224,16 @@
             background: #f8fafc;
         }
 
-        .bin-outdoor { border-color: #f59e0b; }
-        .bin-indoor { border-color: #10b981; }
+        .bin-cat1 { border-color: #f59e0b; }
+        .bin-cat2 { border-color: #10b981; }
 
         .category-bin h2 {
             font-size: 0.95rem;
             margin-bottom: 10px;
         }
 
-        .bin-outdoor h2 { color: #d97706; }
-        .bin-indoor h2 { color: #059669; }
+        .bin-cat1 h2 { color: #d97706; }
+        .bin-cat2 h2 { color: #059669; }
 
         .bin-items {
             width: 100%;
@@ -236,7 +247,7 @@
             text-align: center;
         }
 
-        /* SCREEN 4: End Screen */
+        /* SCREEN 4: Level Complete / End Screen */
         .end-card {
             background: white;
             padding: 30px 20px;
@@ -299,18 +310,19 @@
         <div class="card-box">
             <h2>📜 खेल के नियम</h2>
             <div class="instructions-list">
-                <p>1. स्क्रीन पर दिए गए खेलों में से किसी एक पर क्लिक करें।</p>
-                <p>2. इसके बाद उसे <b>आउटडोर</b> या <b>इनडोर</b> बॉक्स में सही श्रेणी चुनें।</p>
-                <p>3. सभी खेलों को सही छाँटकर गेम पूरा करें!</p>
+                <p>1. <b>स्तर 1:</b> बचपन के खेलों को आउटडोर या इनडोर श्रेणी में छाँटें।</p>
+                <p>2. <b>स्तर 2 (व्याकरण बोध):</b> दिए गए वाक्यों को अशुद्ध या शुद्ध श्रेणी में वर्गीकृत करें।</p>
+                <p>3. कार्ड पर क्लिक करके फिर सही बॉक्स पर क्लिक करें!</p>
             </div>
-            <button class="btn-primary" onclick="goToScreen(3); startGame();">गेम शुरू करें 🚀</button>
+            <button class="btn-primary" onclick="goToScreen(3); startLevel(1);">गेम शुरू करें 🚀</button>
         </div>
     </div>
 
     <!-- SCREEN 3: Game Screen -->
     <div id="screen3" class="screen">
         <div class="game-header">
-            <h1>🎯 बचपन के खेल: वर्गीकरण</h1>
+            <h1 id="gameTitle">🎯 बचपन के खेल: वर्गीकरण</h1>
+            <span id="levelBadge" class="level-badge">स्तर 1</span>
         </div>
 
         <div class="stats-board">
@@ -322,24 +334,24 @@
 
         <!-- Category Bins -->
         <div class="categories-container">
-            <div class="category-bin bin-outdoor" onclick="classifySelected('outdoor')">
-                <h2>☀️ आउटडोर (मैदानी खेल)</h2>
-                <div class="bin-items" id="outdoorBin"></div>
+            <div class="category-bin bin-cat1" onclick="classifySelected('cat1')">
+                <h2 id="cat1Title">☀️ आउटडोर (मैदानी खेल)</h2>
+                <div class="bin-items" id="cat1Bin"></div>
             </div>
 
-            <div class="category-bin bin-indoor" onclick="classifySelected('indoor')">
-                <h2>🏠 इनडोर (घर के अंदर)</h2>
-                <div class="bin-items" id="indoorBin"></div>
+            <div class="category-bin bin-cat2" onclick="classifySelected('cat2')">
+                <h2 id="cat2Title">🏠 इनडोर (घर के अंदर)</h2>
+                <div class="bin-items" id="cat2Bin"></div>
             </div>
         </div>
     </div>
 
-    <!-- SCREEN 4: End Screen -->
+    <!-- SCREEN 4: End / Next Level Screen -->
     <div id="screen4" class="screen">
         <div class="end-card">
-            <h2>🎉 शानदार खेल!</h2>
-            <p>आपने सभी खेलों को सफलतापूर्वक छाँट लिया है!</p>
-            <button class="btn-primary" onclick="restartGame()">पुनः खेलें (नए खेल) 🔄</button>
+            <h2 id="endTitle">🎉 शानदार खेल!</h2>
+            <p id="endDesc">आपने स्तर 1 सफलतापूर्वक पूरा कर लिया है!</p>
+            <button id="endBtn" class="btn-primary" onclick="handleEndButtonClick()">स्तर 2 खेलें ➡️</button>
         </div>
     </div>
 
@@ -408,35 +420,50 @@
             }
         }
 
-        const masterItemsBank = [
-            // Original Items
-            { id: 1, name: '🏏 क्रिकेट', category: 'outdoor' },
-            { id: 2, name: '🎲 लूडो', category: 'indoor' },
-            { id: 3, name: '⚽ फुटबॉल', category: 'outdoor' },
-            { id: 4, name: '🪵 गिल्ली-डंडा', category: 'outdoor' },
-            { id: 5, name: '🎯 कांचा-गोली', category: 'outdoor' },
-            { id: 6, name: '🤼 कबड्डी', category: 'outdoor' },
-            { id: 7, name: '🙈 छुपम-छुपाई', category: 'outdoor' },
-            { id: 8, name: '♟️ शतरंज', category: 'indoor' },
-            { id: 9, name: '🪢 रस्सी-खींच', category: 'outdoor' },
-            { id: 10, name: '🌀 लट्टू', category: 'outdoor' },
-            { id: 11, name: '🃏 ताश का खेल', category: 'indoor' },
-            { id: 12, name: '🐍 साँप-सीढ़ी', category: 'indoor' },
-            { id: 13, name: '🧱 कैरम', category: 'indoor' },
-            { id: 14, name: '🏸 बैडमिंटन', category: 'outdoor' },
-            { id: 15, name: '🏃 पकड़म-पकड़ाई', category: 'outdoor' },
-            { id: 16, name: '👁️ आँख-मिचौली', category: 'outdoor' },
-
-            // Additional options from Ch14.pdf
-            { id: 17, name: '🏑 हॉकी', category: 'outdoor' },
-            { id: 18, name: '🕵️ चोर-सिपाही', category: 'indoor' },
-            { id: 19, name: '🤝 व्यापारी', category: 'indoor' },
-            { id: 20, name: '🏛️ पचीसी / चौपार', category: 'indoor' }
+        // --- DATA BANK ---
+        const level1ItemsBank = [
+            { id: 1, name: '🏏 क्रिकेट', category: 'cat1' },
+            { id: 2, name: '🎲 लूडो', category: 'cat2' },
+            { id: 3, name: '⚽ फुटबॉल', category: 'cat1' },
+            { id: 4, name: '🪵 गिल्ली-डंडा', category: 'cat1' },
+            { id: 5, name: '🎯 कांचा-गोली', category: 'cat1' },
+            { id: 6, name: '🤼 कबड्डी', category: 'cat1' },
+            { id: 7, name: '🙈 छुपम-छुपाई', category: 'cat1' },
+            { id: 8, name: '♟️ शतरंज', category: 'cat2' },
+            { id: 9, name: '🪢 रस्सी-खींच', category: 'cat1' },
+            { id: 10, name: '🌀 लट्टू', category: 'cat1' },
+            { id: 11, name: '🃏 ताश का खेल', category: 'cat2' },
+            { id: 12, name: '🐍 साँप-सीढ़ी', category: 'cat2' },
+            { id: 13, name: '🧱 कैरम', category: 'cat2' },
+            { id: 14, name: '🏸 बैडमिंटन', category: 'cat1' },
+            { id: 15, name: '🏃 पकड़म-पकड़ाई', category: 'cat1' },
+            { id: 16, name: '👁️ आँख-मिचौली', category: 'cat1' },
+            { id: 17, name: '🏑 हॉकी', category: 'cat1' },
+            { id: 18, name: '🕵️ चोर-सिपाही', category: 'cat2' },
+            { id: 19, name: '🤝 व्यापारी', category: 'cat2' },
+            { id: 20, name: '🏛️ पचीसी / चौपार', category: 'cat2' }
         ];
 
+        // Level 2: Grammar - Ashuddhi Shodhan (अशुद्धि-शोधन)
+        const level2ItemsBank = [
+            { id: 21, name: '❌ बच्चो खेल रहे है।', category: 'cat1' },
+            { id: 22, name: '✅ बच्चे खेल रहे हैं।', category: 'cat2' },
+            { id: 23, name: '❌ मेरे को भूख लगी है।', category: 'cat1' },
+            { id: 24, name: '✅ मुझे भूख लगी है।', category: 'cat2' },
+            { id: 25, name: '❌ वह पानी पी लिया।', category: 'cat1' },
+            { id: 26, name: '✅ उसने पानी पी लिया।', category: 'cat2' },
+            { id: 27, name: '❌ हम स्कूल जा रहा हूँ।', category: 'cat1' },
+            { id: 28, name: '✅ मैं स्कूल जा रहा हूँ।', category: 'cat2' },
+            { id: 29, name: '❌ सीता गाना गा रहा है।', category: 'cat1' },
+            { id: 30, name: '✅ सीता गाना गा रही है।', category: 'cat2' },
+            { id: 31, name: '❌ पेड़ पर से पत्ता गिरा।', category: 'cat1' },
+            { id: 32, name: '✅ पेड़ से पत्ता गिरा।', category: 'cat2' }
+        ];
+
+        let currentLevel = 1;
         let selectedItem = null;
         let score = 0;
-        const ITEMS_PER_ROUND = 8;
+        let ITEMS_PER_ROUND = 8;
 
         function goToScreen(screenNumber) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -449,15 +476,38 @@
             }, 5000);
         };
 
-        function startGame() {
+        function startLevel(levelNum) {
+            currentLevel = levelNum;
             score = 0;
             selectedItem = null;
-            document.getElementById('score').innerText = score;
-            document.getElementById('total-score').innerText = ITEMS_PER_ROUND;
-            document.getElementById('outdoorBin').innerHTML = '';
-            document.getElementById('indoorBin').innerHTML = '';
 
-            const shuffledBank = [...masterItemsBank].sort(() => Math.random() - 0.5);
+            document.getElementById('cat1Bin').innerHTML = '';
+            document.getElementById('cat2Bin').innerHTML = '';
+            document.getElementById('score').innerText = score;
+
+            if (currentLevel === 1) {
+                ITEMS_PER_ROUND = 8;
+                document.getElementById('gameTitle').innerText = '🎯 बचपन के खेल: वर्गीकरण';
+                document.getElementById('levelBadge').innerText = 'स्तर 1: खेल';
+                document.getElementById('cat1Title').innerText = '☀️ आउटडोर (मैदानी खेल)';
+                document.getElementById('cat2Title').innerText = '🏠 इनडोर (घर के अंदर)';
+                
+                setupRound(level1ItemsBank);
+            } else {
+                ITEMS_PER_ROUND = 6;
+                document.getElementById('gameTitle').innerText = '📝 व्याकरण बोध: अशुद्धि-शोधन';
+                document.getElementById('levelBadge').innerText = 'स्तर 2: व्याकरण';
+                document.getElementById('cat1Title').innerText = '❌ अशुद्ध वाक्य';
+                document.getElementById('cat2Title').innerText = '✅ शुद्ध वाक्य';
+
+                setupRound(level2ItemsBank);
+            }
+
+            document.getElementById('total-score').innerText = ITEMS_PER_ROUND;
+        }
+
+        function setupRound(bank) {
+            const shuffledBank = [...bank].sort(() => Math.random() - 0.5);
             const currentRoundItems = shuffledBank.slice(0, ITEMS_PER_ROUND);
 
             const pool = document.getElementById('itemsPool');
@@ -487,8 +537,8 @@
 
             if (selectedItem.data.category === targetCategory) {
                 playSound('correct');
-                const targetBin = targetCategory === 'outdoor' ? 
-                    document.getElementById('outdoorBin') : document.getElementById('indoorBin');
+                const targetBin = targetCategory === 'cat1' ? 
+                    document.getElementById('cat1Bin') : document.getElementById('cat2Bin');
                 
                 selectedItem.element.classList.remove('selected');
                 selectedItem.element.onclick = null;
@@ -501,7 +551,7 @@
                 if (score === ITEMS_PER_ROUND) {
                     setTimeout(() => {
                         playSound('win');
-                        goToScreen(4);
+                        showEndScreen();
                     }, 500);
                 }
             } else {
@@ -515,9 +565,27 @@
             }
         }
 
-        function restartGame() {
-            goToScreen(3);
-            startGame();
+        function showEndScreen() {
+            if (currentLevel === 1) {
+                document.getElementById('endTitle').innerText = '🎉 शानदार प्रयास!';
+                document.getElementById('endDesc').innerText = 'आपने स्तर 1 (खेल वर्गीकरण) पूरा कर लिया है!';
+                document.getElementById('endBtn').innerText = 'स्तर 2 शुरू करें (व्याकरण) ➡️';
+            } else {
+                document.getElementById('endTitle').innerText = '🏆 बधाई हो!';
+                document.getElementById('endDesc').innerText = 'आपने अशुद्धि-शोधन व्याकरण सहित सभी स्तर पूरे कर लिए हैं!';
+                document.getElementById('endBtn').innerText = 'पुनः खेलें 🔄';
+            }
+            goToScreen(4);
+        }
+
+        function handleEndButtonClick() {
+            if (currentLevel === 1) {
+                goToScreen(3);
+                startLevel(2);
+            } else {
+                goToScreen(3);
+                startLevel(1);
+            }
         }
     </script>
 </body>
