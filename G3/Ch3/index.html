@@ -112,21 +112,30 @@
         .title {
             font-size: 2.2rem;
             color: var(--primary-dark);
-            margin-bottom: 10px;
+            margin-bottom: 5px;
         }
 
         .subtitle {
             font-size: 1.1rem;
             color: #555;
-            margin-bottom: 25px;
+            margin-bottom: 15px;
+        }
+
+        .level-selection {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+            max-width: 400px;
+            margin-top: 10px;
         }
 
         .btn {
             background-color: var(--primary);
             color: white;
             border: none;
-            padding: 14px 32px;
-            font-size: 1.2rem;
+            padding: 14px 28px;
+            font-size: 1.15rem;
             font-weight: bold;
             border-radius: 30px;
             cursor: pointer;
@@ -138,6 +147,16 @@
             background-color: var(--primary-dark);
             transform: translateY(-2px);
             box-shadow: 0 6px 16px rgba(217, 79, 48, 0.5);
+        }
+
+        .btn-secondary {
+            background-color: var(--accent);
+            box-shadow: 0 4px 12px rgba(42, 157, 143, 0.4);
+        }
+
+        .btn-secondary:hover {
+            background-color: #1f7a6f;
+            box-shadow: 0 6px 16px rgba(42, 157, 143, 0.5);
         }
 
         .btn:active {
@@ -162,7 +181,7 @@
         }
 
         .stat-box {
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: bold;
             color: var(--primary-dark);
         }
@@ -264,7 +283,7 @@
             transform: scale(0.95);
         }
 
-        /* In-Game Warning Toast (Replaces Alert) */
+        /* In-Game Warning Toast */
         #warning-toast {
             position: absolute;
             top: 70px;
@@ -375,7 +394,7 @@
             padding: 30px;
             border-radius: 20px;
             box-shadow: var(--shadow);
-            max-width: 400px;
+            max-width: 420px;
             width: 90%;
         }
 
@@ -417,23 +436,32 @@
 <div id="game-container">
     <div id="splash-screen" class="screen active">
         <div class="logo-box">
-            <img src="assets/logo.png" alt="Innovine Logo" class="innovine-logo-img">
+            <img src="assets/logo.png" alt="Innovine Logo" class="innovine-logo-img" onerror="this.src='https://via.placeholder.com/300x120?text=Innovine';">
         </div>
         <p style="font-size: 1.1rem;">जयपुर की ऐतिहासिक यात्रा...</p>
     </div>
 
     <div id="welcome-screen" class="screen">
         <h1 class="title">हवा महल भूलभुलैया (Maze Adventure)</h1>
-        <p class="subtitle">पाठ 3: हवा महल - जयपुर की यात्रा पर आधारित गेम</p>
-        <div style="font-size: 4rem; margin-bottom: 20px;">🏰</div>
-        <p style="margin-bottom: 20px; max-width: 80%; color: #666;">
-            भूलभुलैया में सभी 10 प्रश्नों के उत्तर दें और हवा महल तक पहुँचें!
+        <p class="subtitle">पाठ 3: हवा महल - जयपुर की यात्रा</p>
+        <div style="font-size: 3.5rem; margin-bottom: 10px;">🏰</div>
+        <p style="margin-bottom: 15px; max-width: 85%; color: #666; font-size: 0.95rem;">
+            भूलभुलैया में सही स्तर चुनकर प्रश्नों के उत्तर दें और हवा महल तक पहुँचें!
         </p>
-        <button class="btn" onclick="startGame()">खेल शुरू करें</button>
+        
+        <div class="level-selection">
+            <button class="btn" onclick="selectLevel(1)">
+                लेवल 1: पाठ बोध (कहानी) 📖
+            </button>
+            <button class="btn btn-secondary" onclick="selectLevel(2)">
+                लेवल 2: व्याकरण बोध (पर्यायवाची शब्द) ✍️
+            </button>
+        </div>
     </div>
 
     <div id="game-screen" class="screen">
         <div class="game-header">
+            <div class="stat-box" id="level-display-mode">स्तर: 1</div>
             <div class="stat-box" id="score-display">अंक: 0</div>
             <div class="stat-box" id="level-display">प्रश्न शेष: 10</div>
             <div class="stat-box" id="timer-display">समय: 00:00</div>
@@ -470,7 +498,10 @@
             <p style="font-size: 1.1rem; margin-bottom: 15px;">आपने हवा महल की यात्रा सफलतापूर्वक पूरी कर ली!</p>
             <div class="end-stat" id="final-score">कुल अंक: 0</div>
             <div class="end-stat" id="final-time">कुल समय: 00:00</div>
-            <button class="btn" style="margin-top: 20px;" onclick="restartGame()">पुनः खेलें</button>
+            <div style="display: flex; gap: 10px; justify-content: center; margin-top: 15px;">
+                <button class="btn" style="padding: 10px 20px; font-size: 1rem;" onclick="restartGame()">पुनः खेलें 🔄</button>
+                <button class="btn btn-secondary" style="padding: 10px 20px; font-size: 1rem;" onclick="switchScreen('end-screen', 'welcome-screen')">मुख्य मेनू 🏠</button>
+            </div>
         </div>
     </div>
 </div>
@@ -531,8 +562,8 @@
         }
     }
 
-    // 10 Questions Bank based on Chapter 3: Hawa Mahal
-    const allQuestions = [
+    // Level 1 Questions (Chapter 3: Hawa Mahal - Story)
+    const level1Questions = [
         {
             q: "जयपुर शहर को किस नाम से जाना जाता है?",
             options: ["सफ़ेद नगरी", "गुलाबी नगरी", "नीली नगरी", "सोना नगरी"],
@@ -585,6 +616,60 @@
         }
     ];
 
+    // Level 2 Questions (Grammar: Synonyms / पर्यायवाची शब्द)
+    const level2Questions = [
+        {
+            q: "जिन शब्दों के अर्थ समान या लगभग एक जैसे होते हैं, उन्हें क्या कहते हैं?",
+            options: ["विलोम शब्द", "पर्यायवाची शब्द", "संज्ञा", "सर्वनाम"],
+            answer: 1
+        },
+        {
+            q: "'हवा' शब्द का सही पर्यायवाची युग्म कौन-सा है?",
+            options: ["जल, नीर", "वायु, पवन", "अग्नि, अनल", "सूर्य, दिनकर"],
+            answer: 1
+        },
+        {
+            q: "'महल' शब्द का पर्यायवाची शब्द इनमें से कौन-सा है?",
+            options: ["प्रासाद, भवन", "कुटीर, झोपड़ी", "अंबर, गगन", "तरु, वृक्ष"],
+            answer: 0
+        },
+        {
+            q: "'राजा' शब्द का सही पर्यायवाची शब्द क्या होगा?",
+            options: ["नृप, भूपति", "दास, सेवक", "मित्र, सखा", "शत्रु, रिपु"],
+            answer: 0
+        },
+        {
+            q: "'आकाश' का सही पर्यायवाची शब्द कौन-सा है?",
+            options: ["गगन, अंबर", "धरा, भूमि", "सरिता, नदी", "पर्वत, गिरि"],
+            answer: 0
+        },
+        {
+            q: "'पानी' शब्द का सही पर्यायवाची रूप क्या है?",
+            options: ["जल, नीर", "अग्नि, पावक", "पवन, समीर", "मेघ, बादल"],
+            answer: 0
+        },
+        {
+            q: "'पेड़' का पर्यायवाची शब्द निम्नलिखित में से कौन-सा है?",
+            options: ["वृक्ष, तरु", "पुष्प, सुमन", "पत्र, पत्ता", "फल, बीज"],
+            answer: 0
+        },
+        {
+            q: "'सूर्य' शब्द का सही पर्यायवाची शब्द चुनिए:",
+            options: ["रवि, दिनकर", "चंद्र, मयंक", "तारा, नक्षत्र", "निशा, रात"],
+            answer: 0
+        },
+        {
+            q: "'आँख' का सही पर्यायवाची शब्द क्या है?",
+            options: ["नयन, लोचन", "कर्ण, कान", "हस्त, हाथ", "पद, पैर"],
+            answer: 0
+        },
+        {
+            q: "'पवन' और 'वायु' किस शब्द के पर्यायवाची हैं?",
+            options: ["पानी", "हवा", "आग", "धरती"],
+            answer: 1
+        }
+    ];
+
     // Maze Grid Layout (9x9 Grid containing 10 checkpoints)
     // 0 = path, 1 = wall, 2 = checkpoint (question), 3 = goal
     const initialMazeLayout = [
@@ -601,6 +686,7 @@
 
     let mazeLayout = JSON.parse(JSON.stringify(initialMazeLayout));
     const mazeSize = 9;
+    let currentLevelMode = 1;
     let playerPos = { x: 0, y: 0 };
     let score = 0;
     let timerInterval = null;
@@ -617,6 +703,11 @@
     function switchScreen(fromId, toId) {
         document.getElementById(fromId).classList.remove('active');
         document.getElementById(toId).classList.add('active');
+    }
+
+    function selectLevel(lvl) {
+        currentLevelMode = lvl;
+        startGame();
     }
 
     // Count remaining checkpoints
@@ -651,11 +742,14 @@
         secondsElapsed = 0;
         playerPos = { x: 0, y: 0 };
 
+        document.getElementById('level-display-mode').innerText = `स्तर: ${currentLevelMode}`;
+
         // Reset Maze Layout Checkpoints
         mazeLayout = JSON.parse(JSON.stringify(initialMazeLayout));
 
-        // Shuffle questions
-        currentQuestions = [...allQuestions].sort(() => Math.random() - 0.5);
+        // Select and Shuffle Question Pool according to Level Mode
+        const rawQuestions = (currentLevelMode === 1) ? level1Questions : level2Questions;
+        currentQuestions = [...rawQuestions].sort(() => Math.random() - 0.5);
 
         document.getElementById('score-display').innerText = `अंक: ${score}`;
         document.getElementById('timer-display').innerText = `समय: 00:00`;
@@ -737,7 +831,8 @@
         document.getElementById('modal-error-msg').style.display = 'none';
 
         if (currentQuestions.length === 0) {
-            currentQuestions = [...allQuestions].sort(() => Math.random() - 0.5);
+            const rawQuestions = (currentLevelMode === 1) ? level1Questions : level2Questions;
+            currentQuestions = [...rawQuestions].sort(() => Math.random() - 0.5);
         }
         const qData = currentQuestions.pop();
 
@@ -793,7 +888,8 @@
     }
 
     function restartGame() {
-        switchScreen('end-screen', 'welcome-screen');
+        switchScreen('end-screen', 'game-screen');
+        startGame();
     }
 
     // Keyboard Controls
