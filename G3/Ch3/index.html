@@ -38,7 +38,7 @@
             width: 100%;
             max-width: 900px;
             height: 95vh;
-            max-height: 700px;
+            max-height: 750px;
             background: var(--card-bg);
             border-radius: 20px;
             box-shadow: var(--shadow);
@@ -196,7 +196,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 1.4rem;
+            font-size: 1.2rem;
             position: relative;
         }
 
@@ -210,7 +210,7 @@
 
         .cell.player::after {
             content: '🚶';
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             animation: bounce 0.5s infinite alternate;
         }
 
@@ -221,13 +221,13 @@
 
         .cell.checkpoint::after {
             content: '❓';
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             animation: pulse 1s infinite;
         }
 
         .cell.goal::after {
             content: '🏰';
-            font-size: 1.6rem;
+            font-size: 1.4rem;
         }
 
         .controls {
@@ -264,6 +264,32 @@
             transform: scale(0.95);
         }
 
+        /* In-Game Warning Toast (Replaces Alert) */
+        #warning-toast {
+            position: absolute;
+            top: 70px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-20px);
+            background: #e74c3c;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+            z-index: 5;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        #warning-toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
         /* Modal / Question Overlay */
         .modal {
             position: absolute;
@@ -294,6 +320,7 @@
             border-radius: 16px;
             box-shadow: var(--shadow);
             text-align: center;
+            position: relative;
         }
 
         .modal-card h3 {
@@ -323,6 +350,18 @@
         .opt-btn:hover {
             border-color: var(--secondary);
             background: #fff8f0;
+        }
+
+        /* Inline Error Banner inside Question Card */
+        #modal-error-msg {
+            display: none;
+            background-color: #f8d7da;
+            color: #842029;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            margin-top: 10px;
+            font-weight: bold;
         }
 
         /* Screen 4: End Screen */
@@ -366,6 +405,10 @@
                 height: 45px;
                 font-size: 1.1rem;
             }
+            #warning-toast {
+                white-space: normal;
+                width: 90%;
+            }
         }
     </style>
 </head>
@@ -384,7 +427,7 @@
         <p class="subtitle">पाठ 3: हवा महल - जयपुर की यात्रा पर आधारित गेम</p>
         <div style="font-size: 4rem; margin-bottom: 20px;">🏰</div>
         <p style="margin-bottom: 20px; max-width: 80%; color: #666;">
-            भूलभुलैया में सभी 5 प्रश्नों का सही उत्तर दें और हवा महल तक पहुँचें!
+            भूलभुलैया में सभी 10 प्रश्नों के उत्तर दें और हवा महल तक पहुँचें!
         </p>
         <button class="btn" onclick="startGame()">खेल शुरू करें</button>
     </div>
@@ -392,9 +435,12 @@
     <div id="game-screen" class="screen">
         <div class="game-header">
             <div class="stat-box" id="score-display">अंक: 0</div>
-            <div class="stat-box" id="level-display">प्रश्न शेष: 5</div>
+            <div class="stat-box" id="level-display">प्रश्न शेष: 10</div>
             <div class="stat-box" id="timer-display">समय: 00:00</div>
         </div>
+
+        <!-- In-Game Notification Banner -->
+        <div id="warning-toast">⚠️ हवा महल पहुँचने से पहले सभी प्रश्नों (❓) के उत्तर दें!</div>
 
         <div class="game-area">
             <div id="maze-board"></div>
@@ -413,6 +459,7 @@
             <div class="modal-card">
                 <h3 id="question-text">प्रश्न यहाँ आएगा...</h3>
                 <div class="options-grid" id="options-container"></div>
+                <div id="modal-error-msg">❌ गलत उत्तर! पुनः प्रयास करें।</div>
             </div>
         </div>
     </div>
@@ -484,7 +531,7 @@
         }
     }
 
-    // Question Bank based on Chapter 3: Hawa Mahal
+    // 10 Questions Bank based on Chapter 3: Hawa Mahal
     const allQuestions = [
         {
             q: "जयपुर शहर को किस नाम से जाना जाता है?",
@@ -525,30 +572,42 @@
             q: "हवा महल का डिज़ाइन किस वास्तुकार ने तैयार किया था?",
             options: ["विद्याधर भट्टाचार्य", "लाल चंद उस्ताद", "सवाई राम सिंह", "अंकित"],
             answer: 1
+        },
+        {
+            q: "हवा महल किस पत्थर से निर्मित है?",
+            options: ["सफ़ेद संगमरमर", "लाल और गुलाबी बलुआ पत्थर", "काला ग्रेनाइट", "चूना पत्थर"],
+            answer: 1
+        },
+        {
+            q: "हवा महल का आकार किस भगवान के मुकुट जैसा दिखाई देता है?",
+            options: ["भगवान शिव", "भगवान श्री कृष्ण", "भगवान राम", "भगवान विष्णु"],
+            answer: 1
         }
     ];
 
-    // Maze Grid Layout (8x8 Grid)
+    // Maze Grid Layout (9x9 Grid containing 10 checkpoints)
     // 0 = path, 1 = wall, 2 = checkpoint (question), 3 = goal
     const initialMazeLayout = [
-        [0, 0, 1, 0, 0, 0, 1, 0],
-        [1, 0, 1, 0, 1, 2, 1, 0],
-        [0, 2, 0, 0, 1, 0, 0, 0],
-        [0, 1, 1, 2, 1, 0, 1, 1],
-        [0, 0, 0, 0, 0, 0, 2, 0],
-        [1, 1, 0, 1, 1, 1, 0, 1],
-        [0, 2, 0, 1, 0, 0, 0, 0],
-        [0, 1, 0, 0, 0, 1, 1, 3]
+        [0, 2, 0, 1, 0, 2, 0, 1, 0],
+        [1, 1, 0, 1, 0, 1, 0, 1, 2],
+        [0, 2, 0, 0, 0, 0, 0, 1, 0],
+        [0, 1, 1, 1, 2, 1, 1, 1, 0],
+        [0, 0, 2, 0, 0, 0, 2, 0, 0],
+        [1, 1, 0, 1, 1, 1, 0, 1, 1],
+        [0, 2, 0, 0, 2, 0, 0, 0, 0],
+        [0, 1, 1, 1, 0, 1, 1, 1, 2],
+        [0, 0, 0, 1, 0, 0, 0, 1, 3]
     ];
 
     let mazeLayout = JSON.parse(JSON.stringify(initialMazeLayout));
-    const mazeSize = 8;
+    const mazeSize = 9;
     let playerPos = { x: 0, y: 0 };
     let score = 0;
     let timerInterval = null;
     let secondsElapsed = 0;
     let currentQuestions = [];
     let pendingMove = null;
+    let toastTimeout = null;
 
     // Auto-Transition Splash to Welcome Screen after 3 seconds
     setTimeout(() => {
@@ -560,7 +619,7 @@
         document.getElementById(toId).classList.add('active');
     }
 
-    // Helper function to count remaining checkpoints
+    // Count remaining checkpoints
     function getRemainingCheckpoints() {
         let count = 0;
         for (let y = 0; y < mazeSize; y++) {
@@ -574,6 +633,16 @@
     function updateCheckpointDisplay() {
         const remaining = getRemainingCheckpoints();
         document.getElementById('level-display').innerText = `प्रश्न शेष: ${remaining}`;
+    }
+
+    function showToast(message) {
+        const toast = document.getElementById('warning-toast');
+        toast.innerText = message;
+        toast.classList.add('show');
+        clearTimeout(toastTimeout);
+        toastTimeout = setTimeout(() => {
+            toast.classList.remove('show');
+        }, 2500);
     }
 
     function startGame() {
@@ -645,9 +714,9 @@
             pendingMove = { x: newX, y: newY };
             showQuestionModal();
         } else if (targetType === 3) { // Goal Position
-            // Check if all checkpoints are cleared
+            // Require all 10 checkpoints to be completed
             if (getRemainingCheckpoints() > 0) {
-                alert("आपको हवा महल पहुँचने से पहले सभी प्रश्नों (❓) के उत्तर देने होंगे!");
+                showToast("⚠️ हवा महल पहुँचने से पहले सभी 10 प्रश्नों (❓) के उत्तर दें!");
                 return;
             }
             executeMove(newX, newY);
@@ -665,6 +734,8 @@
     }
 
     function showQuestionModal() {
+        document.getElementById('modal-error-msg').style.display = 'none';
+
         if (currentQuestions.length === 0) {
             currentQuestions = [...allQuestions].sort(() => Math.random() - 0.5);
         }
@@ -686,9 +757,8 @@
     }
 
     function handleAnswer(isCorrect) {
-        document.getElementById('question-modal').classList.remove('active');
-
         if (isCorrect) {
+            document.getElementById('question-modal').classList.remove('active');
             playSound('correct');
             score += 10;
             document.getElementById('score-display').innerText = `अंक: ${score}`;
@@ -699,11 +769,12 @@
             cell.classList.remove('checkpoint');
             updateCheckpointDisplay();
             executeMove(pendingMove.x, pendingMove.y);
+            pendingMove = null;
         } else {
             playSound('wrong');
-            alert("गलत उत्तर! सही रास्ता चुनने के लिए पुनः प्रयास करें।");
+            const errorMsg = document.getElementById('modal-error-msg');
+            errorMsg.style.display = 'block';
         }
-        pendingMove = null;
     }
 
     function handleWin() {
