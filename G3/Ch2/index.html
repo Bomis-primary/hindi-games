@@ -109,7 +109,7 @@
             100% { transform: scale(1); }
         }
 
-        /* SCREEN 2: WELCOME SCREEN */
+        /* SCREEN 2: WELCOME & LEVEL SELECT SCREEN */
         #welcome-screen {
             background: linear-gradient(to bottom, #f1f8e9, #ded2a8);
             text-align: center;
@@ -118,21 +118,30 @@
         .title {
             font-size: 2.2rem;
             color: var(--primary-dark);
-            margin-bottom: 10px;
+            margin-bottom: 5px;
         }
 
         .subtitle {
             font-size: 1.1rem;
             color: #555;
-            margin-bottom: 25px;
+            margin-bottom: 15px;
+        }
+
+        .level-selection {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+            max-width: 420px;
+            margin-top: 10px;
         }
 
         .btn {
             background-color: var(--primary);
             color: white;
             border: none;
-            padding: 14px 34px;
-            font-size: 1.2rem;
+            padding: 14px 28px;
+            font-size: 1.15rem;
             font-weight: bold;
             border-radius: 30px;
             cursor: pointer;
@@ -144,6 +153,16 @@
             background-color: var(--primary-dark);
             transform: translateY(-2px);
             box-shadow: 0 6px 16px rgba(46, 125, 50, 0.5);
+        }
+
+        .btn-secondary {
+            background-color: #0288d1;
+            box-shadow: 0 4px 12px rgba(2, 136, 209, 0.4);
+        }
+
+        .btn-secondary:hover {
+            background-color: #01579b;
+            box-shadow: 0 6px 16px rgba(1, 87, 155, 0.5);
         }
 
         .btn:active {
@@ -391,24 +410,33 @@
     <!-- SPLASH SCREEN (LOGO DISPLAY) -->
     <div id="splash-screen" class="screen active">
         <div class="logo-box">
-            <img src="assets/logo.png" alt="Innovine Logo" class="innovine-logo-img">
+            <img src="assets/logo.png" alt="Innovine Logo" class="innovine-logo-img" onerror="this.style.display='none'; this.parentNode.innerText='INNOVINE';">
         </div>
     </div>
 
-    <!-- WELCOME SCREEN -->
+    <!-- WELCOME & LEVEL SELECTION SCREEN -->
     <div id="welcome-screen" class="screen">
         <h1 class="title">सेतु निर्माण (Bridge Builder)</h1>
-        <p class="subtitle">पाठ 2: लकड़हारा और पेड़ - व्याकरण एवं पाठ बोध</p>
-        <div style="font-size: 4rem; margin-bottom: 15px;">🌉🌳</div>
-        <p style="margin-bottom: 20px; max-width: 80%; color: #555;">
-            10 प्रश्नों के सही उत्तर देकर पुल की लकड़ियाँ बिछाइए और नदी पार करके हरे-भरे जंगल तक पहुँचिए!
+        <p class="subtitle">पाठ 2: लकड़हारा और पेड़</p>
+        <div style="font-size: 3.5rem; margin-bottom: 10px;">🌉🌳</div>
+        <p style="margin-bottom: 15px; max-width: 85%; color: #555; font-size: 0.95rem;">
+            उत्तर देकर पुल की लकड़ियाँ बिछाइए और नदी पार करके हरे-भरे जंगल तक पहुँचिए!
         </p>
-        <button class="btn" onclick="startGame()">खेल शुरू करें</button>
+        
+        <div class="level-selection">
+            <button class="btn" onclick="selectLevel(1)">
+                लेवल 1: पाठ बोध (कहानी) 📖
+            </button>
+            <button class="btn btn-secondary" onclick="selectLevel(2)">
+                लेवल 2: व्याकरण बोध (मात्रा, शब्द, वाक्य) ✍️
+            </button>
+        </div>
     </div>
 
     <!-- GAMEPLAY SCREEN -->
     <div id="game-screen" class="screen">
         <div class="game-header">
+            <div class="stat-box" id="level-display">स्तर: 1</div>
             <div class="stat-box" id="score-display">अंक: 0</div>
             <div class="stat-box" id="chances-display">प्रयास: ❤️ ❤️</div>
             <div class="stat-box" id="progress-display">पूल: 0/10</div>
@@ -445,10 +473,13 @@
     <div id="end-screen" class="screen">
         <div class="end-card">
             <h2>शानदार सफलता! 🎉</h2>
-            <p style="font-size: 1.1rem; margin-bottom: 15px;">आपने सभी 10 प्रश्नों के उत्तर देकर सेतु का निर्माण पूरा कर लिया और जंगल पहुँच गए!</p>
+            <p style="font-size: 1.05rem; margin-bottom: 15px;">आपने सभी 10 प्रश्नों के उत्तर देकर सेतु का निर्माण पूरा कर लिया!</p>
             <div class="end-stat" id="final-score">कुल अंक: 0</div>
             <div class="end-stat" id="final-time">कुल समय: 00:00</div>
-            <button class="btn" style="margin-top: 20px;" onclick="restartGame()">पुनः खेलें</button>
+            <div style="display: flex; gap: 10px; justify-content: center; margin-top: 15px;">
+                <button class="btn" style="padding: 10px 20px; font-size: 1rem;" onclick="restartGame()">पुनः खेलें 🔄</button>
+                <button class="btn btn-secondary" style="padding: 10px 20px; font-size: 1rem;" onclick="switchScreen('end-screen', 'welcome-screen')">मुख्य मेनू 🏠</button>
+            </div>
         </div>
     </div>
 
@@ -470,8 +501,8 @@
         }
     }
 
-    // --- Question Bank (10 Questions) ---
-    const questionBank = [
+    // --- Level 1 Question Bank (Story/Reading Comprehension) ---
+    const level1Questions = [
         {
             q: "\"हमें सोच-समझकर निर्णय लेना चाहिए।\" – यह किस पेड़ ने कहा?",
             options: ["नीम", "पीपल", "आम", "बरगद"],
@@ -524,8 +555,63 @@
         }
     ];
 
+    // --- Level 2 Question Bank (Grammar: Matra, Shabd, Vakya based on Textbook) ---
+    const level2Questions = [
+        {
+            q: "स्वरों के वे चिह्न जो व्यंजनों के साथ लगते हैं, क्या कहलाते हैं?",
+            options: ["वाक्य", "शब्द", "मात्राएँ", "वर्णमाला"],
+            answer: 2
+        },
+        {
+            q: "किस स्वर की कोई मात्रा नहीं होती है?",
+            options: ["आ", "इ", "अ", "उ"],
+            answer: 2
+        },
+        {
+            q: "'क' व्यंजन में 'ा' (आ की मात्रा) लगाने पर क्या रूप बनता है?",
+            options: ["कि", "का", "कु", "के"],
+            answer: 1
+        },
+        {
+            q: "'क' व्यंजन में 'ि' (इ की मात्रा) लगाने पर कौन-सा शब्द/वर्ण बनेगा?",
+            options: ["की", "का", "कि", "कू"],
+            answer: 2
+        },
+        {
+            q: "वर्णों के उस समूह को क्या कहते हैं जिसका कोई निश्चित अर्थ हो?",
+            options: ["शब्द", "वाक्य", "मात्रा", "व्यंजन"],
+            answer: 0
+        },
+        {
+            q: "निम्नलिखित में से 'शब्द' का सही उदाहरण कौन-सा है?",
+            options: ["ड़कलहा", "जंगल", "ड़पे", "ड़ील्हाकु"],
+            answer: 1
+        },
+        {
+            q: "शब्दों का ऐसा समूह जिसका पूरा अर्थ समझ में आए, क्या कहलाता है?",
+            options: ["मात्रा", "स्वर", "वाक्य", "वर्ण"],
+            answer: 2
+        },
+        {
+            q: "निम्नलिखित में से कौन-सा एक सही 'वाक्य' है?",
+            options: ["जंगल आया में लकड़हारा", "लकड़हारा जंगल में आया।", "आया लकड़हारा में", "में जंगल आया"],
+            answer: 1
+        },
+        {
+            q: "'पेड़' और 'कुल्हाड़ी' व्याकरण के अनुसार क्या हैं?",
+            options: ["मात्राएँ", "सार्थक शब्द", "वाक्य", "निरर्थक शब्द"],
+            answer: 1
+        },
+        {
+            q: "व्यंजनों के साथ स्वरों का जो रूप जुड़ता है, उसे क्या कहते हैं?",
+            options: ["मात्रा", "वर्ण", "ध्वनि", "पद"],
+            answer: 0
+        }
+    ];
+
     // --- Game Variables ---
     const TOTAL_PLANKS = 10;
+    let selectedLevelMode = 1;
     let currentQuestions = [];
     let currentQIndex = 0;
     let builtPlanks = 0;
@@ -540,12 +626,17 @@
         document.getElementById(toId).classList.add('active');
     }
 
-    // Auto-transition from Splash Screen (Logo) to Welcome Screen after 5 seconds
+    // Auto-transition from Splash Screen (Logo) to Welcome Screen after 3 seconds
     setTimeout(() => {
         switchScreen('splash-screen', 'welcome-screen');
-    }, 5000);
+    }, 3000);
 
     // --- Core Game Logic ---
+    function selectLevel(lvl) {
+        selectedLevelMode = lvl;
+        startGame();
+    }
+
     function updateChancesUI() {
         let hearts = "";
         for (let i = 0; i < attemptsLeft; i++) {
@@ -561,8 +652,11 @@
         secondsElapsed = 0;
         currentQIndex = 0;
 
-        // Shuffle/Randomize the 10 questions every time game starts
-        currentQuestions = [...questionBank].sort(() => Math.random() - 0.5);
+        document.getElementById('level-display').innerText = `स्तर: ${selectedLevelMode}`;
+
+        // Select Question Pool based on Level
+        let rawBank = (selectedLevelMode === 1) ? level1Questions : level2Questions;
+        currentQuestions = [...rawBank].sort(() => Math.random() - 0.5);
 
         for (let i = 0; i < TOTAL_PLANKS; i++) {
             document.getElementById(`plank-${i}`).classList.remove('built');
@@ -592,7 +686,8 @@
         }
 
         if (currentQIndex >= currentQuestions.length) {
-            currentQuestions = [...questionBank].sort(() => Math.random() - 0.5);
+            let rawBank = (selectedLevelMode === 1) ? level1Questions : level2Questions;
+            currentQuestions = [...rawBank].sort(() => Math.random() - 0.5);
             currentQIndex = 0;
         }
 
