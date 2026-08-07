@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>भाषा ज्ञान: फ्लैश कार्ड क्वेस्ट</title>
+    <title>व्याकरण बोध: लिंग-वचन - फ्लैश कार्ड क्वेस्ट</title>
     <style>
         :root {
             --primary: #0077b6;
@@ -102,7 +102,7 @@
             100% { transform: scale(1); }
         }
 
-        /* Screen 2: Level Selection */
+        /* Screen 2: Welcome Screen */
         #welcome-screen {
             background: linear-gradient(to bottom, #f4f9f9, #e0f2fe);
             text-align: center;
@@ -118,41 +118,6 @@
             font-size: 1.1rem;
             color: #457b9d;
             margin-bottom: 25px;
-        }
-
-        .level-container {
-            display: flex;
-            gap: 20px;
-            margin-bottom: 25px;
-        }
-
-        .level-card {
-            background: white;
-            border: 2px solid #bde0fe;
-            border-radius: 16px;
-            padding: 20px;
-            width: 220px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-        }
-
-        .level-card:hover {
-            border-color: var(--primary);
-            transform: translateY(-5px);
-            box-shadow: var(--shadow);
-        }
-
-        .level-title {
-            font-size: 1.3rem;
-            font-weight: bold;
-            color: var(--primary-dark);
-            margin-bottom: 8px;
-        }
-
-        .level-desc {
-            font-size: 0.9rem;
-            color: #666;
         }
 
         .btn {
@@ -198,8 +163,7 @@
 
         .progress-bar-container {
             width: 100%;
-            height: 100%;
-            max-height: 10px;
+            height: 10px;
             background: #e2e8f0;
             border-radius: 5px;
             overflow: hidden;
@@ -271,7 +235,7 @@
         }
 
         .card-question {
-            font-size: 1.25rem;
+            font-size: 1.3rem;
             font-weight: 600;
             line-height: 1.5;
         }
@@ -336,8 +300,6 @@
         }
 
         @media (max-width: 600px) {
-            .level-container { flex-direction: column; gap: 10px; }
-            .level-card { width: 100%; }
             .options-grid { grid-template-columns: 1fr; }
             .flashcard-area { height: 240px; }
             .card-question { font-size: 1.1rem; }
@@ -350,35 +312,27 @@
     <!-- Screen 1: Splash Screen -->
     <div id="splash-screen" class="screen active">
         <div class="logo-box">
-            <img src="assets/logo.png" alt="Logo" class="innovine-logo-img" onerror="this.onerror=null; this.src='https://via.placeholder.com/350x120?text=INNOVINE+LEARNING';">
+            <img src="assets/logo.png" alt="Logo" class="innovine-logo-img">
         </div>
-        <p style="font-size: 1.2rem; font-weight: 500;">ज्ञान की दुनिया में आपका स्वागत है...</p>
+        <p style="font-size: 1.2rem; font-weight: 500;">व्याकरण की दुनिया में आपका स्वागत है...</p>
     </div>
 
-    <!-- Screen 2: Welcome / Level Select Screen -->
+    <!-- Screen 2: Welcome Screen -->
     <div id="welcome-screen" class="screen">
-        <h1 class="title">फ्लैश कार्ड क्वेस्ट</h1>
-        <p class="subtitle">अपना स्तर चुनें (Choose Level)</p>
-        
-        <div class="level-container">
-            <div class="level-card" onclick="selectLevel(1)">
-                <div style="font-size: 2.5rem; margin-bottom: 10px;">🎮</div>
-                <div class="level-title">लेवल 1</div>
-                <div class="level-desc">खेल और वार्म-अप (Basic Knowledge Game)</div>
-            </div>
-            <div class="level-card" onclick="selectLevel(2)">
-                <div style="font-size: 2.5rem; margin-bottom: 10px;">📝</div>
-                <div class="level-title">लेवल 2</div>
-                <div class="level-desc">व्याकरण बोध: सर्वनाम (Grammar: Pronouns)</div>
-            </div>
-        </div>
+        <h1 class="title">व्याकरण बोध: लिंग और वचन</h1>
+        <p class="subtitle">स्तर 2: फ्लैश कार्ड क्वेस्ट (Flash Card Quest Game)</p>
+        <div style="font-size: 4.5rem; margin-bottom: 20px;">📚 ✏️</div>
+        <p style="margin-bottom: 25px; max-width: 80%; color: #555;">
+            कार्ड फ्लिप करें, लिंग और वचन के नियमों को समझें और सही उत्तर दें!
+        </p>
+        <button class="btn" onclick="startGame()">खेल शुरू करें</button>
     </div>
 
     <!-- Screen 3: Game Screen -->
     <div id="game-screen" class="screen">
         <div class="game-header">
             <div class="stat-box" id="score-display">अंक: 0</div>
-            <div class="stat-box" id="card-count-display">कार्ड: 1/5</div>
+            <div class="stat-box" id="card-count-display">कार्ड: 1/10</div>
             <div class="stat-box" id="timer-display">समय: 00:00</div>
         </div>
 
@@ -389,13 +343,13 @@
         <div class="flashcard-area" onclick="flipCard()">
             <div class="flashcard" id="flashcard">
                 <div class="card-face card-front">
-                    <div class="card-badge" id="card-badge">कार्ड #1</div>
+                    <div class="card-badge" id="card-badge">फ्लैश कार्ड #1</div>
                     <div class="card-question" id="card-question">प्रश्न लोड हो रहा है...</div>
-                    <div class="card-hint">💡 (संकेत देखने के लिए कार्ड पर क्लिक करें)</div>
+                    <div class="card-hint">💡 (कार्ड पलटने के लिए यहाँ क्लिक करें)</div>
                 </div>
                 <div class="card-face card-back">
                     <div class="card-badge" style="color: #ffb703;">उत्तर का संकेत</div>
-                    <div class="card-question" id="card-hint-text">सही विकल्प चुनें!</div>
+                    <div class="card-question" id="card-hint-text">सही उत्तर नीचे दिए गए विकल्पों में से चुनें!</div>
                 </div>
             </div>
         </div>
@@ -406,18 +360,18 @@
     <!-- Screen 4: End Screen -->
     <div id="end-screen" class="screen">
         <div class="end-card">
-            <div style="font-size: 3.5rem; margin-bottom: 10px;">🏆</div>
-            <h2>शानदार कार्य!</h2>
-            <p style="font-size: 1.1rem; margin-bottom: 15px;" id="end-message">आपने यह स्तर पूरा कर लिया है!</p>
+            <div style="font-size: 3.5rem; margin-bottom: 10px;">🌟</div>
+            <h2>शानदार प्रदर्शन!</h2>
+            <p style="font-size: 1.1rem; margin-bottom: 15px;">आपने लिंग-वचन व्याकरण अभ्यास सफलतापूर्वक पूरा कर लिया!</p>
             <div class="end-stat" id="final-score">कुल अंक: 0</div>
             <div class="end-stat" id="final-time">कुल समय: 00:00</div>
-            <button class="btn" style="margin-top: 20px;" onclick="restartGame()">मुख्य मेनू</button>
+            <button class="btn" style="margin-top: 20px;" onclick="restartGame()">पुनः खेलें</button>
         </div>
     </div>
 </div>
 
 <script>
-    // Audio Context SFX
+    // Audio Context & Web Audio API SFX
     const AudioCtx = window.AudioContext || window.webkitAudioContext;
     let audioCtx = null;
 
@@ -472,127 +426,137 @@
         }
     }
 
-    // Level 1 Questions (Game / Warm-up)
-    const level1Data = [
+    // Quest Cards Data (Level 2 Grammar: Hindi Gender & Number)
+    const cardsData = [
         {
-            badge: "लेवल 1 - कार्ड 1",
-            question: "भारत का राष्ट्रीय पशु कौन सा है?",
-            hint: "यह जंगल का एक शक्तिशाली जानवर है।",
-            options: ["शेर", "बाघ", "हाथी", "हिरण"],
+            badge: "कार्ड 1: लिंग परिवर्तन",
+            question: "'बालक' शब्द का स्त्रीलिंग रूप क्या होगा?",
+            hint: "बालक का स्त्रीलिंग रूप 'बालिका' होता है।",
+            options: [
+                "बालकी",
+                "बालिका",
+                "बालिकाएं",
+                "बालिन"
+            ],
             answer: 1
         },
         {
-            badge: "लेवल 1 - कार्ड 2",
-            question: "सौरमंडल में कुल कितने मुख्य ग्रह हैं?",
-            hint: "हमारी पृथ्वी भी इनमें से एक है।",
-            options: ["7", "8", "9", "10"],
+            badge: "कार्ड 2: वचन पहचान",
+            question: "'लड़कियाँ' शब्द में कौन सा वचन है?",
+            hint: "एक से अधिक संख्याओं का बोध कराने वाले शब्द बहुवचन होते हैं।",
+            options: [
+                "एकवचन",
+                "द्विवचन",
+                "बहुवचन",
+                "इनमें से कोई नहीं"
+            ],
+            answer: 2
+        },
+        {
+            badge: "कार्ड 3: लिंग परिवर्तन",
+            question: "'शेर' शब्द का सही स्त्रीलिंग रूप चुनें:",
+            hint: "शेर का स्त्रीलिंग 'शेरनी' होता है।",
+            options: [
+                "शेरिनी",
+                "शेरनी",
+                "शेरिया",
+                "शेरिन"
+            ],
             answer: 1
         },
         {
-            badge: "लेवल 1 - कार्ड 3",
-            question: "हमारे राष्ट्रीय ध्वज तिरंगे में सबसे ऊपर कौन सा रंग होता है?",
-            hint: "यह त्याग और साहस का प्रतीक है।",
-            options: ["हरा", "सफेद", "केसरिया", "नीला"],
+            badge: "कार्ड 4: वचन परिवर्तन",
+            question: "'किताब' शब्द का बहुवचन रूप क्या होगा?",
+            hint: "अकारांत स्त्रीलिंग शब्दों में 'एँ' जोड़कर बहुवचन बनाते हैं।",
+            options: [
+                "किताबों",
+                "किताबें",
+                "किताबी",
+                "किताबिया"
+            ],
+            answer: 1
+        },
+        {
+            badge: "कार्ड 5: लिंग की पहचान",
+            question: "निम्न में से कौन सा शब्द पुल्लिंग है?",
+            hint: "'सूरज' पुल्लिंग शब्द है, जबकि नदियाँ और भाषाएँ प्रायः स्त्रीलिंग होती हैं।",
+            options: [
+                "नदी",
+                "सूरज",
+                "गंगा",
+                "हिंदी"
+            ],
+            answer: 1
+        },
+        {
+            badge: "कार्ड 6: वचन परिवर्तन",
+            question: "'चिड़िया' शब्द का सही बहुवचन रूप क्या है?",
+            hint: "इकारांत या इयांत शब्दों के अंत में चंद्रबिंदु (ँ) लगाया जाता है।",
+            options: [
+                "चिड़ियाँ",
+                "चिड़िये",
+                "चिड़ियों",
+                "चिड़ियाएँ"
+            ],
+            answer: 0
+        },
+        {
+            badge: "कार्ड 7: लिंग परिवर्तन",
+            question: "'अध्यापक' का स्त्रीलिंग रूप क्या होगा?",
+            hint: "'अध्यापक' का स्त्रीलिंग 'अध्यापिका' होता है।",
+            options: [
+                "अध्यापकी",
+                "अध्यापिका",
+                "अध्यापिकायें",
+                "अध्यापकिन"
+            ],
+            answer: 1
+        },
+        {
+            badge: "कार्ड 8: वचन पहचान",
+            question: "'पत्ता' का बहुवचन रूप क्या होगा?",
+            hint: "आकारांत पुल्लिंग शब्दों के अंत में 'ए' की मात्रा लगती है।",
+            options: [
+                "पत्तियाँ",
+                "पत्ते",
+                "पत्तों",
+                "पत्तियां"
+            ],
+            answer: 1
+        },
+        {
+            badge: "कार्ड 9: लिंग पहचान",
+            question: "इनमें से कौन सा शब्द स्त्रीलिंग है?",
+            hint: "'हवा' बहती है, इसलिए यह स्त्रीलिंग शब्द है।",
+            options: [
+                "पर्वत",
+                "समुद्र",
+                "हवा",
+                "आकाश"
+            ],
             answer: 2
         },
         {
-            badge: "लेवल 1 - कार्ड 4",
-            question: "एक वर्ष में कितने महीने होते हैं?",
-            hint: "जनवरी से शुरू होकर दिसंबर तक।",
-            options: ["10", "11", "12", "14"],
-            answer: 2
-        },
-        {
-            badge: "लेवल 1 - कार्ड 5",
-            question: "सूर्य किस दिशा से उगता है?",
-            hint: "पश्चिम का विपरीत दिशा।",
-            options: ["पूर्व", "पश्चिम", "उत्तर", "दक्षिण"],
+            badge: "कार्ड 10: वचन परिवर्तन",
+            question: "'मछली' शब्द का सही बहुवचन रूप क्या होगा?",
+            hint: "ईकारांत स्त्रीलिंग शब्दों में 'इयाँ' जोड़कर बहुवचन बनाते हैं।",
+            options: [
+                "मछलियाँ",
+                "मछलीयाँ",
+                "मछलियें",
+                "मछलियों"
+            ],
             answer: 0
         }
     ];
 
-    // Level 2 Questions (Grammar: सर्वनाम)
-    const level2Data = [
-        {
-            badge: "लेवल 2 - कार्ड 1: सर्वनाम की परिभाषा",
-            question: "जो शब्द संज्ञा के स्थान पर प्रयोग किए जाते हैं, उन्हें क्या कहते हैं?",
-            hint: "संज्ञा नाम होती है, और यह उसके स्थान पर आता है।",
-            options: ["विशेषण", "सर्वनाम", "क्रिया", "वचन"],
-            answer: 1
-        },
-        {
-            badge: "लेवल 2 - कार्ड 2: सर्वनाम का उदाहरण",
-            question: "इनमें से कौन-सा शब्द सर्वनाम है?",
-            hint: "यह किसी व्यक्ति के नाम की जगह इस्तेमाल होता है।",
-            options: ["अमन", "मेला", "वह", "खुश"],
-            answer: 2
-        },
-        {
-            badge: "लेवल 2 - कार्ड 3: सर्वनाम पहचान",
-            question: "\"अमन मेले में गया। वह बहुत खुश था।\" - इस वाक्य में सर्वनाम शब्द क्या है?",
-            hint: "यह शब्द 'अमन' (संज्ञा) की जगह आया है।",
-            options: ["अमन", "मेले", "खुश", "वह"],
-            answer: 3
-        },
-        {
-            badge: "लेवल 2 - कार्ड 4: स्वयं के लिए सर्वनाम",
-            question: "अपने लिए बात करते समय हम किस सर्वनाम का प्रयोग करते हैं?",
-            hint: "उदाहरण: '_____ स्कूल जा रहा हूँ।'",
-            options: ["मैं", "वह", "वे", "उसका"],
-            answer: 0
-        },
-        {
-            badge: "लेवल 2 - कार्ड 5: सामने वाले के लिए सर्वनाम",
-            question: "जिससे हम बात कर रहे हैं, उसके लिए कौन-सा सर्वनाम चुनेंगे?",
-            hint: "उदाहरण: '_____ कहाँ जा रहे हो?'",
-            options: ["वह", "तुम", "मैं", "हम"],
-            answer: 1
-        },
-        {
-            badge: "लेवल 2 - कार्ड 6: समूह के लिए सर्वनाम",
-            question: "जब एक से अधिक लोग अपने लिए बात करते हैं, तो कौन सा सर्वनाम आता है?",
-            hint: "उदाहरण: '_____ सब मिलकर खेलेंगे।'",
-            options: ["तुम", "हम", "वह", "यह"],
-            answer: 1
-        },
-        {
-            badge: "लेवल 2 - कार्ड 7: वस्तु संकेत सर्वनाम",
-            question: "\"यह मेरी पुस्तक है।\" - इस वाक्य में सर्वनाम शब्द कौन सा है?",
-            hint: "पास की वस्तु की ओर इशारा करने वाला शब्द।",
-            options: ["पुस्तक", "मेरी", "यह", "है"],
-            answer: 2
-        },
-        {
-            badge: "लेवल 2 - कार्ड 8: बहुवचन सर्वनाम",
-            question: "'वह' का बहुवचन रूप क्या होगा?",
-            hint: "एक से अधिक दूर के व्यक्तियों के लिए।",
-            options: ["हम", "वे", "तुम", "यह"],
-            answer: 1
-        },
-        {
-            badge: "लेवल 2 - कार्ड 9: वाक्य पूर्ति",
-            question: "\"राधा आ रही है। _____ गाना गाएगी।\" - सही सर्वनाम भरें:",
-            hint: "राधा एक लड़की है, उसके स्थान पर आने वाला शब्द।",
-            options: ["वे", "तुम", "वह", "हम"],
-            answer: 2
-        },
-        {
-            badge: "लेवल 2 - कार्ड 10: सर्वनाम की पहचान",
-            question: "निम्नलिखित में से सर्वनाम शब्दों का समूह कौन-सा है?",
-            hint: "पाठ में दिए गए मुख्य उदाहरण: वह, यह, मैं, तुम, हम, वे।",
-            options: ["राम, मोहन, सीता", "वह, यह, मैं, तुम", "हंसना, गाना, रोना", "सुंदर, बड़ा, लाल"],
-            answer: 1
-        }
-    ];
-
-    let activeDeck = [];
     let currentCardIndex = 0;
     let score = 0;
     let secondsElapsed = 0;
     let timerInterval = null;
     let isFlipped = false;
 
-    // Splash Screen Transition
+    // Splash Screen Auto Transition after 3 seconds
     setTimeout(() => {
         switchScreen('splash-screen', 'welcome-screen');
     }, 3000);
@@ -602,19 +566,8 @@
         document.getElementById(toId).classList.add('active');
     }
 
-    function selectLevel(levelNum) {
-        initAudio();
-        if (levelNum === 1) {
-            activeDeck = level1Data;
-            document.getElementById('end-message').innerText = "आपने लेवल 1 (खेल) सफलतापूर्वक पूरा कर लिया!";
-        } else {
-            activeDeck = level2Data;
-            document.getElementById('end-message').innerText = "आपने लेवल 2 (सर्वनाम व्याकरण) सफलतापूर्वक पूरा कर लिया!";
-        }
-        startGame();
-    }
-
     function startGame() {
+        initAudio();
         score = 0;
         currentCardIndex = 0;
         secondsElapsed = 0;
@@ -647,18 +600,20 @@
     }
 
     function loadCard() {
-        const card = activeDeck[currentCardIndex];
+        const card = cardsData[currentCardIndex];
         isFlipped = false;
         document.getElementById('flashcard').classList.remove('flipped');
 
-        document.getElementById('card-count-display').innerText = `कार्ड: ${currentCardIndex + 1}/${activeDeck.length}`;
+        document.getElementById('card-count-display').innerText = `कार्ड: ${currentCardIndex + 1}/${cardsData.length}`;
         document.getElementById('card-badge').innerText = card.badge;
         document.getElementById('card-question').innerText = card.question;
         document.getElementById('card-hint-text').innerText = `संकेत: ${card.hint}`;
 
-        const progressPct = ((currentCardIndex) / activeDeck.length) * 100;
+        // Update Progress Bar
+        const progressPct = ((currentCardIndex) / cardsData.length) * 100;
         document.getElementById('progress-bar').style.width = `${progressPct}%`;
 
+        // Render Options
         const optsContainer = document.getElementById('options-container');
         optsContainer.innerHTML = '';
 
@@ -672,7 +627,7 @@
     }
 
     function handleOptionSelect(selectedIdx) {
-        const card = activeDeck[currentCardIndex];
+        const card = cardsData[currentCardIndex];
 
         if (selectedIdx === card.answer) {
             playSound('correct');
@@ -680,7 +635,7 @@
             document.getElementById('score-display').innerText = `अंक: ${score}`;
             currentCardIndex++;
 
-            if (currentCardIndex < activeDeck.length) {
+            if (currentCardIndex < cardsData.length) {
                 loadCard();
             } else {
                 document.getElementById('progress-bar').style.width = `100%`;
