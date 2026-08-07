@@ -584,11 +584,25 @@
         const optionsContainer = document.getElementById('options-container');
         optionsContainer.innerHTML = '';
 
-        qData.options.forEach((opt, idx) => {
+        // Map options into objects that explicitly track correctness
+        let optionObjects = qData.options.map((optText, idx) => {
+            return {
+                text: optText,
+                isCorrect: idx === qData.answer
+            };
+        });
+
+        // Fisher-Yates shuffle algorithm to randomize answer positions
+        for (let i = optionObjects.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [optionObjects[i], optionObjects[j]] = [optionObjects[j], optionObjects[i]];
+        }
+
+        optionObjects.forEach((optObj) => {
             const btn = document.createElement('button');
             btn.classList.add('opt-btn');
-            btn.innerText = opt;
-            btn.onclick = () => checkAnswer(idx === qData.answer);
+            btn.innerText = optObj.text;
+            btn.onclick = () => checkAnswer(optObj.isCorrect);
             optionsContainer.appendChild(btn);
         });
     }
