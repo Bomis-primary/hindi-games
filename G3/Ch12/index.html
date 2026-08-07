@@ -454,7 +454,7 @@
                     "बच्चो खेल रहा हैं।",
                     "बच्चे खेल रहा है।"
                 ],
-                correctIndex: 0
+                correctText: "बच्चे खेल रहे हैं।"
             },
             {
                 incorrect: "अशुद्ध : रोहन ने गाना गाया हैं।",
@@ -463,7 +463,7 @@
                     "रोहन ने गाना गाया।",
                     "रोहन गाना गा रहा हैं।"
                 ],
-                correctIndex: 1
+                correctText: "रोहन ने गाना गाया।"
             },
             {
                 incorrect: "अशुद्ध : मेरे को घर जाना है।",
@@ -472,7 +472,7 @@
                     "मुझे घर जाना है।",
                     "मुझको घर जाते हैं।"
                 ],
-                correctIndex: 1
+                correctText: "मुझे घर जाना है।"
             },
             {
                 incorrect: "अशुद्ध : एआई बहुत बुद्धिमान होती है।",
@@ -481,7 +481,7 @@
                     "एआई बुद्धिमत्ता है।",
                     "एआई बहुत बुद्धिमान हैं।"
                 ],
-                correctIndex: 0
+                correctText: "एआई बहुत बुद्धिमान होता है।"
             }
         ];
 
@@ -490,6 +490,7 @@
         let selectedB = null;
         let score = 0;
         let level2Index = 0;
+        let currentShuffledGrammarList = [];
 
         function goToScreen(screenNumber) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -532,6 +533,7 @@
             colAContainer.innerHTML = '';
             colBContainer.innerHTML = '';
 
+            // Randomize Column A and Column B
             const listA = [...pairsBank].sort(() => Math.random() - 0.5);
             const listB = [...pairsBank].sort(() => Math.random() - 0.5);
 
@@ -611,30 +613,35 @@
         /* --- LEVEL 2 LOGIC (Grammar / Ashuddhi-Shodhan) --- */
         function initLevel2() {
             level2Index = 0;
-            document.getElementById('total-score').innerText = grammarBank.length;
+            // Randomize order of questions each game
+            currentShuffledGrammarList = [...grammarBank].sort(() => Math.random() - 0.5);
+            document.getElementById('total-score').innerText = currentShuffledGrammarList.length;
             loadGrammarQuestion();
         }
 
         function loadGrammarQuestion() {
-            const currentQ = grammarBank[level2Index];
+            const currentQ = currentShuffledGrammarList[level2Index];
             document.getElementById('incorrectSentence').innerText = currentQ.incorrect;
             const optionsGrid = document.getElementById('optionsGrid');
             optionsGrid.innerHTML = '';
 
-            currentQ.options.forEach((optText, index) => {
+            // Randomize options for the current question
+            const randomizedOptions = [...currentQ.options].sort(() => Math.random() - 0.5);
+
+            randomizedOptions.forEach((optText, index) => {
                 const btn = document.createElement('button');
                 btn.className = 'option-btn';
                 btn.innerText = `${index + 1}. ${optText}`;
-                btn.onclick = () => handleGrammarAnswer(btn, index, currentQ.correctIndex);
+                btn.onclick = () => handleGrammarAnswer(btn, optText, currentQ.correctText);
                 optionsGrid.appendChild(btn);
             });
         }
 
-        function handleGrammarAnswer(btnElement, selectedIdx, correctIdx) {
+        function handleGrammarAnswer(btnElement, selectedText, correctText) {
             const allBtns = document.querySelectorAll('.option-btn');
             allBtns.forEach(b => b.style.pointerEvents = 'none');
 
-            if (selectedIdx === correctIdx) {
+            if (selectedText === correctText) {
                 playSound('correct');
                 btnElement.classList.add('correct-ans');
                 score++;
@@ -642,7 +649,7 @@
 
                 setTimeout(() => {
                     level2Index++;
-                    if (level2Index < grammarBank.length) {
+                    if (level2Index < currentShuffledGrammarList.length) {
                         loadGrammarQuestion();
                     } else {
                         document.getElementById('endMessage').innerText = "आपने सभी अशुद्ध वाक्यों का सही व्याकरण शोधन किया!";
@@ -652,11 +659,17 @@
             } else {
                 playSound('wrong');
                 btnElement.classList.add('wrong-ans');
-                allBtns[correctIdx].classList.add('correct-ans');
+                
+                // Highlight correct option
+                allBtns.forEach(btn => {
+                    if (btn.innerText.includes(correctText)) {
+                        btn.classList.add('correct-ans');
+                    }
+                });
 
                 setTimeout(() => {
                     level2Index++;
-                    if (level2Index < grammarBank.length) {
+                    if (level2Index < currentShuffledGrammarList.length) {
                         loadGrammarQuestion();
                     } else {
                         document.getElementById('endMessage').innerText = "गेम समाप्त! आपने व्याकरण शोधन का अभ्यास किया।";
