@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>तेनालीराम की चतुराई - व्याकरण खेल</title>
+  <title>तेनालीराम की चतुराई एवं व्याकरण - खेल</title>
   <style>
     * {
       box-sizing: border-box;
@@ -45,7 +45,6 @@
       align-items: center;
     }
 
-    /* Screen States */
     .screen {
       display: none;
       flex-direction: column;
@@ -58,7 +57,6 @@
       display: flex;
     }
 
-    /* 1. Intro Screen */
     #intro-screen {
       cursor: pointer;
     }
@@ -70,7 +68,6 @@
       transition: transform 0.3s ease;
     }
 
-    /* Titles & Common Styles */
     h1 {
       color: #e76f51;
       margin-bottom: 12px;
@@ -100,14 +97,19 @@
       font-weight: bold;
       cursor: pointer;
       transition: transform 0.2s, background-color 0.2s;
-      margin-top: 15px;
+      margin-top: 10px;
+      width: 100%;
+      max-width: 280px;
     }
 
     .btn:active {
       transform: scale(0.95);
     }
 
-    /* Instructions Screen */
+    .btn-secondary {
+      background-color: #e76f51;
+    }
+
     .timer-circle {
       width: 60px;
       height: 60px;
@@ -123,7 +125,6 @@
       box-shadow: 0 4px 10px rgba(231, 111, 81, 0.4);
     }
 
-    /* Game Screen */
     .progress-bar {
       font-weight: bold;
       color: #e76f51;
@@ -142,81 +143,42 @@
       font-size: 0.95rem;
     }
 
-    /* Punctuation Interactive Styling */
-    .sentence-box {
-      font-size: 1.25rem;
-      font-weight: bold;
-      color: #2b2d42;
-      background: #eef9f6;
-      padding: 15px;
-      border-radius: 12px;
-      border: 2px dashed #2a9d8f;
-      margin: 15px 0;
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 6px;
-      flex-wrap: wrap;
-    }
-
-    .drop-zone {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-width: 38px;
-      height: 38px;
-      border: 2px dashed #e76f51;
-      border-radius: 8px;
-      background: #ffffff;
-      color: #e76f51;
-      font-size: 1.3rem;
-      font-weight: bold;
-      padding: 0 6px;
-    }
-
-    .punctuation-grid {
+    .investigation-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
+      gap: 12px;
       width: 100%;
-      margin-top: 10px;
+      margin-top: 5px;
     }
 
-    .symbol-btn {
+    .suspect-card {
       background: #edf2f4;
       border: 2px solid #2a9d8f;
-      border-radius: 12px;
-      padding: 10px;
-      font-size: 1rem;
-      font-weight: bold;
-      cursor: pointer;
+      border-radius: 14px;
+      padding: 12px 8px;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
-      gap: 8px;
-      color: #2b2d42;
+      cursor: pointer;
       transition: all 0.2s ease;
     }
 
-    .symbol-btn:active {
-      background: #2a9d8f;
-      color: white;
+    .suspect-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
 
-    .symbol-badge {
-      background: #e76f51;
-      color: white;
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.1rem;
+    .suspect-avatar { font-size: 2.5rem; margin-bottom: 4px; }
+    .suspect-name { font-weight: bold; color: #2b2d42; font-size: 0.9rem; margin-bottom: 6px; }
+    .inspect-badge {
+      background: #2a9d8f; color: white; padding: 4px 10px;
+      border-radius: 12px; font-size: 0.75rem; font-weight: bold;
     }
+    .hands-display { font-size: 1.8rem; margin-top: 4px; }
+    .hand-status { font-size: 0.75rem; font-weight: bold; margin-top: 2px; }
+    .clean-text { color: #d90429; }
+    .black-text { color: #2b2d42; }
 
-    /* Multiple Choice Options */
     .options-list {
       display: flex;
       flex-direction: column;
@@ -234,6 +196,7 @@
       text-align: left;
       cursor: pointer;
       color: #2b2d42;
+      transition: background 0.2s, border-color 0.2s;
     }
 
     .option-btn:active {
@@ -258,10 +221,12 @@
 
     <!-- 2. Instructions Screen -->
     <div id="instruction-screen" class="screen">
-      <h1>व्याकरण बोध: विराम-चिह्न</h1>
-      <p>विजयनगर साम्राज्य के संदेशवाहक ने पत्रों में <strong>विराम-चिह्न (Punctuation Marks)</strong> छोड़ दिए हैं!</p>
-      <p>सही विराम-चिह्न चुनकर तेनालीराम को संदेश को समझने में मदद करें।</p>
-      <p><strong>लक्ष्य:</strong> सभी 5 प्रश्नों का सही उत्तर देकर विराम-चिह्न का सही उपयोग सीखें।</p>
+      <h1 id="instructions-title">तेनालीराम की चतुराई</h1>
+      <div id="instructions-body">
+        <p>विजयनगर साम्राज्य के राजकोष से चोरी हो गई है! तेनालीराम ने चोर को पकड़ने के लिए एक <strong>काली मूर्ति</strong> पर काजल लगाया है।</p>
+        <p>जिसने मूर्ति को छुआ, उसके हाथ <strong>काले</strong> हो गए। लेकिन असली चोर डर के मारे मूर्ति को नहीं छुएगा!</p>
+        <p><strong>लक्ष्य:</strong> सभी प्रश्नों के सही उत्तर देकर तेनालीराम की मदद करें।</p>
+      </div>
       <div class="timer-circle" id="timer">5</div>
     </div>
 
@@ -278,7 +243,8 @@
       <div id="result-icon" class="result-icon"></div>
       <h1 id="result-title"></h1>
       <p id="result-desc"></p>
-      <button class="btn" onclick="restartGame()">फिर से खेलें</button>
+      <button id="next-level-btn" class="btn" onclick="startLevel(2)">स्तर 2 खेलें (व्याकरण) ➡️</button>
+      <button class="btn btn-secondary" onclick="restartGame()">फिर से खेलें 🔄</button>
     </div>
   </div>
 
@@ -286,7 +252,6 @@
     const soundCorrect = new Audio('assets/correct.mp3');
     const soundWrong = new Audio('assets/wrong.mp3');
 
-    // Mobile Audio Unlock Logic
     let audioUnlocked = false;
     function unlockAudio() {
       if (!audioUnlocked) {
@@ -299,9 +264,10 @@
     function playAudio(audioObj) {
       unlockAudio();
       audioObj.currentTime = 0;
-      audioObj.play().catch(e => console.log("Audio play error: ", e));
+      audioObj.play().catch(e => console.log("Audio error:", e));
     }
 
+    let currentLevel = 1;
     let currentQuestion = 0;
     let score = 0;
     let timerInterval;
@@ -341,75 +307,143 @@
       }, 1000);
     }
 
-    const questions = [
+    const courtierNames = ["दरबारी रामदेव", "दरबारी सोमेश", "दरबारी विक्रम", "दरबारी धनंजय"];
+
+    // LEVEL 1 Questions (Story & Reasoning)
+    const level1Questions = [
       {
-        type: 'fill_punct',
-        title: 'प्रश्न 1: सही विराम-चिह्न चुनिए',
-        desc: 'नीचे दिए गए वाक्य के अंत में कौन-सा विराम-चिह्न आएगा?',
-        textBefore: 'तेनालीराम बहुत चतुर थे',
-        textAfter: '',
-        correctPunct: '।',
-        options: [
-          { symbol: '।', name: 'पूर्ण विराम' },
-          { symbol: '?', name: 'प्रश्नवाचक' },
-          { symbol: '!', name: 'विस्मयादिबोधक' },
-          { symbol: ',', name: 'अल्प विराम' }
-        ]
+        type: 'investigation',
+        title: 'परिदृश्य 1: संदिग्ध दरबारियों की जांच करें!',
+        desc: 'सभी दरबारी कमरे से बाहर आ चुके हैं। प्रत्येक दरबारी पर क्लिक करके उनके हाथों का निरीक्षण करें और पहचानें कि असली चोर कौन है!',
+        thiefIndex: Math.floor(Math.random() * 4)
       },
       {
-        type: 'fill_punct',
-        title: 'प्रश्न 2: सही विराम-चिह्न चुनिए',
-        desc: 'इस प्रश्नवाचक वाक्य को पूरा करने के लिए सही चिह्न चुनें:',
-        textBefore: 'विजयनगर का चोर कौन था',
-        textAfter: '',
-        correctPunct: '?',
+        type: 'mcq',
+        title: 'परिदृश्य 2: चोर के हाथ साफ क्यों रह गए?',
+        desc: 'चोर ने कमरे में जाकर मूर्ति को क्यों नहीं छुआ?',
         options: [
-          { symbol: '।', name: 'पूर्ण विराम' },
-          { symbol: '?', name: 'प्रश्नवाचक' },
-          { symbol: '!', name: 'विस्मयादिबोधक' },
-          { symbol: ',', name: 'अल्प विराम' }
-        ]
-      },
-      {
-        type: 'fill_punct',
-        title: 'प्रश्न 3: अल्प विराम (,) का प्रयोग',
-        desc: 'सूची के शब्दों को अलग करने के लिए सही जगह पर अल्प विराम चुनें:',
-        textBefore: 'दरबार में राजा',
-        textAfter: 'मंत्री और सैनिक उपस्थित थे।',
-        correctPunct: ',',
-        options: [
-          { symbol: ',', name: 'अल्प विराम' },
-          { symbol: '।', name: 'पूर्ण विराम' },
-          { symbol: '?', name: 'प्रश्नवाचक' },
-          { symbol: '!', name: 'विस्मयादिबोधक' }
-        ]
-      },
-      {
-        type: 'fill_punct',
-        title: 'प्रश्न 4: आश्चर्य या भाव प्रकट करना',
-        desc: 'अद्भुत भाव प्रकट करने के लिए सही चिह्न का चयन करें:',
-        textBefore: 'वाह',
-        textAfter: 'तेनालीराम ने चोर पकड़ लिया।',
-        correctPunct: '!',
-        options: [
-          { symbol: '!', name: 'विस्मयादिबोधक' },
-          { symbol: ',', name: 'अल्प विराम' },
-          { symbol: '।', name: 'पूर्ण विराम' },
-          { symbol: '?', name: 'प्रश्नवाचक' }
+          { text: 'क्योंकि चोर को डर था कि चमत्कारिक मूर्ति उसका राज खोल देगी।', correct: true },
+          { text: 'क्योंकि चोर ने हाथ में दस्ताने पहन रखे थे।', correct: false },
+          { text: 'क्योंकि चोर ने पानी से हाथ धो लिए थे।', correct: false },
+          { text: 'क्योंकि मूर्ति बहुत ऊंची थी।', correct: false }
         ]
       },
       {
         type: 'mcq',
-        title: 'प्रश्न 5: नियम पहचानिए',
-        desc: 'लिखते समय रुकने, प्रश्न पूछने या भाव प्रकट करने वाले चिह्नों को क्या कहते हैं?',
+        title: 'परिदृश्य 3: तेनालीराम का विचार',
+        desc: 'तेनालीराम ने चोर को पकड़ने के लिए किस चीज़ का सहारा लिया?',
         options: [
-          { text: 'विराम-चिह्न (Punctuation Marks)', correct: true },
-          { text: 'संज्ञा (Noun)', correct: false },
-          { text: 'सर्वनाम (Pronoun)', correct: false },
-          { text: 'क्रिया (Verb)', correct: false }
+          { text: 'चोर के मन में छुपे डर और मनोविज्ञान का', correct: true },
+          { text: 'जादू और तंत्र-मंत्र का', correct: false },
+          { text: 'सैनिकों के बल और हथियारों का', correct: false },
+          { text: 'केवल किस्मत का', correct: false }
+        ]
+      },
+      {
+        type: 'mcq',
+        title: 'परिदृश्य 4: काली मूर्ति और काजल',
+        desc: 'तेनालीराम ने अंधेरे कमरे में रखी मूर्ति पर क्या लगाया था?',
+        options: [
+          { text: 'काजल / काली राख', correct: true },
+          { text: 'सुगंधित इत्र', correct: false },
+          { text: 'लाल रंग', correct: false },
+          { text: 'शहद', correct: false }
+        ]
+      },
+      {
+        type: 'mcq',
+        title: 'परिदृश्य 5: कहानी से सीख',
+        desc: 'तेनालीराम की इस चतुराई से हमें क्या सीख मिलती है?',
+        options: [
+          { text: 'अपराधी अपने डर से खुद ही पहचान में आ जाता है', correct: true },
+          { text: 'अंधेरे कमरे में कभी नहीं जाना चाहिए', correct: false },
+          { text: 'हमेशा मूर्तियों की पूजा करनी चाहिए', correct: false },
+          { text: 'चोरी करने के बाद भाग जाना चाहिए', correct: false }
         ]
       }
     ];
+
+    // LEVEL 2 Questions (Grammar: Punctuation Marks / विराम-चिह्न)
+    const level2Questions = [
+      {
+        type: 'mcq',
+        title: 'व्याकरण बोध: विराम-चिह्न की परिभाषा',
+        desc: 'लिखते समय रुकने, प्रश्न पूछने या भाव प्रकट करने के लिए जिन चिन्हों का प्रयोग किया जाता है, उन्हें क्या कहते हैं?',
+        options: [
+          { text: 'विराम-चिह्न (Punctuation Marks)', correct: true },
+          { text: 'वर्णमाला', correct: false },
+          { text: 'कारक-चिह्न', correct: false },
+          { text: 'संज्ञा', correct: false }
+        ]
+      },
+      {
+        type: 'mcq',
+        title: 'विराम-चिह्न पहचान: पूर्ण विराम (।)',
+        desc: 'वाक्य के अंत में किस चिह्न का प्रयोग किया जाता है? (उदा: "तेनालीराम बहुत चतुर थे।")',
+        options: [
+          { text: 'पूर्ण विराम (।)', correct: true },
+          { text: 'अल्प विराम (,)', correct: false },
+          { text: 'प्रश्नवाचक चिह्न (?)', correct: false },
+          { text: 'विस्मयादिबोधक चिह्न (!)', correct: false }
+        ]
+      },
+      {
+        type: 'mcq',
+        title: 'विराम-चिह्न पहचान: अल्प विराम (,)',
+        desc: 'सूची के शब्दों को अलग करने या थोड़ी देर रुकने के लिए किस चिह्न का प्रयोग होता है? (उदा: "दरबार में राजा, मंत्री और सैनिक थे।")',
+        options: [
+          { text: 'अल्प विराम (,)', correct: true },
+          { text: 'पूर्ण विराम (।)', correct: false },
+          { text: 'प्रश्नवाचक चिह्न (?)', correct: false },
+          { text: 'विस्मयादिबोधक चिह्न (!)', correct: false }
+        ]
+      },
+      {
+        type: 'mcq',
+        title: 'विराम-चिह्न पहचान: प्रश्नवाचक चिह्न (?)',
+        desc: 'प्रश्न के अंत में किस चिह्न का प्रयोग किया जाता है? (उदा: "चोर कौन था?")',
+        options: [
+          { text: 'प्रश्नवाचक चिह्न (?)', correct: true },
+          { text: 'पूर्ण विराम (।)', correct: false },
+          { text: 'अल्प विराम (,)', correct: false },
+          { text: 'विस्मयादिबोधक चिह्न (!)', correct: false }
+        ]
+      },
+      {
+        type: 'mcq',
+        title: 'विराम-चिह्न पहचान: विस्मयादिबोधक चिह्न (!)',
+        desc: 'हर्ष, आश्चर्य या अन्य भाव प्रकट करने पर किस चिह्न का प्रयोग किया जाता है? (उदा: "वाह! तेनालीराम ने चोर पकड़ लिया।")',
+        options: [
+          { text: 'विस्मयादिबोधक चिह्न (!)', correct: true },
+          { text: 'प्रश्नवाचक चिह्न (?)', correct: false },
+          { text: 'अल्प विराम (,)', correct: false },
+          { text: 'पूर्ण विराम (।)', correct: false }
+        ]
+      }
+    ];
+
+    let activeQuestions = level1Questions;
+
+    function startLevel(lvl) {
+      currentLevel = lvl;
+      if (lvl === 1) {
+        activeQuestions = level1Questions;
+        document.getElementById('instructions-title').innerText = "स्तर 1: तेनालीराम की चतुराई";
+        document.getElementById('instructions-body').innerHTML = `
+          <p>विजयनगर के राजकोष से चोरी हुई है। तेनालीराम ने चोर को पकड़ने के लिए काली मूर्ति पर काजल लगाया है!</p>
+          <p><strong>लक्ष्य:</strong> 5 प्रश्नों के सही उत्तर देकर चोर को पकड़ें।</p>
+        `;
+      } else {
+        activeQuestions = level2Questions;
+        document.getElementById('instructions-title').innerText = "स्तर 2: व्याकरण बोध (विराम-चिह्न)";
+        document.getElementById('instructions-body').innerHTML = `
+          <p>लिखते समय रुकने, प्रश्न पूछने या भाव प्रकट करने वाले चिह्नों को <strong>विराम-चिह्न</strong> कहते हैं।</p>
+          <p><strong>लक्ष्य:</strong> विराम-चिह्न से संबंधित 5 प्रश्नों के सही उत्तर दें।</p>
+        `;
+      }
+      showScreen('instruction-screen');
+      startInstructionsTimer();
+    }
 
     function startQuiz() {
       currentQuestion = 0;
@@ -419,35 +453,36 @@
     }
 
     function loadQuestion() {
-      const q = questions[currentQuestion];
-      document.getElementById('question-progress').textContent = `प्रश्न ${currentQuestion + 1} / ${questions.length}`;
+      const q = activeQuestions[currentQuestion];
+      document.getElementById('question-progress').textContent = `स्तर ${currentLevel} | प्रश्न ${currentQuestion + 1} / ${activeQuestions.length}`;
       document.getElementById('question-title').textContent = q.title;
       document.getElementById('question-desc').textContent = q.desc;
 
       const quizContent = document.getElementById('quiz-content');
       quizContent.innerHTML = '';
 
-      if (q.type === 'fill_punct') {
-        const sentenceBox = document.createElement('div');
-        sentenceBox.className = 'sentence-box';
-        sentenceBox.innerHTML = `
-          <span>${q.textBefore}</span>
-          <div class="drop-zone" id="target-zone">?</div>
-          <span>${q.textAfter}</span>
-        `;
-        quizContent.appendChild(sentenceBox);
-
+      if (q.type === 'investigation') {
         const grid = document.createElement('div');
-        grid.className = 'punctuation-grid';
+        grid.className = 'investigation-grid';
 
-        q.options.forEach(opt => {
-          const btn = document.createElement('button');
-          btn.className = 'symbol-btn';
-          btn.innerHTML = `<span class="symbol-badge">${opt.symbol}</span> ${opt.name}`;
-          btn.onclick = () => handleAnswer(opt.symbol === q.correctPunct);
-          grid.appendChild(btn);
-        });
+        for (let i = 0; i < 4; i++) {
+          const isThief = i === q.thiefIndex;
+          const card = document.createElement('div');
+          card.className = 'suspect-card';
+          
+          card.innerHTML = `
+            <div class="suspect-avatar">👳‍♂️</div>
+            <div class="suspect-name">${courtierNames[i]}</div>
+            <div class="hands-display">${isThief ? '✋' : '🖐️🏿'}</div>
+            <div class="hand-status ${isThief ? 'clean-text' : 'black-text'}">
+              ${isThief ? 'साफ हाथ (चोर)' : 'काले हाथ (निर्दोष)'}
+            </div>
+            <div class="inspect-badge" style="margin-top: 6px;">🔍 निरीक्षण करें</div>
+          `;
 
+          card.onclick = () => handleAnswer(isThief);
+          grid.appendChild(card);
+        }
         quizContent.appendChild(grid);
 
       } else if (q.type === 'mcq') {
@@ -474,7 +509,7 @@
       }
 
       currentQuestion++;
-      if (currentQuestion < questions.length) {
+      if (currentQuestion < activeQuestions.length) {
         loadQuestion();
       } else {
         showEndScreen();
@@ -486,29 +521,35 @@
       const icon = document.getElementById('result-icon');
       const title = document.getElementById('result-title');
       const desc = document.getElementById('result-desc');
+      const nextBtn = document.getElementById('next-level-btn');
 
-      if (score === questions.length) {
+      if (currentLevel === 1) {
+        nextBtn.style.display = 'inline-block';
+        nextBtn.innerText = 'स्तर 2 खेलें (व्याकरण) ➡️';
+        nextBtn.onclick = () => startLevel(2);
+      } else {
+        nextBtn.style.display = 'inline-block';
+        nextBtn.innerText = 'स्तर 1 पुनः खेलें 🔁';
+        nextBtn.onclick = () => startLevel(1);
+      }
+
+      if (score === activeQuestions.length) {
         icon.textContent = '🏆';
-        title.textContent = 'अद्भुत! आपका व्याकरण ज्ञान शानदार है!';
-        desc.textContent = `आपने सभी ${questions.length} में से ${score} प्रश्नों के सही उत्तर दिए! तेनालीराम ने सभी पत्रों को सही-सही पढ़ लिया है।`;
+        title.textContent = 'अद्भुत! पूर्ण अंक!';
+        desc.textContent = `आपने स्तर ${currentLevel} के सभी ${activeQuestions.length} में से ${score} प्रश्नों के सही उत्तर दिए!`;
       } else if (score >= 3) {
         icon.textContent = '👏';
         title.textContent = 'शाबाश! बहुत अच्छा प्रयास!';
-        desc.textContent = `आपने ${questions.length} में से ${score} प्रश्नों के सही उत्तर दिए। विराम-चिह्न का अभ्यास जारी रखें!`;
+        desc.textContent = `आपने स्तर ${currentLevel} में ${activeQuestions.length} में से ${score} प्रश्नों के सही उत्तर दिए।`;
       } else {
         icon.textContent = '❌';
         title.textContent = 'पुन: प्रयास करें!';
-        desc.textContent = `आपका स्कोर ${questions.length} में से ${score} है। नियम तालिका को एक बार फिर से देखकर खेलें।`;
+        desc.textContent = `आपका स्कोर ${activeQuestions.length} में से ${score} है। दोबारा प्रयास करें!`;
       }
     }
 
     function restartGame() {
-      showScreen('intro-screen');
-      introTimeout = setTimeout(() => {
-        if (document.getElementById('intro-screen').classList.contains('active')) {
-          goToInstructions();
-        }
-      }, 2500);
+      startLevel(currentLevel);
     }
   </script>
 </body>
