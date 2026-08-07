@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>चतुर खरगोश - कहानी निर्माता (Story Builder Game)</title>
+    <title>चतुर खरगोश - कहानी एवं व्याकरण निर्माता</title>
     <style>
         :root {
             --primary: #2e7d32;
@@ -268,12 +268,12 @@
     <!-- Screen 2: Welcome Screen -->
     <div id="welcome-screen" class="screen">
         <h1 class="title">चतुर खरगोश (Story Builder)</h1>
-        <p class="subtitle">पाठ 6: बुद्धि की ताकत - सही विकल्प चुनकर कहानी पूरी करें!</p>
+        <p class="subtitle">पाठ 6: बुद्धि की ताकत एवं व्याकरण बोध (संज्ञा)</p>
         <div style="font-size: 4.5rem; margin-bottom: 20px;">🐇 🦁</div>
         <p style="margin-bottom: 25px; max-width: 80%; color: #555;">
-            क्या खरगोश अपनी बुद्धिमत्ता से भासुरक शेर से जंगल को बचा पाएगा? सही निर्णय लें!
+            पहले स्तर में सही निर्णय लेकर कहानी पूरी करें और दूसरे स्तर में संज्ञा के भेदों की पहचान करें!
         </p>
-        <button class="btn" onclick="startGame()">कहानी शुरू करें</button>
+        <button class="btn" onclick="startGame()">खेल शुरू करें</button>
     </div>
 
     <!-- Screen 3: Game Screen -->
@@ -287,7 +287,7 @@
 
         <div class="story-card">
             <div class="scene-icon" id="scene-icon">🌲</div>
-            <div class="story-text" id="story-prompt">कहानी की शुरुआत हो रही है...</div>
+            <div class="story-text" id="story-prompt">खेल की शुरुआत हो रही है...</div>
             <div class="options-container" id="options-container"></div>
         </div>
     </div>
@@ -296,7 +296,7 @@
     <div id="end-screen" class="screen">
         <div class="end-card">
             <h2>शानदार सफलता! 🎉</h2>
-            <p style="font-size: 1.1rem; margin-bottom: 15px;">आपने अपनी बुद्धिमत्ता से कहानी को सही अंजाम तक पहुँचाया!</p>
+            <p style="font-size: 1.1rem; margin-bottom: 15px;">आपने कहानी और व्याकरण बोध (संज्ञा) के सभी प्रश्नों के सही उत्तर दिए!</p>
             <div class="end-stat" id="final-score">कुल अंक: 0</div>
             <div class="end-stat" id="final-time">कुल समय: 00:00</div>
             <button class="btn" style="margin-top: 20px;" onclick="restartGame()">पुनः खेलें</button>
@@ -411,48 +411,48 @@
         ],
         level2: [
             {
-                icon: "📜",
-                prompt: "शेर के कुएँ में गिरने के बाद, खरगोश ने सबसे पहले क्या किया?",
+                icon: "📚",
+                prompt: "[व्याकरण बोध] 'किसी व्यक्ति, स्थान, वस्तु, जीव या भाव के नाम को ____ कहते हैं।'",
                 options: [
-                    { text: "तुरंत भागकर जंगल के सभी जानवरों को खुशखबरी दी।", correct: true },
-                    { text: "वही कुएँ के पास बैठकर आराम करने लगा।", correct: false },
-                    { text: "शेर को बचाने के लिए रस्सी ढूंढने गया।", correct: false }
+                    { text: "संज्ञा", correct: true },
+                    { text: "सर्वनाम", correct: false },
+                    { text: "विशेषण", correct: false }
                 ]
             },
             {
-                icon: "🎉",
-                prompt: "जब सब जानवरों को पता चला कि क्रूर शेर मारा गया, तो उन्होंने खरगोश का सम्मान कैसे किया?",
+                icon: "🏛️",
+                prompt: "[व्यक्तिवाचक संज्ञा] 'पंचतंत्र' शब्द संज्ञा के किस भेद का उदाहरण है?",
                 options: [
-                    { text: "उसे जंगल से बाहर भेज दिया।", correct: false },
-                    { text: "उसकी बुद्धिमत्ता की सराहना की और उत्सव मनाया।", correct: true },
-                    { text: "उसे नया शेर खोजने का काम सौंपा।", correct: false }
+                    { text: "जातिवाचक संज्ञा", correct: false },
+                    { text: "व्यक्तिवाचक संज्ञा (विशेष पुस्तक का नाम)", correct: true },
+                    { text: "भाववाचक संज्ञा", correct: false }
                 ]
             },
             {
-                icon: "🦊",
-                prompt: "कहानी में खरगोश ने बल की जगह किस शक्ति का मुख्य प्रयोग किया?",
+                icon: "🐾",
+                prompt: "[जातिवाचक संज्ञा] 'शेर' और 'खरगोश' शब्द किस संज्ञा भेद के अंतर्गत आते हैं?",
                 options: [
-                    { text: "शारीरिक शक्ति और गति का।", correct: false },
-                    { text: "बुद्धि और चतुर सोच का।", correct: true },
-                    { text: "जादू और छल-कपट का।", correct: false }
+                    { text: "जातिवाचक संज्ञा (पूरी जाति या वर्ग का नाम)", correct: true },
+                    { text: "व्यक्तिवाचक संज्ञा", correct: false },
+                    { text: "भाववाचक संज्ञा", correct: false }
                 ]
             },
             {
                 icon: "💡",
-                prompt: "इस पंचतंत्र की कहानी से हमें सबसे मुख्य सीख (Moral) क्या मिलती है?",
+                prompt: "[भाववाचक संज्ञा] 'चतुराई' और 'गुस्सा' शब्द किस संज्ञा के उदाहरण हैं?",
                 options: [
-                    { text: "'बुद्धि बल से अधिक श्रेष्ठ होती है' (Intelligence is power).", correct: true },
-                    { text: "हमेशा शक्तिशाली से डरकर रहना चाहिए।", correct: false },
-                    { text: "कभी भी किसी की मदद नहीं करनी चाहिए।", correct: false }
+                    { text: "व्यक्तिवाचक संज्ञा", correct: false },
+                    { text: "भाववाचक संज्ञा (गुण, अवस्था या भाव का नाम)", correct: true },
+                    { text: "जातिवाचक संज्ञा", correct: false }
                 ]
             },
             {
-                icon: "👑",
-                prompt: "शेर की समाप्ति के बाद जंगल में शांति कैसे कायम हुई?",
+                icon: "📝",
+                prompt: "[संज्ञा पहचान] वाक्य: 'खरगोश ने अपनी चतुराई से शेर को हरा दिया।' इस वाक्य में 'चतुराई' क्या है?",
                 options: [
-                    { text: "सभी जानवर बिना डर के मिलकर खुशी-खुशी रहने लगे।", correct: true },
-                    { text: "एक दूसरा नया क्रूर राजा चुन लिया गया।", correct: false },
-                    { text: "सारे जानवर जंगल छोड़कर दूसरी जगह चले गए।", correct: false }
+                    { text: "भाववाचक संज्ञा", correct: true },
+                    { text: "व्यक्तिवाचक संज्ञा", correct: false },
+                    { text: "जातिवाचक संज्ञा", correct: false }
                 ]
             }
         ]
@@ -530,7 +530,7 @@
             if (currentStep < currentQuestions.length) {
                 loadStep();
             } else if (currentLevelKey === "level1") {
-                alert("बधाई हो! आपने स्तर 1 पूरा कर लिया है। अब स्तर 2 शुरू हो रहा है!");
+                alert("बधाई हो! आपने कहानी स्तर 1 पूरा कर लिया है। अब स्तर 2 (व्याकरण बोध: संज्ञा) शुरू हो रहा है!");
                 currentLevelKey = "level2";
                 currentStep = 0;
                 loadStep();
