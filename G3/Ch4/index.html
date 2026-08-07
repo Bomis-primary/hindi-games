@@ -32,7 +32,7 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            min-height: 100dvh; /* Dynamic viewport height for mobile browsers */
+            min-height: 100dvh;
             overflow: hidden;
         }
 
@@ -79,7 +79,6 @@
             pointer-events: auto;
         }
 
-        /* Screen 1: Splash Screen */
         #splash-screen {
             background: linear-gradient(135deg, #ff9800, #d32f2f);
             color: white;
@@ -112,7 +111,6 @@
             100% { transform: scale(1); }
         }
 
-        /* Screen 2: Welcome Screen */
         #welcome-screen {
             background: linear-gradient(to bottom, #fff8e1, #ffe0b2);
             text-align: center;
@@ -150,7 +148,6 @@
             background-color: var(--primary-dark);
         }
 
-        /* Screen 3: Game Screen */
         #game-screen {
             justify-content: flex-start;
             padding: 10px;
@@ -218,7 +215,6 @@
             touch-action: none;
         }
 
-        /* Question Box */
         .question-card {
             background: white;
             width: 100%;
@@ -276,7 +272,6 @@
             border-color: #f57c00;
         }
 
-        /* Screen 4: End Screen */
         #end-screen {
             background: linear-gradient(to bottom, #fff8e1, #ffe0b2);
             text-align: center;
@@ -308,25 +303,22 @@
 <body>
 
 <div id="game-container">
-    <!-- Splash Screen -->
     <div id="splash-screen" class="screen active">
         <div class="logo-box">
             <img src="assets/logo.png" alt="Logo" onerror="this.style.display='none'">
         </div>
     </div>
 
-    <!-- Welcome Screen -->
     <div id="welcome-screen" class="screen">
         <h1 class="title">बिंदु जोड़ो - जगमग दीया 🪔</h1>
-        <p class="subtitle">पाठ 4: जगमग जगमग (सोहनलाल द्विवेदी)</p>
+        <p class="subtitle">पाठ 4: जगमग जगमग (व्याकरण बोध - विलोम शब्द)</p>
         <div style="font-size: 3.5rem; margin-bottom: 10px;">🪔✨</div>
         <p style="margin-bottom: 20px; max-width: 90%; color: #555; font-size: 0.95rem;">
-            प्रश्नों के सही उत्तर देकर बिंदुओं (Dots) को क्रम से जोड़िए और दिवाली का जगमगाता दीया प्रकट कीजिए!
+            व्याकरण बोध के विलोम शब्दों के सही उत्तर देकर बिंदुओं को क्रम से जोड़िए और दिवाली का जगमगाता दीया प्रकट कीजिए!
         </p>
         <button class="btn" onclick="startGame()">खेल शुरू करें</button>
     </div>
 
-    <!-- Game Screen -->
     <div id="game-screen" class="screen">
         <div class="game-header">
             <div class="stat-box" id="score-display">अंक: 0</div>
@@ -349,11 +341,10 @@
         </div>
     </div>
 
-    <!-- End Screen -->
     <div id="end-screen" class="screen">
         <div class="end-card">
             <h2>शुभ दीपावली! 🪔✨</h2>
-            <p style="font-size: 1rem; margin-bottom: 12px;">आपने सभी बिंदु जोड़कर दीया जगमगा दिया है!</p>
+            <p style="font-size: 1rem; margin-bottom: 12px;">आपने व्याकरण के सभी सही उत्तर देकर दीया जगमगा दिया है!</p>
             <div class="end-stat" id="final-score">कुल अंक: 0</div>
             <div class="end-stat" id="final-time">कुल समय: 00:00</div>
             <button class="btn" style="margin-top: 15px;" onclick="restartGame()">पुनः खेलें</button>
@@ -362,7 +353,6 @@
 </div>
 
 <script>
-    // Audio Synthesizer (Web Audio API)
     const AudioCtx = window.AudioContext || window.webkitAudioContext;
     let audioCtx = null;
 
@@ -434,48 +424,48 @@
 
     const questionBank = [
         {
-            q: "कविता 'जगमग जगमग' के रचयिता कौन हैं?",
-            options: ["सोहनलाल द्विवेदी", "जयशंकर प्रसाद", "हरिवंश राय बच्चन", "सुभद्रा कुमारी चौहान"],
+            q: "जो शब्द एक-दूसरे का उल्टा अर्थ बताते हैं, उन्हें क्या कहते हैं?",
+            options: ["विलोम शब्द", "पर्यायवाची शब्द", "समानार्थी शब्द", "अनेक शब्दों के लिए एक शब्द"],
             answer: 0
         },
         {
-            q: "'दृग ठग' शब्द का कविता में क्या अर्थ है?",
-            options: ["आँखों को मोह लेने वाला", "आँखों में धूल झोंकना", "चोरी करना", "सो जाना"],
+            q: "'दिन' का विलोम शब्द क्या होगा?",
+            options: ["रात", "सुबह", "दोपहर", "उजाला"],
             answer: 0
         },
         {
-            q: "तुलसी के नन्हें थाले में क्या जल रहा है?",
-            options: ["फूल", "दीप", "मिठाई", "पानी"],
-            answer: 1
-        },
-        {
-            q: "कविता में दीप कहाँ तैरते दिखाई दे रहे हैं?",
-            options: ["नदियों और नहरों में", "सड़कों पर", "खेतों में", "आसमान में"],
+            q: "'उजियाली' शब्द का विलोम (उल्टा) शब्द क्या है?",
+            options: ["अंधियारा", "सवेरा", "चमक", "रोशनी"],
             answer: 0
         },
         {
-            q: "'राजा के घर, कंगले के घर' पंक्ति का क्या आशय है?",
-            options: ["दिवाली सबके लिए समान खुशियाँ लाती है", "केवल राजा ही दीप जलाते हैं", "गरीब त्योहार नहीं मनाते", "दीवाले केवल महलों में जलते हैं"],
+            q: "'सुंदर' शब्द का सही विलोम शब्द क्या होगा?",
+            options: ["कुरूप", "सुघर", "अच्छा", "प्यारा"],
             answer: 0
         },
         {
-            q: "संस्कृत भाषा में 'दीपावली' का अर्थ क्या होता है?",
-            options: ["दीपों की कतार", "रोशनी का पहाड़", "सुंदर मिठाइयाँ", "रंगों का त्योहार"],
+            q: "'राजा' का सही विलोम शब्द क्या है?",
+            options: ["रंक / कंगला", "महाराजा", "सिपाही", "प्रजा"],
             answer: 0
         },
         {
-            q: "'उजियाली' शब्द का विलोम (उल्टा) शब्द क्या होगा?",
-            options: ["अंधियारा", "सवेरा", "चमक", "सुघर"],
+            q: "'हँसना' का विलोम शब्द चुनिए:",
+            options: ["रोना", "गाना", "सोना", "मुस्कुराना"],
             answer: 0
         },
         {
-            q: "नेपाल में दीपावली के त्योहार को किस नाम से जाना जाता है?",
-            options: ["तिहार", "दीपमाला", "लॉय क्रॉथोंग", "वैशाखी"],
+            q: "'आकाश' का सही विलोम शब्द क्या होगा?",
+            options: ["पाताल", "धरती", "बादल", "हवा"],
             answer: 0
         },
         {
-            q: "'सुघर' शब्द का क्या अर्थ होता है?",
-            options: ["सुंदर ढंग से सजाया हुआ", "बड़ा घर", "टूटा हुआ घर", "पुराना घर"],
+            q: "'सच' का विलोम शब्द पहचानिए:",
+            options: ["झूठ", "सही", "सत्य", "विश्वास"],
+            answer: 0
+        },
+        {
+            q: "'जल' का विलोम शब्द क्या होगा?",
+            options: ["थल / थलचर", "पानी", "नीर", "अमृत"],
             answer: 0
         }
     ];
