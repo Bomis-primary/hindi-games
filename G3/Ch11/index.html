@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>एक अनोखा तरबूज़ - Square Watermelon Game</title>
+    <title>एक अनोखा तरबूज़ & व्याकरण - Multi-Level Game</title>
     <!-- Phaser 3 CDN -->
     <script src="https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.min.js"></script>
     <style>
@@ -53,10 +53,10 @@
         #quiz-modal h3 {
             margin-top: 0;
             color: #0055ff;
-            font-size: 24px; /* Increased font size */
+            font-size: 24px;
         }
         #quiz-modal p {
-            font-size: 20px; /* Increased font size */
+            font-size: 20px;
             font-weight: 600;
             color: #222;
             margin-bottom: 18px;
@@ -70,7 +70,7 @@
             background-color: #f8f9fa;
             border: 2px solid #0055ff;
             border-radius: 10px;
-            font-size: 18px; /* Increased font size */
+            font-size: 18px;
             font-weight: bold;
             color: #0055ff;
             cursor: pointer;
@@ -84,7 +84,7 @@
         /* On-Screen Feedback Message Box */
         #quiz-feedback {
             display: none;
-            font-size: 18px; /* Increased font size */
+            font-size: 18px;
             font-weight: bold;
             padding: 12px;
             margin-top: 14px;
@@ -102,8 +102,8 @@
             border: 2px solid #f5c6cb;
         }
 
-        /* Game Over Modal Styling */
-        #gameover-modal {
+        /* Modals (Game Over, Level Complete, Win) */
+        .game-modal {
             display: none;
             position: absolute;
             top: 50%;
@@ -112,49 +112,23 @@
             width: 90%;
             max-width: 480px;
             background: #ffffff;
-            border: 5px solid #d32f2f;
             border-radius: 16px;
             padding: 24px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.7);
             text-align: center;
             z-index: 110;
         }
-        #gameover-modal h2 {
-            margin-top: 0;
-            color: #d32f2f;
-            font-size: 28px; /* Increased font size */
-        }
-        #gameover-modal p {
-            font-size: 22px; /* Increased font size */
-            color: #333;
-            margin: 18px 0 25px 0;
-            font-weight: bold;
-        }
+        #gameover-modal { border: 5px solid #d32f2f; }
+        #gameover-modal h2 { margin-top: 0; color: #d32f2f; font-size: 28px; }
+        
+        #levelcomplete-modal { border: 5px solid #0055ff; }
+        #levelcomplete-modal h2 { margin-top: 0; color: #0055ff; font-size: 28px; }
 
-        /* Win Modal Styling */
-        #win-modal {
-            display: none;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 90%;
-            max-width: 480px;
-            background: #ffffff;
-            border: 5px solid #2e7d32;
-            border-radius: 16px;
-            padding: 24px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
-            text-align: center;
-            z-index: 110;
-        }
-        #win-modal h2 {
-            margin-top: 0;
-            color: #2e7d32;
-            font-size: 28px; /* Increased font size */
-        }
-        #win-modal p {
-            font-size: 22px; /* Increased font size */
+        #win-modal { border: 5px solid #2e7d32; }
+        #win-modal h2 { margin-top: 0; color: #2e7d32; font-size: 28px; }
+
+        .modal-text {
+            font-size: 22px;
             color: #333;
             margin: 18px 0 25px 0;
             font-weight: bold;
@@ -167,7 +141,7 @@
             color: #ffffff;
             border: none;
             border-radius: 10px;
-            font-size: 18px; /* Increased font size */
+            font-size: 18px;
             font-weight: bold;
             cursor: pointer;
             transition: background-color 0.2s ease;
@@ -187,40 +161,43 @@
 <div id="game-container">
     <!-- Quiz Modal Container -->
     <div id="quiz-modal">
-        <h3 id="quiz-title">📖 कहानी प्रश्न (Story Quiz)</h3>
+        <h3 id="quiz-title">📖 प्रश्न (Quiz)</h3>
         <p id="quiz-question">प्रश्न यहाँ दिखाई देगा...</p>
         <div id="quiz-options"></div>
         <div id="quiz-feedback"></div>
     </div>
 
-    <!-- On-Screen Game Over Modal -->
-    <div id="gameover-modal">
+    <!-- Game Over Modal -->
+    <div id="gameover-modal" class="game-modal">
         <h2>🎮 खेल समाप्त! (Game Over)</h2>
-        <p id="final-score-text">आपका कुल अंक: 0</p>
+        <p id="final-score-text" class="modal-text">आपका कुल अंक: 0</p>
         <button id="restart-btn" class="action-btn">🔄 पुनः प्रयास करें (Try Again)</button>
     </div>
 
-    <!-- On-Screen Win Modal -->
-    <div id="win-modal">
-        <h2>🎉 बधाई हो! आप जीत गए! (You Win!)</h2>
-        <p id="win-score-text">आपने 300 अंक प्राप्त कर लिए हैं!</p>
+    <!-- Level Complete Modal -->
+    <div id="levelcomplete-modal" class="game-modal">
+        <h2>🎉 स्तर 1 पूर्ण! (Level 1 Complete)</h2>
+        <p class="modal-text">शानदार! अब स्तर 2 (व्याकरण: विशेषण के भेद) में प्रवेश करें!</p>
+        <button id="next-level-btn" class="action-btn">🚀 अगला स्तर (Start Level 2)</button>
+    </div>
+
+    <!-- Win Modal -->
+    <div id="win-modal" class="game-modal">
+        <h2>🏆 बधाई हो! आप खेल जीत गए!</h2>
+        <p id="win-score-text" class="modal-text">आपने दोनों स्तर सफलतापूर्वक पूर्ण कर लिए हैं!</p>
         <button id="win-restart-btn" class="action-btn">🔄 दोबारा खेलें (Play Again)</button>
     </div>
 </div>
 
 <script>
-// --- Direct Web Audio API Audio Cache / Player ---
+// --- Web Audio Setup ---
 const audioCache = {
     correct_snd: new Audio('assets/correct.mp3'),
     wrong_snd: new Audio('assets/wrong.mp3')
 };
 
-// Preload audio elements
-for (let key in audioCache) {
-    audioCache[key].preload = 'auto';
-}
+for (let key in audioCache) { audioCache[key].preload = 'auto'; }
 
-// Unlock Audio on First Mobile Touch
 let audioUnlocked = false;
 function unlockMobileAudio() {
     if (audioUnlocked) return;
@@ -235,41 +212,26 @@ function unlockMobileAudio() {
 window.addEventListener('touchstart', unlockMobileAudio, { once: true });
 window.addEventListener('click', unlockMobileAudio, { once: true });
 
-// --- Sound Player Helper (Instant Playback & Immediate Synthesis) ---
 function playSound(soundKey, scene) {
     let played = false;
-    
     if (scene && scene.sound && scene.sound.get(soundKey)) {
-        try {
-            scene.sound.play(soundKey);
-            played = true;
-        } catch (e) {
-            console.warn("Phaser sound play failed, trying HTML5 Audio fallback...", e);
-        }
+        try { scene.sound.play(soundKey); played = true; } catch (e) {}
     }
-    
     if (!played && audioCache[soundKey]) {
         try {
             audioCache[soundKey].currentTime = 0;
             const playPromise = audioCache[soundKey].play();
             if (playPromise !== undefined) {
-                playPromise.catch(() => {
-                    playSynthSound(soundKey);
-                });
+                playPromise.catch(() => playSynthSound(soundKey));
             }
-        } catch (e) {
-            playSynthSound(soundKey);
-        }
+        } catch (e) { playSynthSound(soundKey); }
     }
 }
 
-// Synthetic Sound Fallback (Short, crisp sound design for immediate feedback)
 function playSynthSound(type) {
     try {
         const ctx = new (window.AudioContext || window.webkitAudioContext)();
-        if (ctx.state === 'suspended') {
-            ctx.resume();
-        }
+        if (ctx.state === 'suspended') ctx.resume();
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
         osc.connect(gain);
@@ -278,8 +240,8 @@ function playSynthSound(type) {
 
         if (type === 'correct_snd') {
             osc.type = 'sine';
-            osc.frequency.setValueAtTime(523.25, now); // C5
-            osc.frequency.setValueAtTime(659.25, now + 0.08); // E5
+            osc.frequency.setValueAtTime(523.25, now);
+            osc.frequency.setValueAtTime(659.25, now + 0.08);
             gain.gain.setValueAtTime(0.15, now);
             gain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
             osc.start(now);
@@ -296,8 +258,9 @@ function playSynthSound(type) {
     } catch(e) {}
 }
 
-// --- 10 Chapter Questions Data ---
-const chapterQuestions = [
+// --- Question Sets ---
+// Level 1: Story Questions
+const level1Questions = [
     {
         question: "दादाजी ने गोलू को तरबूज़ के कौन-से आकार के बारे में बताया?",
         options: ["त्रिभुज (Triangle)", "चौकोर (Square)", "स्टार (Star)", "गोलाकार (Round)"],
@@ -327,33 +290,47 @@ const chapterQuestions = [
         question: "पारदर्शी (transparent) सांचे का प्रयोग क्यों किया गया?",
         options: ["ताकि धूप अंदर पहुँच सके", "ताकि वह सुंदर दिखे", "ताकि वह हल्का हो", "ताकि पानी बाहर न निकले"],
         correct: 0
-    },
+    }
+];
+
+// Level 2: Grammar Questions (विशेषण के भेद)
+const level2Questions = [
     {
-        question: "तरबूज खाने से क्या मिलता है?",
-        options: ["पानी", "तेल", "नमक", "चीनी"],
-        correct: 0
-    },
-    {
-        question: "चौकोर तरबूज़ की मांग बाज़ार में क्यों अधिक होती है?",
-        options: ["फ्रिज में आसानी से समा जाने के कारण", "इसका स्वाद अलग होने के कारण", "यह सस्ता होने के कारण", "यह भारी होने के कारण"],
-        correct: 0
-    },
-    {
-        question: "कहानी 'एक अनोखा तरबूज़' से हमें क्या प्रेरणा मिलती है?",
-        options: ["खेती न करने की", "नवाचार और नए विचारों को अपनाने की", "केवल गोल फल उगाने की", "समय बर्बाद करने की"],
+        question: "संज्ञा या सर्वनाम की विशेषता बताने वाले शब्द क्या कहलाते हैं?",
+        options: ["संज्ञा (Noun)", "विशेषण (Adjective)", "सर्वनाम (Pronoun)", "क्रिया (Verb)"],
         correct: 1
     },
     {
-        question: "सांचा किस सामग्री का बना होना चाहिए ताकि तरबूज़ को मजबूत आकार मिले?",
-        options: ["कागज़ का", "मजबूत पारदर्शी प्लास्टिक या कांच का", "कपड़े का", "पत्तियों का"],
+        question: "'मीठा फल' और 'चौकोर तरबूज़' में कौन-सा विशेषण है?",
+        options: ["गुणवाचक विशेषण", "संख्यावाचक विशेषण", "संकेतवाचक विशेषण", "परिमाणवाचक विशेषण"],
+        correct: 0
+    },
+    {
+        question: "'चार आम' और 'दूसरा फल' किस प्रकार के विशेषण हैं?",
+        options: ["गुणवाचक विशेषण", "संख्यावाचक विशेषण", "संकेतवाचक विशेषण", "गुणहीन विशेषण"],
         correct: 1
+    },
+    {
+        question: "'यह तरबूज़' में 'यह' शब्द किस प्रकार का विशेषण है?",
+        options: ["संख्यावाचक विशेषण", "गुणवाचक विशेषण", "संकेतवाचक विशेषण", "क्रिया विशेषण"],
+        correct: 2
+    },
+    {
+        question: "'१. मीठा' - यह फल की किस विशेषता (भेद) को दर्शाता है?",
+        options: ["गुणवाचक विशेषण", "संख्यावाचक विशेषण", "संकेतवाचक विशेषण", "व्यक्तिवाचक विशेषण"],
+        correct: 0
+    },
+    {
+        question: "'८. तीन' और '५. दूसरा' किस विशेषण के उदाहरण हैं?",
+        options: ["संख्यावाचक विशेषण", "गुणवाचक विशेषण", "संकेतवाचक विशेषण", "परिमाणवाचक विशेषण"],
+        correct: 0
     }
 ];
 
 let globalScore = 0;
 let globalLives = 3;
+let currentLevel = 1;
 
-// हर प्रश्न के विकल्पों का क्रम बदलें, लेकिन सही उत्तर की पहचान सुरक्षित रखें।
 function getShuffledOptions(questionData) {
     const shuffledOptions = questionData.options.map((option, originalIndex) => ({
         text: option,
@@ -362,26 +339,18 @@ function getShuffledOptions(questionData) {
 
     for (let i = shuffledOptions.length - 1; i > 0; i--) {
         const randomIndex = Math.floor(Math.random() * (i + 1));
-        [shuffledOptions[i], shuffledOptions[randomIndex]] =
-            [shuffledOptions[randomIndex], shuffledOptions[i]];
+        [shuffledOptions[i], shuffledOptions[randomIndex]] = [shuffledOptions[randomIndex], shuffledOptions[i]];
     }
 
     return shuffledOptions;
 }
 
-// --- Scene 1: Innovine Logo Screen ---
+// --- Scene 1: Logo Screen ---
 class LogoScene extends Phaser.Scene {
-    constructor() {
-        super({ key: 'LogoScene' });
-    }
-
-    preload() {
-        this.load.image('innovine_logo', 'assets/logo.png');
-    }
-
+    constructor() { super({ key: 'LogoScene' }); }
+    preload() { this.load.image('innovine_logo', 'assets/logo.png'); }
     create() {
         this.cameras.main.setBackgroundColor('#ffffff');
-
         const logo = this.add.image(400, 300, 'innovine_logo').setOrigin(0.5);
         logo.setAlpha(0);
 
@@ -403,39 +372,37 @@ class LogoScene extends Phaser.Scene {
 
 // --- Scene 2: Instructions Screen ---
 class InstructionScene extends Phaser.Scene {
-    constructor() {
-        super({ key: 'InstructionScene' });
-    }
+    constructor() { super({ key: 'InstructionScene' }); }
 
     create() {
         this.cameras.main.setBackgroundColor('#1a2634');
 
-        this.add.text(400, 50, 'एक अनोखा तरबूज़', {
-            fontSize: '38px', color: '#4da6ff', fontStyle: 'bold'
+        this.add.text(400, 45, 'एक अनोखा तरबूज़ और व्याकरण', {
+            fontSize: '34px', color: '#4da6ff', fontStyle: 'bold'
         }).setOrigin(0.5);
 
-        this.add.text(400, 105, 'खेलने के नियम (Rules & Instructions)', {
-            fontSize: '24px', color: '#ffffff', fontStyle: 'bold'
+        this.add.text(400, 95, 'खेलने के नियम (Rules & Instructions)', {
+            fontSize: '22px', color: '#ffffff', fontStyle: 'bold'
         }).setOrigin(0.5);
 
         const rulesText = 
             "1. 📱 स्क्रीन पर Touch / Slide करके सांचा चलाएं।\n\n" +
             "2. 🍉 तरबूज़ पकड़ने पर +10 अंक मिलेंगे।\n\n" +
-            "3. ❓ खेल शुरू होते ही पहला प्रश्न आएगा!\n\n" +
+            "3. 📚 स्तर 1: कहानी प्रश्न | स्तर 2: व्याकरण (विशेषण भेद)\n\n" +
             "4. ✅ सही उत्तर: +20 अंक | ❌ गलत उत्तर: -30 अंक\n\n" +
-            "5. 🏆 300 अंक हासिल करने पर आप जीत जाएँगे!";
+            "5. 🏆 300 अंक हासिल करने पर स्तर पार होगा!";
 
         const bgRect = this.add.graphics();
         bgRect.fillStyle(0x0a192f, 0.85);
         bgRect.lineStyle(3, 0x0055ff, 1);
-        bgRect.fillRoundedRect(50, 140, 700, 320, 15);
-        bgRect.strokeRoundedRect(50, 140, 700, 320, 15);
+        bgRect.fillRoundedRect(50, 130, 700, 330, 15);
+        bgRect.strokeRoundedRect(50, 130, 700, 330, 15);
 
-        this.add.text(80, 165, rulesText, {
-            fontSize: '22px', color: '#f0f0f0', lineSpacing: 10
+        this.add.text(80, 155, rulesText, {
+            fontSize: '21px', color: '#f0f0f0', lineSpacing: 8
         });
 
-        const startBtn = this.add.text(400, 510, '👉 खेल शुरू करें (Start Game)', {
+        const startBtn = this.add.text(400, 515, '👉 खेल शुरू करें (Start Level 1)', {
             fontSize: '26px', color: '#ffffff', backgroundColor: '#0055ff', padding: { x: 25, y: 14 }
         }).setOrigin(0.5).setInteractive({ useHandCursor: true });
 
@@ -443,6 +410,7 @@ class InstructionScene extends Phaser.Scene {
             unlockMobileAudio();
             globalScore = 0;
             globalLives = 3;
+            currentLevel = 1;
             this.scene.start('GameScene', { triggerFirstQuiz: true });
         });
     }
@@ -463,20 +431,19 @@ class GameScene extends Phaser.Scene {
     preload() {
         this.load.audio('correct_snd', 'assets/correct.mp3');
         this.load.audio('wrong_snd', 'assets/wrong.mp3');
-
         this.createPlaceholderGraphics();
     }
 
     createPlaceholderGraphics() {
         const bgGfx = this.make.graphics({ x: 0, y: 0, add: false });
-        bgGfx.fillStyle(0x87CEEB, 1);
+        bgGfx.fillStyle(currentLevel === 1 ? 0x87CEEB : 0xd8f3dc, 1);
         bgGfx.fillRect(0, 0, 800, 400);
-        bgGfx.fillStyle(0x7CFC00, 1);
+        bgGfx.fillStyle(currentLevel === 1 ? 0x7CFC00 : 0x74c69d, 1);
         bgGfx.fillRect(0, 400, 800, 200);
-        bgGfx.generateTexture('bg', 800, 600);
+        bgGfx.generateTexture('bg_' + currentLevel, 800, 600);
 
         const melGfx = this.make.graphics({ x: 0, y: 0, add: false });
-        melGfx.fillStyle(0x2d8a4e, 1);
+        melGfx.fillStyle(currentLevel === 1 ? 0x2d8a4e : 0xe63946, 1);
         melGfx.fillCircle(20, 20, 20);
         melGfx.lineStyle(3, 0x144726, 1);
         melGfx.strokeCircle(20, 20, 20);
@@ -496,10 +463,10 @@ class GameScene extends Phaser.Scene {
     }
 
     create() {
-        this.add.image(400, 300, 'bg');
+        this.add.image(400, 300, 'bg_' + currentLevel);
 
-        // Font sizes increased for Score and Lives display
-        this.scoreText = this.add.text(20, 20, 'Score: ' + globalScore + ' / 300', { fontSize: '26px', color: '#000', fontStyle: 'bold' });
+        this.levelText = this.add.text(20, 15, 'Level: ' + currentLevel + ' (' + (currentLevel === 1 ? 'कहानी' : 'व्याकरण') + ')', { fontSize: '22px', color: '#000', fontStyle: 'bold' });
+        this.scoreText = this.add.text(20, 45, 'Score: ' + globalScore + ' / 300', { fontSize: '24px', color: '#000', fontStyle: 'bold' });
         this.livesText = this.add.text(620, 20, 'Lives: ❤️ ' + globalLives, { fontSize: '26px', color: '#d32f2f', fontStyle: 'bold' });
 
         this.player = this.physics.add.sprite(400, 520, 'square_mold');
@@ -511,7 +478,6 @@ class GameScene extends Phaser.Scene {
 
         this.cursors = this.input.keyboard.createCursorKeys();
 
-        // --- Touch Control Handling ---
         this.input.on('pointerdown', (pointer) => {
             unlockMobileAudio();
             this.player.x = Phaser.Math.Clamp(pointer.worldX, 40, 760);
@@ -540,14 +506,24 @@ class GameScene extends Phaser.Scene {
         this.physics.add.overlap(this.player, this.watermelons, this.catchWatermelon, null, this);
         this.physics.add.overlap(this.player, this.obstacles, this.hitObstacle, null, this);
 
-        // Restart buttons handlers
+        // UI Event Listeners
         document.getElementById('restart-btn').onclick = () => {
             document.getElementById('gameover-modal').style.display = 'none';
             this.resetGame();
         };
 
+        document.getElementById('next-level-btn').onclick = () => {
+            document.getElementById('levelcomplete-modal').style.display = 'none';
+            currentLevel = 2;
+            globalScore = 0;
+            this.nextQuizThreshold = 50;
+            this.questionIndex = 0;
+            this.scene.restart({ triggerFirstQuiz: true });
+        };
+
         document.getElementById('win-restart-btn').onclick = () => {
             document.getElementById('win-modal').style.display = 'none';
+            currentLevel = 1;
             this.resetGame();
         };
 
@@ -560,7 +536,6 @@ class GameScene extends Phaser.Scene {
     }
 
     update() {
-        // Keyboard Controls Fallback
         if (this.cursors.left.isDown) {
             this.player.setVelocityX(-420);
         } else if (this.cursors.right.isDown) {
@@ -597,7 +572,11 @@ class GameScene extends Phaser.Scene {
         this.scoreText.setText('Score: ' + globalScore + ' / 300');
 
         if (globalScore >= 300) {
-            this.triggerWin();
+            if (currentLevel === 1) {
+                this.triggerLevelComplete();
+            } else {
+                this.triggerWin();
+            }
             return;
         }
 
@@ -626,10 +605,17 @@ class GameScene extends Phaser.Scene {
         this.spawnTimerObstacle.paused = true;
 
         const gameOverModal = document.getElementById('gameover-modal');
-        const finalScoreText = document.getElementById('final-score-text');
-        
-        finalScoreText.innerText = "आपका कुल अंक (Total Score): " + globalScore;
+        document.getElementById('final-score-text').innerText = "आपका कुल अंक (Total Score): " + globalScore;
         gameOverModal.style.display = 'block';
+    }
+
+    triggerLevelComplete() {
+        playSound('correct_snd', this);
+        this.physics.pause();
+        this.spawnTimerMelon.paused = true;
+        this.spawnTimerObstacle.paused = true;
+
+        document.getElementById('levelcomplete-modal').style.display = 'block';
     }
 
     triggerWin() {
@@ -639,9 +625,7 @@ class GameScene extends Phaser.Scene {
         this.spawnTimerObstacle.paused = true;
 
         const winModal = document.getElementById('win-modal');
-        const winScoreText = document.getElementById('win-score-text');
-
-        winScoreText.innerText = "अद्भुत! आपने " + globalScore + " अंक प्राप्त करके खेल जीत लिया है!";
+        document.getElementById('win-score-text').innerText = "अद्भुत! आपने स्तर 2 भी पूर्ण करके 300 अंक प्राप्त कर लिए हैं!";
         winModal.style.display = 'block';
     }
 
@@ -650,14 +634,17 @@ class GameScene extends Phaser.Scene {
         this.spawnTimerMelon.paused = true;
         this.spawnTimerObstacle.paused = true;
 
-        const currentData = chapterQuestions[this.questionIndex % chapterQuestions.length];
+        const currentQuestions = currentLevel === 1 ? level1Questions : level2Questions;
+        const currentData = currentQuestions[this.questionIndex % currentQuestions.length];
         this.questionIndex++;
 
         const modal = document.getElementById('quiz-modal');
+        const qTitle = document.getElementById('quiz-title');
         const qText = document.getElementById('quiz-question');
         const optionsDiv = document.getElementById('quiz-options');
         const feedbackDiv = document.getElementById('quiz-feedback');
 
+        qTitle.innerText = currentLevel === 1 ? "📖 कहानी प्रश्न (Story Quiz)" : "📝 व्याकरण प्रश्न (Grammar Quiz)";
         qText.innerText = currentData.question;
         optionsDiv.innerHTML = '';
         feedbackDiv.style.display = 'none';
@@ -692,7 +679,11 @@ class GameScene extends Phaser.Scene {
                 setTimeout(() => {
                     modal.style.display = 'none';
                     if (globalScore >= 300) {
-                        this.triggerWin();
+                        if (currentLevel === 1) {
+                            this.triggerLevelComplete();
+                        } else {
+                            this.triggerWin();
+                        }
                     } else {
                         this.resumeGame();
                     }
@@ -715,11 +706,12 @@ class GameScene extends Phaser.Scene {
         globalScore = 0;
         globalLives = 3;
         this.nextQuizThreshold = 50;
+        this.questionIndex = 0;
         this.scene.restart({ triggerFirstQuiz: true });
     }
 }
 
-// --- Phaser Config (Mobile Friendly Auto-Scale) ---
+// --- Phaser Config ---
 const config = {
     type: Phaser.AUTO,
     scale: {
