@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>एआई का कमाल - खेल</title>
+    <title>एआई का कमाल - सही जोड़ी मिलाओ</title>
     <style>
         * {
             box-sizing: border-box;
@@ -16,13 +16,14 @@
         }
 
         body {
-            background: linear-gradient(135deg, #e0f2fe 0%, #fef3c7 100%);
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #311042 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 12px;
             touch-action: manipulation;
+            color: #f8fafc;
         }
 
         /* Screen Routing */
@@ -39,7 +40,7 @@
             display: flex;
         }
 
-        /* SCREEN 1: Innovine Splash Screen (5 Seconds) */
+        /* SCREEN 1: Splash Screen */
         #screen1 {
             height: 80vh;
             justify-content: center;
@@ -59,7 +60,7 @@
             max-width: 80%;
             height: auto;
             object-fit: contain;
-            filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.15));
+            filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.4));
         }
 
         .splash-timer {
@@ -67,7 +68,7 @@
             width: 60%;
             max-width: 180px;
             height: 6px;
-            background: #cbd5e1;
+            background: #334155;
             border-radius: 10px;
             overflow: hidden;
         }
@@ -75,22 +76,24 @@
         .splash-progress {
             width: 0%;
             height: 100%;
-            background: #2563eb;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
             animation: loadProgress 5s linear forwards;
         }
 
         /* SCREEN 2: Instructions */
         .card-box {
-            background: white;
+            background: rgba(30, 41, 59, 0.9);
+            border: 1px solid #334155;
+            backdrop-filter: blur(12px);
             padding: 24px 18px;
             border-radius: 20px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
             max-width: 500px;
             width: 100%;
         }
 
         .card-box h2 {
-            color: #1e3a8a;
+            color: #38bdf8;
             margin-bottom: 15px;
             font-size: 1.5rem;
         }
@@ -101,14 +104,14 @@
             display: flex;
             flex-direction: column;
             gap: 12px;
-            color: #374151;
+            color: #cbd5e1;
             font-size: 0.95rem;
             line-height: 1.5;
         }
 
         .btn-primary {
             padding: 14px 28px;
-            background: #2563eb;
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
             color: white;
             border: none;
             border-radius: 12px;
@@ -116,126 +119,124 @@
             font-weight: bold;
             cursor: pointer;
             transition: all 0.2s ease;
-            box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);
+            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4);
             width: 100%;
             max-width: 280px;
         }
 
         .btn-primary:active {
-            transform: scale(0.98);
+            transform: scale(0.96);
         }
 
         /* SCREEN 3: Game Screen */
         .game-header h1 {
-            color: #1e3a8a;
+            color: #38bdf8;
             font-size: 1.4rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
 
         .stats-board {
-            background: white;
-            padding: 8px 20px;
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid #334155;
+            padding: 8px 24px;
             border-radius: 50px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            margin: 10px 0 15px 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+            margin: 10px 0 20px 0;
             font-weight: bold;
-            color: #1f2937;
+            color: #e2e8f0;
             font-size: 0.95rem;
         }
 
-        .score-val { color: #2563eb; }
+        .score-val { color: #38bdf8; font-size: 1.1rem; }
 
-        .items-pool {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(8px);
-            padding: 14px;
-            border-radius: 18px;
-            min-height: 100px;
-            width: 100%;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            justify-content: center;
-            align-items: center;
-            border: 2px dashed #93c5fd;
-            margin-bottom: 15px;
-        }
-
-        .game-card {
-            background: white;
-            padding: 10px 14px;
-            border-radius: 12px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: #1e293b;
-            box-shadow: 0 3px 5px rgba(0,0,0,0.05);
-            cursor: pointer;
-            transition: transform 0.15s ease, background 0.2s ease, border-color 0.2s ease;
-            border: 2px solid #e2e8f0;
-        }
-
-        .game-card:active {
-            transform: scale(0.96);
-        }
-
-        .game-card.selected {
-            border-color: #2563eb;
-            background: #eff6ff;
-            transform: scale(1.04);
-            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2);
-        }
-
-        .categories-container {
+        .matching-container {
             display: grid;
             grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            width: 100%;
+            max-width: 750px;
+        }
+
+        .column {
+            display: flex;
+            flex-direction: column;
             gap: 12px;
-            width: 100%;
         }
 
-        .category-bin {
-            background: white;
-            border-radius: 18px;
-            padding: 12px;
-            min-height: 200px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            box-shadow: 0 8px 15px -3px rgba(0, 0, 0, 0.08);
-            border: 3px solid transparent;
+        .column-header {
+            font-size: 1rem;
+            font-weight: 700;
+            padding: 8px;
+            border-radius: 8px;
+            background: rgba(15, 23, 42, 0.6);
+            color: #a7f3d0;
+            border: 1px solid #059669;
+        }
+
+        .column-header.col-b {
+            color: #fde68a;
+            border-color: #d97706;
+        }
+
+        .match-card {
+            background: rgba(30, 41, 59, 0.7);
+            border: 2px solid #475569;
+            padding: 14px;
+            border-radius: 14px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #f1f5f9;
             cursor: pointer;
-        }
-
-        .bin-ai { border-color: #0284c7; }
-        .bin-human { border-color: #16a34a; }
-
-        .category-bin h2 { font-size: 0.95rem; margin-bottom: 10px; }
-        .bin-ai h2 { color: #0284c7; }
-        .bin-human h2 { color: #16a34a; }
-
-        .bin-items {
-            width: 100%;
+            transition: all 0.2s ease;
+            min-height: 70px;
             display: flex;
-            flex-direction: column;
-            gap: 8px;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
         }
 
-        .bin-items .game-card {
+        .match-card:hover {
+            border-color: #38bdf8;
+            background: rgba(51, 65, 85, 0.9);
+        }
+
+        .match-card.selected {
+            border-color: #a855f7;
+            background: #581c87;
+            box-shadow: 0 0 15px rgba(168, 85, 247, 0.6);
+            transform: scale(1.02);
+        }
+
+        .match-card.matched {
+            border-color: #22c55e !important;
+            background: rgba(20, 83, 45, 0.8) !important;
+            color: #86efac;
             cursor: default;
-            text-align: center;
+            opacity: 0.85;
+            box-shadow: 0 0 10px rgba(34, 197, 94, 0.3);
+        }
+
+        .match-card.wrong-flash {
+            border-color: #ef4444 !important;
+            background: rgba(127, 29, 29, 0.9) !important;
+            animation: shake 0.4s ease-in-out;
         }
 
         /* SCREEN 4: End Screen */
         .end-card {
-            background: white;
-            padding: 30px 20px;
+            background: rgba(30, 41, 59, 0.95);
+            border: 1px solid #334155;
+            padding: 35px 20px;
             border-radius: 20px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
             max-width: 450px;
             width: 100%;
         }
 
-        .end-card h2 { color: #1e3a8a; font-size: 1.6rem; margin-bottom: 10px; }
-        .end-card p { color: #4b5563; font-size: 1rem; margin-bottom: 20px; }
+        .end-card h2 { color: #38bdf8; font-size: 1.8rem; margin-bottom: 10px; }
+        .end-card p { color: #cbd5e1; font-size: 1rem; margin-bottom: 25px; }
 
+        /* Animations */
         @keyframes fadeInScale {
             0% { opacity: 0; transform: scale(0.85); }
             100% { opacity: 1; transform: scale(1); }
@@ -246,15 +247,20 @@
             100% { width: 100%; }
         }
 
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-6px); }
+            40%, 80% { transform: translateX(6px); }
+        }
+
         @media (min-width: 600px) {
             .card-box { padding: 35px; }
             .card-box h2 { font-size: 1.8rem; }
             .instructions-list { font-size: 1.05rem; }
             .game-header h1 { font-size: 1.8rem; }
             .stats-board { font-size: 1.1rem; }
-            .game-card { font-size: 1rem; padding: 10px 18px; }
-            .category-bin h2 { font-size: 1.1rem; }
-            .categories-container { gap: 20px; }
+            .match-card { font-size: 1rem; padding: 16px; }
+            .matching-container { gap: 24px; }
             .btn-primary { width: auto; }
         }
     </style>
@@ -276,35 +282,36 @@
         <div class="card-box">
             <h2>📜 खेल के नियम</h2>
             <div class="instructions-list">
-                <p>1. पाठ <b>"एआई का कमाल"</b> के आधार पर नीचे दिए गए कार्ड पर टैप करें।</p>
-                <p>2. चुनें कि यह कार्य <b>एआई (मशीन)</b> द्वारा किया जाता है या <b>इंसान (मानव)</b> द्वारा।</p>
-                <p>3. सभी 6 कार्डों का सही मिलान करके गेम पूरा करें!</p>
+                <p>1. पाठ <b>"एआई का कमाल"</b> के आधार पर सही जोड़ी का मिलान करें।</p>
+                <p>2. पहले <b>कॉलम A</b> से किसी कार्ड पर टैप करें।</p>
+                <p>3. फिर <b>कॉलम B</b> से उसके सही उत्तर पर टैप करके जोड़ी बनाएं!</p>
+                <p>4. सभी जोडियाँ सही मिलाकर खेल पूरा करें!</p>
             </div>
             <button class="btn-primary" onclick="goToScreen(3); startGame();">गेम शुरू करें 🚀</button>
         </div>
     </div>
 
-    <!-- SCREEN 3: Game Board -->
+    <!-- SCREEN 3: Match A and B Board -->
     <div id="screen3" class="screen">
         <div class="game-header">
-            <h1>🤖 एआई का कमाल: वर्गीकरण</h1>
+            <h1>🧩 एआई का कमाल: सही जोड़ी मिलाओ</h1>
         </div>
 
         <div class="stats-board">
-            स्कोर: <span id="score" class="score-val">0</span> / <span id="total-score">6</span>
+            जोड़ी बनाई: <span id="score" class="score-val">0</span> / <span id="total-score">5</span>
         </div>
 
-        <div class="items-pool" id="itemsPool"></div>
-
-        <div class="categories-container">
-            <div class="category-bin bin-ai" onclick="classifySelected('ai')">
-                <h2>🤖 एआई / मशीन (AI)</h2>
-                <div class="bin-items" id="aiBin"></div>
+        <div class="matching-container">
+            <!-- Column A -->
+            <div class="column">
+                <div class="column-header">कॉलम A (क्षमता / कार्य)</div>
+                <div id="colA" class="column"></div>
             </div>
 
-            <div class="category-bin bin-human" onclick="classifySelected('human')">
-                <h2>🧠 इंसान / मानव (Human)</h2>
-                <div class="bin-items" id="humanBin"></div>
+            <!-- Column B -->
+            <div class="column">
+                <div class="column-header col-b">कॉलम B (माध्यम / पहचान)</div>
+                <div id="colB" class="column"></div>
             </div>
         </div>
     </div>
@@ -313,7 +320,7 @@
     <div id="screen4" class="screen">
         <div class="end-card">
             <h2>🎉 अद्भुत प्रदर्शन!</h2>
-            <p>आपने पाठ के आधार पर एआई और इंसान की क्षमताओं का सही वर्गीकरण किया!</p>
+            <p>आपने पाठ के आधार पर सभी जोड़ियों का बिल्कुल सही मिलान किया!</p>
             <button class="btn-primary" onclick="restartGame()">पुनः खेलें 🔄</button>
         </div>
     </div>
@@ -344,43 +351,56 @@
             const now = audioCtx.currentTime;
 
             if (type === 'select') {
-                osc.frequency.setValueAtTime(400, now);
-                gain.gain.setValueAtTime(0.1, now);
-                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+                osc.frequency.setValueAtTime(450, now);
+                gain.gain.setValueAtTime(0.08, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
                 osc.start(now);
-                osc.stop(now + 0.1);
+                osc.stop(now + 0.08);
             } else if (type === 'correct') {
                 osc.type = 'sine';
                 osc.frequency.setValueAtTime(523.25, now);
                 osc.frequency.setValueAtTime(659.25, now + 0.1);
-                gain.gain.setValueAtTime(0.15, now);
+                gain.gain.setValueAtTime(0.12, now);
                 gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
                 osc.start(now);
                 osc.stop(now + 0.3);
             } else if (type === 'wrong') {
                 osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(180, now);
-                osc.frequency.setValueAtTime(130, now + 0.15);
-                gain.gain.setValueAtTime(0.15, now);
-                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                osc.frequency.setValueAtTime(200, now);
+                osc.frequency.setValueAtTime(140, now + 0.12);
+                gain.gain.setValueAtTime(0.12, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
                 osc.start(now);
-                osc.stop(now + 0.3);
+                osc.stop(now + 0.25);
+            } else if (type === 'win') {
+                const notes = [440, 554.37, 659.25, 880];
+                notes.forEach((freq, idx) => {
+                    const winOsc = audioCtx.createOscillator();
+                    const winGain = audioCtx.createGain();
+                    winOsc.connect(winGain);
+                    winGain.connect(audioCtx.destination);
+                    winOsc.frequency.setValueAtTime(freq, now + idx * 0.1);
+                    winGain.gain.setValueAtTime(0.1, now + idx * 0.1);
+                    winGain.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.1 + 0.25);
+                    winOsc.start(now + idx * 0.1);
+                    winOsc.stop(now + idx * 0.1 + 0.25);
+                });
             }
         }
 
-        // Updated options based on AI capabilities and Human traits
-        const masterItemsBank = [
-            { id: 1, name: '🚗 बिना ड्राइवर के गाड़ी चलाना', category: 'ai' },
-            { id: 2, name: '🎨 मौलिक चित्रकला बनाना', category: 'human' },
-            { id: 3, name: '🌐 तुरंत भाषा का अनुवाद करना', category: 'ai' },
-            { id: 4, name: '💖 दूसरों का दुख-दर्द महसूस करना', category: 'human' },
-            { id: 5, name: '🤖 चेहरे को पहचानकर लॉक खोलना', category: 'ai' },
-            { id: 6, name: '💬 नैतिक और सही-गलत का फैसला', category: 'human' }
+        // Pairs dataset matching AI capabilities/Human traits
+        const matching PairsBank = [
+            { id: 1, optionA: '🚗 बिना ड्राइवर गाड़ी चलाना', optionB: '🤖 एआई (स्वचालित कार)' },
+            { id: 2, name: '💖 दया और सहानुभूति', optionA: '💖 दया और मानवीय भावनाएं', optionB: '🧠 इंसान (मानव)' },
+            { id: 3, optionA: '🌐 भाषाओं का तुरंत अनुवाद', optionB: '⚡ एआई मशीन' },
+            { id: 4, optionA: '🎨 मौलिक कला और रचनात्मकता', optionB: '🎨 इंसानी दिमाग' },
+            { id: 5, optionA: '🔓 चेहरा पहचानकर सुरक्षा', optionB: '👁️ एआई सुरक्षा प्रणाली' }
         ];
 
-        let selectedItem = null;
+        let selectedA = null;
+        let selectedB = null;
         let score = 0;
-        const ITEMS_PER_ROUND = 6;
+        const TOTAL_PAIRS = pairsBank.length;
 
         function goToScreen(screenNumber) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -395,65 +415,102 @@
 
         function startGame() {
             score = 0;
-            selectedItem = null;
+            selectedA = null;
+            selectedB = null;
             document.getElementById('score').innerText = score;
-            document.getElementById('total-score').innerText = ITEMS_PER_ROUND;
-            document.getElementById('aiBin').innerHTML = '';
-            document.getElementById('humanBin').innerHTML = '';
+            document.getElementById('total-score').innerText = TOTAL_PAIRS;
 
-            const currentRoundItems = [...masterItemsBank].sort(() => Math.random() - 0.5);
+            const colAContainer = document.getElementById('colA');
+            const colBContainer = document.getElementById('colB');
 
-            const pool = document.getElementById('itemsPool');
-            pool.innerHTML = '';
+            colAContainer.innerHTML = '';
+            colBContainer.innerHTML = '';
 
-            currentRoundItems.forEach(item => {
+            // Shuffle Column A and Column B independently
+            const listA = [...pairsBank].sort(() => Math.random() - 0.5);
+            const listB = [...pairsBank].sort(() => Math.random() - 0.5);
+
+            listA.forEach(item => {
                 const card = document.createElement('div');
-                card.className = 'game-card';
-                card.innerText = item.name;
-                card.onclick = (e) => {
-                    e.stopPropagation();
-                    selectCard(card, item);
-                };
-                pool.appendChild(card);
+                card.className = 'match-card';
+                card.innerText = item.optionA;
+                card.dataset.id = item.id;
+                card.onclick = () => handleSelectA(card, item.id);
+                colAContainer.appendChild(card);
+            });
+
+            listB.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'match-card';
+                card.innerText = item.optionB;
+                card.dataset.id = item.id;
+                card.onclick = () => handleSelectB(card, item.id);
+                colBContainer.appendChild(card);
             });
         }
 
-        function selectCard(cardElement, itemData) {
+        function handleSelectA(cardElement, id) {
+            if (cardElement.classList.contains('matched')) return;
+
             playSound('select');
-            document.querySelectorAll('.game-card').forEach(c => c.classList.remove('selected'));
+            document.querySelectorAll('#colA .match-card').forEach(c => c.classList.remove('selected'));
             cardElement.classList.add('selected');
-            selectedItem = { element: cardElement, data: itemData };
+            selectedA = { element: cardElement, id: id };
+
+            checkMatch();
         }
 
-        function classifySelected(targetCategory) {
-            if (!selectedItem) return;
+        function handleSelectB(cardElement, id) {
+            if (cardElement.classList.contains('matched')) return;
 
-            if (selectedItem.data.category === targetCategory) {
-                playSound('correct');
-                const targetBin = targetCategory === 'ai' ? 
-                    document.getElementById('aiBin') : document.getElementById('humanBin');
-                
-                selectedItem.element.classList.remove('selected');
-                selectedItem.element.onclick = null;
-                targetBin.appendChild(selectedItem.element);
+            playSound('select');
+            document.querySelectorAll('#colB .match-card').forEach(c => c.classList.remove('selected'));
+            cardElement.classList.add('selected');
+            selectedB = { element: cardElement, id: id };
 
-                score++;
-                document.getElementById('score').innerText = score;
-                selectedItem = null;
+            checkMatch();
+        }
 
-                if (score === ITEMS_PER_ROUND) {
+        function checkMatch() {
+            if (selectedA && selectedB) {
+                if (selectedA.id === selectedB.id) {
+                    // Match found
+                    playSound('correct');
+                    selectedA.element.classList.remove('selected');
+                    selectedB.element.classList.remove('selected');
+
+                    selectedA.element.classList.add('matched');
+                    selectedB.element.classList.add('matched');
+
+                    selectedA = null;
+                    selectedB = null;
+
+                    score++;
+                    document.getElementById('score').innerText = score;
+
+                    if (score === TOTAL_PAIRS) {
+                        setTimeout(() => {
+                            playSound('win');
+                            goToScreen(4);
+                        }, 600);
+                    }
+                } else {
+                    // Incorrect Match
+                    playSound('wrong');
+                    const tempA = selectedA.element;
+                    const tempB = selectedB.element;
+
+                    tempA.classList.add('wrong-flash');
+                    tempB.classList.add('wrong-flash');
+
+                    selectedA = null;
+                    selectedB = null;
+
                     setTimeout(() => {
-                        goToScreen(4);
+                        tempA.classList.remove('selected', 'wrong-flash');
+                        tempB.classList.remove('selected', 'wrong-flash');
                     }, 500);
                 }
-            } else {
-                playSound('wrong');
-                selectedItem.element.style.borderColor = '#ef4444';
-                setTimeout(() => {
-                    if (selectedItem && selectedItem.element) {
-                        selectedItem.element.style.borderColor = '#e2e8f0';
-                    }
-                }, 500);
             }
         }
 
