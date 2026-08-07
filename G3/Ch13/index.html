@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>व्याकरण बोध: मुहावरे - घटनाक्रम खेल</title>
+    <title>हिम्मत की दौड़ - घटनाक्रम व व्याकरण</title>
     <style>
         * {
             box-sizing: border-box;
@@ -24,7 +24,7 @@
 
         #game-container {
             background: #ffffff;
-            max-width: 650px;
+            max-width: 680px;
             width: 100%;
             padding: 25px;
             border-radius: 12px;
@@ -75,6 +75,7 @@
             font-size: 0.95em;
         }
 
+        /* --- Level 1 Timeline Styles --- */
         #events-list {
             list-style-type: none;
             margin-bottom: 20px;
@@ -106,6 +107,60 @@
             margin-right: 12px;
             color: #aaa;
             font-size: 1.2em;
+        }
+
+        /* --- Level 2 Matching Styles --- */
+        #matching-container {
+            display: none;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .match-column {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .match-card {
+            background-color: #fafafa;
+            border: 2px solid #e0e0e0;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-align: center;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.2s;
+            min-height: 54px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .match-card:hover {
+            border-color: #3498db;
+            background-color: #f0f7fc;
+        }
+
+        .match-card.selected {
+            border-color: #f39c12;
+            background-color: #fef9e7;
+            transform: scale(1.02);
+        }
+
+        .match-card.matched {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+            cursor: default;
+        }
+
+        .match-card.wrong {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
         }
 
         .button-group {
@@ -159,7 +214,14 @@
 
         <p class="instructions" id="instructions-text">घटनाओं को सही कालानुक्रमिक (Chronological) क्रम में व्यवस्थित करने के लिए ड्रैग करें:</p>
 
+        <!-- Level 1 Content -->
         <ul id="events-list"></ul>
+
+        <!-- Level 2 Content -->
+        <div id="matching-container">
+            <div class="match-column" id="idioms-column"></div>
+            <div class="match-column" id="meanings-column"></div>
+        </div>
 
         <div class="button-group">
             <button id="check-btn" class="btn btn-check">उत्तर जांचें</button>
@@ -171,39 +233,46 @@
 
     <script>
         // ==========================================
-        // 1. DATA POOL
+        // DATA POOL
         // ==========================================
-        const masterEventsPool = [
-            // --- LEVEL 1: Main Story Line (Basic Events) ---
-            { id: "e1", level: 1, text: "डेरेक रेडमंड का जन्म 3 सितंबर 1965 को इंग्लैंड में हुआ।", correctOrder: 1 },
-            { id: "e2", level: 1, text: "डेरेक का सपना ओलंपिक में स्वर्ण पदक जीतना था।", correctOrder: 2 },
-            { id: "e3", level: 1, text: "डेरेक ने 7 वर्ष की उम्र में एथलेटिक्स क्लब में अभ्यास शुरू किया।", correctOrder: 3 },
-            { id: "e4", level: 1, text: "1992 बार्सिलोना ओलंपिक 400 मीटर सेमीफाइनल की दौड़ शुरू हुई।", correctOrder: 4 },
-            { id: "e5", level: 1, text: "250 मीटर पर डेरेक के पैर की हैमस्ट्रिंग में चोट लगी और वह गिर पड़े।", correctOrder: 5 },
-            { id: "e6", level: 1, text: "डेरेक दर्द में भी उठे और लंगड़ाते हुए आगे बढ़ने लगे।", correctOrder: 6 },
-            { id: "e7", level: 1, text: "पिता जिम रेडमंड मैदान में आए और अपने बेटे को सहारा दिया।", correctOrder: 7 },
-            { id: "e8", level: 1, text: "दर्शकों की तालियों के बीच दोनों ने मिलकर फिनिश लाइन पार की।", correctOrder: 8 },
+        const level1Data = [
+            { id: "e1", text: "डेरेक रेडमंड का जन्म 3 सितंबर 1965 को इंग्लैंड में हुआ।", correctOrder: 1 },
+            { id: "e2", text: "डेरेक का सपना ओलंपिक में स्वर्ण पदक जीतना था।", correctOrder: 2 },
+            { id: "e3", text: "डेरेक ने 7 वर्ष की उम्र में एथलेटिक्स क्लब में अभ्यास शुरू किया।", correctOrder: 3 },
+            { id: "e4", text: "1992 बार्सिलोना ओलंपिक 400 मीटर सेमीफाइनल की दौड़ शुरू हुई।", correctOrder: 4 },
+            { id: "e5", text: "250 मीटर पर डेरेक के पैर की हैमस्ट्रिंग में चोट लगी और वह गिर पड़े।", correctOrder: 5 },
+            { id: "e6", text: "डेरेक दर्द में भी उठे और लंगड़ाते हुए आगे बढ़ने लगे।", correctOrder: 6 },
+            { id: "e7", text: "पिता जिम रेडमंड मैदान में आए और अपने बेटे को सहारा दिया।", correctOrder: 7 },
+            { id: "e8", text: "दर्शकों की तालियों के बीच दोनों ने मिलकर फिनिश लाइन पार की।", correctOrder: 8 }
+        ];
 
-            // --- LEVEL 2: Grammar - Idioms & Meanings (मुहावरे और उनके सही अर्थ) ---
-            { id: "e9",  level: 2, text: "दाँतों तले उँगली दबाना ➔ बहुत आश्चर्यचकित होना", correctOrder: 1 },
-            { id: "e10", level: 2, text: "सिर ऊँचा करना ➔ गर्व बढ़ाना", correctOrder: 2 },
-            { id: "e11", level: 2, text: "मैदान मारना ➔ सफलता प्राप्त करना", correctOrder: 3 },
-            { id: "e12", level: 2, text: "कंधे से कंधा मिलाना ➔ मिलकर साथ देना", correctOrder: 4 }
+        const level2Data = [
+            { id: "m1", idiom: "दाँतों तले उँगली दबाना", meaning: "बहुत आश्चर्यचकित होना" },
+            { id: "m2", idiom: "सिर ऊँचा करना", meaning: "गर्व बढ़ाना" },
+            { id: "m3", idiom: "मैदान मारना", meaning: "सफलता प्राप्त करना" },
+            { id: "m4", idiom: "कंधे से कंधा मिलाना", meaning: "मिलकर साथ देना" },
+            { id: "m5", idiom: "पसीना बहाना", meaning: "कड़ी मेहनत करना" },
+            { id: "m6", idiom: "हिम्मत न हारना", meaning: "धैर्य न खोना" }
         ];
 
         // ==========================================
-        // 2. GAME CONTROLLER
+        // GAME CONTROLLER
         // ==========================================
-        class TimelineGame {
+        class GameApp {
             constructor() {
                 this.currentLevel = 1;
-                this.activeEvents = [];
-                this.draggedIndex = null;
+                this.activeEventsL1 = [];
+                this.selectedIdiom = null;
+                this.selectedMeaning = null;
+                this.userMatches = {}; // { idiomId: meaningId }
 
                 this.levelIndicator = document.getElementById('level-indicator');
                 this.levelToggleBtn = document.getElementById('level-toggle-btn');
                 this.instructionsText = document.getElementById('instructions-text');
                 this.eventsList = document.getElementById('events-list');
+                this.matchingContainer = document.getElementById('matching-container');
+                this.idiomsColumn = document.getElementById('idioms-column');
+                this.meaningsColumn = document.getElementById('meanings-column');
                 this.feedback = document.getElementById('feedback');
                 this.checkBtn = document.getElementById('check-btn');
                 this.resetBtn = document.getElementById('reset-btn');
@@ -227,104 +296,208 @@
                 return shuffled;
             }
 
-            loadLevel(levelNumber) {
-                this.currentLevel = levelNumber;
-                this.levelIndicator.innerText = `स्तर: ${this.currentLevel} (${this.currentLevel === 1 ? 'मुख्य कहानी' : 'व्याकरण बोध: मुहावरे'})`;
-                this.levelToggleBtn.innerText = this.currentLevel === 1 ? "स्तर 2 पर जाएं" : "स्तर 1 पर जाएं";
-                this.feedback.innerText = "";
-
-                if (this.currentLevel === 1) {
-                    this.instructionsText.innerText = "घटनाओं को सही कालानुक्रमिक (Chronological) क्रम में व्यवस्थित करने के लिए ड्रैग करें:";
-                } else {
-                    this.instructionsText.innerText = "मुहावरों को उनके सही अर्थ से सुमेलित (सही क्रम में) करने के लिए ड्रैग करें:";
-                }
-
-                const levelData = masterEventsPool.filter(e => e.level === levelNumber);
-                this.activeEvents = this.shuffle(levelData);
-
-                this.renderList();
-            }
-
             toggleLevel() {
                 const nextLevel = this.currentLevel === 1 ? 2 : 1;
                 this.loadLevel(nextLevel);
             }
 
-            renderList() {
-                this.eventsList.innerHTML = "";
+            loadLevel(levelNumber) {
+                this.currentLevel = levelNumber;
+                this.feedback.innerText = "";
+                this.selectedIdiom = null;
+                this.selectedMeaning = null;
+                this.userMatches = {};
 
-                this.activeEvents.forEach((event, index) => {
+                if (this.currentLevel === 1) {
+                    this.levelIndicator.innerText = "स्तर: 1 (मुख्य कहानी)";
+                    this.levelToggleBtn.innerText = "स्तर 2 पर जाएं";
+                    this.instructionsText.innerText = "घटनाओं को सही कालानुक्रमिक (Chronological) क्रम में व्यवस्थित करने के लिए ड्रैग करें:";
+                    this.eventsList.style.display = "block";
+                    this.matchingContainer.style.display = "none";
+                    this.checkBtn.style.display = "inline-block";
+
+                    this.activeEventsL1 = this.shuffle(level1Data);
+                    this.renderLevel1();
+                } else {
+                    this.levelIndicator.innerText = "स्तर: 2 (व्याकरण बोध: मुहावरे मिलान)";
+                    this.levelToggleBtn.innerText = "स्तर 1 पर जाएं";
+                    this.instructionsText.innerText = "बाएँ कॉलम से 'मुहावरा' और दाएँ कॉलम से उसका सही 'अर्थ' चुनकर मिलान करें:";
+                    this.eventsList.style.display = "none";
+                    this.matchingContainer.style.display = "grid";
+                    this.checkBtn.style.display = "inline-block";
+
+                    this.renderLevel2();
+                }
+            }
+
+            // --- LEVEL 1 LOGIC ---
+            renderLevel1() {
+                this.eventsList.innerHTML = "";
+                this.activeEventsL1.forEach((event, index) => {
                     const li = document.createElement('li');
                     li.setAttribute('draggable', 'true');
                     li.dataset.index = index;
                     li.innerHTML = `<span class="drag-icon">☰</span> <span>${event.text}</span>`;
 
-                    // Drag and Drop Event Listeners
-                    li.addEventListener('dragstart', (e) => this.handleDragStart(e, index));
-                    li.addEventListener('dragover', (e) => this.handleDragOver(e));
-                    li.addEventListener('drop', (e) => this.handleDrop(e, index));
-                    li.addEventListener('dragend', (e) => this.handleDragEnd(e));
+                    li.addEventListener('dragstart', (e) => {
+                        this.draggedIndex = index;
+                        e.dataTransfer.effectAllowed = 'move';
+                        e.target.classList.add('dragging');
+                    });
+
+                    li.addEventListener('dragover', (e) => {
+                        e.preventDefault();
+                        e.dataTransfer.dropEffect = 'move';
+                    });
+
+                    li.addEventListener('drop', (e) => {
+                        e.preventDefault();
+                        if (this.draggedIndex === null || this.draggedIndex === index) return;
+                        const movedItem = this.activeEventsL1.splice(this.draggedIndex, 1)[0];
+                        this.activeEventsL1.splice(index, 0, movedItem);
+                        this.renderLevel1();
+                    });
+
+                    li.addEventListener('dragend', (e) => {
+                        e.target.classList.remove('dragging');
+                        this.draggedIndex = null;
+                    });
 
                     this.eventsList.appendChild(li);
                 });
             }
 
-            // Drag and Drop Handlers
-            handleDragStart(e, index) {
-                this.draggedIndex = index;
-                e.dataTransfer.effectAllowed = 'move';
-                e.target.classList.add('dragging');
-            }
+            // --- LEVEL 2 LOGIC ---
+            renderLevel2() {
+                this.idiomsColumn.innerHTML = "";
+                this.meaningsColumn.innerHTML = "";
 
-            handleDragOver(e) {
-                e.preventDefault();
-                e.dataTransfer.dropEffect = 'move';
-            }
+                const shuffledIdioms = this.shuffle(level2Data);
+                const shuffledMeanings = this.shuffle(level2Data);
 
-            handleDrop(e, targetIndex) {
-                e.preventDefault();
-                if (this.draggedIndex === null || this.draggedIndex === targetIndex) return;
-
-                const movedItem = this.activeEvents.splice(this.draggedIndex, 1)[0];
-                this.activeEvents.splice(targetIndex, 0, movedItem);
-
-                this.renderList();
-            }
-
-            handleDragEnd(e) {
-                e.target.classList.remove('dragging');
-                this.draggedIndex = null;
-            }
-
-            // Answer Checking Logic
-            checkAnswer() {
-                let isCorrect = true;
-                const listItems = this.eventsList.children;
-
-                this.activeEvents.forEach((event, index) => {
-                    if (event.correctOrder !== index + 1) {
-                        isCorrect = false;
-                        listItems[index].style.backgroundColor = '#f8d7da';
-                        listItems[index].style.borderColor = '#f5c6cb';
-                    } else {
-                        listItems[index].style.backgroundColor = '#d4edda';
-                        listItems[index].style.borderColor = '#c3e6cb';
-                    }
+                shuffledIdioms.forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'match-card';
+                    card.dataset.id = item.id;
+                    card.dataset.type = 'idiom';
+                    card.innerText = item.idiom;
+                    card.addEventListener('click', () => this.handleMatchClick(card));
+                    this.idiomsColumn.appendChild(card);
                 });
 
-                if (isCorrect) {
-                    this.feedback.innerText = "अद्भुत! आपने सभी उत्तर सही क्रम में लगाए हैं। 🎉";
+                shuffledMeanings.forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'match-card';
+                    card.dataset.id = item.id;
+                    card.dataset.type = 'meaning';
+                    card.innerText = item.meaning;
+                    card.addEventListener('click', () => this.handleMatchClick(card));
+                    this.meaningsColumn.appendChild(card);
+                });
+            }
+
+            handleMatchClick(card) {
+                if (card.classList.contains('matched')) return;
+
+                const type = card.dataset.type;
+
+                if (type === 'idiom') {
+                    document.querySelectorAll('#idioms-column .match-card').forEach(c => {
+                        if (!c.classList.contains('matched')) c.classList.remove('selected');
+                    });
+                    card.classList.add('selected');
+                    this.selectedIdiom = card;
+                } else if (type === 'meaning') {
+                    document.querySelectorAll('#meanings-column .match-card').forEach(c => {
+                        if (!c.classList.contains('matched')) c.classList.remove('selected');
+                    });
+                    card.classList.add('selected');
+                    this.selectedMeaning = card;
+                }
+
+                // Try to pair if both selected
+                if (this.selectedIdiom && this.selectedMeaning) {
+                    const idiomId = this.selectedIdiom.dataset.id;
+                    const meaningId = this.selectedMeaning.dataset.id;
+
+                    if (idiomId === meaningId) {
+                        // Correct Pair
+                        this.selectedIdiom.classList.remove('selected');
+                        this.selectedMeaning.classList.remove('selected');
+                        this.selectedIdiom.classList.add('matched');
+                        this.selectedMeaning.classList.add('matched');
+
+                        this.userMatches[idiomId] = true;
+                        this.selectedIdiom = null;
+                        this.selectedMeaning = null;
+
+                        this.checkLevel2Progress();
+                    } else {
+                        // Wrong Pair
+                        const tempIdiom = this.selectedIdiom;
+                        const tempMeaning = this.selectedMeaning;
+
+                        tempIdiom.classList.add('wrong');
+                        tempMeaning.classList.add('wrong');
+
+                        setTimeout(() => {
+                            tempIdiom.classList.remove('wrong', 'selected');
+                            tempMeaning.classList.remove('wrong', 'selected');
+                        }, 800);
+
+                        this.selectedIdiom = null;
+                        this.selectedMeaning = null;
+                    }
+                }
+            }
+
+            checkLevel2Progress() {
+                if (Object.keys(this.userMatches).length === level2Data.length) {
+                    this.feedback.innerText = "अद्भुत! आपने सभी मुहावरों के सही अर्थ मिला दिए हैं। 🎉";
                     this.feedback.style.color = "#27ae60";
+                }
+            }
+
+            // --- CHECK ANSWERS ---
+            checkAnswer() {
+                if (this.currentLevel === 1) {
+                    let isCorrect = true;
+                    const listItems = this.eventsList.children;
+
+                    this.activeEventsL1.forEach((event, index) => {
+                        if (event.correctOrder !== index + 1) {
+                            isCorrect = false;
+                            listItems[index].style.backgroundColor = '#f8d7da';
+                            listItems[index].style.borderColor = '#f5c6cb';
+                        } else {
+                            listItems[index].style.backgroundColor = '#d4edda';
+                            listItems[index].style.borderColor = '#c3e6cb';
+                        }
+                    });
+
+                    if (isCorrect) {
+                        this.feedback.innerText = "अद्भुत! आपने सभी उत्तर सही क्रम में लगाए हैं। 🎉";
+                        this.feedback.style.color = "#27ae60";
+                    } else {
+                        this.feedback.innerText = "कुछ उत्तर गलत क्रम में हैं। लाल रंग वाले बॉक्स जांचें और पुनः प्रयास करें। ❌";
+                        this.feedback.style.color = "#e74c3c";
+                    }
                 } else {
-                    this.feedback.innerText = "कुछ उत्तर गलत क्रम में हैं। लाल रंग वाले बॉक्स जांचें और पुनः प्रयास करें। ❌";
-                    this.feedback.style.color = "#e74c3c";
+                    const matchedCount = Object.keys(this.userMatches).length;
+                    if (matchedCount === level2Data.length) {
+                        this.feedback.innerText = "शानदार! सभी मुहावरे सही सुमेलित हैं! 🎉";
+                        this.feedback.style.color = "#27ae60";
+                    } else {
+                        this.feedback.innerText = `आपने ${level2Data.length} में से ${matchedCount} मुहावरे सही मिलाए हैं। बाकी भी पूरा करें! 💡`;
+                        this.feedback.style.color = "#e67e22";
+                    }
                 }
             }
         }
 
-        // Run Game on Page Load
+        // Run Game on Load
         window.addEventListener('DOMContentLoaded', () => {
-            new TimelineGame();
+            new GameApp();
         });
     </script>
 </body>
