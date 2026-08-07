@@ -70,7 +70,7 @@
             object-fit: contain;
         }
 
-        /* Instructions Screen */
+        /* Instructions Screen & Level Select */
         .instruction-box {
             background: #f0f4f8;
             border-left: 5px solid #0072ff;
@@ -82,18 +82,30 @@
             line-height: 1.5;
         }
 
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            width: 100%;
+            justify-content: center;
+        }
+
         .btn {
             background: #0072ff;
             color: white;
             border: none;
-            padding: 12px 30px;
-            font-size: 18px;
+            padding: 12px 20px;
+            font-size: 16px;
             font-weight: bold;
             border-radius: 25px;
             cursor: pointer;
             box-shadow: 0 4px 10px rgba(0,114,255,0.3);
             transition: transform 0.1s, background 0.2s;
-            margin-top: 15px;
+        }
+
+        .btn-secondary {
+            background: #2e7d32;
+            box-shadow: 0 4px 10px rgba(46,125,50,0.3);
         }
 
         .btn:active {
@@ -230,10 +242,10 @@
 <div id="game-container">
     <!-- Screen 1: Splash (Only Innovine Logo) -->
     <div id="screen-splash" class="screen active">
-        <img src="assets/logo.png" alt="Innovine Logo" class="splash-logo">
+        <img src="assets/logo.png" alt="Innovine Logo" class="splash-logo" onerror="this.onerror=null; this.src='https://via.placeholder.com/220x100?text=INNOVINE';">
     </div>
 
-    <!-- Screen 2: Instructions -->
+    <!-- Screen 2: Level Selection & Instructions -->
     <div id="screen-instructions" class="screen">
         <h2>खेल के नियम</h2>
         <p class="subtitle" style="color:#666; margin-top:3px; font-weight: 500;">बड़े सपनों वाला बच्चा</p>
@@ -246,13 +258,17 @@
                 <li>सही अक्षर (+10) | गलत अक्षर (-5)</li>
             </ul>
         </div>
-        <button class="btn" onclick="startGame()">खेल शुरू करें</button>
+        <p style="font-weight: bold; margin-top: 10px; color: #1e3c72;">खेलने के लिए लेवल चुनें:</p>
+        <div class="btn-group">
+            <button class="btn" onclick="startGame(1)">लेवल 1: पाठ्य खेल</button>
+            <button class="btn btn-secondary" onclick="startGame(2)">लेवल 2: व्याकरण बोध (विशेषण)</button>
+        </div>
     </div>
 
     <!-- Screen 3: Game -->
     <div id="screen-game" class="screen">
         <div class="game-header">
-            <div>प्रश्न: <span id="current-q">1</span>/<span id="total-q">5</span></div>
+            <div><span id="level-title-display">लेवल 1</span> | प्रश्न: <span id="current-q">1</span>/<span id="total-q">5</span></div>
             <div>स्कोर: <span id="score">0</span></div>
         </div>
 
@@ -270,32 +286,57 @@
         <h2>बधाई हो! 🎉</h2>
         <p style="margin-top: 10px; font-size: 18px;">आपका कुल स्कोर: <b id="final-score" style="color:#0072ff;">0</b></p>
         
-        <div class="lesson-card">
+        <div class="lesson-card" id="end-lesson-text">
             <strong>डॉ. कलाम का संदेश:</strong><br>
             "सपना वह नहीं होता जो आप सोते समय देखते हैं, सपना वह होता है जो आपको सोने न दे।"
         </div>
 
-        <button class="btn" onclick="startGame()">पुनः खेलें 🔄</button>
+        <div class="btn-group">
+            <button class="btn" onclick="switchScreen('screen-instructions')">मुख्य मेनू 🏠</button>
+            <button class="btn btn-secondary" onclick="startGame(selectedLevel)">पुनः खेलें 🔄</button>
+        </div>
     </div>
 </div>
 
 <script>
-    // Sound Effects Setup
-    const soundCorrect = new Audio('assets/correct.mp3');
-    const soundWrong = new Audio('assets/wrong.mp3');
+    // Web Audio API Synthesis for Sound Effects
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    let audioCtx = null;
 
-    function playSound(audioObj) {
-        audioObj.currentTime = 0;
-        audioObj.play().catch(e => console.log("Audio play prevented: ", e));
+    function playSound(type) {
+        if (!audioCtx) audioCtx = new AudioCtx();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        const now = audioCtx.currentTime;
+
+        if (type === 'correct') {
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(523.25, now);
+            osc.frequency.setValueAtTime(659.25, now + 0.1);
+            gain.gain.setValueAtTime(0.2, now);
+            gain.gain.linearRampToValueAtTime(0.01, now + 0.25);
+            osc.start(now);
+            osc.stop(now + 0.25);
+        } else {
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(180, now);
+            osc.frequency.setValueAtTime(120, now + 0.15);
+            gain.gain.setValueAtTime(0.2, now);
+            gain.gain.linearRampToValueAtTime(0.01, now + 0.25);
+            osc.start(now);
+            osc.stop(now + 0.25);
+        }
     }
 
-    // Splash Screen Timer (5 Seconds)
+    // Splash Screen Timer (3 Seconds)
     setTimeout(() => {
         switchScreen('screen-instructions');
-    }, 5000);
+    }, 3000);
 
-    // Master Pool of 15 Questions
-    const masterQuestionPool = [
+    // Level 1 Questions (Game Content)
+    const level1Questions = [
         { hint: "💡 कलाम जी का जन्म तमिलनाडु के किस शहर में हुआ था?", targetWord: ["रा", "मे", "श्व", "र", "म"] },
         { hint: "💡 बचपन में कलाम जी पढ़ाई का खर्च निकालने के लिए क्या बाँटते थे?", targetWord: ["अ", "ख", "बा", "र"] },
         { hint: "💡 कलाम जी के प्रिय प्राथमिक शिक्षक का क्या नाम था?", targetWord: ["सु", "ब्र", "म्ह", "ण्य", "म"] },
@@ -313,6 +354,16 @@
         { hint: "💡 कलाम जी को किनके साथ समय बिताना सबसे प्रिय था?", targetWord: ["ब", "च्चों"] }
     ];
 
+    // Level 2 Questions (Grammar: विशेषण)
+    const level2Questions = [
+        { hint: "💡 'संज्ञा या सर्वनाम के गुण/विशेषता बताने वाले शब्द' को क्या कहते हैं?", targetWord: ["वि", "शे", "ष", "ण"] },
+        { hint: "💡 'सरल व्यक्ति' - इस वाक्य में विशेषण शब्द कौन-सा है?", targetWord: ["स", "र", "ल"] },
+        { hint: "💡 'बड़े सपने' - इस पद में 'सपने' की विशेषता बताने वाला शब्द कौन सा है?", targetWord: ["ब", "ड़े"] },
+        { hint: "💡 'कलाम जी एक महान वैज्ञानिक थे।' - वाक्य में विशेषण शब्द पहचानें:", targetWord: ["म", "हा", "न"] },
+        { hint: "💡 'उन्होंने कठिन परिश्रम किया।' - इस वाक्य में विशेषण शब्द क्या है?", targetWord: ["क", "ठि", "न"] }
+    ];
+
+    let selectedLevel = 1;
     let currentGameQuestions = [];
     let currentLevel = 0;
     let score = 0;
@@ -340,8 +391,21 @@
         document.getElementById(screenId).classList.add('active');
     }
 
-    function startGame() {
-        currentGameQuestions = shuffleArray(masterQuestionPool).slice(0, 5);
+    function startGame(level) {
+        selectedLevel = level;
+        if (level === 1) {
+            currentGameQuestions = shuffleArray(level1Questions).slice(0, 5);
+            document.getElementById('level-title-display').innerText = "लेवल 1";
+            document.getElementById('end-lesson-text').innerHTML = `
+                <strong>डॉ. कलाम का संदेश:</strong><br>
+                "सपना वह नहीं होता जो आप सोते समय देखते हैं, सपना वह होता है जो आपको सोने न दे।"`;
+        } else {
+            currentGameQuestions = level2Questions;
+            document.getElementById('level-title-display').innerText = "लेवल 2 (विशेषण)";
+            document.getElementById('end-lesson-text').innerHTML = `
+                <strong>व्याकरण बोध: विशेषण</strong><br>
+                संज्ञा या सर्वनाम के गुण, रंग, आकार, संख्या या अवस्था के बारे में बताने वाले शब्द विशेषण कहलाते हैं। (उदा: सरल व्यक्ति, बड़े सपने)`;
+        }
 
         currentLevel = 0;
         score = 0;
@@ -464,7 +528,7 @@
                         filledLetters[nextNeededIndex] = item.text;
                         document.getElementById('slot-' + nextNeededIndex).innerText = item.text;
                         score += 10;
-                        playSound(soundCorrect);
+                        playSound('correct');
                         showFeedback("⚡ सही अक्षर! +10", true);
 
                         if (filledLetters.findIndex(val => val === '') === -1) {
@@ -472,7 +536,7 @@
                         }
                     } else {
                         score = Math.max(0, score - 5);
-                        playSound(soundWrong);
+                        playSound('wrong');
                         showFeedback("❌ गलत अक्षर! -5", false);
                     }
 
