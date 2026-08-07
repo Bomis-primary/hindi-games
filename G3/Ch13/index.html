@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>हिम्मत की दौड़ - घटनाक्रम खेल</title>
+    <title>व्याकरण बोध: मुहावरे - घटनाक्रम खेल</title>
     <style>
         * {
             box-sizing: border-box;
@@ -150,14 +150,14 @@
 <body>
 
     <div id="game-container">
-        <h2>हिम्मत की दौड़ - घटनाक्रम गेम</h2>
+        <h2>हिम्मत की दौड़ - घटनाक्रम व व्याकरण</h2>
         
         <div class="controls-header">
             <span id="level-indicator">स्तर: 1</span>
             <button id="level-toggle-btn" class="btn-toggle">स्तर 2 पर जाएं</button>
         </div>
 
-        <p class="instructions">घटनाओं को सही कालानुक्रमिक (Chronological) क्रम में व्यवस्थित करने के लिए ड्रैग करें:</p>
+        <p class="instructions" id="instructions-text">घटनाओं को सही कालानुक्रमिक (Chronological) क्रम में व्यवस्थित करने के लिए ड्रैग करें:</p>
 
         <ul id="events-list"></ul>
 
@@ -184,15 +184,11 @@
             { id: "e7", level: 1, text: "पिता जिम रेडमंड मैदान में आए और अपने बेटे को सहारा दिया।", correctOrder: 7 },
             { id: "e8", level: 1, text: "दर्शकों की तालियों के बीच दोनों ने मिलकर फिनिश लाइन पार की।", correctOrder: 8 },
 
-            // --- LEVEL 2: Detailed Career & Race Events (Advanced) ---
-            { id: "e9", level: 2, text: "1985 में डेरेक ने 44.82 सेकंड का ब्रिटिश राष्ट्रीय रिकॉर्ड बनाया।", correctOrder: 1 },
-            { id: "e10", level: 2, text: "1986 स्टटगार्ट यूरोपीय चैंपियनशिप में 4x400 मीटर रिले में स्वर्ण पदक जीता।", correctOrder: 2 },
-            { id: "e11", level: 2, text: "1987 रोम विश्व चैंपियनशिप में डेरेक ने रजत पदक प्राप्त किया।", correctOrder: 3 },
-            { id: "e12", level: 2, text: "1991 टोक्यो विश्व चैंपियनशिप में डेरेक ने फिर से स्वर्ण पदक जीता।", correctOrder: 4 },
-            { id: "e13", level: 2, text: "1992 बार्सिलोना में बंदूक की आवाज के साथ सेमीफाइनल दौड़ की शुरुआत हुई।", correctOrder: 5 },
-            { id: "e14", level: 2, text: "मेडिकल टीम स्ट्रेचर लेकर आई, लेकिन डेरेक ने हार मानने से इनकार कर दिया।", correctOrder: 6 },
-            { id: "e15", level: 2, text: "पिता जिम रेडमंड सुरक्षाकर्मियों को पीछे छोड़ चिल्लाते हुए मैदान में पहुंचे।", correctOrder: 7 },
-            { id: "e16", level: 2, text: "फिनिश लाइन के पास पहुँचकर पिता ने हाथ छोड़ दिया ताकि डेरेक खुद लाइन पार कर सके।", correctOrder: 8 }
+            // --- LEVEL 2: Grammar - Idioms & Meanings (मुहावरे और उनके सही अर्थ) ---
+            { id: "e9",  level: 2, text: "दाँतों तले उँगली दबाना ➔ बहुत आश्चर्यचकित होना", correctOrder: 1 },
+            { id: "e10", level: 2, text: "सिर ऊँचा करना ➔ गर्व बढ़ाना", correctOrder: 2 },
+            { id: "e11", level: 2, text: "मैदान मारना ➔ सफलता प्राप्त करना", correctOrder: 3 },
+            { id: "e12", level: 2, text: "कंधे से कंधा मिलाना ➔ मिलकर साथ देना", correctOrder: 4 }
         ];
 
         // ==========================================
@@ -206,6 +202,7 @@
 
                 this.levelIndicator = document.getElementById('level-indicator');
                 this.levelToggleBtn = document.getElementById('level-toggle-btn');
+                this.instructionsText = document.getElementById('instructions-text');
                 this.eventsList = document.getElementById('events-list');
                 this.feedback = document.getElementById('feedback');
                 this.checkBtn = document.getElementById('check-btn');
@@ -232,9 +229,15 @@
 
             loadLevel(levelNumber) {
                 this.currentLevel = levelNumber;
-                this.levelIndicator.innerText = `स्तर: ${this.currentLevel} (${this.currentLevel === 1 ? 'मुख्य कहानी' : 'विस्तृत विवरण'})`;
+                this.levelIndicator.innerText = `स्तर: ${this.currentLevel} (${this.currentLevel === 1 ? 'मुख्य कहानी' : 'व्याकरण बोध: मुहावरे'})`;
                 this.levelToggleBtn.innerText = this.currentLevel === 1 ? "स्तर 2 पर जाएं" : "स्तर 1 पर जाएं";
                 this.feedback.innerText = "";
+
+                if (this.currentLevel === 1) {
+                    this.instructionsText.innerText = "घटनाओं को सही कालानुक्रमिक (Chronological) क्रम में व्यवस्थित करने के लिए ड्रैग करें:";
+                } else {
+                    this.instructionsText.innerText = "मुहावरों को उनके सही अर्थ से सुमेलित (सही क्रम में) करने के लिए ड्रैग करें:";
+                }
 
                 const levelData = masterEventsPool.filter(e => e.level === levelNumber);
                 this.activeEvents = this.shuffle(levelData);
@@ -310,10 +313,10 @@
                 });
 
                 if (isCorrect) {
-                    this.feedback.innerText = "अद्भुत! आपने सभी घटनाओं को सही क्रम में लगाया है। 🎉";
+                    this.feedback.innerText = "अद्भुत! आपने सभी उत्तर सही क्रम में लगाए हैं। 🎉";
                     this.feedback.style.color = "#27ae60";
                 } else {
-                    this.feedback.innerText = "कुछ घटनाएं गलत क्रम में हैं। लाल रंग वाले बॉक्स जांचें और पुनः प्रयास करें। ❌";
+                    this.feedback.innerText = "कुछ उत्तर गलत क्रम में हैं। लाल रंग वाले बॉक्स जांचें और पुनः प्रयास करें। ❌";
                     this.feedback.style.color = "#e74c3c";
                 }
             }
