@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>पहले क्या लूँ? - Smart Shopper Game</title>
+    <title>व्याकरण अभ्यास - द्वित्व व्यंजन और संयुक्ताक्षर</title>
     <style>
         :root {
             --primary: #4e54c8;
             --secondary: #8f94fb;
             --accent: #ff9900;
-            --need-color: #28a745;
-            --want-color: #dc3545;
+            --dvitva-color: #28a745;
+            --samyukt-color: #17a2b8;
             --bg-color: #f4f7f6;
             --card-bg: #ffffff;
         }
@@ -32,7 +32,7 @@
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
             max-width: 600px;
             width: 100%;
-            padding: 20px;
+            padding: 25px;
             box-sizing: border-box;
             text-align: center;
             position: relative;
@@ -47,33 +47,15 @@
             display: block;
         }
 
-        /* Screen 1: Pure Logo Splash Screen */
-        .splash-logo-container {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 350px;
-            gap: 30px;
-            cursor: pointer;
-        }
-
-        .splash-logo-img {
-            max-width: 260px;
-            width: 100%;
-            height: auto;
-            object-fit: contain;
-            transition: transform 0.3s ease;
-        }
-
-        .splash-logo-img:hover {
-            transform: scale(1.03);
-        }
-
         h1 {
             color: var(--primary);
             margin-top: 0;
             font-size: 1.8rem;
+        }
+
+        h2 {
+            color: #333;
+            font-size: 1.4rem;
         }
 
         p {
@@ -81,21 +63,20 @@
             line-height: 1.5;
         }
 
-        /* Instructions Screen */
-        .instructions-list {
+        .instructions-card {
             text-align: left;
             background: #eef2f5;
-            padding: 15px 20px 15px 35px;
+            padding: 15px 20px;
             border-radius: 10px;
             margin-bottom: 20px;
+            border-left: 5px solid var(--primary);
         }
 
-        .instructions-list li {
-            margin-bottom: 10px;
-            font-weight: 500;
+        .instructions-card h3 {
+            margin-top: 0;
+            color: var(--primary);
         }
 
-        /* Gameplay Screen */
         .stats-bar {
             display: flex;
             justify-content: space-between;
@@ -110,33 +91,23 @@
         .item-card {
             border: 2px dashed var(--secondary);
             border-radius: 12px;
-            padding: 20px;
+            padding: 25px;
             margin-bottom: 20px;
             background: #fafafa;
         }
 
-        .item-icon {
-            font-size: 4rem;
+        .item-word {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: #2c3e50;
             margin-bottom: 10px;
-        }
-
-        .item-name {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 5px;
-        }
-
-        .item-price {
-            font-size: 1.2rem;
-            color: var(--accent);
-            font-weight: bold;
         }
 
         .btn-group {
             display: flex;
             gap: 15px;
             justify-content: center;
+            flex-wrap: wrap;
         }
 
         .btn {
@@ -159,14 +130,16 @@
             width: 100%;
         }
 
-        .btn-need {
+        .btn-dvitva {
             flex: 1;
-            background-color: var(--need-color);
+            background-color: var(--dvitva-color);
+            min-width: 140px;
         }
 
-        .btn-want {
+        .btn-samyukt {
             flex: 1;
-            background-color: var(--want-color);
+            background-color: var(--samyukt-color);
+            min-width: 140px;
         }
 
         .sound-toggle {
@@ -193,61 +166,46 @@
 <div class="game-container">
     <button class="sound-toggle" onclick="toggleAudio()" id="soundBtn">🔊</button>
 
-    <!-- Screen 1: Logo ONLY Screen -->
-    <div id="screenLogo" class="screen active-screen">
-        <div class="splash-logo-container" onclick="showInstructions()">
-            <img src="assets/logo.png" alt="Innovine Logo" class="splash-logo-img" onerror="this.onerror=null; this.src='https://via.placeholder.com/260x100?text=Innovine+Logo';">
-            <button class="btn btn-primary" style="max-width: 220px;">आगे बढ़ें ➡️</button>
-        </div>
-    </div>
-
-    <!-- Screen 2: Title & Instructions -->
-    <div id="screenInstructions" class="screen">
-        <h1>पहले क्या लूँ?</h1>
-        <p>स्मार्ट ख़रीददार बनें और समझदारी से फ़ैसले लें!</p>
+    <!-- Screen 1: Title & Instructions -->
+    <div id="screenInstructions" class="screen active-screen">
+        <h1>व्याकरण बोध ✍️</h1>
+        <p>द्वित्व व्यंजन और संयुक्ताक्षर की पहचान करें!</p>
         
-        <h2>खेल के नियम 📜</h2>
-        <ul class="instructions-list">
-            <li>आपको <b>₹100</b> जेब खर्च मिलेगा[cite: 3]।</li>
-            <li>बाज़ार की वस्तुओं को देखकर चुनें कि वह <b>ज़रूरत (Need)</b> है या <b>इच्छा (Want)</b>।</li>
-            <li><b>ज़रूरत (Need):</b> ऐसी चीज़ें जिनके बिना काम न चले (उदा. किताब, बैग)।</li>
-            <li><b>इच्छा (Want):</b> शौक या मज़ा लेने की चीज़ें (उदा. खिलौने, टॉफ़ी)।</li>
-            <li>इच्छाओं को टालकर बचाए गए पैसे आपकी <b>गुल्लक</b> में जमा होंगे!</li>
-        </ul>
-        <button class="btn btn-primary" onclick="startGame()">खेल शुरू करें 🎮</button>
+        <div class="instructions-card">
+            <h3>नियम एवं परिभाषा:</h3>
+            <p>1. <b>द्वित्व व्यंजन:</b> जब एक ही व्यंजन लगातार दो बार आता है।<br><i>उदाहरण: पक्का (क्क), गुल्ला (ल्ल)</i></p>
+            <p>2. <b>संयुक्ताक्षर:</b> जब दो अलग-अलग व्यंजन मिलकर एक नया अक्षर बनाते हैं।<br><i>उदाहरण: क्षमा (क्ष), मक्खी (क्ख)</i></p>
+        </div>
+        
+        <button class="btn btn-primary" onclick="startGame()">अभ्यास शुरू करें 🎮</button>
     </div>
 
-    <!-- Screen 3: Gameplay -->
+    <!-- Screen 2: Gameplay -->
     <div id="screenGameplay" class="screen">
         <div class="stats-bar">
-            <span>बजट: ₹<span id="budget">100</span></span>
-            <span>गुल्लक: ₹<span id="savings">0</span></span>
+            <span>प्रश्न: <span id="currentQ">1</span>/10</span>
             <span>अंक: <span id="score">0</span></span>
         </div>
 
         <div class="item-card">
-            <div class="item-icon" id="itemIcon">📖</div>
-            <div class="item-name" id="itemName">किताब</div>
-            <div class="item-price">कीमत: ₹<span id="itemPrice">30</span></div>
+            <div class="item-word" id="wordDisplay">पक्का</div>
+            <p style="margin:0; color:#777;">इस शब्द में कौन-सा व्यंजन भेद है?</p>
         </div>
 
-        <p>यह वस्तु क्या है? सही विकल्प चुनें:</p>
-
         <div class="btn-group">
-            <button class="btn btn-need" onclick="makeChoice('need')">✅ ज़रूरत (Need)</button>
-            <button class="btn btn-want" onclick="makeChoice('want')">🎈 इच्छा (Want)</button>
+            <button class="btn btn-dvitva" onclick="makeChoice('dvitva')">द्वित्व व्यंजन</button>
+            <button class="btn btn-samyukt" onclick="makeChoice('samyukt')">संयुक्ताक्षर</button>
         </div>
 
         <div class="feedback" id="feedback"></div>
     </div>
 
-    <!-- Screen 4: Results -->
+    <!-- Screen 3: Results -->
     <div id="screenResult" class="screen">
-        <h2>खेल पूरा हुआ! 🎉</h2>
-        <p id="finalScore"></p>
-        <p id="finalSavings"></p>
+        <h2>अभ्यास पूरा हुआ! 🎉</h2>
+        <p id="finalScore" style="font-size: 1.3rem; font-weight: bold;"></p>
         <p id="evaluationMsg"></p>
-        <button class="btn btn-primary" onclick="startGame()">पुनः खेलें 🔄</button>
+        <button class="btn btn-primary" onclick="startGame()">पुनः प्रयास करें 🔄</button>
     </div>
 </div>
 
@@ -297,29 +255,24 @@
         document.getElementById('soundBtn').innerText = audioMuted ? '🔇' : '🔊';
     }
 
-    // Full Chapter Dataset (15 Items)
-    const masterItemsBank = [
-        { name: 'किताब (Book)', category: 'need', price: 30, icon: '📖' },
-        { name: 'रोबोट (Robot Toy)', category: 'want', price: 50, icon: '🤖' },
-        { name: 'गुब्बारा (Balloon)', category: 'want', price: 10, icon: '🎈' },
-        { name: 'स्कूल बैग (School Bag)', category: 'need', price: 40, icon: '🎒' },
-        { name: 'टॉफ़ी (Toffee)', category: 'want', price: 10, icon: '🍬' },
-        { name: 'गेंद (Ball)', category: 'want', price: 20, icon: '⚽' },
-        { name: 'दूध (Milk)', category: 'need', price: 25, icon: '🥛' },
-        { name: 'साबुन (Soap)', category: 'need', price: 15, icon: '🧼' },
-        { name: 'चॉकलेट (Chocolate)', category: 'want', price: 15, icon: '🍫' },
-        { name: 'पेंसिल/स्टेशनरी (Stationery)', category: 'need', price: 10, icon: '✏️' },
-        { name: 'मटका / पानी का बर्तन (Earthen Pot)', category: 'need', price: 35, icon: '🏺' },
-        { name: 'चावल (Rice)', category: 'need', price: 30, icon: '🌾' },
-        { name: 'बिस्कुट का पैकेट (Biscuit Packet)', category: 'want', price: 15, icon: '🍪' },
-        { name: 'सजावटी फूल (Decorative Flowers)', category: 'want', price: 20, icon: '💐' },
-        { name: 'पानी की बोतल (Water Bottle)', category: 'need', price: 25, icon: '🍾' }
+    // Dataset based on Textbook Level 2 Grammar
+    const masterQuestions = [
+        { word: 'पक्का', type: 'dvitva', detail: 'क्क (समान व्यंजन)' },
+        { word: 'क्षमा', type: 'samyukt', detail: 'क्ष (क् + ष)' },
+        { word: 'गुल्ला', type: 'dvitva', detail: 'ल्ल (समान व्यंजन)' },
+        { word: 'मक्खी', type: 'samyukt', detail: 'क्ख (अलग व्यंजन)' },
+        { word: 'बिल्ली', type: 'dvitva', detail: 'ल्ल (समान व्यंजन)' },
+        { word: 'ज्ञान', type: 'samyukt', detail: 'ज्ञ (ज् + ञ)' },
+        { word: 'बच्चा', type: 'dvitva', detail: 'च्च (समान व्यंजन)' },
+        { word: 'पुस्तक', type: 'samyukt', detail: 'स्त (अलग व्यंजन)' },
+        { word: 'रस्सी', type: 'dvitva', detail: 'स्सि (समान व्यंजन)' },
+        { word: 'त्रिशूल', type: 'samyukt', detail: 'त्र (त् + र)' },
+        { word: 'दिल्ली', type: 'dvitva', detail: 'ल्ल (समान व्यंजन)' },
+        { word: 'सत्य', type: 'samyukt', detail: 'त्य (अलग व्यंजन)' }
     ];
 
-    let items = [];
+    let questions = [];
     let currentIndex = 0;
-    let budget = 100;
-    let savings = 0;
     let score = 0;
 
     function showScreen(screenId) {
@@ -327,89 +280,77 @@
         document.getElementById(screenId).classList.add('active-screen');
     }
 
-    function showInstructions() {
-        initAudio();
-        showScreen('screenInstructions');
-    }
-
     function startGame() {
         initAudio();
-        items = [...masterItemsBank].sort(() => Math.random() - 0.5).slice(0, 6);
+        // Shuffle and pick 10 items
+        questions = [...masterQuestions].sort(() => Math.random() - 0.5).slice(0, 10);
         currentIndex = 0;
-        budget = 100;
-        savings = 0;
         score = 0;
 
         showScreen('screenGameplay');
-        updateStats();
-        loadNextItem();
+        loadNextQuestion();
     }
 
     function updateStats() {
-        document.getElementById('budget').innerText = budget;
-        document.getElementById('savings').innerText = savings;
+        document.getElementById('currentQ').innerText = currentIndex + 1;
         document.getElementById('score').innerText = score;
     }
 
-    function loadNextItem() {
-        if (currentIndex >= items.length || budget <= 0) {
+    function loadNextQuestion() {
+        if (currentIndex >= questions.length) {
             endGame();
             return;
         }
 
-        const currentItem = items[currentIndex];
-        document.getElementById('itemName').innerText = currentItem.name;
-        document.getElementById('itemPrice').innerText = currentItem.price;
-        document.getElementById('itemIcon').innerText = currentItem.icon;
+        updateStats();
+        const currentQ = questions[currentIndex];
+        document.getElementById('wordDisplay').innerText = currentQ.word;
         document.getElementById('feedback').innerText = '';
+
+        // Enable action buttons
+        const btns = document.querySelectorAll('.btn-group .btn');
+        btns.forEach(b => b.disabled = false);
     }
 
     function makeChoice(userChoice) {
-        const currentItem = items[currentIndex];
+        const currentQ = questions[currentIndex];
         const feedbackEl = document.getElementById('feedback');
+        const btns = document.querySelectorAll('.btn-group .btn');
+        
+        btns.forEach(b => b.disabled = true);
 
-        if (userChoice === currentItem.category) {
+        if (userChoice === currentQ.type) {
             playSound('correct');
             score += 10;
-            if (userChoice === 'need') {
-                if (budget >= currentItem.price) {
-                    budget -= currentItem.price;
-                    feedbackEl.style.color = 'green';
-                    feedbackEl.innerText = 'सही निर्णय! यह एक ज़रूरत है। आपने इसे खरीदा।';
-                } else {
-                    feedbackEl.style.color = 'orange';
-                    feedbackEl.innerText = 'सही पहचान! पर आपके पास पर्याप्त बजट नहीं था।';
-                }
-            } else {
-                savings += currentItem.price;
-                feedbackEl.style.color = 'green';
-                feedbackEl.innerText = 'शाबाश! आपने इच्छा टालकर ₹' + currentItem.price + ' गुल्लक में बचाए।';
-            }
+            feedbackEl.style.color = 'green';
+            feedbackEl.innerText = `सही उत्तर! '${currentQ.word}' में ${currentQ.detail} है।`;
         } else {
             playSound('wrong');
             feedbackEl.style.color = 'red';
-            feedbackEl.innerText = 'गलत! ' + currentItem.name + ' एक ' + (currentItem.category === 'need' ? 'ज़रूरत' : 'इच्छा') + ' है।';
+            const correctText = currentQ.type === 'dvitva' ? 'द्वित्व व्यंजन' : 'संयुक्ताक्षर';
+            feedbackEl.innerText = `गलत! '${currentQ.word}' एक ${correctText} (${currentQ.detail}) है।`;
         }
 
-        updateStats();
         currentIndex++;
-        setTimeout(loadNextItem, 1500);
+        setTimeout(loadNextQuestion, 1600);
     }
 
     function endGame() {
         playSound('win');
         showScreen('screenResult');
 
-        document.getElementById('finalScore').innerText = 'कुल अंक: ' + score;
-        document.getElementById('finalSavings').innerText = 'गुल्लक में बचाए गए रुपये: ₹' + savings;
+        document.getElementById('finalScore').innerText = `कुल अंक: ${score} / 100`;
 
         const evalEl = document.getElementById('evaluationMsg');
-        if (score >= 50) {
-            evalEl.innerText = 'अद्भुत! आप माँ की तरह बहुत समझदार खरीदार हैं! 🌟';
+        if (score >= 80) {
+            evalEl.innerText = 'अद्भुत! आपने व्याकरण बोध को बहुत अच्छे से समझा है! 🌟';
+        } else if (score >= 50) {
+            evalEl.innerText = 'अच्छा प्रयास! थोड़ा और अभ्यास करें। 💡';
         } else {
-            evalEl.innerText = 'अच्छा प्रयास! अगली बार ज़रूरतों को पहले चुनने का प्रयास करें! 💡';
+            evalEl.innerText = 'पुनः प्रयास करें और नियमों को ध्यान से पढ़ें! 📚';
         }
     }
 </script>
+
 </body>
 </html>
