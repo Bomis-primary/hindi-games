@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>हिंदी - कक्षा 1 - 'इ' वर्ण एवं 'ि' मात्रा का खेल</title>
+    <title>Grade 1: 'इ' वर्ण एवं 'ि' मात्रा का खेल</title>
     <style>
         :root {
             --primary: #0284c7;
@@ -160,6 +160,10 @@
 </head>
 <body>
 
+    <!-- Audio assets -->
+    <audio id="snd-correct" src="assets/correct.mp3" preload="auto"></audio>
+    <audio id="snd-wrong" src="assets/wrong.mp3" preload="auto"></audio>
+
     <div id="game-box">
         
         <!-- START SCREEN -->
@@ -169,7 +173,7 @@
             
             <div style="background: white; padding: 20px; border-radius: 15px; text-align: left; width: 90%; margin-bottom: 10px;">
                 <p style="margin-bottom: 10px;"><b>Level 1 (10 प्रश्न):</b> 'इ' / 'ि' वाले सही शब्द को चुनें।</p>
-                <p><b>Level 2 (10 प्रश्न):</b> शब्द पूरा करने के लिए सही मात्रा चुनें।</p>
+                <p><b>Level 2 (10 प्रश्न):</b> खाली जगह के लिए सही अक्षर या मात्रा चुनें।</p>
             </div>
 
             <button class="btn" onclick="startGame()">खेल शुरू करें</button>
@@ -190,9 +194,9 @@
 
             <!-- LEVEL 2 ARENA -->
             <div id="level2-arena" class="screen">
-                <h2 style="font-size: 1.6rem; color: #334155;">खाली जगह के लिए सही मात्रा चुनें:</h2>
+                <h2 style="font-size: 1.6rem; color: #334155;">खाली जगह के लिए सही मात्रा/अक्षर चुनें:</h2>
                 <div class="quiz-card">
-                    <div class="word-display" id="quiz-word">_ ताब</div>
+                    <div class="word-display" id="quiz-word">_ गिलास</div>
                 </div>
                 <div class="options-row" id="quiz-options"></div>
             </div>
@@ -208,28 +212,13 @@
     </div>
 
     <script>
-        // Sound Synthesizer
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        function playAudio(type) {
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
+        const sndCorrect = document.getElementById('snd-correct');
+        const sndWrong = document.getElementById('snd-wrong');
 
-            if (type === 'correct') {
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(523, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.2);
-            } else {
-                osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(200, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.2);
-            }
-            gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
-            osc.start();
-            osc.stop(audioCtx.currentTime + 0.2);
+        function playSound(isCorrect) {
+            const target = isCorrect ? sndCorrect : sndWrong;
+            target.currentTime = 0;
+            target.play().catch(e => console.log("Audio play error: ", e));
         }
 
         // LEVEL 1 DATA: 10 Questions
@@ -246,18 +235,18 @@
             { correct: "डाकिया", wrong: "सैनिक" }
         ];
 
-        // LEVEL 2 DATA: 10 Questions
+        // LEVEL 2 DATA: 10 Rectified Questions with correct position of blanks
         const level2Data = [
+            { word: "_ गिलास", correct: "गि", options: ["गि", "गा"] },
             { word: "_ ताब", correct: "कि", options: ["कि", "का"] },
-            { word: "ग _ लास", correct: "ि", options: ["ि", "ा"] },
             { word: "_ मली", correct: "इ", options: ["इ", "ई"] },
-            { word: "ह _ रन", correct: "ि", options: ["ि", "ी"] },
-            { word: "च _ ड़िया", correct: "ि", options: ["ि", "ू"] },
-            { word: "क _ शान", correct: "ि", options: ["े", "ि"] },
-            { word: "स _ तार", correct: "ि", options: ["ि", "ो"] },
-            { word: "त _ तली", correct: "ि", options: ["ि", "ा"] },
+            { word: "_ रन", correct: "हि", options: ["हि", "ही"] },
+            { word: "_ ड़िया", correct: "चि", options: ["चि", "चा"] },
+            { word: "_ सान", correct: "कि", options: ["कि", "का"] },
+            { word: "_ तार", correct: "सि", options: ["सि", "सा"] },
+            { word: "_ तली", correct: "ति", options: ["ति", "ते"] },
             { word: "_ मारत", correct: "इ", options: ["इ", "उ"] },
-            { word: "ड _ किया", correct: "ा", options: ["ा", "ि"] }
+            { word: "डा _ या", correct: "कि", options: ["कि", "की"] }
         ];
 
         let l1Index = 0;
@@ -295,11 +284,11 @@
                 card.innerText = item.text;
                 card.onclick = () => {
                     if (item.isCorrect) {
-                        playAudio('correct');
+                        playSound(true);
                         l1Index++;
                         loadLevel1Question();
                     } else {
-                        playAudio('wrong');
+                        playSound(false);
                     }
                 };
                 cardsBox.appendChild(card);
@@ -327,11 +316,11 @@
                 b.innerText = opt;
                 b.onclick = () => {
                     if (opt === q.correct) {
-                        playAudio('correct');
+                        playSound(true);
                         l2Index++;
                         loadLevel2Question();
                     } else {
-                        playAudio('wrong');
+                        playSound(false);
                     }
                 };
                 optsBox.appendChild(b);
