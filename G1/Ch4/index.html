@@ -56,7 +56,6 @@
             padding: 20px;
             text-align: center;
             background: white;
-            z-index: 10;
         }
 
         .active { 
@@ -190,7 +189,7 @@
             
             <div style="background: white; padding: 20px; border-radius: 15px; text-align: left; width: 90%; margin-bottom: 10px;">
                 <p style="margin-bottom: 10px;"><b>Level 1 (10 प्रश्न):</b> 'इ' / 'ि' वाले सही शब्द को चुनें।</p>
-                <p><b>Level 2 (10 प्रश्न):</b> खाली जगह के लिए सही अक्षर या मात्रा चुनें।</p>
+                <p><b>Level 2 (10 प्रश्न):</b> खाली जगह के लिए सही अक्षर चुनें।</p>
             </div>
 
             <button class="btn" onclick="startGame()">खेल शुरू करें</button>
@@ -212,9 +211,9 @@
 
                 <!-- LEVEL 2 ARENA -->
                 <div id="level2-arena" class="screen">
-                    <h2 style="font-size: 1.4rem; color: #334155; margin-bottom: 10px;">खाली जगह के लिए सही मात्रा/अक्षर चुनें:</h2>
+                    <h2 style="font-size: 1.4rem; color: #334155; margin-bottom: 10px;">खाली जगह के लिए सही अक्षर चुनें:</h2>
                     <div class="quiz-card">
-                        <div class="word-display" id="quiz-word">ग _ लास</div>
+                        <div class="word-display" id="quiz-word">_ लास</div>
                     </div>
                     <div class="options-row" id="quiz-options"></div>
                 </div>
@@ -256,18 +255,18 @@
             { correct: "डाकिया", wrong: "सैनिक" }
         ];
 
-        // LEVEL 2 DATA: 10 Questions Cleaned & Fixed
+        // LEVEL 2 DATA: 10 Syllable-based Clear Questions
         const level2Data = [
-            { word: "ग _ लास", correct: "ि", options: ["ि", "ा"] },
-            { word: "क _ ताब", correct: "ि", options: ["ि", "ा"] },
+            { word: "_ लास", correct: "गि", options: ["गि", "गा"] },
+            { word: "_ ताब", correct: "कि", options: ["कि", "का"] },
             { word: "_ मली", correct: "इ", options: ["इ", "ई"] },
-            { word: "ह _ रन", correct: "ि", options: ["ि", "ी"] },
-            { word: "च _ ड़िया", correct: "ि", options: ["ि", "ा"] },
-            { word: "क _ सान", correct: "ि", options: ["ि", "ा"] },
-            { word: "स _ तार", correct: "ि", options: ["ि", "ा"] },
-            { word: "त _ तली", correct: "ि", options: ["ि", "े"] },
+            { word: "_ रन", correct: "हि", options: ["हि", "ही"] },
+            { word: "_ ड़िया", correct: "चि", options: ["चि", "चा"] },
+            { word: "_ सान", correct: "कि", options: ["कि", "का"] },
+            { word: "_ तार", correct: "सि", options: ["सि", "सा"] },
+            { word: "_ तली", correct: "ति", options: ["ति", "ते"] },
             { word: "_ मारत", correct: "इ", options: ["इ", "उ"] },
-            { word: "डाक _ या", correct: "ि", options: ["ि", "ी"] }
+            { word: "डा _ या", correct: "कि", options: ["कि", "की"] }
         ];
 
         let l1Index = 0;
@@ -284,7 +283,7 @@
             if (l1Index >= level1Data.length) {
                 document.getElementById('level1-arena').classList.remove('active');
                 document.getElementById('level2-arena').classList.add('active');
-                document.getElementById('lvl-tag').innerText = "Level 2: सही मात्रा";
+                document.getElementById('lvl-tag').innerText = "Level 2: सही अक्षर";
                 loadLevel2Question();
                 return;
             }
