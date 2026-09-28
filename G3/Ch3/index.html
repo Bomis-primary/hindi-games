@@ -79,10 +79,10 @@
         <p style="text-align: center;">अपना स्तर चुनिए:</p>
         <div class="btn-container">
             <button class="btn btn-primary" onclick="selectLevel(1)">
-                लेवल 1: दिया पूरा करना 🪔
+                लेवल 1: दीया पूरा कीजिए। 🪔
             </button>
             <button class="btn btn-secondary" onclick="selectLevel(2)">
-                लेवल 2: दिए गए शब्द का सही अर्थ चुनिए ✍️
+                लेवल 2: दिए गए शब्द का सही अर्थ चुनिए। ✍️
             </button>
         </div>
     </div>
@@ -119,81 +119,81 @@
 const correctSound = new Audio('assets/freesound_community-claps-44774.mp3');
 const wrongSound = new Audio('assets/wrong.mp3');
 
-// Level 1 Questions (Diya Pura Karna)
-const level1Questions = [
+// Raw Level 1 Questions Data
+const rawLevel1Questions = [
     {
         q: "जिन शब्दों के अर्थ समान या लगभग एक जैसे होते हैं, उन्हें क्या कहते हैं?",
-        options: ["विलोम शब्द", "पर्यायवाची शब्द", "संज्ञा", "सर्वनाम"],
-        answer: 1
+        correct: "पर्यायवाची शब्द",
+        wrongs: ["विलोम शब्द", "संज्ञा", "सर्वनाम"]
     },
     {
         q: "'हवा' शब्द का सही पर्यायवाची शब्द कौन-सा है?",
-        options: ["वायु", "जल", "अग्नि", "भूमि"],
-        answer: 0
+        correct: "वायु",
+        wrongs: ["जल", "अग्नि", "भूमि"]
     },
     {
         q: "'महल' शब्द का सही पर्यायवाची शब्द क्या होगा?",
-        options: ["झोपड़ी", "प्रासाद", "वन", "पहाड़"],
-        answer: 1
-    },
-    {
-        q: "'पवन' शब्द किस शब्द का पर्यायवाची है?",
-        options: ["पानी", "हवा", "आकाश", "सूरज"],
-        answer: 1
+        correct: "प्रासाद",
+        wrongs: ["झोपड़ी", "वन", "पहाड़"]
     },
     {
         q: "'भवन' शब्द का समान अर्थ (पर्यायवाची) देने वाला शब्द चुनिए:",
-        options: ["घर / महल", "रास्ता", "पेड़", "नदी"],
-        answer: 0
+        correct: "घर / महल",
+        wrongs: ["रास्ता", "पेड़", "नदी"]
     },
     {
         q: "'राजा' शब्द का सही पर्यायवाची शब्द इनमें से कौन-सा है?",
-        options: ["नृप", "सैनिक", "प्रजा", "सेवक"],
-        answer: 0
+        correct: "नृप",
+        wrongs: ["सैनिक", "प्रजा", "सेवक"]
     },
     {
         q: "'सूर्य' शब्द का पर्यायवाची शब्द क्या होगा?",
-        options: ["चंद्रमा", "रवि", "मेघ", "तारा"],
-        answer: 1
+        correct: "रवि",
+        wrongs: ["चंद्रमा", "मेघ", "तारा"]
+    },
+    {
+        q: "'पानी' शब्द का सही पर्यायवाची शब्द बताइए:",
+        correct: "जल",
+        wrongs: ["अनल", "आकाश", "पर्वत"]
     }
 ];
 
-// Level 2 Questions (Shabdarth - 7 Words with 1 Right and 3 Wrong Options)
-const level2Questions = [
+// Raw Level 2 Questions Data
+const rawLevel2Questions = [
     {
         q: "दिए गए शब्द का सही अर्थ बताने वाला शब्द चुनिए: 'शीघ्र'",
-        options: ["जल्दी", "धीमे", "देर", "आसानी"],
-        answer: 0
+        correct: "जल्दी",
+        wrongs: ["धीमे", "देर", "आसानी"]
     },
     {
         q: "दिए गए शब्द का सही अर्थ बताने वाला शब्द चुनिए: 'सदा'",
-        options: ["कभी-कभी", "हमेशा", "कभी नहीं", "अक्सर"],
-        answer: 1
+        correct: "हमेशा",
+        wrongs: ["कभी-कभी", "कभी नहीं", "अक्सर"]
     },
     {
         q: "दिए गए शब्द का सही अर्थ बताने वाला शब्द चुनिए: 'अंधेरा'",
-        options: ["उजाला", "चांदनी", "अंधकार", "रोशनी"],
-        answer: 2
+        correct: "अंधकार",
+        wrongs: ["उजाला", "चांदनी", "रोशनी"]
     },
     {
         q: "दिए गए शब्द का सही अर्थ बताने वाला शब्द चुनिए: 'कुटिया'",
-        options: ["महल", "झोपड़ी", "किला", "भवन"],
-        answer: 1
+        correct: "झोपड़ी",
+        wrongs: ["महल", "किला", "भवन"]
     },
     {
         q: "दिए गए शब्द का सही अर्थ बताने वाला शब्द चुनिए: 'प्रसन्न'",
-        options: ["दुखी", "उदास", "क्रोधित", "खुश"],
-        answer: 3
+        correct: "खुश",
+        wrongs: ["दुखी", "उदास", "क्रोधित"]
     },
     {
         q: "दिए गए शब्द का सही अर्थ बताने वाला शब्द चुनिए: 'प्रतियोगिता'",
-        options: ["मुकाबला / होड़", "मित्रता", "सहयोग", "वार्तालाप"],
-        answer: 0
+        correct: "मुकाबला / होड़",
+        wrongs: ["मित्रता", "सहयोग", "वार्तालाप"]
     },
     {
         q: "दिए गए शब्द का सही अर्थ बताने वाला शब्द चुनिए: 'अपूर्व'",
-        options: ["पुराना", "अनोखा", "साधारण", "कठिन"],
-        answer: 1
+        correct: "अनोखा",
+        wrongs: ["पुराना", "साधारण", "कठिन"]
     }
 ];
 
@@ -201,13 +201,37 @@ let currentQuestions = [];
 let currentQuestionIndex = 0;
 let score = 0;
 
+// Helper function to shuffle array
+function shuffleArray(array) {
+    const arr = [...array];
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+}
+
+// Function to process raw questions and randomize options
+function prepareQuestions(rawData) {
+    return rawData.map(item => {
+        const allOptions = [item.correct, ...item.wrongs];
+        const shuffledOptions = shuffleArray(allOptions);
+        const correctIndex = shuffledOptions.indexOf(item.correct);
+        return {
+            q: item.q,
+            options: shuffledOptions,
+            answer: correctIndex
+        };
+    });
+}
+
 function selectLevel(level) {
     if (level === 1) {
-        currentQuestions = level1Questions;
-        document.getElementById('level-title').innerText = "लेवल 1: दिया पूरा करना";
+        currentQuestions = prepareQuestions(rawLevel1Questions);
+        document.getElementById('level-title').innerText = "लेवल 1: दीया पूरा कीजिए";
     } else {
-        currentQuestions = level2Questions;
-        document.getElementById('level-title').innerText = "लेवल 2: सही अर्थ चुनिए";
+        currentQuestions = prepareQuestions(rawLevel2Questions);
+        document.getElementById('level-title').innerText = "लेवल 2: दिए गए शब्द का सही अर्थ चुनिए";
     }
     
     currentQuestionIndex = 0;
@@ -331,7 +355,7 @@ function checkAnswer(selectedIndex, selectedBtn) {
         selectedBtn.classList.add('correct');
         playAudio(correctSound);
         score++;
-        drawDiya(score); // Har sahi answer par diya step-by-step judega
+        drawDiya(score);
     } else {
         selectedBtn.classList.add('wrong');
         buttons[qData.answer].classList.add('correct');
@@ -356,11 +380,8 @@ function showResults() {
 }
 
 function restartQuiz() {
-    currentQuestionIndex = 0;
-    score = 0;
-    showScreen('quiz-screen');
-    drawDiya(0);
-    loadQuestion();
+    const activeLevel = document.getElementById('level-title').innerText.includes("1") ? 1 : 2;
+    selectLevel(activeLevel);
 }
 
 function goHome() {
