@@ -540,20 +540,8 @@
     </div>
 
 <script>
-    const audioCorrect = new Audio('assets/correct.mp3');
     const audioWrong = new Audio('assets/wrong.mp3');
     const audioClaps = new Audio('assets/freesound_community-claps-44774.mp3');
-
-    function speakHindiFeedback(text) {
-        if ('speechSynthesis' in window) {
-            window.speechSynthesis.cancel();
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = 'hi-IN';
-            utterance.rate = 0.95;
-            utterance.pitch = 1.2;
-            window.speechSynthesis.speak(utterance);
-        }
-    }
 
     const baseLevels = [
         { concept: "lineup", sequence: [{num: "१", icon: "🐘"}, {num: "?", icon: "❓"}, {num: "३", icon: "🦒"}], math: "१ के बाद कौन-सा अंक आएगा?", correct: "२ (दो)", choices: ["२ (दो)", "४ (चार)"], hint: "१ के ठीक बाद २ आता है।" },
@@ -599,7 +587,7 @@
     }
 
     function initAudioAndStartGame() {
-        [audioCorrect, audioWrong, audioClaps].forEach(track => {
+        [audioWrong, audioClaps].forEach(track => {
             track.play().catch(() => {});
             track.pause();
             track.currentTime = 0;
@@ -760,14 +748,12 @@
         const currentData = activeLevels[currentLevelIndex - 1];
         
         if (selectedOption === currentData.correct) {
-            audioCorrect.currentTime = 0;
-            audioCorrect.play().catch(() => {});
+            audioClaps.currentTime = 0;
+            audioClaps.play().catch(() => {});
 
             const rewardOverlay = document.getElementById('rewardOverlay');
             document.getElementById('rewardAnswerText').innerText = currentData.correct;
             rewardOverlay.style.display = "flex";
-
-            speakHindiFeedback(`बहुत बढ़िया! सही उत्तर ${currentData.correct} है!`);
 
             totalScore += 10;
             renderStatusDisplays();
@@ -780,8 +766,6 @@
         } else {
             audioWrong.currentTime = 0;
             audioWrong.play().catch(() => {});
-            
-            speakHindiFeedback("ओहो! फिर से सोचिए।");
 
             totalLives--;
             renderStatusDisplays();
@@ -803,11 +787,9 @@
         if (isWin) {
             audioClaps.currentTime = 0;
             audioClaps.play().catch(() => {});
-            speakHindiFeedback("बधाई हो! आप जीत गए!");
             title.innerText = "🎉 जीत गए! 🥳";
             desc.innerText = `अद्भुत खेल! आपने बनाए कुल ${totalScore} अंक। हाथी अपनी मंजिल तक पहुँच गया!`;
         } else {
-            speakHindiFeedback("फिर से कोशिश कीजिए!");
             title.innerText = "ओहो! 💔";
             desc.innerText = `आपने शानदार प्रयास किया और ${totalScore} अंक बनाए! चलो फिर से कोशिश करते हैं!`;
         }
