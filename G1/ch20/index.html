@@ -3,846 +3,823 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>'ऊ' और 'ू' (बड़ी ऊ) की मात्रा - खेल और अभ्यास</title>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+    <title> गिनती १ से १० तक ✨</title>
     <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #a8ff78 0%, #78ffd6 100%);
+            --card-bg: #ffffff;
+            --primary-pink: #ff477e;
+            --jungle-green: #2ecc71;
+            --bright-yellow: #ffb703;
+            --purple-glow: #8e44ad;
+            --sky-blue: #3498db;
+            --dark-text: #1b4332;
+        }
+
         * {
             box-sizing: border-box;
-            user-select: none;
-            -webkit-user-select: none;
-            touch-action: manipulation;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Fredoka', 'Comic Sans MS', sans-serif;
-            background: linear-gradient(135deg, #a8edd8 0%, #fed6e3 100%);
+            font-family: 'Comic Sans MS', 'Segoe UI', Arial, sans-serif;
+            background: var(--bg-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .screen-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(255, 255, 255, 0.98);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            text-align: center;
-            padding: 24px;
-            transition: opacity 0.3s ease;
-        }
-
-        #page-splash { 
-            background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%); 
-            cursor: pointer;
-        }
-
-        #splash-logo {
-            max-width: 280px;
-            width: 70%;
-            animation: floatLogo 2.5s infinite ease-in-out;
-        }
-
-        @keyframes floatLogo {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-12px); }
-        }
-
-        .title-heading {
-            font-size: 2.2rem;
-            color: #2d3436;
-            font-weight: 800;
-            margin-bottom: 12px;
-        }
-
-        .title-subheading {
-            font-size: 1.2rem;
-            color: #0984e3;
-            margin-bottom: 25px;
-            font-weight: bold;
-        }
-
-        .green-btn {
-            background: linear-gradient(135deg, #00b894, #00cec9);
-            color: white;
-            font-size: 1.25rem;
-            font-weight: bold;
-            padding: 14px 42px;
-            border-radius: 50px;
-            border: none;
-            cursor: pointer;
-            box-shadow: 0 8px 20px rgba(0, 184, 148, 0.3);
-            transition: all 0.2s ease;
-        }
-
-        .green-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 24px rgba(0, 184, 148, 0.4);
-        }
-
-        .green-btn:active { transform: scale(0.96); }
-
-        .instructions-card {
-            background: #ffffff;
-            border-left: 6px solid #0984e3;
-            border-radius: 16px;
-            padding: 14px 20px;
-            margin: 10px 0;
-            width: 95%;
-            max-width: 520px;
-            display: flex;
-            align-items: center;
-            box-shadow: 0 6px 18px rgba(0,0,0,0.05);
-            font-size: 1.05rem;
-            font-weight: 600;
-            color: #2d3436;
-            text-align: left;
-        }
-
-        header {
-            width: 100%;
-            max-width: 900px;
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(12px);
-            padding: 14px 28px;
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-            border-bottom-left-radius: 24px;
-            border-bottom-right-radius: 24px;
-        }
-
-        .scoreboard {
-            display: flex;
-            gap: 16px;
-            font-size: 1rem;
-            font-weight: bold;
-        }
-
-        .score-box {
-            background: #ffffff;
-            padding: 8px 20px;
-            border-radius: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
-            color: #2d3436;
-            border: 2px solid #74b9ff;
-        }
-
-        .game-container {
-            width: 95%;
-            max-width: 900px;
-            margin: 20px auto;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 28px;
-            padding: 24px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.08);
-            text-align: center;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .level-tabs {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 16px;
-            flex-wrap: wrap;
-        }
-
-        .tab-btn {
-            padding: 10px 18px;
-            border: none;
-            background: #f1f2f6;
-            border-radius: 16px;
-            font-weight: bold;
-            color: #636e72;
-            cursor: pointer;
-            font-size: 0.95rem;
-            transition: all 0.25s ease;
-        }
-
-        .tab-btn.active {
-            background: linear-gradient(135deg, #0984e3, #74b9ff);
-            color: white;
-            box-shadow: 0 4px 14px rgba(9, 132, 227, 0.3);
-        }
-
-        .q-title {
-            font-size: 1.4rem;
-            color: #2d3436;
-            margin-bottom: 12px;
-            font-weight: 700;
-        }
-
-        .feedback-banner {
-            height: 32px;
-            font-size: 1.25rem;
-            font-weight: bold;
-            color: #00b894;
-            margin-bottom: 12px;
-            transition: opacity 0.2s ease;
-        }
-
-        .asset-img {
-            max-height: 150px;
-            max-width: 100%;
-            border-radius: 20px;
-            margin: 12px auto;
-            display: block;
-            object-fit: contain;
-            background: #f8f9fa;
             padding: 10px;
-            box-shadow: inset 0 0 0 2px #edf2f7;
+            overflow-x: hidden;
+            user-select: none;
         }
 
-        .options-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 20px;
-            max-width: 600px;
-            margin: 20px auto;
-            padding: 0 10px;
-        }
-
-        .opt-btn {
-            padding: 16px 20px;
-            font-size: 1.25rem;
-            font-weight: bold;
-            border-radius: 20px;
-            border: none;
-            background: #6c5ce7;
-            color: white;
-            box-shadow: 0 6px 0 #574b90;
-            cursor: pointer;
-            transition: transform 0.1s ease, box-shadow 0.1s ease;
-        }
-
-        .opt-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 0 #574b90;
-        }
-
-        .opt-btn:active {
-            transform: translateY(4px);
-            box-shadow: 0 2px 0 #574b90;
-        }
-
-        .l2-sentence-card {
-            background: #f8f9fa;
-            border: 2px solid #74b9ff;
-            border-radius: 24px;
-            padding: 24px;
-            max-width: 580px;
-            margin: 12px auto;
-        }
-
-        .sentence-box {
-            font-size: 1.4rem;
-            font-weight: bold;
-            color: #2d3436;
-            margin: 18px 0;
-            line-height: 1.6;
-        }
-
-        .blank-space {
-            display: inline-block;
-            min-width: 100px;
-            border-bottom: 3px dashed #e63946;
-            color: #e63946;
-            padding: 0 10px;
-        }
-
-        .destination-board {
-            background: linear-gradient(180deg, #fff9e6 0%, #ffeaa7 100%);
-            border-radius: 24px;
-            padding: 20px;
-            max-width: 640px;
-            margin: 10px auto;
-            border: 2px solid #ffeaa7;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.04);
-        }
-
-        .svg-track-container {
-            position: relative;
+        .game-screen {
+            display: none;
             width: 100%;
-            height: 140px;
-            margin: 12px 0;
+            max-width: 850px;
+            min-height: 85vh;
+            background: rgba(255, 255, 255, 0.96);
+            border-radius: 35px;
+            padding: 22px 18px;
+            box-shadow: 0 25px 50px rgba(46, 204, 113, 0.2), inset 0 0 0 3px #ffffff;
+            border: 5px solid #27ae60;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            overflow: hidden;
         }
 
-        .svg-path {
-            fill: none;
-            stroke: #d63031;
-            stroke-width: 6;
-            stroke-dasharray: 8, 8;
-            stroke-linecap: round;
+        .game-screen.active {
+            display: flex;
         }
 
-        .runner-avatar, .target-avatar {
-            position: absolute;
-            font-size: 2.6rem;
-            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-            transform: translate(-50%, -50%);
-            z-index: 10;
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.92) translateY(12px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
         }
 
-        .step-node {
-            position: absolute;
-            width: 36px;
-            height: 36px;
+        /* LOGO SCREEN */
+        #screen-logo {
             background: #ffffff;
-            border: 3px solid #d63031;
+            justify-content: center;
+            border-color: #f0f0f0;
+        }
+        .logo-img {
+            max-width: 70%;
+            max-height: 40vh;
+            object-fit: contain;
+            animation: pulseGlow 2s infinite ease-in-out;
+        }
+        @keyframes pulseGlow {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(46,204,113,0.3)); }
+            50% { transform: scale(1.05); filter: drop-shadow(0 0 25px rgba(255,71,126,0.5)); }
+        }
+
+        h1 {
+            color: #1b4332;
+            font-size: clamp(2.2rem, 5.5vw, 3.2rem);
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 0px #d8f3dc;
+        }
+
+        .safari-btn {
+            background: linear-gradient(180deg, #2ecc71 0%, #27ae60 100%);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            font-size: clamp(1.3rem, 3.2vw, 1.7rem);
+            font-weight: bold;
+            border-radius: 50px;
+            box-shadow: 0 8px 0 #1e8449, 0 12px 25px rgba(46,204,113,0.35);
+            cursor: pointer;
+            transition: transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.1s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .safari-btn:active {
+            transform: translateY(6px) scale(0.98);
+            box-shadow: 0 2px 0 #1e8449;
+        }
+        .safari-btn.blue-btn {
+            background: linear-gradient(180deg, #3498db 0%, #2980b9 100%);
+            box-shadow: 0 8px 0 #1c598a, 0 12px 25px rgba(52,152,219,0.35);
+        }
+
+        .instruction-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 12px;
+            width: 100%;
+            margin: 15px 0;
+        }
+        .instruction-card {
+            background: #f8f9fa;
+            border: 3px solid #e9ecef;
+            border-radius: 22px;
+            padding: 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-align: left;
+            box-shadow: 0 8px 0 #e9ecef;
+        }
+        .instruction-card .icon {
+            font-size: 2.2rem;
+            background: #e8f8f5;
+            padding: 10px;
+            border-radius: 16px;
+        }
+        .instruction-card .text {
+            font-size: clamp(0.95rem, 2.5vw, 1.15rem);
+            color: var(--dark-text);
+            font-weight: bold;
+            line-height: 1.35;
+        }
+
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            font-size: clamp(1.1rem, 3vw, 1.4rem);
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .heart-box { color: var(--primary-pink); }
+        .score-box {
+            background: #fff3cd;
+            color: #856404;
+            padding: 6px 18px;
+            border-radius: 20px;
+            border: 2px solid #ffeeba;
+            box-shadow: 0 4px 0 #ebd79b;
+        }
+
+        .map-track {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8f9fa;
+            padding: 12px 10px;
+            border-radius: 22px;
+            width: 100%;
+            margin-bottom: 12px;
+            border: 3px solid #e9ecef;
+            position: relative;
+        }
+        .map-tile {
+            width: calc(100% / 12 - 4px);
+            aspect-ratio: 1;
+            max-width: 38px;
+            background: #dee2e6;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: clamp(0.65rem, 2vw, 0.95rem);
             font-weight: bold;
-            font-size: 1rem;
-            transform: translate(-50%, -50%);
-            z-index: 6;
-        }
-
-        .step-node.active {
-            background: #00b894;
             color: white;
-            border-color: #00b894;
+            box-shadow: inset 0 -2px 0 rgba(0,0,0,0.2);
+            transition: background 0.3s, transform 0.3s;
+        }
+        .map-tile.passed {
+            background: var(--jungle-green);
+            transform: scale(1.08);
+            box-shadow: 0 4px 0 #1e8449;
+        }
+        .map-tile.finish-gate {
+            background: var(--purple-glow);
+            border-radius: 12px;
+        }
+        .pawn-avatar {
+            font-size: clamp(1.5rem, 4.2vw, 2.3rem);
+            position: absolute;
+            top: -14px;
+            transition: left 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 10;
+            filter: drop-shadow(0 6px 6px rgba(0,0,0,0.2));
         }
 
-        .path-choices-l4 {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-            gap: 16px;
-            margin-top: 20px;
-            padding: 0 10px;
-        }
-
-        .choice-btn-l4 {
-            background: #ffffff;
-            border: 2px solid #0984e3;
-            border-radius: 18px;
-            padding: 14px 16px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: #2d3436;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            transition: all 0.2s ease;
-        }
-
-        .choice-btn-l4:hover {
-            background: #0984e3;
-            color: #ffffff;
-        }
-
-        .final-score-card {
-            background: #ffffff;
+        .stage-box {
+            background: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%);
+            border: 4px solid var(--jungle-green);
             border-radius: 28px;
-            padding: 36px 24px;
-            max-width: 460px;
+            padding: 18px 12px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 0 #a3e4d7, 0 15px 30px rgba(0,0,0,0.06);
+            position: relative;
+            min-height: 230px;
+            text-align: center;
+        }
+        
+        #visualArea {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 12px 0;
+        }
+
+        .hint-btn {
+            background: #fff3cd;
+            color: #856404;
+            border: 2px solid var(--bright-yellow);
+            border-radius: 20px;
+            padding: 6px 18px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 8px;
+            box-shadow: 0 4px 0 #e6a100;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: transform 0.1s;
+        }
+        .hint-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #e6a100; }
+        .hint-text-box {
+            background: #e8f8f5;
+            border: 2px dashed var(--jungle-green);
+            color: #1e8449;
+            padding: 8px 16px;
+            border-radius: 14px;
+            font-size: clamp(0.95rem, 2.6vw, 1.15rem);
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: none;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        /* NUMBER LINEUP */
+        .safari-lineup {
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 18px;
+            width: 100%;
+        }
+        .number-box-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+        .animal-mascot-label {
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            animation: bounceMascot 1.2s ease-in-out infinite alternate;
+        }
+        @keyframes bounceMascot {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-6px); }
+        }
+        .number-card-box {
+            background: #fff8e7;
+            border: 4px solid #f39c12;
+            border-radius: 22px;
+            padding: 8px 18px;
+            font-size: clamp(2.4rem, 6vw, 3.2rem);
+            font-weight: 900;
+            color: #d35400;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 0 #d35400;
+            min-width: 80px;
+            min-height: 85px;
+        }
+        .number-card-box.blank {
+            background: #ffffff;
+            border: 4px dashed var(--primary-pink);
+            color: var(--primary-pink);
+            box-shadow: 0 8px 0 #ff758f;
+            animation: pulseBlank 0.8s infinite alternate;
+        }
+        @keyframes pulseBlank {
+            0% { transform: scale(0.96); border-color: var(--primary-pink); }
+            100% { transform: scale(1.04); border-color: var(--purple-glow); }
+        }
+
+        /* LARGE & CLEAN HAND EMOJIS */
+        .hand-emoji-display {
+            font-size: clamp(3.8rem, 10vw, 5rem);
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            align-items: center;
+            filter: drop-shadow(0 6px 8px rgba(0,0,0,0.12));
+        }
+
+        .pond-box {
+            background: linear-gradient(180deg, #a0c4ff 0%, #bdb2ff 100%);
+            border-radius: 24px;
+            padding: 16px;
             width: 90%;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.12);
-            border: 3px solid #00b894;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            align-items: center;
+            border: 4px solid #70a1ff;
+            box-shadow: inset 0 -5px 0 rgba(0,0,0,0.15);
+        }
+        .fish-item {
+            font-size: clamp(2.2rem, 5.5vw, 3rem);
+            animation: swimFish 2s infinite alternate ease-in-out;
+            filter: drop-shadow(0 4px 4px rgba(0,0,0,0.15));
+        }
+        @keyframes swimFish {
+            0% { transform: translateY(0) rotate(-3deg); }
+            100% { transform: translateY(-8px) rotate(3deg); }
         }
 
-        .view-fade {
-            animation: fadeIn 0.3s ease-in-out;
+        .question-text {
+            font-size: clamp(1.3rem, 3.5vw, 1.8rem);
+            font-weight: bold;
+            color: var(--dark-text);
+            margin-top: 12px;
+            text-align: center;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(4px); }
-            to { opacity: 1; transform: translateY(0); }
+        .choices-layout {
+            display: flex;
+            gap: 16px;
+            width: 100%;
+            justify-content: center;
+            margin-top: 12px;
+        }
+        .choice-card {
+            background: white;
+            border: 4px solid var(--bright-yellow);
+            border-radius: 24px;
+            padding: 16px 10px;
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            font-weight: bold;
+            color: var(--dark-text);
+            cursor: pointer;
+            flex: 1;
+            box-shadow: 0 8px 0 #fb8500, 0 10px 15px rgba(0,0,0,0.05);
+            transition: transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.1s;
+        }
+        .choice-card:active {
+            transform: translateY(6px) scale(0.98);
+            box-shadow: 0 2px 0 #fb8500;
+        }
+        .choice-card.alt-color {
+            border-color: var(--sky-blue);
+            box-shadow: 0 8px 0 #0096c7;
+        }
+
+        .reward-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 255, 255, 0.96);
+            border-radius: 28px;
+            z-index: 150;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            animation: popReward 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 6px solid var(--jungle-green);
+        }
+        @keyframes popReward {
+            from { transform: scale(0.7); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .reward-card {
+            background: #e8f8f5;
+            border: 4px solid var(--jungle-green);
+            border-radius: 24px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        .reward-badge-text {
+            font-size: clamp(1.8rem, 4.5vw, 2.5rem);
+            color: #1e8449;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .reward-answer-box {
+            background: var(--bright-yellow);
+            color: #333;
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: bold;
+            padding: 10px 30px;
+            border-radius: 20px;
+            box-shadow: 0 6px 0 #e6a100;
+            display: inline-block;
+        }
+
+        .confetti-piece {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 3px;
+            pointer-events: none;
+            z-index: 99;
+            animation: explodeParticles 0.8s forwards cubic-bezier(0.1, 0.8, 0.3, 1);
+        }
+        @keyframes explodeParticles {
+            0% { transform: translate(0, 0) rotate(0deg) scale(1); opacity: 1; }
+            100% { transform: translate(var(--x), var(--y)) rotate(var(--r)) scale(0); opacity: 0; }
+        }
+
+        .screen-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 30px;
+            z-index: 200;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        @media (max-width: 500px) {
+            .game-screen { padding: 15px 10px; min-height: 90vh; }
+            .choices-layout { flex-direction: column; gap: 10px; }
+            .instruction-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
-    <!-- SPLASH & OVERLAYS -->
-    <div id="page-splash" class="screen-overlay" onclick="goToTitlePage()">
-        <img id="splash-logo" src="assets/innovine-logo.png" alt="Innovine Logo" onerror="this.src='https://via.placeholder.com/280x100?text=Innovine+Logo'">
+    <div id="screen-logo" class="game-screen active">
+        <img src="assets/innovine-logo.png" alt="Innovine Logo" class="logo-img" onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='block';">
+        <h2 id="logo-fallback" style="display:none; font-size: 2.2rem; color: #333;">Innovine Media</h2>
     </div>
 
-    <div id="page-title" class="screen-overlay" style="display: none;">
-        <div class="title-heading">🐪 'ऊ' और 'ू' (बड़ी ऊ) की मात्रा 🌸</div>
-        <div class="title-subheading">मज़ेदार खेल और अभ्यास </div>
-        <button class="green-btn" onclick="goToInstructionPage()">शुरू करें ▶</button>
+    <div id="screen-title" class="game-screen">
+        <span style="font-size: 4.8rem; margin-bottom: 5px;">🦁✨</span>
+        <h1> गिनती १ से १० तक </h1>
+        <p style="font-size: 1.2rem; color: #555; margin-bottom: 15px;">आओ मिलकर <b>१ से १०</b> तक गिनती सीखें!</p>
+        <button class="safari-btn" onclick="switchScreen('screen-title', 'screen-instructions')">आगे बढ़ें 🚀</button>
     </div>
 
-    <div id="page-instructions" class="screen-overlay" style="display: none;">
-        <div class="title-heading" style="font-size: 1.8rem;">खेल के नियम 🎮</div>
-        <div class="instructions-card"><span>🔍 <b>स्तर १:</b> चित्र देखकर सही नाम चुनें।</span></div>
-        <div class="instructions-card"><span>✍️ <b>स्तर २:</b> वाक्य देखकर सही शब्द भरें।</span></div>
-        <div class="instructions-card"><span>🧩 <b>स्तर ३:</b> प्रश्नों के उत्तर देकर सही शब्द पहचानें।</span></div>
-        <div class="instructions-card"><span>🚀 <b>स्तर ४:</b> घुमावदार रास्ते पर सही उत्तर चुनकर मंज़िल तक पहुँचें!</span></div>
-        <div class="instructions-card"><span>⭐ <b>स्तर ५:</b> 'ू' (बड़ी ऊ) मात्रा वाले सही शब्द की पहचान करें।</span></div>
-        <br>
-        <button class="green-btn" onclick="startGame()">खेलें 🎮</button>
-    </div>
-
-    <div id="page-final-score" class="screen-overlay" style="display: none;">
-        <div class="final-score-card">
-            <div style="font-size:3.8rem;">🏆🥳🎉</div>
-            <div class="title-heading" style="font-size: 1.7rem; color:#6c5ce7;">शानदार प्रदर्शन!</div>
-            <div style="font-size: 1.15rem; color:#00b894; font-weight:bold;">आपने सभी ५ स्तर सफलतापूर्वक पूर्ण कर लिए!</div>
-            <div style="background:#f8f9fa; border-radius:16px; padding:16px; margin:20px 0; font-size:1.3rem; font-weight:bold;">
-                कुल अंक: <span id="final-score-val" style="color:#e63946;">0</span>
+    <div id="screen-instructions" class="game-screen">
+        <h1>कैसे खेलें? 🎯</h1>
+        <div class="instruction-grid">
+            <div class="instruction-card">
+                <span class="icon">🦁</span>
+                <span class="text">जानवर, पक्षी और उंगलियाँ देखकर सही गिनती पहचानिए।</span>
             </div>
-            <button class="green-btn" onclick="resetGame()">पुनः खेलें 🔄</button>
-        </div>
-    </div>
-
-    <!-- HEADER -->
-    <header>
-        <div class="scoreboard">
-            <div class="score-box">स्तर: <span id="level-num">1</span>/5</div>
-            <div class="score-box">अंक: <span id="score-val">0</span></div>
-        </div>
-    </header>
-
-    <!-- MAIN CONTAINER -->
-    <div class="game-container" id="game-container-card">
-        <div>
-            <div class="level-tabs">
-                <button class="tab-btn active" onclick="loadLevel(1)">L1: शब्द चुनो</button>
-                <button class="tab-btn" onclick="loadLevel(2)">L2: वाक्य पूरा करो</button>
-                <button class="tab-btn" onclick="loadLevel(3)">L3: प्रश्नोत्तर</button>
-                <button class="tab-btn" onclick="loadLevel(4)">L4: मंज़िल का रास्ता</button>
-                <button class="tab-btn" onclick="loadLevel(5)">L5: सही शब्द पहचानो</button>
+            <div class="instruction-card">
+                <span class="icon">💡</span>
+                <span class="text">मदद के लिए संकेत बटन दबाएँ।</span>
             </div>
-            <hr style="border:0; border-top: 2px dashed #dfe6e9; margin-bottom: 16px;">
-            
-            <div class="feedback-banner" id="feedback-msg"></div>
-            <div id="game-view" class="view-fade"></div>
+            <div class="instruction-card">
+                <span class="icon">🐘</span>
+                <span class="text">सही जवाब पर हाथी आगे बढ़ेगा।</span>
+            </div>
+            <div class="instruction-card">
+                <span class="icon">❤️</span>
+                <span class="text">आपके पास कुल 3 Lives हैं।</span>
+            </div>
         </div>
-
-        <!-- ONLY 2 AUDIO ASSETS -->
-        <audio id="audio-correct" src="assets/freesound_community-claps-44774.mp3"></audio>
-        <audio id="audio-wrong" src="assets/wrong.mp3"></audio>
+        <button class="safari-btn blue-btn" onclick="initAudioAndStartGame()">खेलें 🎮</button>
     </div>
 
-    <script>
-        const audioClaps = document.getElementById('audio-correct');
-        const audioWrong = document.getElementById('audio-wrong');
+    <div id="screen-game" class="game-screen">
+        <div class="status-bar">
+            <div class="heart-box" id="heartBox">❤️ ❤️ ❤️</div>
+            <div class="score-box" id="scoreBox">⭐ अंक: 0</div>
+        </div>
 
-        let splashTimeout = null;
+        <div class="map-track" id="trackLine">
+            <div class="pawn-avatar" id="heroPawn">🐘</div>
+            <div class="map-tile passed" id="tile-0">शुरू</div>
+            <div class="map-tile" id="tile-1">१</div>
+            <div class="map-tile" id="tile-2">२</div>
+            <div class="map-tile" id="tile-3">३</div>
+            <div class="map-tile" id="tile-4">४</div>
+            <div class="map-tile" id="tile-5">५</div>
+            <div class="map-tile" id="tile-6">६</div>
+            <div class="map-tile" id="tile-7">७</div>
+            <div class="map-tile" id="tile-8">८</div>
+            <div class="map-tile" id="tile-9">९</div>
+            <div class="map-tile" id="tile-10">१०</div>
+            <div class="map-tile finish-gate" id="tile-11">🏆</div>
+        </div>
 
-        window.onload = function() {
-            splashTimeout = setTimeout(goToTitlePage, 5000);
-        };
+        <div class="stage-box" id="mainDisplayCard">
+            <button class="hint-btn" onclick="showHintAndGlow()">💡 संकेत</button>
+            <div class="hint-text-box" id="hintBox"></div>
 
-        function goToTitlePage() {
-            if (splashTimeout) clearTimeout(splashTimeout);
-            document.getElementById('page-splash').style.display = 'none';
-            document.getElementById('page-title').style.display = 'flex';
+            <div id="visualArea"></div>
+            <div class="question-text" id="spellFormula">प्रश्न यहाँ आएगा?</div>
+
+            <div class="reward-overlay" id="rewardOverlay">
+                <div class="reward-card">
+                    <div class="reward-badge-text">🎉 बहुत बढ़िया! 🎉</div>
+                    <p style="font-size: 1.1rem; color: #555; margin-bottom: 12px;">सही उत्तर:</p>
+                    <div class="reward-answer-box" id="rewardAnswerText">२ (दो)</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="choices-layout" id="buttonsLayout"></div>
+
+        <div id="endScreen" class="screen-overlay" style="display: none;">
+            <h2 id="endTitle" style="font-size: 2.8rem; margin-bottom: 10px;">🎉 जीत गए! 🥳</h2>
+            <p id="endDesc" style="font-size: 1.3rem; color: #555; margin-bottom: 20px;">अद्भुत खेल!</p>
+            <button class="safari-btn" onclick="resetGame()">फिर खेलें 🔄</button>
+        </div>
+    </div>
+
+<script>
+    const audioCorrect = new Audio('assets/correct.mp3');
+    const audioWrong = new Audio('assets/wrong.mp3');
+    const audioClaps = new Audio('assets/freesound_community-claps-44774.mp3');
+
+    function speakHindiFeedback(text) {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'hi-IN';
+            utterance.rate = 0.95;
+            utterance.pitch = 1.2;
+            window.speechSynthesis.speak(utterance);
         }
+    }
 
-        function goToInstructionPage() {
-            document.getElementById('page-title').style.display = 'none';
-            document.getElementById('page-instructions').style.display = 'flex';
+    const baseLevels = [
+        { concept: "lineup", sequence: [{num: "१", icon: "🐘"}, {num: "?", icon: "❓"}, {num: "३", icon: "🦒"}], math: "१ के बाद कौन-सा अंक आएगा?", correct: "२ (दो)", choices: ["२ (दो)", "४ (चार)"], hint: "१ के ठीक बाद २ आता है।" },
+        { concept: "lineup", sequence: [{num: "?", icon: "❓"}, {num: "५", icon: "🦁"}, {num: "६", icon: "🐅"}], math: "५ के पहले कौन-सा अंक आएगा?", correct: "४ (चार)", choices: ["३ (तीन)", "४ (चार)"], hint: "५ से एक कम गिनिए।" },
+        { concept: "lineup", sequence: [{num: "७", icon: "🦓"}, {num: "८", icon: "🦘"}, {num: "?", icon: "❓"}], math: "८ के बाद कौन-सा अंक आएगा?", correct: "९ (नौ)", choices: ["९ (नौ)", "१० (दस)"], hint: "८ के आगे की संख्या गिनिए।" },
+
+        // CLEAN & ACCURATE HAND EMOJIS
+        { concept: "hands", emoji: "🖐️", math: "हाथ में कुल कितनी उंगलियाँ हैं?", correct: "५ (पाँच)", choices: ["४ (चार)", "५ (पाँच)"], hint: "एक हाथ में ५ उंगलियाँ होती हैं।" },
+        { concept: "hands", emoji: "🖐️ ✌️", math: "हाथों में कुल कितनी उंगलियाँ हैं?", correct: "७ (सात)", choices: ["७ (सात)", "८ (आठ)"], hint: "५ + २ को साथ में गिनिए।" },
+        { concept: "hands", emoji: "🖐️ 🖐️", math: "दोनों हाथों की उंगलियाँ गिनिए।", correct: "१० (दस)", choices: ["९ (नौ)", "१० (दस)"], hint: "दोनों हाथों में पूरी १० उंगलियाँ होती हैं।" },
+
+        { concept: "pond", item: "🐟", count: 6, math: "तालाब में कितनी मछलियाँ हैं?", correct: "६ (छह)", choices: ["५ (पाँच)", "६ (छह)"], hint: "५ के बाद ६ आता है।" },
+        { concept: "pond", item: "🦆", count: 4, math: "तालाब में कितनी बतखें हैं?", correct: "४ (चार)", choices: ["४ (चार)", "५ (पाँच)"], hint: "बतखों को गिनिए: १, २, ३, ४।" },
+        { concept: "pond", item: "🐸", count: 8, math: "चित्र में कितने मेंढक हैं?", correct: "८ (आठ)", choices: ["८ (आठ)", "९ (नौ)"], hint: "७ के बाद ८ आता है।" }
+    ];
+
+    let activeLevels = [];
+    let currentLevelIndex = 1;
+    let totalLives = 3;
+    let totalScore = 0;
+
+    function shuffleArray(array) {
+        let arr = [...array];
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
         }
+        return arr;
+    }
 
-        function startGame() {
-            document.getElementById('page-instructions').style.display = 'none';
-            loadLevel(1);
+    window.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+            switchScreen('screen-logo', 'screen-title');
+        }, 5000);
+    });
+
+    function switchScreen(hideId, showId) {
+        document.getElementById(hideId).classList.remove('active');
+        document.getElementById(showId).classList.add('active');
+        if(showId === 'screen-game') {
+            alignPawn();
         }
+    }
 
-        function playSound(type) {
-            const snd = (type === 'correct') ? audioClaps : audioWrong;
-            if (snd) {
-                snd.currentTime = 0;
-                snd.play().catch(() => {});
+    function initAudioAndStartGame() {
+        [audioCorrect, audioWrong, audioClaps].forEach(track => {
+            track.play().catch(() => {});
+            track.pause();
+            track.currentTime = 0;
+        });
+        switchScreen('screen-instructions', 'screen-game');
+        resetAndShuffleGame();
+    }
+
+    function resetAndShuffleGame() {
+        activeLevels = shuffleArray(baseLevels).map(level => {
+            return {
+                ...level,
+                choices: shuffleArray(level.choices)
+            };
+        });
+
+        currentLevelIndex = 1;
+        totalLives = 3;
+        totalScore = 0;
+
+        const tiles = document.querySelectorAll('.map-tile');
+        tiles.forEach((tile, index) => {
+            if(index > 0) tile.classList.remove('passed');
+        });
+
+        renderStatusDisplays();
+        alignPawn();
+        loadChallenge();
+    }
+
+    function renderStatusDisplays() {
+        const heartBox = document.getElementById('heartBox');
+        let heartString = "";
+        for(let i = 0; i < totalLives; i++) { heartString += "❤️ "; }
+        if(heartString === "") heartString = "💔 खेल खत्म";
+        heartBox.innerText = heartString;
+
+        document.getElementById('scoreBox').innerText = `⭐ अंक: ${totalScore}`;
+    }
+
+    function alignPawn() {
+        const pawn = document.getElementById('heroPawn');
+        const activeTile = document.getElementById(`tile-${currentLevelIndex}`);
+        if(!activeTile || !pawn) return;
+        
+        const track = document.getElementById('trackLine');
+        const tileRect = activeTile.getBoundingClientRect();
+        const trackRect = track.getBoundingClientRect();
+        
+        const leftOffset = (tileRect.left - trackRect.left) + (tileRect.width / 2) - (pawn.offsetWidth / 2);
+        pawn.style.left = `${leftOffset}px`;
+    }
+
+    function showHintAndGlow() {
+        const currentData = activeLevels[currentLevelIndex - 1];
+        const hintBox = document.getElementById('hintBox');
+        hintBox.innerText = `💡 ${currentData.hint}`;
+        hintBox.style.display = "block";
+
+        const choiceBtns = document.querySelectorAll('.choice-card');
+        choiceBtns.forEach(btn => {
+            if (btn.getAttribute('data-choice') === currentData.correct) {
+                btn.classList.add('glow-hint');
             }
+        });
+    }
+
+    function launchConfettiBurst() {
+        const arenaCard = document.getElementById('mainDisplayCard');
+        const particleColors = ['#ff758f', '#4cc9f0', '#2ecc71', '#ffb703', '#8e44ad'];
+        const totalParticles = window.innerWidth < 480 ? 20 : 35;
+
+        for (let i = 0; i < totalParticles; i++) {
+            const confettiPiece = document.createElement('div');
+            confettiPiece.classList.add('confetti-piece');
+            confettiPiece.style.backgroundColor = particleColors[Math.floor(Math.random() * particleColors.length)];
+            confettiPiece.style.left = '50%';
+            confettiPiece.style.top = '50%';
+
+            const maxDist = window.innerWidth < 480 ? 140 : 250;
+            const vectorX = (Math.random() - 0.5) * maxDist;
+            const vectorY = (Math.random() - 0.6) * maxDist;
+            const rotationRandom = Math.floor(Math.random() * 360) + 180;
+
+            confettiPiece.style.setProperty('--x', `${vectorX}px`);
+            confettiPiece.style.setProperty('--y', `${vectorY}px`);
+            confettiPiece.style.setProperty('--r', `${rotationRandom}deg`);
+
+            arenaCard.appendChild(confettiPiece);
+
+            setTimeout(() => { confettiPiece.remove(); }, 800);
+        }
+    }
+
+    function loadChallenge() {
+        document.getElementById('hintBox').style.display = "none";
+        document.getElementById('rewardOverlay').style.display = "none";
+        
+        if (currentLevelIndex > 10) {
+            document.getElementById('tile-11').classList.add('passed');
+            setTimeout(() => { triggerGameEnd(true); }, 500);
+            return;
         }
 
-        function showFeedback(msg, isSuccess = true) {
-            const banner = document.getElementById('feedback-msg');
-            if (!banner) return;
-            banner.innerText = msg;
-            banner.style.color = isSuccess ? '#00b894' : '#d63031';
-            banner.style.opacity = '1';
-            setTimeout(() => { banner.style.opacity = '0'; }, 1500);
+        for (let i = 0; i < currentLevelIndex; i++) {
+            const tile = document.getElementById(`tile-${i}`);
+            if (tile) tile.classList.add('passed');
         }
 
-        function shuffleArray(arr) {
-            return [...arr].sort(() => Math.random() - 0.5);
-        }
+        const currentData = activeLevels[currentLevelIndex - 1];
+        const visualArea = document.getElementById('visualArea');
+        document.getElementById('spellFormula').innerText = currentData.math;
 
-        let currentLevel = 1;
-        let currentQIndex = 0;
-        let totalScore = 0;
+        visualArea.innerHTML = "";
 
-        const level1Master = [
-            { img: 'assets/chuha.png', correct: 'चूहा', options: ['चूहा', 'मोर', 'चील'] },
-            { img: 'assets/kabutar.png', correct: 'कबूतर', options: ['कबूतर', 'तोता', 'कागा'] },
-            { img: 'assets/phool.png', correct: 'फूल', options: ['फूल', 'पत्ता', 'पेड़'] }
-        ];
-
-        const level2SentenceMaster = [
-            { img: 'assets/chuha.png', pre: 'बगीचे में एक ', post: ' घूम रहा था।', correct: 'चूहा', wrong: ['चूहे', 'चीहा'] },
-            { img: 'assets/phool.png', pre: 'पूजा के लिए सुंदर ', post: ' लाओ।', correct: 'फूल', wrong: ['फल', 'फुल'] },
-            { img: 'assets/kabutar.png', pre: 'छत पर ', post: ' दाना चुग रहा है।', correct: 'कबूतर', wrong: ['कबुतर', 'कौआ'] }
-        ];
-
-        const level3Master = [
-            { prompt: 'रेगिस्तान का जहाज़ कौन-सा है?', correct: 'ऊँट', options: ['ऊँट', 'उंट', 'औंट'] },
-            { prompt: 'इनमें से बड़ी "ू" मात्रा वाला सही शब्द चुनें:', correct: 'सूरजमुखी', options: ['सूरजमुखी', 'सुरजमुखि', 'सूरजमुखि'] },
-            { prompt: 'सर्दी में हम गर्म कपड़े किससे बनाते हैं?', correct: 'ऊन', options: ['ऊन', 'उन', 'ओन'] },
-            { prompt: 'मीठा और रसीला फल कौन-सा है?', correct: 'तरबूज', options: ['तरबूज', 'तरबुज', 'तरबोज'] },
-            { prompt: 'पूजा में प्रयोग होने वाली सामग्री:', correct: 'कपूर', options: ['कपूर', 'कपुर', 'कपार'] }
-        ];
-
-        const level4DestinationMaster = [
-            {
-                runner: '🐭', target: '🧀', title: 'चूहे को रास्ते से पनीर तक पहुँचाएँ!',
-                steps: [
-                    { prompt: 'कदम 1: "ू" मात्रा वाला सही शब्द चुनें', correct: 'दूध', wrong: ['दाल', 'दिन'] },
-                    { prompt: 'कदम 2: सही शब्द चुनें', correct: 'जूता', wrong: ['जाल', 'जल'] },
-                    { prompt: 'कदम 3: सही वर्तनी पहचानें', correct: 'सूरज', wrong: ['सुरज', 'सोरज'] }
-                ]
-            },
-            {
-                runner: '🕊️', target: '🌾', title: 'कबूतर को रास्ते से दाने तक पहुँचाएँ!',
-                steps: [
-                    { prompt: 'कदम 1: "ू" मात्रा वाला शब्द चुनें', correct: 'झूला', wrong: ['खीरा', 'झोपड़ी'] },
-                    { prompt: 'कदम 2: सही शब्द चुनें', correct: 'खजूर', wrong: ['खीरा', 'खाना'] },
-                    { prompt: 'कदम 3: सही वर्तनी चुनें', correct: 'कबूतर', wrong: ['कबुतर', 'कौआ'] }
-                ]
-            },
-            {
-                runner: '🐫', target: '🏜️', title: 'ऊँट को रेगिस्तान की मंज़िल तक पहुँचाएँ!',
-                steps: [
-                    { prompt: 'कदम 1: "ऊ" से शुरू होने वाला शब्द', correct: 'ऊँचा', wrong: ['उजाला', 'ऊपर'] },
-                    { prompt: 'कदम 2: सही शब्द पहचानें', correct: 'नाखून', wrong: ['नख', 'नाक'] },
-                    { prompt: 'कदम 3: सही शब्द चुनें', correct: 'खूबसूरत', wrong: ['खुबसुरत', 'खौफ'] }
-                ]
-            }
-        ];
-
-        const level5IdentifyMaster = [
-            { prompt: 'इनमें से बड़ी "ू" मात्रा का सही शब्द कौन-सा है?', correct: 'सूरज', wrong: ['सुरज', 'सोरज', 'सरज'] },
-            { prompt: 'शुद्ध शब्द की पहचान करें:', correct: 'भालू', wrong: ['भालु', 'भोलो', 'भाल'] },
-            { prompt: 'सही वर्तनी वाले शब्द को पहचानिए:', correct: 'तराजू', wrong: ['तराजु', 'तरज़ू', 'तराज'] },
-            { prompt: 'इनमें से सही रूप कौन-सा है?', correct: 'चाकू', wrong: ['चाकु', 'चॉको', 'चाक'] },
-            { prompt: 'सही मात्रा वाला शब्द चुनिए:', correct: 'मजदूर', wrong: ['मजदुर', 'मजदौर', 'मजदिर'] }
-        ];
-
-        let currentL1Questions = [];
-        let currentL2Questions = [];
-        let currentL3Questions = [];
-        let currentL4Questions = [];
-        let currentL5Questions = [];
-        let l4StepIndex = 0; 
-
-        function triggerViewAnimation() {
-            const view = document.getElementById('game-view');
-            view.classList.remove('view-fade');
-            void view.offsetWidth;
-            view.classList.add('view-fade');
-        }
-
-        function loadLevel(lvl) {
-            currentLevel = lvl;
-            currentQIndex = 0;
-            l4StepIndex = 0;
-            document.getElementById('level-num').innerText = lvl;
-
-            document.querySelectorAll('.tab-btn').forEach((btn, idx) => {
-                btn.classList.toggle('active', idx + 1 === lvl);
+        if(currentData.concept === "lineup") {
+            let lineupHtml = '<div class="safari-lineup">';
+            currentData.sequence.forEach(item => {
+                if(item.num === "?") {
+                    lineupHtml += `
+                        <div class="number-box-wrapper">
+                            <span class="animal-mascot-label">${item.icon}</span>
+                            <div class="number-card-box blank">?</div>
+                        </div>`;
+                } else {
+                    lineupHtml += `
+                        <div class="number-box-wrapper">
+                            <span class="animal-mascot-label">${item.icon}</span>
+                            <div class="number-card-box">${item.num}</div>
+                        </div>`;
+                }
             });
-
-            triggerViewAnimation();
-
-            if (lvl === 1) {
-                currentL1Questions = shuffleArray(level1Master);
-                renderLevel1();
+            lineupHtml += '</div>';
+            visualArea.innerHTML = lineupHtml;
+        } 
+        else if(currentData.concept === "hands") {
+            visualArea.innerHTML = `<div class="hand-emoji-display">${currentData.emoji}</div>`;
+        } 
+        else if(currentData.concept === "pond") {
+            let pondHtml = '<div class="pond-box">';
+            for(let i = 0; i < currentData.count; i++) {
+                pondHtml += `<span class="fish-item">${currentData.item}</span>`;
             }
-            else if (lvl === 2) {
-                currentL2Questions = shuffleArray(level2SentenceMaster);
-                renderLevel2();
-            }
-            else if (lvl === 3) {
-                currentL3Questions = shuffleArray(level3Master);
-                renderLevel3();
-            }
-            else if (lvl === 4) {
-                currentL4Questions = shuffleArray(level4DestinationMaster);
-                renderLevel4();
-            }
-            else if (lvl === 5) {
-                currentL5Questions = shuffleArray(level5IdentifyMaster);
-                renderLevel5();
-            }
+            pondHtml += '</div>';
+            visualArea.innerHTML = pondHtml;
         }
 
-        /* LEVEL 1 */
-        function renderLevel1() {
-            const view = document.getElementById('game-view');
-            const q = currentL1Questions[currentQIndex];
-            const opts = shuffleArray(q.options);
+        const layout = document.getElementById('buttonsLayout');
+        layout.innerHTML = "";
+        
+        currentData.choices.forEach((choice, idx) => {
+            const colorClass = idx === 1 ? 'alt-color' : '';
+            layout.innerHTML += `<button class="choice-card ${colorClass}" data-choice="${choice}" onclick="handleChoiceClick(this, '${choice}')">${choice}</button>`;
+        });
+    }
 
-            view.innerHTML = `
-                <div class="q-title">शब्द चुनो</div>
-                <p style="color:#636e72; font-weight:bold; margin: 4px 0;">चित्र देखकर सही शब्द पर क्लिक करें:</p>
-                <img src="${q.img}" class="asset-img" alt="Quiz Image" onerror="this.src='https://via.placeholder.com/150?text=Item'">
-                <div class="options-grid">
-                    ${opts.map(opt => `<button class="opt-btn" onclick="checkLevel1('${opt}', '${q.correct}')">${opt}</button>`).join('')}
-                </div>
-            `;
-        }
+    function handleChoiceClick(buttonElement, selectedOption) {
+        const currentData = activeLevels[currentLevelIndex - 1];
+        
+        if (selectedOption === currentData.correct) {
+            audioCorrect.currentTime = 0;
+            audioCorrect.play().catch(() => {});
 
-        function checkLevel1(selected, correct) {
-            if (selected === correct) {
-                playSound('correct');
-                addScore(10);
-                showFeedback('बिल्कुल सही! ✨', true);
-                if (currentQIndex < currentL1Questions.length - 1) {
-                    currentQIndex++;
-                    setTimeout(() => { triggerViewAnimation(); renderLevel1(); }, 500);
-                } else {
-                    triggerConfetti();
-                    showFeedback('शानदार! स्तर 1 पूरा हुआ!', true);
-                    setTimeout(() => { loadLevel(2); }, 1200);
-                }
-            } else {
-                playSound('wrong');
-                showFeedback('गलत उत्तर! पुनः प्रयास करें', false);
-            }
-        }
+            const rewardOverlay = document.getElementById('rewardOverlay');
+            document.getElementById('rewardAnswerText').innerText = currentData.correct;
+            rewardOverlay.style.display = "flex";
 
-        /* LEVEL 2 */
-        function renderLevel2() {
-            const view = document.getElementById('game-view');
-            const q = currentL2Questions[currentQIndex];
-            const opts = shuffleArray([q.correct, ...q.wrong]);
+            speakHindiFeedback(`बहुत बढ़िया! सही उत्तर ${currentData.correct} है!`);
 
-            view.innerHTML = `
-                <div class="q-title">वाक्य पूरा करो</div>
-                <div class="l2-sentence-card">
-                    <img src="${q.img}" class="asset-img" alt="Sentence Image" onerror="this.src='https://via.placeholder.com/150?text=Item'">
-                    <div class="sentence-box">
-                        ${q.pre}<span class="blank-space" id="blank-target">?</span>${q.post}
-                    </div>
-                    <div class="options-grid" style="margin-top:15px;">
-                        ${opts.map(opt => `<button class="opt-btn" style="background:#0984e3; box-shadow:0 6px 0 #0768b5;" onclick="checkLevel2('${opt}', '${q.correct}')">${opt}</button>`).join('')}
-                    </div>
-                </div>
-            `;
-        }
+            totalScore += 10;
+            renderStatusDisplays();
+            launchConfettiBurst();
+            
+            currentLevelIndex++;
+            alignPawn();
+            
+            setTimeout(() => { loadChallenge(); }, 1600);
+        } else {
+            audioWrong.currentTime = 0;
+            audioWrong.play().catch(() => {});
+            
+            speakHindiFeedback("ओहो! फिर से सोचिए।");
 
-        function checkLevel2(selected, correct) {
-            if (selected === correct) {
-                document.getElementById('blank-target').innerText = selected;
-                document.getElementById('blank-target').style.color = '#00b894';
-                playSound('correct');
-                addScore(10);
-                showFeedback('सही शब्द! 🎯', true);
+            totalLives--;
+            renderStatusDisplays();
 
-                setTimeout(() => {
-                    if (currentQIndex < currentL2Questions.length - 1) {
-                        currentQIndex++;
-                        triggerViewAnimation();
-                        renderLevel2();
-                    } else {
-                        triggerConfetti();
-                        showFeedback('शाबाश! स्तर 2 पूरा हुआ!', true);
-                        setTimeout(() => { loadLevel(3); }, 1200);
-                    }
-                }, 800);
-            } else {
-                playSound('wrong');
-                showFeedback('गलत! सही शब्द चुनें', false);
+            showHintAndGlow();
+
+            if (totalLives <= 0) {
+                setTimeout(() => { triggerGameEnd(false); }, 600);
             }
         }
+    }
 
-        /* LEVEL 3 */
-        function renderLevel3() {
-            const view = document.getElementById('game-view');
-            const q = currentL3Questions[currentQIndex];
-            const opts = shuffleArray(q.options);
-
-            view.innerHTML = `
-                <div class="q-title">प्रश्नोत्तर और सही शब्द</div>
-                <p style="font-size:1.2rem; color:#2d3436; font-weight:bold; margin: 15px 0;">${q.prompt}</p>
-                <div class="options-grid" style="margin-top:20px;">
-                    ${opts.map(opt => `<button class="opt-btn" style="background:#00b894; box-shadow:0 6px 0 #00897b;" onclick="checkLevel3('${opt}', '${q.correct}')">${opt}</button>`).join('')}
-                </div>
-            `;
+    function triggerGameEnd(isWin) {
+        const screen = document.getElementById('endScreen');
+        const title = document.getElementById('endTitle');
+        const desc = document.getElementById('endDesc');
+        
+        screen.style.display = "flex";
+        if (isWin) {
+            audioClaps.currentTime = 0;
+            audioClaps.play().catch(() => {});
+            speakHindiFeedback("बधाई हो! आप जीत गए!");
+            title.innerText = "🎉 जीत गए! 🥳";
+            desc.innerText = `अद्भुत खेल! आपने बनाए कुल ${totalScore} अंक। हाथी अपनी मंजिल तक पहुँच गया!`;
+        } else {
+            speakHindiFeedback("फिर से कोशिश कीजिए!");
+            title.innerText = "ओहो! 💔";
+            desc.innerText = `आपने शानदार प्रयास किया और ${totalScore} अंक बनाए! चलो फिर से कोशिश करते हैं!`;
         }
+    }
 
-        function checkLevel3(selected, correct) {
-            if (selected === correct) {
-                playSound('correct');
-                addScore(10);
-                showFeedback('उत्कृष्ट! सही उत्तर 👍', true);
-                if (currentQIndex < currentL3Questions.length - 1) {
-                    currentQIndex++;
-                    setTimeout(() => { triggerViewAnimation(); renderLevel3(); }, 500);
-                } else {
-                    triggerConfetti();
-                    showFeedback('बहुत बढ़िया! स्तर 3 पूरा हुआ!', true);
-                    setTimeout(() => { loadLevel(4); }, 1200);
-                }
-            } else {
-                playSound('wrong');
-                showFeedback('गलत! पुनः प्रयास करें', false);
-            }
-        }
+    function resetGame() {
+        document.getElementById('endScreen').style.display = "none";
+        resetAndShuffleGame();
+    }
 
-        /* LEVEL 4 */
-        const curvePoints = [
-            { x: 10, y: 80 },
-            { x: 32, y: 25 },
-            { x: 55, y: 90 },
-            { x: 78, y: 30 },
-            { x: 92, y: 75 }
-        ];
+    window.onresize = alignPawn;
+</script>
 
-        function renderLevel4() {
-            const view = document.getElementById('game-view');
-            const mission = currentL4Questions[currentQIndex];
-            const currentStep = mission.steps[l4StepIndex];
-            const choices = shuffleArray([currentStep.correct, ...currentStep.wrong]);
-            const pos = curvePoints[l4StepIndex];
-
-            view.innerHTML = `
-                <div class="q-title">मंज़िल का रास्ता</div>
-                <p style="font-size:1.1rem; color:#636e72; font-weight:bold; margin-bottom:8px;">${mission.title}</p>
-                
-                <div class="destination-board">
-                    <div class="svg-track-container">
-                        <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none">
-                            <path class="svg-path" d="M 10 80 Q 32 10 55 90 T 92 75" />
-                        </svg>
-
-                        <div class="step-node ${l4StepIndex >= 1 ? 'active' : ''}" style="left:32%; top:25%;">1</div>
-                        <div class="step-node ${l4StepIndex >= 2 ? 'active' : ''}" style="left:55%; top:90%;">2</div>
-                        <div class="step-node ${l4StepIndex >= 3 ? 'active' : ''}" style="left:78%; top:30%;">3</div>
-
-                        <div class="runner-avatar" id="runner-char" style="left: ${pos.x}%; top: ${pos.y}%;">${mission.runner}</div>
-                        <div class="target-avatar" style="left: ${curvePoints[4].x}%; top: ${curvePoints[4].y}%;">${mission.target}</div>
-                    </div>
-
-                    <p style="color:#d63031; font-weight:bold; background:#fff; padding:10px; border-radius:14px; margin: 12px 0;">${currentStep.prompt}</p>
-
-                    <div class="path-choices-l4">
-                        ${choices.map(choice => `<button class="choice-btn-l4" onclick="stepDestination('${choice}', '${currentStep.correct}')">${choice}</button>`).join('')}
-                    </div>
-                </div>
-            `;
-        }
-
-        function stepDestination(selected, correct) {
-            if (selected === correct) {
-                playSound('correct');
-                addScore(10);
-                l4StepIndex++;
-
-                if (l4StepIndex < 3) {
-                    showFeedback('सही उत्तर! आगे बढ़िए 🏃‍♂️', true);
-                    triggerViewAnimation();
-                    renderLevel4();
-                } else {
-                    const runner = document.getElementById('runner-char');
-                    if (runner) {
-                        runner.style.left = `${curvePoints[4].x}%`;
-                        runner.style.top = `${curvePoints[4].y}%`;
-                    }
-
-                    triggerConfetti();
-                    showFeedback('मंज़िल तक पहुँच गए! 🎉', true);
-                    
-                    setTimeout(() => {
-                        if (currentQIndex < currentL4Questions.length - 1) {
-                            currentQIndex++;
-                            l4StepIndex = 0;
-                            triggerViewAnimation();
-                            renderLevel4();
-                        } else {
-                            triggerConfetti();
-                            showFeedback('शानदार! स्तर 4 पूरा हुआ!', true);
-                            setTimeout(() => { loadLevel(5); }, 1200);
-                        }
-                    }, 1200);
-                }
-            } else {
-                playSound('wrong');
-                showFeedback('गलत रास्ता! सही शब्द चुनें', false);
-            }
-        }
-
-        /* LEVEL 5 */
-        function renderLevel5() {
-            const view = document.getElementById('game-view');
-            const q = currentL5Questions[currentQIndex];
-            const opts = shuffleArray([q.correct, ...q.wrong]);
-
-            view.innerHTML = `
-                <div class="q-title">सही शब्द पहचानो</div>
-                <p style="font-size:1.2rem; color:#2d3436; font-weight:bold; margin-bottom:20px;">${q.prompt}</p>
-                <div class="options-grid">
-                    ${opts.map(opt => `<button class="opt-btn" style="background:#e67e22; box-shadow:0 6px 0 #d35400;" onclick="checkLevel5('${opt}', '${q.correct}')">${opt}</button>`).join('')}
-                </div>
-            `;
-        }
-
-        function checkLevel5(selected, correct) {
-            if (selected === correct) {
-                playSound('correct');
-                addScore(10);
-                showFeedback('बिल्कुल सही शब्द! ⭐', true);
-
-                if (currentQIndex < currentL5Questions.length - 1) {
-                    currentQIndex++;
-                    setTimeout(() => { triggerViewAnimation(); renderLevel5(); }, 500);
-                } else {
-                    showFinalScoreboard();
-                }
-            } else {
-                playSound('wrong');
-                showFeedback('गलत उत्तर! शुद्ध शब्द पहचानें', false);
-            }
-        }
-
-        function showFinalScoreboard() {
-            triggerMassiveConfetti();
-            document.getElementById('final-score-val').innerText = totalScore;
-            document.getElementById('page-final-score').style.display = 'flex';
-        }
-
-        function resetGame() {
-            totalScore = 0;
-            document.getElementById('score-val').innerText = '0';
-            document.getElementById('page-final-score').style.display = 'none';
-            loadLevel(1);
-        }
-
-        function addScore(pts) {
-            totalScore += pts;
-            document.getElementById('score-val').innerText = totalScore;
-        }
-
-        function triggerConfetti() {
-            if (typeof confetti === 'function') {
-                confetti({ particleCount: 70, spread: 60, origin: { y: 0.6 } });
-            }
-        }
-
-        function triggerMassiveConfetti() {
-            if (typeof confetti === 'function') {
-                confetti({ particleCount: 160, spread: 100, origin: { y: 0.6 } });
-            }
-        }
-    </script>
 </body>
 </html>
