@@ -57,17 +57,6 @@
         .question-text { font-size: 18px; margin-bottom: 20px; font-weight: 600; color: #2c3e50; }
         .score-text { font-size: 20px; text-align: center; margin-bottom: 20px; }
         .controls { display: flex; justify-content: space-between; margin-top: 20px; }
-        
-        /* Diya Canvas Styles */
-        .diya-container {
-            text-align: center;
-            margin-bottom: 15px;
-        }
-        #diyaCanvas {
-            background-color: #fff8eb;
-            border-radius: 10px;
-            border: 2px dashed #f39c12;
-        }
     </style>
 </head>
 <body>
@@ -79,10 +68,10 @@
         <p style="text-align: center;">अपना स्तर चुनिए:</p>
         <div class="btn-container">
             <button class="btn btn-primary" onclick="selectLevel(1)">
-                लेवल 1: दीया पूरा कीजिए। 🪔
+                लेवल 1: पर्यायवाची शब्द 📘
             </button>
             <button class="btn btn-secondary" onclick="selectLevel(2)">
-                लेवल 2: दिए गए शब्द का सही अर्थ चुनिए। ✍️
+                लेवल 2: दिए गए शब्द का सही अर्थ चुनिए ✍️
             </button>
         </div>
     </div>
@@ -90,12 +79,6 @@
     <!-- Quiz Screen -->
     <div id="quiz-screen" class="screen">
         <h2 id="level-title">व्याकरण अभ्यास</h2>
-        
-        <!-- Visual Diya Progress -->
-        <div class="diya-container">
-            <canvas id="diyaCanvas" width="200" height="150"></canvas>
-        </div>
-
         <div class="question-text" id="question-text">प्रश्न यहाँ दिखेगा</div>
         <div class="btn-container" id="options-container"></div>
         <div class="controls">
@@ -115,11 +98,11 @@
 </div>
 
 <script>
-// Audio Elements
+// Audio Elements (Right = Clapping, Wrong = Wrong Sound)
 const correctSound = new Audio('assets/freesound_community-claps-44774.mp3');
 const wrongSound = new Audio('assets/wrong.mp3');
 
-// Raw Level 1 Questions Data
+// Raw Level 1 Questions Data (Synonyms)
 const rawLevel1Questions = [
     {
         q: "जिन शब्दों के अर्थ समान या लगभग एक जैसे होते हैं, उन्हें क्या कहते हैं?",
@@ -158,7 +141,7 @@ const rawLevel1Questions = [
     }
 ];
 
-// Raw Level 2 Questions Data
+// Raw Level 2 Questions Data (Shabdarth - 7 Words)
 const rawLevel2Questions = [
     {
         q: "दिए गए शब्द का सही अर्थ बताने वाला शब्द चुनिए: 'शीघ्र'",
@@ -201,7 +184,7 @@ let currentQuestions = [];
 let currentQuestionIndex = 0;
 let score = 0;
 
-// Helper function to shuffle array
+// Helper function to shuffle array randomly
 function shuffleArray(array) {
     const arr = [...array];
     for (let i = arr.length - 1; i > 0; i--) {
@@ -211,7 +194,7 @@ function shuffleArray(array) {
     return arr;
 }
 
-// Function to process raw questions and randomize options
+// Function to randomize options so the correct answer isn't always 1st or 2nd
 function prepareQuestions(rawData) {
     return rawData.map(item => {
         const allOptions = [item.correct, ...item.wrongs];
@@ -228,7 +211,7 @@ function prepareQuestions(rawData) {
 function selectLevel(level) {
     if (level === 1) {
         currentQuestions = prepareQuestions(rawLevel1Questions);
-        document.getElementById('level-title').innerText = "लेवल 1: दीया पूरा कीजिए";
+        document.getElementById('level-title').innerText = "लेवल 1: पर्यायवाची शब्द";
     } else {
         currentQuestions = prepareQuestions(rawLevel2Questions);
         document.getElementById('level-title').innerText = "लेवल 2: दिए गए शब्द का सही अर्थ चुनिए";
@@ -238,88 +221,7 @@ function selectLevel(level) {
     score = 0;
     
     showScreen('quiz-screen');
-    drawDiya(0);
     loadQuestion();
-}
-
-function drawDiya(step) {
-    const canvas = document.getElementById('diyaCanvas');
-    const ctx = canvas.getContext('2d');
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // Step 1: Base Dots & Bottom Line
-    if (step >= 1) {
-        ctx.strokeStyle = '#d35400';
-        ctx.lineWidth = 4;
-        ctx.beginPath();
-        ctx.arc(100, 110, 50, 0, Math.PI, false);
-        ctx.stroke();
-    }
-
-    // Step 2: Fill Diya Base Body
-    if (step >= 2) {
-        ctx.fillStyle = '#e67e22';
-        ctx.beginPath();
-        ctx.arc(100, 110, 50, 0, Math.PI, false);
-        ctx.closePath();
-        ctx.fill();
-    }
-
-    // Step 3: Top Rim Line
-    if (step >= 3) {
-        ctx.strokeStyle = '#c0392b';
-        ctx.lineWidth = 5;
-        ctx.beginPath();
-        ctx.moveTo(45, 110);
-        ctx.lineTo(155, 110);
-        ctx.stroke();
-    }
-
-    // Step 4: Diya Decorative Pattern
-    if (step >= 4) {
-        ctx.fillStyle = '#f1c40f';
-        for(let x = 65; x <= 135; x += 20) {
-            ctx.beginPath();
-            ctx.arc(x, 125, 4, 0, Math.PI * 2);
-            ctx.fill();
-        }
-    }
-
-    // Step 5: Batti / Wick
-    if (step >= 5) {
-        ctx.strokeStyle = '#7f8c8d';
-        ctx.lineWidth = 4;
-        ctx.beginPath();
-        ctx.moveTo(100, 110);
-        ctx.lineTo(100, 85);
-        ctx.stroke();
-    }
-
-    // Step 6: Flame (Jyoti)
-    if (step >= 6) {
-        ctx.fillStyle = '#f39c12';
-        ctx.beginPath();
-        ctx.moveTo(100, 85);
-        ctx.quadraticCurveTo(85, 65, 100, 40);
-        ctx.quadraticCurveTo(115, 65, 100, 85);
-        ctx.fill();
-    }
-
-    // Step 7: Flame Glow & Full Light Up
-    if (step >= 7) {
-        ctx.fillStyle = '#f1c40f';
-        ctx.beginPath();
-        ctx.moveTo(100, 80);
-        ctx.quadraticCurveTo(90, 65, 100, 50);
-        ctx.quadraticCurveTo(110, 65, 100, 80);
-        ctx.fill();
-
-        // Light Glow Effect
-        ctx.fillStyle = 'rgba(241, 196, 15, 0.25)';
-        ctx.beginPath();
-        ctx.arc(100, 60, 35, 0, Math.PI * 2);
-        ctx.fill();
-    }
 }
 
 function loadQuestion() {
@@ -355,7 +257,6 @@ function checkAnswer(selectedIndex, selectedBtn) {
         selectedBtn.classList.add('correct');
         playAudio(correctSound);
         score++;
-        drawDiya(score);
     } else {
         selectedBtn.classList.add('wrong');
         buttons[qData.answer].classList.add('correct');
