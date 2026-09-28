@@ -68,17 +68,17 @@
         <p style="text-align: center;">अपना स्तर चुनिए:</p>
         <div class="btn-container">
             <button class="btn btn-primary" onclick="selectLevel(1)">
-                लेवल 1: आधारभूत अभ्यास 📘
+                लेवल 1:सही उत्तर चुनिए। 🪔
             </button>
             <button class="btn btn-secondary" onclick="selectLevel(2)">
-                लेवल 2: व्याकरण बोध (पर्यायवाची शब्द) ✍️
+                लेवल 2: दिए गए शब्द का सही अर्थ चुनिए। ✍️
             </button>
         </div>
     </div>
 
     <!-- Quiz Screen -->
     <div id="quiz-screen" class="screen">
-        <h2 id="level-title">लेवल 2: पर्यायवाची शब्द</h2>
+        <h2 id="level-title">व्याकरण अभ्यास</h2>
         <div class="question-text" id="question-text">प्रश्न यहाँ दिखेगा</div>
         <div class="btn-container" id="options-container"></div>
         <div class="controls">
@@ -98,8 +98,12 @@
 </div>
 
 <script>
-// Level 2 Questions (Grammar: Synonyms / पर्यायवाची शब्द)
-const level2Questions = [
+// Audio Elements
+const correctSound = new Audio('assets/freesound_community-claps-44774.mp3');
+const wrongSound = new Audio('assets/wrong.mp3');
+
+// Level 1 Questions (Diya Pura Karna)
+const level1Questions = [
     {
         q: "जिन शब्दों के अर्थ समान या लगभग एक जैसे होते हैं, उन्हें क्या कहते हैं?",
         options: ["विलोम शब्द", "पर्यायवाची शब्द", "संज्ञा", "सर्वनाम"],
@@ -152,16 +156,41 @@ const level2Questions = [
     }
 ];
 
-// Fallback Level 1 Questions
-const level1Questions = [
+// Level 2 Questions (Shabdarth - 7 Words with 1 Right and 3 Wrong Options)
+const level2Questions = [
     {
-        q: "वर्णों के समूह को क्या कहते हैं?",
-        options: ["वर्णमाला", "शब्द", "वाक्य", "पद"],
+        q: "दिए गए शब्द का सही अर्थ बताने वाला शब्द चुनिए: 'शीघ्र'",
+        options: ["जल्दी", "धीमे", "देर", "आसानी"],
         answer: 0
     },
     {
-        q: "हिंदी में कितने स्वर होते हैं?",
-        options: ["10", "11", "12", "13"],
+        q: "दिए गए शब्द का सही अर्थ बताने वाला शब्द चुनिए: 'सदा'",
+        options: ["कभी-कभी", "हमेशा", "कभी नहीं", "अक्सर"],
+        answer: 1
+    },
+    {
+        q: "दिए गए शब्द का सही अर्थ बताने वाला शब्द चुनिए: 'अंधेरा'",
+        options: ["उजाला", "चांदनी", "अंधकार", "रोशनी"],
+        answer: 2
+    },
+    {
+        q: "दिए गए शब्द का सही अर्थ बताने वाला शब्द चुनिए: 'कुटिया'",
+        options: ["महल", "झोपड़ी", "किला", "भवन"],
+        answer: 1
+    },
+    {
+        q: "दिए गए शब्द का सही अर्थ बताने वाला शब्द चुनिए: 'प्रसन्न'",
+        options: ["दुखी", "उदास", "क्रोधित", "खुश"],
+        answer: 3
+    },
+    {
+        q: "दिए गए शब्द का सही अर्थ बताने वाला शब्द चुनिए: 'प्रतियोगिता'",
+        options: ["मुकाबला / होड़", "मित्रता", "सहयोग", "वार्तालाप"],
+        answer: 0
+    },
+    {
+        q: "दिए गए शब्द का सही अर्थ बताने वाला शब्द चुनिए: 'अपूर्व'",
+        options: ["पुराना", "अनोखा", "साधारण", "कठिन"],
         answer: 1
     }
 ];
@@ -171,12 +200,12 @@ let currentQuestionIndex = 0;
 let score = 0;
 
 function selectLevel(level) {
-    if (level === 2) {
-        currentQuestions = level2Questions;
-        document.getElementById('level-title').innerText = "लेवल 2: पर्यायवाची शब्द";
-    } else {
+    if (level === 1) {
         currentQuestions = level1Questions;
-        document.getElementById('level-title').innerText = "लेवल 1: आधारभूत अभ्यास";
+        document.getElementById('level-title').innerText = "लेवल 1: दिया पूरा करना";
+    } else {
+        currentQuestions = level2Questions;
+        document.getElementById('level-title').innerText = "लेवल 2: सही अर्थ चुनिए";
     }
     
     currentQuestionIndex = 0;
@@ -204,6 +233,11 @@ function loadQuestion() {
     });
 }
 
+function playAudio(sound) {
+    sound.currentTime = 0;
+    sound.play().catch(e => console.log("Audio play error:", e));
+}
+
 function checkAnswer(selectedIndex, selectedBtn) {
     const qData = currentQuestions[currentQuestionIndex];
     const buttons = document.querySelectorAll('#options-container .btn-option');
@@ -212,10 +246,12 @@ function checkAnswer(selectedIndex, selectedBtn) {
 
     if (selectedIndex === qData.answer) {
         selectedBtn.classList.add('correct');
+        playAudio(correctSound);
         score++;
     } else {
         selectedBtn.classList.add('wrong');
         buttons[qData.answer].classList.add('correct');
+        playAudio(wrongSound);
     }
 
     document.getElementById('next-btn').style.display = 'block';
