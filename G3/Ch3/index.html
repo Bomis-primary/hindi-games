@@ -151,7 +151,7 @@ const level1Questions = [
     },
     {
         q: "'फूल' शब्द का समानार्थक (पर्यायवाची) शब्द क्या होगा?",
-        options: ["पुष्प", "पत्ता", "फल", "तथा"],
+        options: ["फल", "पत्ता", "पुष्प", "तथा"],
         answer: 0
     }
 ];
@@ -202,7 +202,7 @@ let score = 0;
 function selectLevel(level) {
     if (level === 1) {
         currentQuestions = level1Questions;
-        document.getElementById('level-title').innerText = "लेवल 1: दिया पूरा करना";
+        document.getElementById('level-title').innerText = "लेवल 1: सही उत्तर चुनिए।";
     } else {
         currentQuestions = level2Questions;
         document.getElementById('level-title').innerText = "लेवल 2: सही अर्थ चुनिए";
