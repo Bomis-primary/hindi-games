@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grade 1: ई की मात्रा</title> Innovine</title>
+    <title>Grade 1: ई की मात्रा</title>
     <style>
         * {
             box-sizing: border-box;
@@ -263,8 +263,8 @@
 </head>
 <body>
 
-    <!-- Audio Elements -->
-    <audio id="sound-clap" src="assets/clap.mp3" preload="auto"></audio>
+    <!-- Audio Elements (Corrected file name to correct.mp3) -->
+    <audio id="sound-clap" src="assets/correct.mp3" preload="auto"></audio>
     <audio id="sound-wrong" src="assets/wrong.mp3" preload="auto"></audio>
 
     <!-- 1. Splash Screen Section (5 Seconds) -->
@@ -287,7 +287,6 @@
             
             <div class="wheel-container" id="wheel-container">
                 <div class="center-hub" id="wheel-center">सी</div>
-                <!-- Spoke options are updated for every question. -->
                 <button class="spoke-node" id="wheel-node-0" type="button" style="top:0; left:110px;">ख</button>
                 <button class="spoke-node" id="wheel-node-1" type="button" style="top:50px; right:10px;">टी</button>
                 <button class="spoke-node" id="wheel-node-2" type="button" style="top:170px; right:10px;">पी</button>
@@ -302,12 +301,10 @@
             <p style="color: #64748b; font-weight: 500; margin-bottom: 15px;">शब्दों को सही पंख पर ड्रैग करके छोड़ें (Drag & Drop)!</p>
             
             <div class="butterfly-layout">
-                <!-- Target Wing A -->
                 <div class="wing left-wing" id="wing-ee-root" ondragover="allowDrop(event)" ondrop="handleWingDrop(event, 'root')">
                     <div class="wing-title">केवल 'ई' से शुरू होने वाले शब्द</div>
                 </div>
 
-                <!-- Target Wing B -->
                 <div class="wing right-wing" id="wing-ee-matra" ondragover="allowDrop(event)" ondrop="handleWingDrop(event, 'matra')">
                     <div class="wing-title">'ी' की मात्रा वाले शब्द</div>
                 </div>
@@ -325,7 +322,6 @@
     </div>
 
     <script>
-        // Data derived directly from Chapter 5 PDF
         const levelOneWheelTargets = [
             { center: "सी", node: "ख", word: "सीख", options: ["ख", "टी", "पी", "धा", "ना", "मा"] },
             { center: "सी", node: "टी", word: "सीटी", options: ["ख", "टी", "पी", "धा", "ना", "मा"] },
@@ -344,10 +340,9 @@
             { center: "दी", node: "मक", word: "दीमक", options: ["प", "पक", "या", "दी", "वार", "मक"] }
         ];
 
-        // Separation lists based on direct page categories[cite: 2]
         const sortingWords = [
-            { text: "ईख", type: "root" }, { text: "ईंट", type: "root" }, { text: "ईनाम", type: "root" }, { text: "ईद", type: "root" }, //[cite: 2]
-            { text: "कील", type: "matra" }, { text: "तीर", type: "matra" }, { text: "खीर", type: "matra" }, { text: "दीवार", type: "matra" } //[cite: 2]
+            { text: "ईख", type: "root" }, { text: "ईंट", type: "root" }, { text: "ईनाम", type: "root" }, { text: "ईद", type: "root" },
+            { text: "कील", type: "matra" }, { text: "तीर", type: "matra" }, { text: "खीर", type: "matra" }, { text: "दीवार", type: "matra" }
         ];
 
         let gameScore = 0;
@@ -359,7 +354,6 @@
         const clapSnd = document.getElementById('sound-clap');
         const wrongSnd = document.getElementById('sound-wrong');
 
-        // Splash screen validation for exactly 5000ms
         window.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
                 const splash = document.getElementById('splash-screen');
@@ -374,8 +368,10 @@
 
         function triggerAudio(isCorrect) {
             const track = isCorrect ? clapSnd : wrongSnd;
-            track.currentTime = 0;
-            track.play().catch(() => {});
+            if (track) {
+                track.currentTime = 0;
+                track.play().catch(error => console.log("Audio playback blocked/failed:", error));
+            }
         }
 
         function shuffleArray(items) {
@@ -397,7 +393,6 @@
             return mixed;
         }
 
-        // --- LEVEL 1 ENGINE ---
         function initWheelLevel() {
             activeWheelTargets = levelOneWheelTargets;
             wheelIndex = 0;
@@ -408,7 +403,6 @@
         }
 
         function startSecondWheelLevel() {
-            // Level 2 intentionally starts in a random order on every playthrough.
             activeWheelTargets = shuffleOutOfSequence(levelTwoWheelTargets);
             wheelIndex = 0;
             document.getElementById('stage-indicator').innerText = "स्तर २: कठिन शब्द चक्र";
@@ -457,7 +451,6 @@
             }
         }
 
-        // --- LEVEL 3 ENGINE ---
         function startButterflyLevel() {
             document.getElementById('wheel-level').style.display = 'none';
             document.getElementById('butterfly-level').style.display = 'block';
@@ -466,7 +459,6 @@
             const pool = document.getElementById('sorting-pool');
             pool.innerHTML = "";
             
-            // Shuffle matching objects array
             const shuffled = [...sortingWords].sort(() => Math.random() - 0.5);
             pendingSortCount = shuffled.length;
 
@@ -503,7 +495,6 @@
                 gameScore += 15;
                 document.getElementById('score-counter').innerText = gameScore;
 
-                // Move visual element directly inside corresponding wing frame
                 const poolElements = document.getElementsByClassName('draggable-word');
                 for (let el of poolElements) {
                     if (el.innerText === activeDraggedItem.text) {
@@ -526,7 +517,6 @@
             activeDraggedItem = null;
         }
 
-        // --- ENDGAME TERMINATION ---
         function endEntireGame() {
             document.getElementById('butterfly-level').style.display = 'none';
             document.getElementById('end-screen').style.display = 'block';
@@ -541,7 +531,6 @@
             document.getElementById('wheel-level').style.display = 'block';
             document.getElementById('stage-indicator').innerText = "स्तर १: शब्द चक्र बनाओ";
             
-            // Clean wings content reset
             document.getElementById('wing-ee-root').innerHTML = '<div class="wing-title">केवल \'ई\' से शुरू होने वाले शब्द</div>';
             document.getElementById('wing-ee-matra').innerHTML = '<div class="wing-title">\'ी\' की मात्रा वाले शब्द</div>';
             
