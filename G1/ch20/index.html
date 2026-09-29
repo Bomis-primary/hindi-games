@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title> गिनती १ से १० तक ✨</title>
+    <title>गिनती १ से १० तक ✨</title>
     <style>
         :root {
             --bg-gradient: linear-gradient(135deg, #a8ff78 0%, #78ffd6 100%);
@@ -84,6 +84,7 @@
             font-size: clamp(2.2rem, 5.5vw, 3.2rem);
             margin-bottom: 10px;
             text-shadow: 2px 2px 0px #d8f3dc;
+            text-align: center;
         }
 
         .safari-btn {
@@ -174,7 +175,7 @@
             position: relative;
         }
         .map-tile {
-            width: calc(100% / 12 - 4px);
+            width: calc(100% / 12 - 3px);
             aspect-ratio: 1;
             max-width: 38px;
             background: #dee2e6;
@@ -182,7 +183,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: clamp(0.65rem, 2vw, 0.95rem);
+            font-size: clamp(0.6rem, 1.8vw, 0.95rem);
             font-weight: bold;
             color: white;
             box-shadow: inset 0 -2px 0 rgba(0,0,0,0.2);
@@ -198,12 +199,13 @@
             border-radius: 12px;
         }
         .pawn-avatar {
-            font-size: clamp(1.5rem, 4.2vw, 2.3rem);
+            font-size: clamp(1.4rem, 4vw, 2.2rem);
             position: absolute;
             top: -14px;
             transition: left 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             z-index: 10;
             filter: drop-shadow(0 6px 6px rgba(0,0,0,0.2));
+            pointer-events: none;
         }
 
         .stage-box {
@@ -218,7 +220,7 @@
             justify-content: center;
             box-shadow: 0 10px 0 #a3e4d7, 0 15px 30px rgba(0,0,0,0.06);
             position: relative;
-            min-height: 230px;
+            min-height: 220px;
             text-align: center;
         }
         
@@ -227,7 +229,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 12px 0;
+            margin: 10px 0;
         }
 
         .hint-btn {
@@ -260,12 +262,11 @@
             animation: fadeIn 0.3s ease-out;
         }
 
-        /* NUMBER LINEUP */
         .safari-lineup {
             display: flex;
             align-items: flex-end;
             justify-content: center;
-            gap: 18px;
+            gap: 12px;
             width: 100%;
         }
         .number-box-wrapper {
@@ -286,16 +287,16 @@
             background: #fff8e7;
             border: 4px solid #f39c12;
             border-radius: 22px;
-            padding: 8px 18px;
-            font-size: clamp(2.4rem, 6vw, 3.2rem);
+            padding: 8px 16px;
+            font-size: clamp(1.8rem, 4.5vw, 2.6rem);
             font-weight: 900;
             color: #d35400;
             display: flex;
             align-items: center;
             justify-content: center;
             box-shadow: 0 8px 0 #d35400;
-            min-width: 80px;
-            min-height: 85px;
+            min-width: 65px;
+            min-height: 70px;
         }
         .number-card-box.blank {
             background: #ffffff;
@@ -309,11 +310,10 @@
             100% { transform: scale(1.04); border-color: var(--purple-glow); }
         }
 
-        /* LARGE & CLEAN HAND EMOJIS */
         .hand-emoji-display {
-            font-size: clamp(3.8rem, 10vw, 5rem);
+            font-size: clamp(3.2rem, 9vw, 4.5rem);
             display: flex;
-            gap: 20px;
+            gap: 15px;
             justify-content: center;
             align-items: center;
             filter: drop-shadow(0 6px 8px rgba(0,0,0,0.12));
@@ -322,18 +322,18 @@
         .pond-box {
             background: linear-gradient(180deg, #a0c4ff 0%, #bdb2ff 100%);
             border-radius: 24px;
-            padding: 16px;
-            width: 90%;
+            padding: 12px;
+            width: 95%;
             display: flex;
             flex-wrap: wrap;
-            gap: 12px;
+            gap: 10px;
             justify-content: center;
             align-items: center;
             border: 4px solid #70a1ff;
             box-shadow: inset 0 -5px 0 rgba(0,0,0,0.15);
         }
         .fish-item {
-            font-size: clamp(2.2rem, 5.5vw, 3rem);
+            font-size: clamp(2rem, 5vw, 2.8rem);
             animation: swimFish 2s infinite alternate ease-in-out;
             filter: drop-shadow(0 4px 4px rgba(0,0,0,0.15));
         }
@@ -343,10 +343,10 @@
         }
 
         .question-text {
-            font-size: clamp(1.3rem, 3.5vw, 1.8rem);
+            font-size: clamp(1.2rem, 3.2vw, 1.7rem);
             font-weight: bold;
             color: var(--dark-text);
-            margin-top: 12px;
+            margin-top: 10px;
             text-align: center;
         }
 
@@ -362,7 +362,7 @@
             border: 4px solid var(--bright-yellow);
             border-radius: 24px;
             padding: 16px 10px;
-            font-size: clamp(1.5rem, 4vw, 2rem);
+            font-size: clamp(1.3rem, 3.8vw, 1.8rem);
             font-weight: bold;
             color: var(--dark-text);
             cursor: pointer;
@@ -413,9 +413,9 @@
         .reward-answer-box {
             background: var(--bright-yellow);
             color: #333;
-            font-size: clamp(2rem, 5vw, 3rem);
+            font-size: clamp(1.6rem, 4.2vw, 2.5rem);
             font-weight: bold;
-            padding: 10px 30px;
+            padding: 10px 25px;
             border-radius: 20px;
             box-shadow: 0 6px 0 #e6a100;
             display: inline-block;
@@ -446,6 +446,7 @@
             align-items: center;
             justify-content: center;
             padding: 20px;
+            text-align: center;
         }
 
         @media (max-width: 500px) {
@@ -474,7 +475,7 @@
         <div class="instruction-grid">
             <div class="instruction-card">
                 <span class="icon">🦁</span>
-                <span class="text">जानवर, पक्षी और उंगलियाँ देखकर सही गिनती पहचानिए।</span>
+                <span class="text">जानवर, उंगलियाँ और सही क्रम पहचानकर जवाब दें।</span>
             </div>
             <div class="instruction-card">
                 <span class="icon">💡</span>
@@ -540,22 +541,73 @@
     </div>
 
 <script>
-    const audioWrong = new Audio('assets/wrong.mp3');
-    const audioClaps = new Audio('assets/freesound_community-claps-44774.mp3');
+    // Audio Objects
+    let audioCorrect = new Audio('assets/correct.mp3');
+    let audioClaps = new Audio('assets/freesound_community-claps-44774.mp3');
+    let audioWrong = new Audio('assets/wrong.mp3');
 
+    // Fallback Web Audio Synthesizer
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    let audioCtx = null;
+
+    function playSynthSound(isCorrect) {
+        try {
+            if (!audioCtx) audioCtx = new AudioCtx();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            if (isCorrect) {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+                osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.3); // A5
+                gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.3);
+            } else {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(220, audioCtx.currentTime); // A3
+                osc.frequency.exponentialRampToValueAtTime(110, audioCtx.currentTime + 0.3); // A2
+                gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.3);
+            }
+        } catch(e) {}
+    }
+
+    function playSoundEffect(type) {
+        if (type === 'correct') {
+            let target = audioCorrect.src ? audioCorrect : audioClaps;
+            target.currentTime = 0;
+            target.play().catch(() => {
+                audioClaps.currentTime = 0;
+                audioClaps.play().catch(() => {});
+            });
+            playSynthSound(true);
+        } else {
+            audioWrong.currentTime = 0;
+            audioWrong.play().catch(() => {});
+            playSynthSound(false);
+        }
+    }
+
+    // COMPLETE 10 QUESTIONS INCLUDING REARRANGE QUESTIONS
     const baseLevels = [
         { concept: "lineup", sequence: [{num: "१", icon: "🐘"}, {num: "?", icon: "❓"}, {num: "३", icon: "🦒"}], math: "१ के बाद कौन-सा अंक आएगा?", correct: "२ (दो)", choices: ["२ (दो)", "४ (चार)"], hint: "१ के ठीक बाद २ आता है।" },
         { concept: "lineup", sequence: [{num: "?", icon: "❓"}, {num: "५", icon: "🦁"}, {num: "६", icon: "🐅"}], math: "५ के पहले कौन-सा अंक आएगा?", correct: "४ (चार)", choices: ["३ (तीन)", "४ (चार)"], hint: "५ से एक कम गिनिए।" },
-        { concept: "lineup", sequence: [{num: "७", icon: "🦓"}, {num: "८", icon: "🦘"}, {num: "?", icon: "❓"}], math: "८ के बाद कौन-सा अंक आएगा?", correct: "९ (नौ)", choices: ["९ (नौ)", "१० (दस)"], hint: "८ के आगे की संख्या गिनिए।" },
-
-        // CLEAN & ACCURATE HAND EMOJIS
+        { concept: "rearrange", sequence: [{num: "३", icon: "🐒"}, {num: "१", icon: "🐵"}, {num: "२", icon: "🙈"}], math: "इन अंकों का सही बढ़ता क्रम (1, 2, 3) क्या होगा?", correct: "१, २, ३", choices: ["१, २, ३", "३, २, १"], hint: "गिनती १ से शुरू करें: १, २, ३।" },
         { concept: "hands", emoji: "🖐️", math: "हाथ में कुल कितनी उंगलियाँ हैं?", correct: "५ (पाँच)", choices: ["४ (चार)", "५ (पाँच)"], hint: "एक हाथ में ५ उंगलियाँ होती हैं।" },
+        { concept: "rearrange", sequence: [{num: "६", icon: "🐶"}, {num: "४", icon: "🐱"}, {num: "५", icon: "🐭"}], math: "सही क्रम (4, 5, 6) चुनिए:", correct: "४, ५, ६", choices: ["६, ५, ४", "४, ५, ६"], hint: "४ से आगे की गिनती कीजिए: ४, ५, ६।" },
         { concept: "hands", emoji: "🖐️ ✌️", math: "हाथों में कुल कितनी उंगलियाँ हैं?", correct: "७ (सात)", choices: ["७ (सात)", "८ (आठ)"], hint: "५ + २ को साथ में गिनिए।" },
-        { concept: "hands", emoji: "🖐️ 🖐️", math: "दोनों हाथों की उंगलियाँ गिनिए।", correct: "१० (दस)", choices: ["९ (नौ)", "१० (दस)"], hint: "दोनों हाथों में पूरी १० उंगलियाँ होती हैं।" },
-
+        { concept: "rearrange", sequence: [{num: "८", icon: "🦘"}, {num: "१०", icon: "🦓"}, {num: "९", icon: "🦒"}], math: "८, ९, १० को सही क्रम में लगाएँ:", correct: "८, ९, १०", choices: ["८, ९, १०", "१०, ९, ८"], hint: "८ के बाद ९ और फिर १० आता है।" },
         { concept: "pond", item: "🐟", count: 6, math: "तालाब में कितनी मछलियाँ हैं?", correct: "६ (छह)", choices: ["५ (पाँच)", "६ (छह)"], hint: "५ के बाद ६ आता है।" },
         { concept: "pond", item: "🦆", count: 4, math: "तालाब में कितनी बतखें हैं?", correct: "४ (चार)", choices: ["४ (चार)", "५ (पाँच)"], hint: "बतखों को गिनिए: १, २, ३, ४।" },
-        { concept: "pond", item: "🐸", count: 8, math: "चित्र में कितने मेंढक हैं?", correct: "८ (आठ)", choices: ["८ (आठ)", "९ (नौ)"], hint: "७ के बाद ८ आता है।" }
+        { concept: "hands", emoji: "🖐️ 🖐️", math: "दोनों हाथों की कुल उंगलियाँ कितनी हैं?", correct: "१० (दस)", choices: ["९ (नौ)", "१० (दस)"], hint: "दोनों हाथों में पूरी १० उंगलियाँ होती हैं।" }
     ];
 
     let activeLevels = [];
@@ -575,22 +627,24 @@
     window.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
             switchScreen('screen-logo', 'screen-title');
-        }, 5000);
+        }, 2000);
     });
 
     function switchScreen(hideId, showId) {
         document.getElementById(hideId).classList.remove('active');
         document.getElementById(showId).classList.add('active');
         if(showId === 'screen-game') {
-            alignPawn();
+            setTimeout(alignPawn, 50);
         }
     }
 
     function initAudioAndStartGame() {
-        [audioWrong, audioClaps].forEach(track => {
-            track.play().catch(() => {});
-            track.pause();
-            track.currentTime = 0;
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        [audioCorrect, audioClaps, audioWrong].forEach(track => {
+            track.play().then(() => {
+                track.pause();
+                track.currentTime = 0;
+            }).catch(() => {});
         });
         switchScreen('screen-instructions', 'screen-game');
         resetAndShuffleGame();
@@ -643,16 +697,10 @@
 
     function showHintAndGlow() {
         const currentData = activeLevels[currentLevelIndex - 1];
+        if(!currentData) return;
         const hintBox = document.getElementById('hintBox');
         hintBox.innerText = `💡 ${currentData.hint}`;
         hintBox.style.display = "block";
-
-        const choiceBtns = document.querySelectorAll('.choice-card');
-        choiceBtns.forEach(btn => {
-            if (btn.getAttribute('data-choice') === currentData.correct) {
-                btn.classList.add('glow-hint');
-            }
-        });
     }
 
     function launchConfettiBurst() {
@@ -688,6 +736,7 @@
         
         if (currentLevelIndex > 10) {
             document.getElementById('tile-11').classList.add('passed');
+            alignPawn();
             setTimeout(() => { triggerGameEnd(true); }, 500);
             return;
         }
@@ -698,12 +747,14 @@
         }
 
         const currentData = activeLevels[currentLevelIndex - 1];
+        if(!currentData) return;
+
         const visualArea = document.getElementById('visualArea');
         document.getElementById('spellFormula').innerText = currentData.math;
 
         visualArea.innerHTML = "";
 
-        if(currentData.concept === "lineup") {
+        if(currentData.concept === "lineup" || currentData.concept === "rearrange") {
             let lineupHtml = '<div class="safari-lineup">';
             currentData.sequence.forEach(item => {
                 if(item.num === "?") {
@@ -742,14 +793,16 @@
             const colorClass = idx === 1 ? 'alt-color' : '';
             layout.innerHTML += `<button class="choice-card ${colorClass}" data-choice="${choice}" onclick="handleChoiceClick(this, '${choice}')">${choice}</button>`;
         });
+
+        alignPawn();
     }
 
     function handleChoiceClick(buttonElement, selectedOption) {
         const currentData = activeLevels[currentLevelIndex - 1];
+        if(!currentData) return;
         
         if (selectedOption === currentData.correct) {
-            audioClaps.currentTime = 0;
-            audioClaps.play().catch(() => {});
+            playSoundEffect('correct');
 
             const rewardOverlay = document.getElementById('rewardOverlay');
             document.getElementById('rewardAnswerText').innerText = currentData.correct;
@@ -762,10 +815,9 @@
             currentLevelIndex++;
             alignPawn();
             
-            setTimeout(() => { loadChallenge(); }, 1600);
+            setTimeout(() => { loadChallenge(); }, 1400);
         } else {
-            audioWrong.currentTime = 0;
-            audioWrong.play().catch(() => {});
+            playSoundEffect('wrong');
 
             totalLives--;
             renderStatusDisplays();
@@ -785,8 +837,7 @@
         
         screen.style.display = "flex";
         if (isWin) {
-            audioClaps.currentTime = 0;
-            audioClaps.play().catch(() => {});
+            playSoundEffect('correct');
             title.innerText = "🎉 जीत गए! 🥳";
             desc.innerText = `अद्भुत खेल! आपने बनाए कुल ${totalScore} अंक। हाथी अपनी मंजिल तक पहुँच गया!`;
         } else {
@@ -800,7 +851,8 @@
         resetAndShuffleGame();
     }
 
-    window.onresize = alignPawn;
+    window.addEventListener('resize', alignPawn);
+    window.addEventListener('orientationchange', () => setTimeout(alignPawn, 200));
 </script>
 
 </body>
